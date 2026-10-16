@@ -20,6 +20,13 @@ export {
   CustomSoftwareIllustration,
   ApiIntegrationIllustration,
   AboutEcosystemIllustration,
+  SoftwareEcosystemIllustration,
+  EcosystemShowcaseIllustration,
+  ServicesHeaderIllustration,
+  ProjectsHeaderIllustration,
+  ContactMessageIllustration,
+  ContactChatIllustration,
+  ThinkingRocketIllustration,
   ProcessConnector,
 } from './ServiceIllustrations'
 export type { IllustrationProps } from './WebDevIllustration'

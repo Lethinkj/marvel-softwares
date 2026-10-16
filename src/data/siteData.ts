@@ -368,6 +368,36 @@ export const workingPrinciples: Principle[] = [
   },
 ]
 
+// --- About: team functions (role-based, no invented names).
+// To feature real people later, replace this array with verified
+// member profiles (name, role, photo) and update the About section.
+export const teamRoles: Principle[] = [
+  {
+    title: 'Software Engineers',
+    description:
+      'Developers who design, build and test your websites, applications and business systems.',
+    icon: 'code',
+  },
+  {
+    title: 'UI/UX Designers',
+    description:
+      'Designers who shape clear user journeys and interfaces people find easy to use.',
+    icon: 'design',
+  },
+  {
+    title: 'Project Delivery',
+    description:
+      'Coordinators who keep requirements, timelines and communication organised.',
+    icon: 'planning',
+  },
+  {
+    title: 'Support & Maintenance',
+    description:
+      'Engineers who keep your software reliable, updated and improving after launch.',
+    icon: 'shield',
+  },
+]
+
 // --- About: development approach flow ---
 export const developmentApproach: string[] = [
   'Requirements',

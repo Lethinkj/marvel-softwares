@@ -52,15 +52,16 @@ export const Services: React.FC = () => (
     />
 
     {/* Page heading */}
-    <section aria-labelledby="services-heading" className="section-warm">
-      <div className="container text-center" style={{ paddingBlock: 'clamp(48px,7vw,88px)', maxWidth: 780, marginInline: 'auto' }}>
-        <p className="eyebrow" style={{ justifyContent: 'center' }}>Our expertise</p>
+    <section aria-labelledby="services-heading">
+      <div className="container text-center" style={{ paddingBlock: 'clamp(48px,6vw,80px)', maxWidth: 780, marginInline: 'auto' }}>
         <h1 id="services-heading" className="text-page-title" style={{ marginTop: 16 }}>
-          Software Development Services
+          Our Services
         </h1>
-        <p className="text-body" style={{ marginTop: 18, marginInline: 'auto', fontSize: '1.125rem' }}>
+        <p className="text-body" style={{ marginTop: 18, fontSize: '1.125rem', marginInline: 'auto' }}>
           We design, develop and integrate digital solutions that help businesses operate
-          more efficiently, serve customers better and scale with confidence.
+          more efficiently, serve customers better and scale with confidence. From your
+          first website to complex enterprise platforms, every solution is shaped around
+          your workflows, your users and your long-term goals.
         </p>
       </div>
     </section>
@@ -68,7 +69,7 @@ export const Services: React.FC = () => (
     {/* Service sections — alternating rhythm, predictable reading order */}
     {services.map((service, index) => {
       const artLeft = index % 2 === 0
-      const warm = index % 2 === 1
+      const warm = index % 2 === 0
       return (
         <section
           key={service.id}
@@ -76,10 +77,10 @@ export const Services: React.FC = () => (
           aria-labelledby={`${service.id}-title`}
           className={warm ? 'section-warm' : ''}
         >
-          <div className="container section">
+          <div className="container" style={{ paddingBlock: 'clamp(44px,5vw,72px)' }}>
             <div
               className="grid grid-cols-1 md:grid-cols-2 items-center"
-              style={{ gap: 'clamp(32px,5vw,72px)' }}
+              style={{ gap: 'clamp(28px,4vw,56px)' }}
             >
               <AnimatedSection
                 className={artLeft ? 'md:order-1' : 'md:order-2'}
@@ -152,8 +153,8 @@ export const Services: React.FC = () => (
     })}
 
     {/* Closing CTA */}
-    <section aria-labelledby="services-cta" className="section">
-      <div className="container">
+    <section aria-labelledby="services-cta" className="section-warm">
+      <div className="container" style={{ paddingBlock: 'clamp(44px,5vw,72px)' }}>
         <div
           className="text-center"
           style={{

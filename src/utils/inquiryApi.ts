@@ -17,6 +17,7 @@ export interface ProjectInquiry {
   name: string
   email: string
   phone?: string
+  address?: string
   company?: string
   solution: string
   budget?: string

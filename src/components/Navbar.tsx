@@ -1,7 +1,22 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'motion/react'
-import { navLinks } from '../data/siteData'
+import { navLinks, siteConfig } from '../data/siteData'
+import {
+  GlobeIcon,
+  LayersIcon,
+  UsersIcon,
+  BarChartIcon,
+  MailIcon,
+} from './Icons'
+
+const NAV_ICONS: Record<string, React.ReactNode> = {
+  '/': <GlobeIcon className="w-5 h-5" />,
+  '/services': <LayersIcon className="w-5 h-5" />,
+  '/about': <UsersIcon className="w-5 h-5" />,
+  '/projects': <BarChartIcon className="w-5 h-5" />,
+  '/contact': <MailIcon className="w-5 h-5" />,
+}
 
 /**
  * Sticky site header. Original logo asset, 80px desktop
@@ -78,15 +93,25 @@ export function Navbar() {
           to="/"
           aria-label="MARVEL SOFTWARES — Home"
           onClick={() => setIsMenuOpen(false)}
-          className="shrink-0 rounded-md"
+          className="shrink-0 rounded-md flex items-center"
+          style={{ gap: 10 }}
         >
           <img
-            src="/marvel-softwares-logo.png"
-            alt="MARVEL SOFTWARES"
-            width={272}
-            height={90}
-            style={{ width: '132px', height: 'auto' }}
+            src="/marvel-softwares-mark-transparent.png"
+            alt=""
+            aria-hidden="true"
+            width={171}
+            height={96}
+            className="brand-mark"
           />
+          <span className="flex flex-col" style={{ lineHeight: 1.05 }}>
+            <span className="brand-name">
+              MARVEL
+            </span>
+            <span className="brand-sub">
+              SOFTWARES
+            </span>
+          </span>
         </Link>
 
         <nav className="hidden lg:flex items-center gap-1" aria-label="Main navigation">
@@ -101,46 +126,19 @@ export function Navbar() {
                 style={{
                   color: active ? 'var(--color-primary)' : 'var(--color-text)',
                   fontWeight: active ? 700 : 500,
-                  background: active ? 'rgba(0,87,231,.07)' : 'transparent',
+                  textDecoration: active ? 'underline' : 'none',
+                  textDecorationThickness: 3,
+                  textUnderlineOffset: 6,
+                  textDecorationColor: 'var(--color-primary)',
                 }}
               >
                 {link.label}
-                {active && (
-                  <motion.span
-                    layoutId="navbar-active-indicator"
-                    className="absolute inset-x-3 -bottom-[13px] rounded-full"
-                    style={{ height: 3, background: 'var(--color-primary)' }}
-                    transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-                  />
-                )}
               </Link>
             )
           })}
         </nav>
 
-        <div className="hidden lg:flex items-center shrink-0">
-          <Link
-            to="/contact"
-            className="inline-flex items-center justify-center min-h-[48px] px-6 text-[15px] font-semibold text-white transition-all hover:-translate-y-px"
-            style={{
-              background: 'var(--color-primary)',
-              borderRadius: 'var(--radius-button)',
-              boxShadow: 'var(--shadow-button)',
-            }}
-          >
-            Start a Project
-          </Link>
-        </div>
-
-        <div className="flex lg:hidden items-center gap-2">
-          <Link
-            to="/contact"
-            onClick={() => setIsMenuOpen(false)}
-            className="inline-flex items-center justify-center min-h-[44px] px-4 text-sm font-semibold text-white"
-            style={{ background: 'var(--color-primary)', borderRadius: 'var(--radius-button)' }}
-          >
-            Start a Project
-          </Link>
+        <div className="flex lg:hidden items-center">
           <button
             ref={menuButtonRef}
             type="button"
@@ -180,45 +178,122 @@ export function Navbar() {
 
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.div
-            id="mobile-navigation"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Site navigation"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:hidden overflow-hidden bg-white"
-            style={{ borderTop: '1px solid var(--color-border)' }}
-          >
-            <nav
-              aria-label="Mobile navigation"
-              className="flex flex-col gap-1 py-4 mx-auto"
-              style={{ width: 'min(100% - 32px, var(--container-width))' }}
+          <>
+            <motion.div
+              key="nav-scrim"
+              aria-hidden="true"
+              onClick={() => setIsMenuOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.22 }}
+              className="lg:hidden fixed inset-0 z-[60]"
+              style={{ background: 'rgba(11,21,48,.45)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}
+            />
+            <motion.aside
+              key="nav-drawer"
+              id="mobile-navigation"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Site navigation"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+              className="lg:hidden fixed top-0 right-0 z-[61] flex flex-col bg-white rounded-l-3xl"
+              style={{
+                width: 'min(78vw, 340px)',
+                height: '100dvh',
+                boxShadow: '-24px 0 64px -16px rgba(0,31,128,.35)',
+              }}
             >
-              {navLinks.map((link) => {
-                const active = isActiveLink(link.href)
-                return (
-                  <Link
-                    key={link.href}
-                    to={link.href}
-                    onClick={() => setIsMenuOpen(false)}
-                    aria-current={active ? 'page' : undefined}
-                    className="flex items-center min-h-[48px] px-4 rounded-xl text-base transition-colors"
-                    style={{
-                      fontWeight: active ? 700 : 500,
-                      color: active ? 'var(--color-primary)' : 'var(--color-text)',
-                      background: active ? 'rgba(0,87,231,.07)' : 'transparent',
-                      borderLeft: active ? '4px solid var(--color-primary)' : '4px solid transparent',
-                    }}
-                  >
-                    {link.label}
-                  </Link>
-                )
-              })}
-            </nav>
-          </motion.div>
+              <div
+                className="flex items-center justify-between px-5 shrink-0"
+                style={{ height: 'var(--nav-height)', borderBottom: '1px solid var(--color-border)' }}
+              >
+                <span className="flex items-center" style={{ gap: 8 }}>
+                  <img
+                    src="/marvel-softwares-mark-transparent.png"
+                    alt=""
+                    aria-hidden="true"
+                    width={86}
+                    height={48}
+                    style={{ height: '30px', width: 'auto', display: 'block' }}
+                  />
+                  <span className="text-sm font-extrabold" style={{ color: 'var(--color-primary-dark)', letterSpacing: '0.04em' }}>
+                    MARVEL
+                  </span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setIsMenuOpen(false)}
+                  aria-label="Close navigation menu"
+                  className="flex items-center justify-center w-11 h-11 rounded-xl transition-colors"
+                  style={{ color: 'var(--color-text)' }}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" aria-hidden="true">
+                    <path d="M18 6 6 18 M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <nav aria-label="Mobile navigation" className="flex-1 overflow-y-auto px-4 py-5">
+                <ul className="flex flex-col" style={{ gap: 6, listStyle: 'none', margin: 0, padding: 0 }}>
+                  {navLinks.map((link, i) => {
+                    const active = isActiveLink(link.href)
+                    return (
+                      <motion.li
+                        key={link.href}
+                        initial={{ opacity: 0, x: 28 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, delay: 0.08 + i * 0.05, ease: [0.16, 1, 0.3, 1] }}
+                      >
+                        <Link
+                          to={link.href}
+                          onClick={() => setIsMenuOpen(false)}
+                          aria-current={active ? 'page' : undefined}
+                          className="flex items-center min-h-[56px] px-3 rounded-2xl transition-colors"
+                          style={{ gap: 14, background: active ? 'rgba(0,87,231,.08)' : 'transparent' }}
+                        >
+                          <span
+                            aria-hidden="true"
+                            className="flex items-center justify-center w-11 h-11 rounded-xl shrink-0"
+                            style={{
+                              background: active ? 'var(--color-primary)' : 'var(--color-surface-warm)',
+                              color: active ? '#fff' : 'var(--color-primary)',
+                            }}
+                          >
+                            {NAV_ICONS[link.href]}
+                          </span>
+                          <span
+                            className="flex-1"
+                            style={{
+                              fontSize: '1.05rem',
+                              fontWeight: active ? 700 : 500,
+                              color: active ? 'var(--color-primary)' : 'var(--color-text)',
+                            }}
+                          >
+                            {link.label}
+                          </span>
+                          <span aria-hidden="true" style={{ color: active ? 'var(--color-primary)' : '#B9C6DD', fontWeight: 700 }}>
+                            →
+                          </span>
+                        </Link>
+                      </motion.li>
+                    )
+                  })}
+                </ul>
+              </nav>
+              <div className="px-5 py-4 shrink-0" style={{ borderTop: '1px solid var(--color-border)' }}>
+                <a
+                  href={`mailto:${siteConfig.email}`}
+                  className="block text-sm font-semibold break-anywhere"
+                  style={{ color: 'var(--color-primary)' }}
+                >
+                  {siteConfig.email}
+                </a>
+              </div>
+            </motion.aside>
+          </>
         )}
       </AnimatePresence>
     </header>

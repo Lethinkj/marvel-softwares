@@ -10,13 +10,11 @@ const CURRENT_YEAR = new Date().getFullYear()
  * profile URLs are configured.
  */
 export function Footer() {
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
-
   return (
     <footer
       aria-labelledby="footer-heading"
       className="text-white"
-      style={{ background: 'var(--color-primary-dark)' }}
+      style={{ background: '#1e312f' }}
     >
       <h2 id="footer-heading" className="sr-only">
         MARVEL SOFTWARES footer
@@ -30,18 +28,13 @@ export function Footer() {
           {/* Brand */}
           <div className="lg:col-span-4">
             <Link to="/" aria-label="MARVEL SOFTWARES — Home" className="inline-block rounded-md">
-              <span
-                className="inline-block rounded-xl px-3 py-2"
-                style={{ background: '#fff' }}
-              >
-                <img
-                  src="/marvel-softwares-logo.png"
-                  alt="MARVEL SOFTWARES"
-                  width={272}
-                  height={90}
-                  style={{ width: '140px', height: 'auto' }}
-                />
-              </span>
+              <img
+                src="/marvel-softwares-logo-removebg-preview.png"
+                alt="MARVEL SOFTWARES"
+                width={180}
+                height={120}
+                style={{ width: '120px', height: 'auto' }}
+              />
             </Link>
             <p
               className="mt-5 text-[15px] leading-relaxed"
@@ -112,16 +105,6 @@ export function Footer() {
               </li>
               <li className="text-white/70 text-sm leading-relaxed">{siteConfig.location}</li>
             </ul>
-            <Link
-              to="/contact"
-              className="mt-5 inline-flex items-center justify-center min-h-[48px] px-6 text-[15px] font-semibold text-white transition-colors"
-              style={{
-                background: 'var(--color-orange)',
-                borderRadius: 'var(--radius-button)',
-              }}
-            >
-              Start a Project
-            </Link>
           </div>
         </div>
 
@@ -130,15 +113,6 @@ export function Footer() {
           style={{ borderTop: '1px solid rgba(255,255,255,.18)', paddingTop: 24 }}
         >
           <p>© {CURRENT_YEAR} MARVEL SOFTWARES. All rights reserved.</p>
-          <button
-            type="button"
-            onClick={scrollToTop}
-            aria-label="Scroll back to top"
-            className="inline-flex items-center gap-2 min-h-[44px] px-4 rounded-xl text-white/85 hover:text-white transition-colors"
-            style={{ border: '1px solid rgba(255,255,255,.25)' }}
-          >
-            Back to top <span aria-hidden="true">↑</span>
-          </button>
         </div>
       </div>
     </footer>

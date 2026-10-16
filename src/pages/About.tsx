@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom'
 import { renderAppIcon } from '../utils/iconResolver'
 import AnimatedSection from '../components/AnimatedSection'
 import Seo from '../components/Seo'
-import { AboutEcosystemIllustration } from '../components/illustrations'
-import { workingPrinciples, developmentApproach } from '../data/siteData'
+import { workingPrinciples, teamRoles } from '../data/siteData'
 
 const cardStyle: React.CSSProperties = {
   background: '#fff',
@@ -22,41 +21,34 @@ export const About: React.FC = () => (
     />
 
     {/* A. Introduction */}
-    <section aria-labelledby="about-heading" className="section-warm">
-      <div className="container section" style={{ paddingBottom: 'clamp(40px,5vw,72px)' }}>
-        <div className="grid grid-cols-1 lg:grid-cols-2 items-center" style={{ gap: 'clamp(32px,5vw,72px)' }}>
-          <div>
-            <p className="eyebrow" style={{ marginBottom: 16 }}>About Marvel Softwares</p>
-            <h1 id="about-heading" className="text-page-title">
-              Building Software Around Real Business Needs
-            </h1>
-            <p className="text-body" style={{ marginTop: 20 }}>
-              MARVEL SOFTWARES develops websites, applications, enterprise systems and
-              custom digital solutions that help businesses turn ideas into useful,
-              dependable technology.
-            </p>
-            <p className="text-body" style={{ marginTop: 14 }}>
-              Every business works differently. We focus on understanding your
-              requirements, designing practical solutions and building software that fits
-              your workflows, users and future plans.
-            </p>
-          </div>
-          <div className="w-full max-w-lg mx-auto lg:max-w-none">
-            <AboutEcosystemIllustration />
-          </div>
-        </div>
+    <section aria-labelledby="about-heading">
+      <div className="container text-center" style={{ paddingBlock: 'clamp(48px,6vw,80px)', maxWidth: 780, marginInline: 'auto' }}>
+        <h1 id="about-heading" className="text-page-title" style={{ marginTop: 16 }}>
+          About Us
+        </h1>
+        <p className="text-body" style={{ marginTop: 20, marginInline: 'auto' }}>
+          MARVEL SOFTWARES develops websites, applications, enterprise systems and
+          custom digital solutions that help businesses turn ideas into useful,
+          dependable technology. Our work covers the full journey from planning and
+          design to development, deployment and ongoing support.
+        </p>
+        <p className="text-body" style={{ marginTop: 14, marginInline: 'auto' }}>
+          Every business works differently. We focus on understanding your
+          requirements, designing practical solutions and building software that fits
+          your workflows, users and future plans.
+        </p>
       </div>
     </section>
 
     {/* B. Mission and vision */}
-    <section aria-labelledby="mission-heading" className="section">
+    <section aria-labelledby="mission-heading" className="section section-warm">
       <div className="container">
         <h2 id="mission-heading" className="sr-only">Our mission and vision</h2>
         <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 'var(--card-gap)' }}>
           <AnimatedSection>
-            <article className="p-8 h-full" style={cardStyle}>
+            <article className="p-8 h-full mv-card" style={cardStyle}>
               <span
-                className="flex items-center justify-center w-12 h-12 rounded-2xl"
+                className="mv-icon flex items-center justify-center w-12 h-12 rounded-2xl"
                 style={{ background: '#F4F5FF', color: 'var(--color-primary)', marginBottom: 18 }}
                 aria-hidden="true"
               >
@@ -70,9 +62,9 @@ export const About: React.FC = () => (
             </article>
           </AnimatedSection>
           <AnimatedSection delay={0.1}>
-            <article className="p-8 h-full" style={cardStyle}>
+            <article className="p-8 h-full mv-card" style={cardStyle}>
               <span
-                className="flex items-center justify-center w-12 h-12 rounded-2xl"
+                className="mv-icon flex items-center justify-center w-12 h-12 rounded-2xl"
                   style={{ background: '#F4F5FF', color: 'var(--color-orange)', marginBottom: 18 }}
                 aria-hidden="true"
               >
@@ -91,9 +83,9 @@ export const About: React.FC = () => (
     </section>
 
     {/* C. Working principles */}
-    <section aria-labelledby="principles-heading" className="section section-warm">
+    <section aria-labelledby="principles-heading" className="section">
       <div className="container">
-        <AnimatedSection className="text-center mx-auto" style={{ maxWidth: 720 }}>
+        <AnimatedSection style={{ maxWidth: 720 }}>
           <h2 id="principles-heading" className="text-section-title">
             What Guides Our Work
           </h2>
@@ -101,9 +93,12 @@ export const About: React.FC = () => (
         <div className="grid-cards-3" style={{ marginTop: 44 }}>
           {workingPrinciples.map((principle, i) => (
             <AnimatedSection key={principle.title} delay={(i % 3) * 0.08}>
-              <article className="p-7 h-full bg-white" style={cardStyle}>
+              <article
+                className={`p-7 h-full bg-white principle-card mild-glow-card ${i % 4 === 1 ? 'mild-d1' : i % 4 === 2 ? 'mild-d2' : i % 4 === 3 ? 'mild-d3' : ''}`}
+                style={cardStyle}
+              >
                 <span
-                  className="flex items-center justify-center w-11 h-11 rounded-xl"
+                  className="principle-icon flex items-center justify-center w-11 h-11 rounded-xl"
                   style={{ background: '#F4F5FF', color: 'var(--color-primary)', marginBottom: 16 }}
                   aria-hidden="true"
                 >
@@ -120,48 +115,37 @@ export const About: React.FC = () => (
       </div>
     </section>
 
-    {/* D. Development approach */}
-    <section aria-labelledby="approach-heading" className="section">
+    {/* D. Team */}
+    <section aria-labelledby="team-heading" className="section section-warm">
       <div className="container">
-        <AnimatedSection className="text-center mx-auto" style={{ maxWidth: 720 }}>
-          <h2 id="approach-heading" className="text-section-title">
-            Our Development Approach
+        <AnimatedSection style={{ maxWidth: 720 }}>
+          <h2 id="team-heading" className="text-section-title">
+            Meet Our Team
           </h2>
-          <p className="text-body" style={{ marginTop: 14, marginInline: 'auto' }}>
-            We aim to maintain clear communication throughout the project, align
-            implementation with agreed requirements and help clients make informed
-            decisions as the product evolves.
+          <p className="text-body" style={{ marginTop: 14 }}>
+            A compact, cross-functional team covers your product end to end — from
+            first sketch to long-term support.
           </p>
         </AnimatedSection>
-
-        <ol
-          aria-label="Project phases"
-          className="flex flex-col lg:flex-row items-stretch"
-          style={{ gap: 12, marginTop: 44, listStyle: 'none', padding: 0 }}
-        >
-          {developmentApproach.map((phase, i) => (
-            <li
-              key={phase}
-              className="flex-1 flex lg:flex-col items-center gap-3 rounded-2xl bg-white px-5 py-4"
-              style={{ border: '1px solid var(--color-border)' }}
-            >
-              <span
-                className="flex items-center justify-center w-9 h-9 rounded-full text-sm font-bold shrink-0"
-                style={{
-                  background: i === 0 ? 'var(--color-primary)' : '#F4F5FF',
-                  color: i === 0 ? '#fff' : 'var(--color-primary)',
-                }}
-                aria-hidden="true"
-              >
-                {i + 1}
-              </span>
-              <span className="text-[15px] font-semibold text-center">{phase}</span>
-              {i < developmentApproach.length - 1 && (
-                <span aria-hidden="true" className="hidden lg:block" style={{ color: 'var(--color-primary)', fontWeight: 700 }}>→</span>
-              )}
-            </li>
+        <div className="grid-cards-4" style={{ marginTop: 44 }}>
+          {teamRoles.map((role, i) => (
+            <AnimatedSection key={role.title} delay={(i % 4) * 0.08}>
+              <article className="p-7 h-full bg-white principle-card" style={cardStyle}>
+                <span
+                  className="principle-icon flex items-center justify-center w-11 h-11 rounded-xl"
+                  style={{ background: '#F4F5FF', color: 'var(--color-primary)', marginBottom: 16 }}
+                  aria-hidden="true"
+                >
+                  {renderAppIcon(role.icon, 'w-5 h-5')}
+                </span>
+                <h3 className="text-card-title" style={{ fontSize: '1.15rem', marginBottom: 8 }}>
+                  {role.title}
+                </h3>
+                <p className="text-body text-[15px]">{role.description}</p>
+              </article>
+            </AnimatedSection>
           ))}
-        </ol>
+        </div>
       </div>
     </section>
 

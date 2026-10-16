@@ -1,54 +1,45 @@
-import React, { useState, useId, useMemo } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import React, { useState, useId } from 'react'
 import Seo from '../components/Seo'
-import { ContactIllustration } from '../components/illustrations'
+import { ContactChatIllustration } from '../components/illustrations'
 import { CheckIcon } from '../components/Icons'
-import { solutionTypes, siteConfig } from '../data/siteData'
+import { siteConfig } from '../data/siteData'
 import { submitProjectInquiry } from '../utils/inquiryApi'
 
 interface FormErrors {
   name?: string
   email?: string
-  solution?: string
-  requirements?: string
+  phone?: string
+  address?: string
+  message?: string
 }
-
-const BUDGETS = ['Under $1k', '$1k – $5k', '$5k – $15k', '$15k+', 'Not sure yet']
-const TIMELINES = ['As soon as possible', 'Within 1 month', '1 – 3 months', '3+ months', 'Flexible']
 
 export const Contact: React.FC = () => {
   const formId = useId()
-  const [searchParams] = useSearchParams()
-  const requested = searchParams.get('solution')
-  const initialSolution = useMemo(
-    () => (requested && solutionTypes.includes(requested) ? requested : 'Custom Software'),
-    [requested],
-  )
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
-  const [company, setCompany] = useState('')
-  const [solution, setSolution] = useState(initialSolution)
-  const [budget, setBudget] = useState('')
-  const [timeline, setTimeline] = useState('')
-  const [requirements, setRequirements] = useState('')
+  const [address, setAddress] = useState('')
+  const [message, setMessage] = useState('')
   const [errors, setErrors] = useState<FormErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [wasQueued, setWasQueued] = useState(false)
 
-  const validate = (): { valid: boolean; firstError?: 'name' | 'email' | 'solution' | 'requirements' } => {
+  const validate = (): { valid: boolean; firstError?: keyof FormErrors } => {
     const next: FormErrors = {}
     if (name.trim().length < 2) next.name = 'Please enter your full name.'
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))
       next.email = 'Please enter a valid email address (e.g. name@company.com).'
-    if (!solutionTypes.includes(solution)) next.solution = 'Please choose a type of solution.'
-    if (requirements.trim().length < 10)
-      next.requirements = 'Please describe your requirements in at least 10 characters.'
+    if (phone.replace(/\D/g, '').length < 7)
+      next.phone = 'Please enter a valid phone number.'
+    if (address.trim().length < 6)
+      next.address = 'Please enter your address.'
+    if (message.trim().length < 10)
+      next.message = 'Please describe your requirements in at least 10 characters.'
     setErrors(next)
-    const firstError = (['name', 'email', 'solution', 'requirements'] as const).find(
+    const firstError = (['name', 'phone', 'email', 'address', 'message'] as const).find(
       (f) => next[f],
     )
     return { valid: !firstError, firstError }
@@ -68,12 +59,10 @@ export const Contact: React.FC = () => {
       const result = await submitProjectInquiry({
         name: name.trim(),
         email: email.trim(),
-        phone: phone.trim() || undefined,
-        company: company.trim() || undefined,
-        solution,
-        budget: budget || undefined,
-        timeline: timeline || undefined,
-        requirements: requirements.trim(),
+        phone: phone.trim(),
+        address: address.trim(),
+        solution: 'Other',
+        requirements: message.trim(),
       })
       setWasQueued(result.status === 'queued')
       setIsSubmitted(true)
@@ -104,24 +93,31 @@ export const Contact: React.FC = () => {
       />
 
       {/* Heading */}
-      <section aria-labelledby="contact-heading" className="section-warm">
-        <div className="container text-center" style={{ paddingBlock: 'clamp(48px,7vw,88px)', maxWidth: 780, marginInline: 'auto' }}>
-          <p className="eyebrow" style={{ justifyContent: 'center' }}>Let&apos;s work together</p>
+      <section aria-labelledby="contact-heading">
+        <div className="container text-center" style={{ paddingBlock: 'clamp(48px,6vw,80px)', maxWidth: 780, marginInline: 'auto' }}>
           <h1 id="contact-heading" className="text-page-title" style={{ marginTop: 16 }}>
-            Tell Us What You Want to Build.
+            Contact Us
           </h1>
-          <p className="text-body" style={{ marginTop: 18, marginInline: 'auto', fontSize: '1.125rem' }}>
+          <p className="text-body" style={{ marginTop: 18, fontSize: '1.125rem', marginInline: 'auto' }}>
             Share your requirements, business goals and challenges. We&apos;ll use the
             information to understand your needs and discuss a suitable software solution.
+            The more detail you share about your users, timeline and expectations, the
+            better we can respond.
           </p>
         </div>
       </section>
 
-      <section aria-label="Project inquiry" className="section">
+      <section aria-label="Project inquiry" className="section section-warm">
         <div className="container">
-          <div className="grid grid-cols-1 lg:grid-cols-12 items-start" style={{ gap: 'clamp(28px,4vw,56px)' }}>
-            {/* Form */}
-            <div className="lg:col-span-7 rounded-3xl bg-white p-6 sm:p-10" style={{ border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-card)' }}>
+          <div className="rounded-3xl bg-white p-6 sm:p-10" style={{ border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-card)' }}>
+          <div className="grid grid-cols-1 lg:grid-cols-12 items-center" style={{ gap: 'clamp(28px,4vw,56px)' }}>
+            {/* Illustration (left on desktop) */}
+            <div className="order-2 lg:order-1 lg:col-span-5 w-full max-w-md mx-auto lg:max-w-none">
+              <ContactChatIllustration className="w-full h-auto" />
+            </div>
+
+            {/* Form (right on desktop, first on mobile) */}
+            <div className="order-1 lg:order-2 lg:col-span-7 lg:pl-10 lg:border-l" style={{ borderColor: 'var(--color-border)' }}>
               {isSubmitted ? (
                 <div role="status" aria-live="polite" className="text-center" style={{ paddingBlock: 32 }}>
                   <span
@@ -176,8 +172,27 @@ export const Contact: React.FC = () => {
                         {errorFor('name')}
                       </div>
                       <div>
+                        <label className="field-label" htmlFor={`${formId}-phone`}>
+                          Phone Number <span className="field-required" aria-hidden="true">*</span>
+                        </label>
+                        <input
+                          id={`${formId}-phone`}
+                          type="tel"
+                          className={`field-input${errors.phone ? ' field-error' : ''}`}
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          autoComplete="tel"
+                          aria-invalid={Boolean(errors.phone)}
+                          aria-describedby={errors.phone ? `${formId}-phone-error` : undefined}
+                        />
+                        {errorFor('phone')}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 20 }}>
+                      <div>
                         <label className="field-label" htmlFor={`${formId}-email`}>
-                          Work Email <span className="field-required" aria-hidden="true">*</span>
+                          Email <span className="field-required" aria-hidden="true">*</span>
                         </label>
                         <input
                           id={`${formId}-email`}
@@ -191,110 +206,38 @@ export const Contact: React.FC = () => {
                         />
                         {errorFor('email')}
                       </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 20 }}>
                       <div>
-                        <label className="field-label" htmlFor={`${formId}-phone`}>
-                          Phone Number <span className="field-optional">(optional)</span>
+                        <label className="field-label" htmlFor={`${formId}-address`}>
+                          Address <span className="field-required" aria-hidden="true">*</span>
                         </label>
                         <input
-                          id={`${formId}-phone`}
-                          type="tel"
-                          className="field-input"
-                          value={phone}
-                          onChange={(e) => setPhone(e.target.value)}
-                          autoComplete="tel"
+                          id={`${formId}-address`}
+                          className={`field-input${errors.address ? ' field-error' : ''}`}
+                          value={address}
+                          onChange={(e) => setAddress(e.target.value)}
+                          autoComplete="street-address"
+                          placeholder="Street, city and state"
+                          aria-invalid={Boolean(errors.address)}
+                          aria-describedby={errors.address ? `${formId}-address-error` : undefined}
                         />
-                      </div>
-                      <div>
-                        <label className="field-label" htmlFor={`${formId}-company`}>
-                          Company Name <span className="field-optional">(optional)</span>
-                        </label>
-                        <input
-                          id={`${formId}-company`}
-                          className="field-input"
-                          value={company}
-                          onChange={(e) => setCompany(e.target.value)}
-                          autoComplete="organization"
-                        />
+                        {errorFor('address')}
                       </div>
                     </div>
 
                     <div>
-                      <label className="field-label" htmlFor={`${formId}-solution`}>
-                        Type of Solution <span className="field-required" aria-hidden="true">*</span>
-                      </label>
-                      <select
-                        id={`${formId}-solution`}
-                        className={`field-select${errors.solution ? ' field-error' : ''}`}
-                        value={solution}
-                        onChange={(e) => setSolution(e.target.value)}
-                        aria-invalid={Boolean(errors.solution)}
-                        aria-describedby={errors.solution ? `${formId}-solution-error` : undefined}
-                      >
-                        {solutionTypes.map((type) => (
-                          <option key={type} value={type}>
-                            {type}
-                          </option>
-                        ))}
-                      </select>
-                      {errorFor('solution')}
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 20 }}>
-                      <div>
-                        <label className="field-label" htmlFor={`${formId}-budget`}>
-                          Estimated Budget <span className="field-optional">(optional)</span>
-                        </label>
-                        <select
-                          id={`${formId}-budget`}
-                          className="field-select"
-                          value={budget}
-                          onChange={(e) => setBudget(e.target.value)}
-                        >
-                          <option value="">Prefer not to say</option>
-                          {BUDGETS.map((b) => (
-                            <option key={b} value={b}>
-                              {b}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div>
-                        <label className="field-label" htmlFor={`${formId}-timeline`}>
-                          Project Timeline <span className="field-optional">(optional)</span>
-                        </label>
-                        <select
-                          id={`${formId}-timeline`}
-                          className="field-select"
-                          value={timeline}
-                          onChange={(e) => setTimeline(e.target.value)}
-                        >
-                          <option value="">Flexible</option>
-                          {TIMELINES.map((t) => (
-                            <option key={t} value={t}>
-                              {t}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="field-label" htmlFor={`${formId}-requirements`}>
-                        Project Requirements <span className="field-required" aria-hidden="true">*</span>
+                      <label className="field-label" htmlFor={`${formId}-message`}>
+                        Message <span className="field-required" aria-hidden="true">*</span>
                       </label>
                       <textarea
-                        id={`${formId}-requirements`}
-                        className={`field-textarea${errors.requirements ? ' field-error' : ''}`}
-                        value={requirements}
-                        onChange={(e) => setRequirements(e.target.value)}
+                        id={`${formId}-message`}
+                        className={`field-textarea${errors.message ? ' field-error' : ''}`}
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
                         placeholder="What problem should the software solve? Who will use it? Any features, systems or deadlines we should know about?"
-                        aria-invalid={Boolean(errors.requirements)}
-                        aria-describedby={errors.requirements ? `${formId}-requirements-error` : undefined}
+                        aria-invalid={Boolean(errors.message)}
+                        aria-describedby={errors.message ? `${formId}-message-error` : undefined}
                       />
-                      {errorFor('requirements')}
+                      {errorFor('message')}
                     </div>
 
                     {submitError && (
@@ -303,74 +246,29 @@ export const Contact: React.FC = () => {
                       </p>
                     )}
 
-                    <div style={{ paddingTop: 4 }}>
+                    <div style={{ paddingTop: 4, display: 'flex', justifyContent: 'center' }}>
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="inline-flex items-center justify-center min-h-[52px] px-8 text-base font-semibold w-full sm:w-auto transition-all"
+                        className="inline-flex items-center justify-center min-h-[52px] px-10 py-3 text-base font-semibold transition-all whitespace-nowrap"
                         style={{
                           background: isSubmitting ? '#8aa9f2' : 'var(--color-primary)',
                           color: '#fff',
-                          borderRadius: 'var(--radius-button)',
+                          borderRadius: 999,
                           boxShadow: 'var(--shadow-button)',
                           cursor: isSubmitting ? 'wait' : 'pointer',
                           opacity: isSubmitting ? 0.85 : 1,
+                          minWidth: 200,
                         }}
                       >
-                        {isSubmitting ? 'Sending…' : 'Send Project Inquiry'}
+                        {isSubmitting ? 'Sending…' : 'Submit'}
                       </button>
                     </div>
                   </form>
                 </>
               )}
             </div>
-
-            {/* Contact panel */}
-            <aside className="lg:col-span-5 flex flex-col" style={{ gap: 24 }} aria-label="Other ways to reach us">
-              <div className="w-full max-w-xs mx-auto">
-                <ContactIllustration className="w-full h-auto" />
-              </div>
-              <div className="rounded-3xl bg-white p-6 sm:p-8" style={{ border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-card)' }}>
-                <h2 className="text-card-title">Other Ways to Reach Us</h2>
-                <p className="text-body text-[15px]" style={{ marginTop: 8 }}>
-                  Prefer to contact us directly? Use our verified business contact details.
-                </p>
-                <ul style={{ listStyle: 'none', padding: 0, marginTop: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
-                  <li>
-                    <span className="block text-xs font-bold uppercase" style={{ letterSpacing: '0.12em', color: 'var(--color-text-muted)' }}>
-                      Email
-                    </span>
-                    <a
-                      href={`mailto:${siteConfig.email}`}
-                      className="font-semibold break-anywhere"
-                      style={{ color: 'var(--color-primary)' }}
-                    >
-                      {siteConfig.email}
-                    </a>
-                  </li>
-                  <li>
-                    <span className="block text-xs font-bold uppercase" style={{ letterSpacing: '0.12em', color: 'var(--color-text-muted)' }}>
-                      Phone
-                    </span>
-                    <a href={siteConfig.phoneHref} className="font-semibold" style={{ color: 'var(--color-primary)' }}>
-                      {siteConfig.phone}
-                    </a>
-                  </li>
-                  <li>
-                    <span className="block text-xs font-bold uppercase" style={{ letterSpacing: '0.12em', color: 'var(--color-text-muted)' }}>
-                      Availability
-                    </span>
-                    <span className="text-[15px]">{siteConfig.hours}</span>
-                  </li>
-                  <li>
-                    <span className="block text-xs font-bold uppercase" style={{ letterSpacing: '0.12em', color: 'var(--color-text-muted)' }}>
-                      Location
-                    </span>
-                    <span className="text-[15px]">{siteConfig.location}</span>
-                  </li>
-                </ul>
-              </div>
-            </aside>
+          </div>
           </div>
         </div>
       </section>

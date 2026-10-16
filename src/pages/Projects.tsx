@@ -1,9 +1,9 @@
-import React, { useState, useMemo } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'motion/react'
 import AnimatedSection from '../components/AnimatedSection'
 import Seo from '../components/Seo'
-import { projects, projectCategories, type Project } from '../data/siteData'
+import { projects, type Project } from '../data/siteData'
 
 const cardStyle: React.CSSProperties = {
   background: '#fff',
@@ -13,13 +13,6 @@ const cardStyle: React.CSSProperties = {
 }
 
 export const Projects: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState<string>('All')
-
-  const filteredProjects = useMemo(() => {
-    if (activeCategory === 'All') return projects
-    return projects.filter((p: Project) => p.category === activeCategory)
-  }, [activeCategory])
-
   return (
     <div className="w-full bg-white overflow-x-clip">
       <Seo
@@ -29,76 +22,39 @@ export const Projects: React.FC = () => {
       />
 
       {/* Heading + working filters */}
-      <section aria-labelledby="projects-heading" className="section-warm">
-        <div className="container text-center" style={{ paddingBlock: 'clamp(48px,7vw,88px)', maxWidth: 780, marginInline: 'auto' }}>
-          <p className="eyebrow" style={{ justifyContent: 'center' }}>Our portfolio</p>
+      <section aria-labelledby="projects-heading">
+        <div className="container text-center" style={{ paddingBlock: 'clamp(48px,6vw,80px)', maxWidth: 780, marginInline: 'auto' }}>
           <h1 id="projects-heading" className="text-page-title" style={{ marginTop: 16 }}>
-            Software Built to Solve Real Problems
+            Our Projects
           </h1>
-          <p className="text-body" style={{ marginTop: 18, marginInline: 'auto', fontSize: '1.125rem' }}>
+          <p className="text-body" style={{ marginTop: 18, fontSize: '1.125rem', marginInline: 'auto' }}>
             Explore software products and digital experiences built to solve practical
-            problems and support business goals.
+            problems and support business goals. Every project begins with a
+            requirement. Our focus is on translating that requirement into a clear user
+            experience, a suitable technical implementation and a product that can
+            evolve with changing needs.
           </p>
-          <p className="text-body" style={{ marginTop: 12, marginInline: 'auto' }}>
-            Every project begins with a requirement. Our focus is on translating that
-            requirement into a clear user experience, a suitable technical
-            implementation and a product that can evolve with changing needs.
-          </p>
-
-          <div
-            role="group"
-            aria-label="Filter projects by category"
-            className="flex flex-wrap items-center justify-center"
-            style={{ gap: 10, marginTop: 32 }}
-          >
-            {projectCategories.map((category) => {
-              const active = activeCategory === category
-              return (
-                <button
-                  key={category}
-                  type="button"
-                  onClick={() => setActiveCategory(category)}
-                  aria-pressed={active}
-                  className="inline-flex items-center justify-center min-h-[44px] px-5 text-sm font-semibold transition-all"
-                  style={{
-                    borderRadius: 'var(--radius-button)',
-                    background: active ? 'var(--color-primary)' : '#fff',
-                    color: active ? '#fff' : 'var(--color-text)',
-                    border: active
-                      ? '1.5px solid var(--color-primary)'
-                      : '1.5px solid var(--color-border)',
-                  }}
-                >
-                  {category === 'All' ? 'All Projects' : category}
-                </button>
-              )
-            })}
-          </div>
         </div>
       </section>
 
       {/* Grid + honest framing + empty state */}
-      <section aria-label="Project examples" className="section">
+      <section aria-label="Project examples" className="section section-warm">
         <div className="container">
           <p
             className="text-center text-sm"
             style={{ color: 'var(--color-text-muted)', marginBottom: 28, fontStyle: 'italic' }}
             role="note"
           >
-            Showing {filteredProjects.length} of {projects.length} representative solution
-            examples. Final scope and features are agreed with each client before development.
+            Representative solution examples. Final scope and features are agreed with each client before development.
           </p>
 
           <div
             id="portfolio-grid"
-            role="region"
-            aria-live="polite"
-            aria-label={`${activeCategory} projects`}
+            aria-label="Project examples"
             className="grid-cards-3"
           >
             <AnimatePresence mode="popLayout">
-              {filteredProjects.length > 0 ? (
-                filteredProjects.map((project: Project) => (
+              {projects.map((project: Project) => (
                   <motion.article
                     key={project.id}
                     layout
@@ -147,46 +103,7 @@ export const Projects: React.FC = () => {
                       </div>
                     </div>
                   </motion.article>
-                ))
-              ) : (
-                <motion.div
-                  key="empty-state"
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  className="text-center"
-                  style={{ gridColumn: '1 / -1', paddingBlock: 48 }}
-                  role="status"
-                >
-                  <h2 className="text-card-title">No examples in this category yet</h2>
-                  <p className="text-body" style={{ marginTop: 10, marginInline: 'auto', maxWidth: 480 }}>
-                    We don&apos;t have an example under “{activeCategory}” right now — but
-                    if that&apos;s what you need, tell us about it and we&apos;ll explore
-                    the right approach together.
-                  </p>
-                  <div className="flex flex-wrap justify-center" style={{ gap: 12, marginTop: 24 }}>
-                    <button
-                      type="button"
-                      onClick={() => setActiveCategory('All')}
-                      className="inline-flex items-center justify-center min-h-[48px] px-6 text-[15px] font-semibold"
-                      style={{
-                        border: '2px solid var(--color-primary)',
-                        color: 'var(--color-primary)',
-                        borderRadius: 'var(--radius-button)',
-                      }}
-                    >
-                      View All Projects
-                    </button>
-                    <Link
-                      to="/contact"
-                      className="inline-flex items-center justify-center min-h-[48px] px-6 text-[15px] font-semibold text-white"
-                      style={{ background: 'var(--color-primary)', borderRadius: 'var(--radius-button)' }}
-                    >
-                      Discuss Your Idea
-                    </Link>
-                  </div>
-                </motion.div>
-              )}
+                ))}
             </AnimatePresence>
           </div>
         </div>

@@ -49,56 +49,46 @@ export const Home: React.FC = () => {
 
       {/* ============ A. HERO ============ */}
       <section aria-labelledby="hero-title" className="relative overflow-hidden">
-        <div className="container" style={{ paddingBlock: 'clamp(40px,6vw,84px)' }}>
-          <div className="grid grid-cols-1 lg:grid-cols-2 items-center" style={{ gap: 'clamp(32px,5vw,72px)' }}>
-            <div>
-              <p className="eyebrow" style={{ marginBottom: 18 }}>
-                Software solutions built around your business
-              </p>
-              <h1 id="hero-title" className="text-hero">
-                Turning Your Ideas Into{' '}
-                <span style={{ color: 'var(--color-primary)' }}>Powerful Software</span>
+        <div className="container" style={{ paddingBlock: 'clamp(48px,6vw,80px)' }}>
+          <div className="flex flex-col lg:grid lg:grid-cols-12 lg:items-center" style={{ gap: 'clamp(20px,3vw,40px)' }}>
+            <div className="order-1 lg:order-none lg:col-span-7 lg:row-start-1 lg:self-start">
+              <h1 id="hero-title" className="text-hero" style={{ marginTop: 16 }}>
+                <span className="block" style={{ color: 'var(--color-primary)' }}>
+                  Software That Grows
+                </span>
+                <span className="block" style={{ color: 'var(--color-primary)' }}>
+                  Your Business
+                </span>
               </h1>
               <p className="text-body" style={{ marginTop: 22 }}>
                 From websites and mobile apps to enterprise platforms and custom business
                 systems, we design and develop software that solves real problems,
                 streamlines operations and helps businesses grow.
               </p>
+            </div>
+            <div className="order-2 lg:order-none w-full max-w-xl mx-auto lg:max-w-none lg:col-span-5 lg:row-start-1 lg:row-span-2 lg:self-center">
+              <EcosystemHero />
+            </div>
+            <div className="order-3 lg:order-none lg:col-span-7 lg:row-start-2 lg:self-start">
               <div
-                className="flex flex-col sm:flex-row sm:items-center"
-                style={{ gap: 14, marginTop: 32 }}
+                className="flex flex-row items-stretch sm:items-center"
+                style={{ gap: 10, marginTop: 4 }}
               >
                 <Link
                   to="/contact"
-                  className="inline-flex items-center justify-center min-h-[52px] px-8 text-base font-semibold transition-all hover:-translate-y-px"
+                  className="inline-flex flex-1 sm:flex-none items-center justify-center min-h-[48px] px-3 sm:px-8 text-[13px] sm:text-base font-semibold transition-all hover:-translate-y-px whitespace-nowrap"
                   style={btnPrimary}
                 >
                   Start a Project
                 </Link>
                 <Link
                   to="/services"
-                  className="inline-flex items-center justify-center min-h-[52px] px-8 text-base font-semibold transition-colors hover:bg-[#F4F5FF]"
+                  className="inline-flex flex-1 sm:flex-none items-center justify-center min-h-[48px] px-3 sm:px-8 text-[13px] sm:text-base font-semibold transition-colors hover:bg-[#F4F5FF] whitespace-nowrap"
                   style={btnSecondary}
                 >
                   Explore Our Services
                 </Link>
               </div>
-              <p
-                style={{
-                  marginTop: 20,
-                  fontSize: '0.875rem',
-                  fontWeight: 600,
-                  color: 'var(--color-text)',
-                }}
-              >
-                Custom-built. Scalable.{' '}
-                <span style={{ color: 'var(--color-orange)' }}>
-                  Designed for real-world business needs.
-                </span>
-              </p>
-            </div>
-            <div className="w-full max-w-xl mx-auto lg:max-w-none">
-              <EcosystemHero />
             </div>
           </div>
         </div>
@@ -118,8 +108,7 @@ export const Home: React.FC = () => {
             {capabilities.map((cap) => (
               <li
                 key={cap.label}
-                className="flex items-center gap-3 rounded-2xl bg-white px-5 py-4"
-                style={{ border: '1px solid var(--color-border)' }}
+                className="pulse-border-card flex items-center gap-3 rounded-2xl bg-white px-5 py-4"
               >
                 <span
                   className="flex items-center justify-center w-10 h-10 rounded-xl shrink-0"
@@ -138,29 +127,27 @@ export const Home: React.FC = () => {
       {/* ============ C. SERVICES OVERVIEW ============ */}
       <section aria-labelledby="services-title" className="section">
         <div className="container">
-          <AnimatedSection className="text-center mx-auto" style={{ maxWidth: 720 }}>
+          <AnimatedSection style={{ maxWidth: 720 }}>
             <h2 id="services-title" className="text-section-title">
               Software Solutions for Every Stage of Your Business
             </h2>
-            <p className="text-body" style={{ marginTop: 16, marginInline: 'auto' }}>
+            <p className="text-body" style={{ marginTop: 16 }}>
               From your first digital product to complex enterprise systems, we build
               technology around the way your business works.
             </p>
           </AnimatedSection>
 
           <div className="grid-cards-3" style={{ marginTop: 48 }}>
-            {overview.map((service) => (
+            {overview.map((service, i) => (
               <article
                 key={service.id}
-                className="flex flex-col p-7 transition-all hover:-translate-y-1"
-                style={{ ...cardStyle, boxShadow: 'var(--shadow-card)' }}
+                className={`flex flex-col p-7 transition-all hover:-translate-y-1 glow-border-card glow-radius-lg ${i % 3 === 1 ? 'glow-delay-1' : i % 3 === 2 ? 'glow-delay-2' : ''}`}
+                style={{ ...cardStyle, border: '1.5px solid transparent' }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.boxShadow = 'var(--shadow-card-hover)'
-                  e.currentTarget.style.borderColor = 'var(--color-primary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.boxShadow = 'var(--shadow-card)'
-                  e.currentTarget.style.borderColor = 'var(--color-border)'
                 }}
               >
                 <span
@@ -192,7 +179,7 @@ export const Home: React.FC = () => {
       {/* ============ D. WHY CHOOSE US ============ */}
       <section aria-labelledby="why-title" className="section section-warm">
         <div className="container">
-          <AnimatedSection className="text-center mx-auto" style={{ maxWidth: 720 }}>
+          <AnimatedSection style={{ maxWidth: 720 }}>
             <h2 id="why-title" className="text-section-title">
               Technology That Works for Your Business
             </h2>
@@ -200,7 +187,10 @@ export const Home: React.FC = () => {
           <div className="grid-cards-4" style={{ marginTop: 48 }}>
             {whyChooseUs.map((item, i) => (
               <AnimatedSection key={item.title} delay={i * 0.08}>
-                <article className="p-7 h-full bg-white" style={cardStyle}>
+                <article
+                  className={`p-7 h-full bg-white mild-glow-card ${i === 1 ? 'mild-d1' : i === 2 ? 'mild-d2' : i === 3 ? 'mild-d3' : ''}`}
+                  style={cardStyle}
+                >
                   <span
                     className="flex items-center justify-center w-11 h-11 rounded-xl"
                     style={{ background: '#F4F5FF', color: 'var(--color-primary)', marginBottom: 16 }}
@@ -222,7 +212,7 @@ export const Home: React.FC = () => {
       {/* ============ E. DEVELOPMENT PROCESS ============ */}
       <section aria-labelledby="process-title" className="section">
         <div className="container">
-          <AnimatedSection className="text-center mx-auto" style={{ maxWidth: 720 }}>
+          <AnimatedSection style={{ maxWidth: 720 }}>
             <h2 id="process-title" className="text-section-title">
               From Idea to Implementation
             </h2>

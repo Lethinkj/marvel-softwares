@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import Navbar from './Navbar'
 import Footer from './Footer'
+import BackToTop from './BackToTop'
 
 /**
  * ScrollToTop component restores viewport scroll position to (0, 0)
@@ -52,6 +53,9 @@ export function Layout() {
 
       {/* Global Footer */}
       <Footer />
+
+      {/* Floating back-to-top button (all pages) */}
+      <BackToTop />
     </div>
   )
 }
