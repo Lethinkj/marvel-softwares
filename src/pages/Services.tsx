@@ -153,17 +153,64 @@ export const Services: React.FC = () => (
     })}
 
     {/* Closing CTA */}
-    <section aria-labelledby="services-cta" className="section-warm">
-      <div className="container" style={{ paddingBlock: 'clamp(44px,5vw,72px)' }}>
-        <div
-          className="text-center"
-          style={{
-            borderRadius: 28,
-            background: 'linear-gradient(120deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)',
-            color: '#fff',
-            padding: 'clamp(40px,6vw,68px) clamp(24px,5vw,64px)',
-          }}
+    <section aria-labelledby="services-cta" className="section" style={{ paddingTop: 0, paddingLeft: 0, paddingRight: 0 }}>
+      <div
+        className="relative overflow-hidden text-center"
+        style={{
+          background: 'linear-gradient(120deg, var(--color-primary-deep) 0%, var(--color-primary-dark) 100%)',
+          color: '#fff',
+          padding: 'clamp(48px,7vw,84px) clamp(24px,5vw,64px)',
+        }}
+      >
+        {/* Modern pattern: diagonal weave + glow orbs */}
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          viewBox="0 0 1200 400"
+          preserveAspectRatio="xMidYMid slice"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
         >
+          <defs>
+            <radialGradient id="services-glow-a" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0%" stopColor="#00cfff" stopOpacity="0.5" />
+              <stop offset="100%" stopColor="#00cfff" stopOpacity="0" />
+            </radialGradient>
+            <radialGradient id="services-glow-b" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0%" stopColor="#ff5a00" stopOpacity="0.42" />
+              <stop offset="100%" stopColor="#ff5a00" stopOpacity="0" />
+            </radialGradient>
+            <pattern id="services-weave" width="44" height="44" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <line x1={0} y1={0} x2={0} y2={44} stroke="#fff" strokeWidth={1.5} opacity={0.18} />
+              <line x1={0} y1={0} x2={44} y2={0} stroke="#00cfff" strokeWidth={1.5} opacity={0.16} />
+            </pattern>
+            <radialGradient id="services-weave-fade" cx="0.5" cy="0.5" r="0.7">
+              <stop offset="0%" stopColor="#fff" stopOpacity="1" />
+              <stop offset="100%" stopColor="#fff" stopOpacity="0" />
+            </radialGradient>
+            <mask id="services-weave-mask">
+              <rect width="1200" height="400" fill="url(#services-weave-fade)" />
+            </mask>
+          </defs>
+
+          <ellipse cx={160} cy={370} rx={400} ry={280} fill="url(#services-glow-a)" />
+          <ellipse cx={1060} cy={30} rx={380} ry={260} fill="url(#services-glow-b)" />
+          <rect width="1200" height="400" fill="url(#services-weave)" mask="url(#services-weave-mask)" />
+
+          {/* accent dots */}
+          <g fill="#00cfff" opacity={0.75}>
+            <circle cx={260} cy={110} r={4} />
+            <circle cx={940} cy={290} r={4} />
+          </g>
+          <path d="M260 110 H470" fill="none" stroke="#00cfff" strokeWidth={2} opacity={0.45} strokeDasharray="3 12" className="svg-flow" />
+
+          <g className="svg-float" strokeLinecap="round" strokeWidth={3}>
+            <path d="M560 90 v18 M551 99 h18" stroke="#00cfff" opacity={0.85} />
+            <path d="M660 310 v16 M652 318 h16" stroke="#ff5a00" opacity={0.8} />
+          </g>
+          <circle cx={600} cy={200} r={5} fill="#ffb800" opacity={0.9} className="svg-pulse" />
+        </svg>
+
+        <div className="relative" style={{ zIndex: 1 }}>
           <h2 id="services-cta" className="text-section-title" style={{ color: '#fff' }}>
             Not Sure Which Solution You Need?
           </h2>
@@ -174,7 +221,7 @@ export const Services: React.FC = () => (
           <Link
             to="/contact"
             className="inline-flex items-center justify-center min-h-[52px] px-8 text-base font-semibold"
-            style={{ background: '#fff', color: 'var(--color-primary)', borderRadius: 'var(--radius-button)', marginTop: 30 }}
+            style={{ background: 'var(--color-orange)', color: '#fff', borderRadius: 'var(--radius-button)', marginTop: 30 }}
           >
             Discuss Your Project
           </Link>

@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'motion/react'
-import AnimatedSection from '../components/AnimatedSection'
 import Seo from '../components/Seo'
 import { projects, type Project } from '../data/siteData'
 
@@ -110,21 +109,73 @@ export const Projects: React.FC = () => {
       </section>
 
       {/* CTA */}
-      <section aria-labelledby="projects-cta" className="section" style={{ paddingTop: 0 }}>
-        <div className="container">
-          <AnimatedSection
-            className="text-center"
-            style={{
-              borderRadius: 28,
-              background: 'linear-gradient(120deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)',
-              color: '#fff',
-              padding: 'clamp(40px,6vw,68px) clamp(24px,5vw,64px)',
-            }}
+      <section aria-labelledby="projects-cta" className="section" style={{ paddingTop: 0, paddingLeft: 0, paddingRight: 0 }}>
+        <div
+          className="relative overflow-hidden text-center"
+          style={{
+            background: 'linear-gradient(120deg, var(--color-cyan) 0%, var(--color-primary) 100%)',
+            color: '#fff',
+            padding: 'clamp(48px,7vw,84px) clamp(24px,5vw,64px)',
+          }}
+        >
+          {/* Modern pattern: mesh glow + edge-faded fine grid + glass tiles */}
+          <svg
+            aria-hidden="true"
+            focusable="false"
+            viewBox="0 0 1200 400"
+            preserveAspectRatio="xMidYMid slice"
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
           >
+            <defs>
+              <radialGradient id="projects-glow-a" cx="0.5" cy="0.5" r="0.5">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+              </radialGradient>
+              <radialGradient id="projects-glow-b" cx="0.5" cy="0.5" r="0.5">
+                <stop offset="0%" stopColor="#001f80" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#001f80" stopOpacity="0" />
+              </radialGradient>
+              <pattern id="projects-grid" width="48" height="48" patternUnits="userSpaceOnUse">
+                <path d="M48 0 H0 V48" fill="none" stroke="#fff" strokeWidth={1} opacity={0.4} />
+              </pattern>
+              <radialGradient id="projects-grid-fade" cx="0.5" cy="0.5" r="0.65">
+                <stop offset="0%" stopColor="#fff" stopOpacity="1" />
+                <stop offset="100%" stopColor="#fff" stopOpacity="0" />
+              </radialGradient>
+              <mask id="projects-grid-mask">
+                <rect width="1200" height="400" fill="url(#projects-grid-fade)" />
+              </mask>
+            </defs>
+
+            <ellipse cx={1030} cy={360} rx={400} ry={280} fill="url(#projects-glow-a)" />
+            <ellipse cx={150} cy={40} rx={380} ry={260} fill="url(#projects-glow-b)" />
+            <rect width="1200" height="400" fill="url(#projects-grid)" mask="url(#projects-grid-mask)" />
+
+            {/* floating glass tiles */}
+            <g className="svg-float" opacity={0.5}>
+              <rect x={300} y={90} width={72} height={72} rx={16} fill="#fff" opacity={0.14} stroke="#fff" strokeWidth={1.5} />
+              <rect x={840} y={250} width={56} height={56} rx={14} fill="#fff" opacity={0.12} stroke="#fff" strokeWidth={1.5} />
+            </g>
+
+            {/* accent nodes */}
+            <g fill="#fff" opacity={0.8}>
+              <circle cx={210} cy={280} r={5} />
+              <circle cx={990} cy={120} r={5} />
+            </g>
+            <path d="M210 280 H420" fill="none" stroke="#fff" strokeWidth={2} opacity={0.4} strokeDasharray="3 12" className="svg-flow" />
+
+            <g className="svg-float" strokeLinecap="round" strokeWidth={3}>
+              <path d="M540 90 v18 M531 99 h18" stroke="#fff" opacity={0.85} />
+              <path d="M680 320 v16 M672 328 h16" stroke="#001f80" opacity={0.6} />
+            </g>
+            <circle cx={600} cy={200} r={5} fill="#fff" opacity={0.9} className="svg-pulse" />
+          </svg>
+
+          <div className="relative" style={{ zIndex: 1 }}>
             <h2 id="projects-cta" className="text-section-title" style={{ color: '#fff' }}>
               Have a Similar Idea? Let&apos;s Discuss It.
             </h2>
-            <p className="text-body" style={{ color: 'rgba(255,255,255,.88)', marginTop: 14, marginInline: 'auto', maxWidth: 600 }}>
+            <p className="text-body" style={{ color: 'rgba(255,255,255,.9)', marginTop: 14, marginInline: 'auto', maxWidth: 600 }}>
               Share your requirements and we&apos;ll explore a practical way forward for
               your business.
             </p>
@@ -135,7 +186,7 @@ export const Projects: React.FC = () => {
             >
               Start a Project
             </Link>
-          </AnimatedSection>
+          </div>
         </div>
       </section>
     </div>

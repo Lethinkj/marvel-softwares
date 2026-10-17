@@ -150,24 +150,68 @@ export const About: React.FC = () => (
     </section>
 
     {/* E. CTA */}
-    <section aria-labelledby="about-cta" className="section" style={{ paddingTop: 0 }}>
-      <div className="container">
-        <div
-          className="text-center"
-          style={{
-            borderRadius: 28,
-            background: 'linear-gradient(120deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)',
-            color: '#fff',
-            padding: 'clamp(40px,6vw,68px) clamp(24px,5vw,64px)',
-          }}
+    <section aria-labelledby="about-cta" className="section" style={{ paddingTop: 0, paddingLeft: 0, paddingRight: 0 }}>
+      <div
+        className="relative overflow-hidden text-center"
+        style={{
+          background: 'linear-gradient(120deg, var(--color-orange) 0%, var(--color-yellow) 100%)',
+          color: '#fff',
+          padding: 'clamp(48px,7vw,84px) clamp(24px,5vw,64px)',
+        }}
+      >
+        {/* Modern pattern: soft glow orbs + edge-faded dot grid */}
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          viewBox="0 0 1200 400"
+          preserveAspectRatio="xMidYMid slice"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
         >
+          <defs>
+            <radialGradient id="about-glow-a" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.55" />
+              <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+            </radialGradient>
+            <radialGradient id="about-glow-b" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0%" stopColor="#7a2e00" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="#7a2e00" stopOpacity="0" />
+            </radialGradient>
+            <pattern id="about-dots" width="28" height="28" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1.6" fill="#ffffff" opacity="0.5" />
+            </pattern>
+            <linearGradient id="about-fade" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#fff" stopOpacity="0" />
+              <stop offset="50%" stopColor="#fff" stopOpacity="1" />
+              <stop offset="100%" stopColor="#fff" stopOpacity="0" />
+            </linearGradient>
+            <mask id="about-dot-mask">
+              <rect width="1200" height="400" fill="url(#about-fade)" />
+            </mask>
+          </defs>
+
+          <ellipse cx={170} cy={370} rx={380} ry={270} fill="url(#about-glow-a)" />
+          <ellipse cx={1060} cy={30} rx={360} ry={250} fill="url(#about-glow-b)" />
+          <rect width="1200" height="400" fill="url(#about-dots)" mask="url(#about-dot-mask)" />
+
+          {/* fine accent line */}
+          <line x1="0" y1="330" x2="1200" y2="60" stroke="#fff" strokeWidth={2} opacity={0.22} strokeLinecap="round" />
+          <line x1="0" y1="352" x2="1200" y2="82" stroke="#7a2e00" strokeWidth={1.5} opacity={0.28} strokeLinecap="round" />
+
+          <g className="svg-float" strokeLinecap="round" strokeWidth={3}>
+            <path d="M600 80 v18 M591 89 h18" stroke="#fff" opacity={0.85} />
+            <path d="M690 320 v16 M682 328 h16" stroke="#7a2e00" opacity={0.7} />
+          </g>
+          <circle cx={600} cy={330} r={5} fill="#fff" opacity={0.9} className="svg-pulse" />
+        </svg>
+
+        <div className="relative" style={{ zIndex: 1 }}>
           <h2 id="about-cta" className="text-section-title" style={{ color: '#fff' }}>
             Let&apos;s Build Something Useful Together
           </h2>
           <Link
             to="/contact"
             className="inline-flex items-center justify-center min-h-[52px] px-8 text-base font-semibold"
-            style={{ background: 'var(--color-orange)', color: '#fff', borderRadius: 'var(--radius-button)', marginTop: 28 }}
+            style={{ background: 'var(--color-primary-dark)', color: '#fff', borderRadius: 'var(--radius-button)', marginTop: 28 }}
           >
             Start a Project
           </Link>
