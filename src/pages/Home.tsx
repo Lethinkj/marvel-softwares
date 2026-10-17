@@ -349,29 +349,102 @@ export const Home: React.FC = () => {
       </section>
 
       {/* ============ G. FINAL CTA ============ */}
-      <section aria-labelledby="cta-title" className="section">
-        <div className="container">
-          <div
-            className="relative overflow-hidden text-center"
-            style={{
-              borderRadius: 28,
-              background: 'linear-gradient(120deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)',
-              color: '#fff',
-              padding: 'clamp(40px,6vw,72px) clamp(24px,5vw,64px)',
-            }}
-          >
-            <span
+      <section aria-labelledby="cta-title" className="section" style={{ paddingTop: 0, paddingLeft: 0, paddingRight: 0 }}>
+        <div
+          className="relative overflow-hidden text-center"
+          style={{
+            background: 'linear-gradient(120deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)',
+            color: '#fff',
+            padding: 'clamp(48px,7vw,84px) clamp(24px,5vw,64px)',
+          }}
+        >
+            {/* Diagonal tube banner pattern (brand colors) */}
+            <svg
               aria-hidden="true"
-              className="absolute rounded-full"
-              style={{
-                width: 180,
-                height: 180,
-                right: -60,
-                top: -60,
-                background: 'radial-gradient(circle, var(--color-orange) 0%, transparent 70%)',
-                opacity: 0.5,
-              }}
-            />
+              focusable="false"
+              viewBox="0 0 1200 400"
+              preserveAspectRatio="xMidYMid slice"
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
+            >
+              <defs>
+                <linearGradient id="cta-diag-a" x1="0" y1="1" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#00CFFF" />
+                  <stop offset="100%" stopColor="#0057E7" />
+                </linearGradient>
+                <linearGradient id="cta-diag-b" x1="0" y1="1" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#0057E7" />
+                  <stop offset="100%" stopColor="#00CFFF" />
+                </linearGradient>
+                <linearGradient id="cta-diag-c" x1="0" y1="1" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#FF5A00" />
+                  <stop offset="100%" stopColor="#FFB800" />
+                </linearGradient>
+              </defs>
+
+              {/* soft washes */}
+              <ellipse cx={130} cy={350} rx={230} ry={100} fill="#0057E7" opacity={0.05} />
+              <ellipse cx={1090} cy={50} rx={250} ry={100} fill="#00CFFF" opacity={0.07} />
+
+              {/* left diagonal U-tube */}
+              <g fill="none" strokeLinecap="round">
+                <path d="M360 20 L170 230 Q140 262 108 230 L20 130" stroke="url(#cta-diag-a)" strokeWidth={25} opacity={0.9} />
+                <path d="M405 45 L225 245" stroke="#0033A0" strokeWidth={5} opacity={0.3} />
+                <path d="M315 5 L135 205" stroke="#00CFFF" strokeWidth={4} opacity={0.6} strokeDasharray="2 14" className="svg-flow" />
+                <path d="M150 400 L300 230" stroke="url(#cta-diag-c)" strokeWidth={8} opacity={0.7} />
+              </g>
+
+              {/* right diagonal U-tube */}
+              <g fill="none" strokeLinecap="round">
+                <path d="M840 380 L1030 170 Q1060 138 1092 170 L1180 260" stroke="url(#cta-diag-b)" strokeWidth={25} opacity={0.9} />
+                <path d="M795 355 L985 165" stroke="#0033A0" strokeWidth={5} opacity={0.3} />
+                <path d="M885 395 L1075 205" stroke="#00CFFF" strokeWidth={4} opacity={0.6} strokeDasharray="2 14" className="svg-flow" />
+                <path d="M990 400 L1140 230" stroke="url(#cta-diag-c)" strokeWidth={8} opacity={0.7} />
+              </g>
+
+              {/* small striped tube detail */}
+              <g fill="none" strokeLinecap="round">
+                <path d="M1015 130 L1015 80 Q1015 60 1035 60 L1075 60" stroke="#00CFFF" strokeWidth={4} opacity={0.7} />
+                <line x1={1032} y1={92} x2={1058} y2={92} stroke="#0057E7" strokeWidth={3} opacity={0.4} />
+                <line x1={1032} y1={102} x2={1058} y2={102} stroke="#0057E7" strokeWidth={3} opacity={0.4} />
+                <line x1={1032} y1={112} x2={1058} y2={112} stroke="#0057E7" strokeWidth={3} opacity={0.4} />
+              </g>
+
+              {/* hatch clusters */}
+              <g stroke="#0057E7" strokeWidth={4} strokeLinecap="round" opacity={0.4}>
+                <line x1={300} y1={300} x2={330} y2={270} />
+                <line x1={322} y1={312} x2={352} y2={282} />
+                <line x1={344} y1={324} x2={374} y2={294} />
+                <line x1={870} y1={120} x2={900} y2={90} />
+                <line x1={892} y1={132} x2={922} y2={102} />
+                <line x1={914} y1={144} x2={944} y2={114} />
+              </g>
+
+              {/* dotted grids */}
+              <g fill="#0033A0" opacity={0.32}>
+                {[0, 1, 2, 3, 4].map((r) =>
+                  [0, 1, 2, 3, 4].map((c) => (
+                    <circle key={`${r}-${c}`} cx={52 + c * 18} cy={56 + r * 18} r={2.5} />
+                  )),
+                )}
+                {[0, 1, 2, 3].map((r) =>
+                  [0, 1, 2, 3, 4].map((c) => (
+                    <circle key={`b${r}-${c}`} cx={1062 + c * 18} cy={256 + r * 18} r={2.5} />
+                  )),
+                )}
+              </g>
+
+              {/* plus sparkles */}
+              <g className="svg-float" strokeLinecap="round" strokeWidth={3}>
+                <path d="M420 90 v16 M412 98 h16" stroke="#0057E7" opacity={0.75} />
+                <path d="M452 122 v16 M444 130 h16" stroke="#00CFFF" opacity={0.85} />
+                <path d="M730 280 v16 M722 288 h16" stroke="#00CFFF" opacity={0.8} />
+                <path d="M762 248 v16 M754 256 h16" stroke="#FF5A00" opacity={0.85} />
+                <path d="M700 120 v16 M692 128 h16" stroke="#0057E7" opacity={0.6} />
+              </g>
+              <circle cx={600} cy={76} r={5} fill="#FFB800" opacity={0.9} className="svg-pulse" />
+              <circle cx={640} cy={330} r={4} fill="#0057E7" opacity={0.6} className="svg-pulse" />
+            </svg>
+            <div className="relative" style={{ zIndex: 1 }}>
             <p
               className="text-xs font-bold uppercase"
               style={{ letterSpacing: '0.16em', color: 'var(--color-yellow)' }}
@@ -396,16 +469,9 @@ export const Home: React.FC = () => {
               >
                 Start a Project
               </Link>
-              <Link
-                to="/contact"
-                className="inline-flex items-center justify-center min-h-[52px] px-8 text-base font-semibold w-full sm:w-auto"
-                style={{ border: '2px solid #fff', color: '#fff', borderRadius: 'var(--radius-button)' }}
-              >
-                Contact Our Team
-              </Link>
+            </div>
             </div>
           </div>
-        </div>
       </section>
     </div>
   )
