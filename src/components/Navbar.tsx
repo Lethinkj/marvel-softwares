@@ -97,21 +97,10 @@ export function Navbar() {
           style={{ gap: 10 }}
         >
           <img
-            src="/marvel-softwares-mark-transparent.png"
-            alt=""
-            aria-hidden="true"
-            width={171}
-            height={96}
-            className="brand-mark"
+            src="/marvel-softwares-logo-horizontal.png"
+            alt="MARVEL SOFTWARES"
+            className="brand-logo"
           />
-          <span className="flex flex-col" style={{ lineHeight: 1.05 }}>
-            <span className="brand-name">
-              MARVEL
-            </span>
-            <span className="brand-sub">
-              SOFTWARES
-            </span>
-          </span>
         </Link>
 
         <nav className="hidden lg:flex items-center gap-1" aria-label="Main navigation">
@@ -211,19 +200,11 @@ export function Navbar() {
                 className="flex items-center justify-between px-5 shrink-0"
                 style={{ height: 'var(--nav-height)', borderBottom: '1px solid var(--color-border)' }}
               >
-                <span className="flex items-center" style={{ gap: 8 }}>
-                  <img
-                    src="/marvel-softwares-mark-transparent.png"
-                    alt=""
-                    aria-hidden="true"
-                    width={86}
-                    height={48}
-                    style={{ height: '30px', width: 'auto', display: 'block' }}
-                  />
-                  <span className="text-sm font-extrabold" style={{ color: 'var(--color-primary-dark)', letterSpacing: '0.04em' }}>
-                    MARVEL
-                  </span>
-                </span>
+                <img
+                  src="/marvel-softwares-logo-horizontal.png"
+                  alt="MARVEL SOFTWARES"
+                  style={{ height: '34px', width: 'auto', display: 'block' }}
+                />
                 <button
                   type="button"
                   onClick={() => setIsMenuOpen(false)}

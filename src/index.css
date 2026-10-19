@@ -157,7 +157,7 @@ h2[id] {
 /* --- Brand lockup (mark + wordmark): sized to fit the header bar --- */
 .brand-logo {
   width: auto;
-  height: 68px;
+  height: 48px;
   max-width: 100%;
   object-fit: contain;
   display: block;
@@ -190,7 +190,7 @@ h2[id] {
 
 @media (max-width: 575px) {
   .brand-logo {
-    height: 54px;
+    height: 38px;
   }
   .brand-mark {
     height: 42px;

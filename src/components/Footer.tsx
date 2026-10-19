@@ -29,11 +29,9 @@ export function Footer() {
           <div className="lg:col-span-4">
             <Link to="/" aria-label="MARVEL SOFTWARES — Home" className="inline-block rounded-md">
               <img
-                src="/marvel-softwares-logo-removebg-preview.png"
+                src="/marvel-softwares-logo-horizontal.png"
                 alt="MARVEL SOFTWARES"
-                width={180}
-                height={120}
-                style={{ width: '120px', height: 'auto' }}
+                style={{ width: '180px', height: 'auto' }}
               />
             </Link>
             <p
