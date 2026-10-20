@@ -555,6 +555,211 @@ h2[id] {
   animation: ms-spin 9s linear infinite;
 }
 
+/* ============================================
+   OUR PROCESS — scroll-triggered flow animation
+   Cards rise, icons pop, connectors draw in and
+   a light pulse travels along the route.
+   ============================================ */
+.op-flow .op-title,
+.op-flow .op-subtitle,
+.op-flow .op-card,
+.op-flow .op-icon,
+.op-flow .op-arrow,
+.op-flow .op-rule,
+.op-list .op-list-item {
+  opacity: 0;
+}
+
+.op-flow .op-title {
+  transform: translateY(16px);
+}
+
+.op-flow .op-subtitle {
+  transform: translateY(12px);
+}
+
+.op-flow .op-card,
+.op-flow .op-icon,
+.op-flow .op-arrow,
+.op-flow .op-rule {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.op-flow .op-card {
+  transform: translateY(26px) scale(0.97);
+}
+
+.op-flow .op-icon {
+  transform: scale(0.6) rotate(-10deg);
+}
+
+.op-flow .op-arrow {
+  transform: scale(0.4);
+}
+
+.op-flow .op-rule {
+  transform: scaleX(0);
+}
+
+.op-flow .op-connector-line {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+}
+
+.op-flow .op-connector-flow {
+  stroke-dasharray: 7 13;
+  opacity: 0;
+}
+
+.op-flow.is-inview .op-title {
+  animation: op-rise 0.7s cubic-bezier(0.22, 0.75, 0.3, 1) 0.05s forwards;
+}
+
+.op-flow.is-inview .op-subtitle {
+  animation: op-rise 0.7s cubic-bezier(0.22, 0.75, 0.3, 1) 0.16s forwards;
+}
+
+.op-flow.is-inview .op-rule {
+  animation: op-rule-in 0.8s cubic-bezier(0.22, 0.75, 0.3, 1) forwards;
+}
+
+.op-flow.is-inview .op-card {
+  animation: op-card-in 0.7s cubic-bezier(0.22, 0.75, 0.3, 1) forwards;
+}
+
+.op-flow.is-inview .op-icon {
+  animation: op-icon-pop 0.55s cubic-bezier(0.2, 1.35, 0.4, 1) forwards;
+}
+
+.op-flow.is-inview .op-arrow {
+  animation: op-arrow-in 0.4s cubic-bezier(0.2, 1.3, 0.4, 1) forwards;
+}
+
+.op-flow.is-inview .op-connector-line {
+  animation: op-draw 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.op-flow.is-inview .op-connector-flow {
+  animation:
+    op-dash 1.9s linear 1.1s infinite,
+    op-fade-in 0.6s ease 1.1s forwards;
+}
+
+.op-list.is-inview .op-list-item {
+  animation: op-rise 0.6s cubic-bezier(0.22, 0.75, 0.3, 1) forwards;
+}
+
+/* Hover lift (independent property so it stacks on the entrance animation) */
+.op-flow .op-card,
+.op-flow .op-icon {
+  transition: translate 0.35s cubic-bezier(0.22, 0.75, 0.3, 1);
+}
+
+.op-flow .op-card:hover {
+  translate: 0 -6px;
+}
+
+.op-flow .op-card:hover .op-icon {
+  translate: 0 -2px;
+}
+
+/* Icon idle motion */
+.op-gear {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ms-spin 18s linear infinite;
+}
+
+.op-flame {
+  transform-box: fill-box;
+  transform-origin: top center;
+  animation: op-flicker 1.8s ease-in-out infinite;
+}
+
+@keyframes op-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes op-rule-in {
+  from {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes op-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(26px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes op-icon-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6) rotate(-10deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes op-arrow-in {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes op-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes op-dash {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+@keyframes op-fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes op-flicker {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(0.9, 1.14);
+  }
+}
+
 /* --- Forms --- */
 .field-label {
   display: block;
@@ -673,6 +878,26 @@ h2[id] {
   }
   .svg-flow {
     stroke-dasharray: none;
+    animation: none !important;
+  }
+  .op-flow .op-title,
+  .op-flow .op-subtitle,
+  .op-flow .op-card,
+  .op-flow .op-icon,
+  .op-flow .op-arrow,
+  .op-flow .op-rule,
+  .op-list .op-list-item {
+    opacity: 1 !important;
+    animation: none !important;
+    transform: none !important;
+  }
+  .op-flow .op-connector-line {
+    stroke-dasharray: none !important;
+    stroke-dashoffset: 0 !important;
+    animation: none !important;
+  }
+  .op-flow .op-connector-flow {
+    opacity: 1 !important;
     animation: none !important;
   }
 }
