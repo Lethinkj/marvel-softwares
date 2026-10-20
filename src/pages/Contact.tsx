@@ -1,6 +1,5 @@
 import React, { useState, useId } from 'react'
 import Seo from '../components/Seo'
-import { ContactChatIllustration } from '../components/illustrations'
 import { CheckIcon } from '../components/Icons'
 import { siteConfig } from '../data/siteData'
 import { submitProjectInquiry } from '../utils/inquiryApi'
@@ -111,13 +110,18 @@ export const Contact: React.FC = () => {
         <div className="container">
           <div className="rounded-3xl bg-white p-6 sm:p-10" style={{ border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-card)' }}>
           <div className="grid grid-cols-1 lg:grid-cols-12 items-center" style={{ gap: 'clamp(28px,4vw,56px)' }}>
-            {/* Illustration (left on desktop) */}
-            <div className="order-2 lg:order-1 lg:col-span-5 w-full max-w-md mx-auto lg:max-w-none">
-              <ContactChatIllustration className="w-full h-auto" />
+            {/* Illustration / Image (left on desktop) */}
+            <div className="order-2 lg:order-1 lg:col-span-6 w-full max-w-lg mx-auto lg:max-w-none flex items-center justify-center">
+              <img
+                src="/Isometric Software Teamwork Workspace.png"
+                alt="Isometric Software Teamwork Workspace"
+                className="w-full h-auto max-w-[580px] lg:max-w-full object-contain drop-shadow-lg transition-transform duration-300 hover:scale-[1.02]"
+                loading="lazy"
+              />
             </div>
 
             {/* Form (right on desktop, first on mobile) */}
-            <div className="order-1 lg:order-2 lg:col-span-7 lg:pl-10 lg:border-l" style={{ borderColor: 'var(--color-border)' }}>
+            <div className="order-1 lg:order-2 lg:col-span-6 lg:pl-8 xl:pl-10 lg:border-l" style={{ borderColor: 'var(--color-border)' }}>
               {isSubmitted ? (
                 <div role="status" aria-live="polite" className="text-center" style={{ paddingBlock: 32 }}>
                   <span
