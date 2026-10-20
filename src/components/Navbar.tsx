@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { Link, useLocation } from 'react-router-dom'
-import { motion, AnimatePresence, useScroll, useSpring } from 'motion/react'
+import { motion, AnimatePresence, useScroll, useSpring, useDragControls } from 'motion/react'
 import { navLinks, siteConfig } from '../data/siteData'
 import {
   GlobeIcon,
@@ -33,6 +34,7 @@ export function Navbar() {
   const location = useLocation()
   const menuButtonRef = useRef<HTMLButtonElement>(null)
 
+  const dragControls = useDragControls()
   const { scrollYProgress } = useScroll()
   const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 30, mass: 0.3 })
 
@@ -84,98 +86,89 @@ export function Navbar() {
     <header
       className="sticky top-0 z-50 w-full"
       style={{
-        background: isScrolled ? 'rgba(255,255,255,.72)' : 'rgba(255,255,255,.92)',
-        backdropFilter: 'saturate(180%) blur(16px)',
-        WebkitBackdropFilter: 'saturate(180%) blur(16px)',
-        borderBottom: isScrolled ? '1px solid rgba(8,102,245,.10)' : '1px solid rgba(8,102,245,.06)',
-        boxShadow: isScrolled ? '0 12px 32px -24px rgba(0,51,160,.45)' : 'none',
-        transition: 'background .3s ease, box-shadow .3s ease, border-color .3s ease',
+        paddingTop: isScrolled ? 8 : 12,
+        paddingBottom: isScrolled ? 8 : 12,
+        transition: 'padding .3s ease',
       }}
     >
       <div
-        className="mx-auto flex items-center justify-between"
+        className="mx-auto"
         style={{
           maxWidth: 'var(--container-width)',
-          width: 'min(100% - 32px, var(--container-width))',
-          height: 'var(--nav-height)',
-          gap: 16,
+          width: 'min(100% - 24px, var(--container-width))',
         }}
       >
-        <Link
-          to="/"
-          aria-label="MARVEL SOFTWARES — Home"
-          onClick={() => setIsMenuOpen(false)}
-          className="shrink-0 rounded-md flex items-center"
-          style={{ gap: 10 }}
-        >
-          <img
-            src="/marvel-softwares-logo-removebg-preview.png"
-            alt="MARVEL SOFTWARES"
-            className="brand-logo"
-            style={{ height: isScrolled ? 54 : 62, transition: 'height .3s ease' }}
-          />
-        </Link>
-
-        {/* Pill navigation — desktop + tablet */}
-        <nav
-          className="hidden md:flex items-center"
-          aria-label="Main navigation"
-          style={{ background: '#F1F5FB', borderRadius: 999, padding: 4, gap: 2 }}
-        >
-          {navLinks.map((link) => {
-            const active = isActiveLink(link.href)
-            return (
-              <Link
-                key={link.href}
-                to={link.href}
-                aria-current={active ? 'page' : undefined}
-                className="relative rounded-full transition-colors"
-                style={{
-                  padding: '9px 16px',
-                  fontSize: '0.95rem',
-                  fontWeight: active ? 700 : 500,
-                  color: active ? 'var(--color-primary)' : 'var(--color-text)',
-                }}
-              >
-                {active && (
-                  <motion.span
-                    layoutId="nav-active-pill"
-                    aria-hidden="true"
-                    className="absolute inset-0 rounded-full"
-                    style={{
-                      background: '#fff',
-                      boxShadow: '0 4px 14px -8px rgba(0,51,160,.55)',
-                    }}
-                    transition={{ type: 'spring', stiffness: 420, damping: 34 }}
-                  />
-                )}
-                <span className="relative z-10">{link.label}</span>
-              </Link>
-            )
-          })}
-        </nav>
-
-        {/* Gradient CTA — desktop */}
-        <Link
-          to="/contact"
-          className="hidden lg:inline-flex items-center shrink-0"
+        <div
+          className="relative flex items-center justify-between"
           style={{
-            gap: 8,
-            padding: '11px 20px',
-            borderRadius: 999,
-            fontSize: '0.92rem',
-            fontWeight: 700,
-            color: '#fff',
-            background: CTA_GRADIENT,
-            boxShadow: '0 10px 24px -14px rgba(0,87,231,.95)',
-            transition: 'transform .25s cubic-bezier(.22,.75,.3,1), box-shadow .25s ease',
+            height: isScrolled ? 58 : 64,
+            gap: 12,
+            padding: isScrolled ? '0 6px 0 18px' : '0 8px 0 20px',
+            borderRadius: 26,
+            background: 'rgba(255,255,255,.88)',
+            backdropFilter: 'saturate(180%) blur(24px)',
+            WebkitBackdropFilter: 'saturate(180%) blur(24px)',
+            border: '1px solid rgba(8,102,245,.12)',
+            boxShadow: isScrolled
+              ? '0 18px 40px -22px rgba(0,31,128,.45), 0 2px 6px -3px rgba(16,38,83,.12)'
+              : '0 10px 30px -20px rgba(0,31,128,.28), 0 1px 3px -1px rgba(16,38,83,.08)',
+            transition:
+              'height .3s ease, padding .3s ease, box-shadow .3s ease, background .3s ease',
           }}
         >
-          Start a Project
-          <span aria-hidden="true" className="inline-block">
-            →
-          </span>
-        </Link>
+          <Link
+            to="/"
+            aria-label="MARVEL SOFTWARES — Home"
+            onClick={() => setIsMenuOpen(false)}
+            className="shrink-0 rounded-md flex items-center"
+            style={{ gap: 10 }}
+          >
+            <img
+              src="/marvel-softwares-logo-removebg-preview.png"
+              alt="MARVEL SOFTWARES"
+              className="brand-logo"
+              style={{ height: isScrolled ? 40 : 46, transition: 'height .3s ease' }}
+            />
+          </Link>
+
+          {/* Navigation — desktop + tablet (right aligned) */}
+          <nav
+            className="hidden md:flex items-center"
+            aria-label="Main navigation"
+            style={{ marginLeft: 'auto', gap: 2 }}
+          >
+            {navLinks.map((link) => {
+              const active = isActiveLink(link.href)
+              return (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  aria-current={active ? 'page' : undefined}
+                  className="nav-pill-link relative rounded-full transition-colors"
+                  style={{
+                    padding: '9px 16px',
+                    fontSize: '0.93rem',
+                    fontWeight: active ? 700 : 500,
+                    color: active ? '#fff' : 'var(--color-text)',
+                  }}
+                >
+                  {active && (
+                    <motion.span
+                      layoutId="nav-active-pill"
+                      aria-hidden="true"
+                      className="absolute inset-0 rounded-full"
+                      style={{
+                        background: 'linear-gradient(135deg, #0057E7 0%, #0033A0 100%)',
+                        boxShadow: '0 10px 22px -12px rgba(0,87,231,.9)',
+                      }}
+                      transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+                    />
+                  )}
+                  <span className="relative z-10">{link.label}</span>
+                </Link>
+              )
+            })}
+          </nav>
 
         {/* Burger — mobile */}
         <button
@@ -212,24 +205,32 @@ export function Navbar() {
             />
           </span>
         </button>
+
+          {/* Scroll progress hairline — sits inside the capsule */}
+          <motion.div
+            aria-hidden="true"
+            className="origin-left"
+            style={{
+              scaleX: progress,
+              position: 'absolute',
+              left: 22,
+              right: 22,
+              bottom: 3,
+              height: 2,
+              borderRadius: 2,
+              background: 'linear-gradient(90deg, #0057E7, #00CFFF 55%, #FF5A00)',
+            }}
+          />
+        </div>
       </div>
 
-      {/* Scroll progress hairline */}
-      <motion.div
-        aria-hidden="true"
-        className="origin-left"
-        style={{
-          scaleX: progress,
-          height: 2,
-          background: 'linear-gradient(90deg, #0057E7, #00CFFF 55%, #FF5A00)',
-        }}
-      />
-
-      <AnimatePresence>
-        {isMenuOpen && (
-          <>
-            <motion.div
-              key="nav-scrim"
+      {typeof document !== 'undefined' &&
+        createPortal(
+          <AnimatePresence>
+            {isMenuOpen && (
+              <>
+                <motion.div
+                  key="nav-scrim"
               aria-hidden="true"
               onClick={() => setIsMenuOpen(false)}
               initial={{ opacity: 0 }}
@@ -254,6 +255,8 @@ export function Navbar() {
               exit={{ y: '100%' }}
               transition={{ duration: 0.36, ease: [0.16, 1, 0.3, 1] }}
               drag="y"
+              dragListener={false}
+              dragControls={dragControls}
               dragConstraints={{ top: 0, bottom: 0 }}
               dragElastic={{ top: 0, bottom: 0.4 }}
               onDragEnd={(_, info) => {
@@ -268,7 +271,12 @@ export function Navbar() {
               }}
             >
               {/* drag handle */}
-              <div className="flex justify-center pt-3 pb-1 shrink-0" aria-hidden="true">
+              <div
+                className="flex justify-center pt-3 pb-1 shrink-0"
+                aria-hidden="true"
+                onPointerDown={(e) => dragControls.start(e)}
+                style={{ touchAction: 'none', cursor: 'grab' }}
+              >
                 <span style={{ width: 44, height: 5, borderRadius: 5, background: '#DCE4F0' }} />
               </div>
 
@@ -368,20 +376,13 @@ export function Navbar() {
                 <Link
                   to="/contact"
                   onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center justify-center w-full"
-                  style={{
-                    gap: 8,
-                    padding: '14px 20px',
-                    borderRadius: 999,
-                    fontSize: '0.98rem',
-                    fontWeight: 700,
-                    color: '#fff',
-                    background: CTA_GRADIENT,
-                    boxShadow: '0 12px 26px -14px rgba(0,87,231,.95)',
-                  }}
+                  className="nav-cta nav-cta--block flex items-center justify-center w-full"
+                  style={{ gap: 8, padding: '14px 20px', borderRadius: 999 }}
                 >
                   Start a Project
-                  <span aria-hidden="true">→</span>
+                  <span aria-hidden="true" className="nav-cta-arrow">
+                    →
+                  </span>
                 </Link>
                 <a
                   href={`mailto:${siteConfig.email}`}
@@ -392,9 +393,11 @@ export function Navbar() {
                 </a>
               </div>
             </motion.div>
-          </>
+              </>
+            )}
+          </AnimatePresence>,
+          document.body,
         )}
-      </AnimatePresence>
     </header>
   )
 }

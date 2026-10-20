@@ -7,20 +7,13 @@ import { HeroIntelligentCore } from '../components/illustrations'
 import { OurProcess } from '../components/OurProcess'
 import ServiceShowcase from '../components/ServiceShowcase'
 import WhyChooseUs from '../components/WhyChooseUs'
-import { projects } from '../data/siteData'
+import { projects, siteConfig } from '../data/siteData'
 
 const cardStyle: React.CSSProperties = {
   background: 'linear-gradient(180deg, #ffffff 0%, #f9faff 100%)',
   border: '1px solid var(--color-border)',
   borderRadius: 'var(--radius-card)',
   boxShadow: 'var(--shadow-card)',
-}
-
-const btnPrimary: React.CSSProperties = {
-  background: 'var(--color-primary)',
-  color: '#fff',
-  borderRadius: 'var(--radius-button)',
-  boxShadow: 'var(--shadow-button)',
 }
 
 const btnSecondary: React.CSSProperties = {
@@ -79,55 +72,57 @@ export const Home: React.FC = () => {
         <div aria-hidden="true" className="hero-glow hero-glow-a" />
         <div aria-hidden="true" className="hero-glow hero-glow-b" />
 
-        <div className="container relative" style={{ paddingTop: 'clamp(20px,3vw,36px)', paddingBottom: 'clamp(56px,8vw,112px)' }}>
+        <div className="container relative" style={{ paddingTop: 'clamp(56px,7vw,104px)', paddingBottom: 'clamp(56px,8vw,112px)' }}>
           <div
             className="flex flex-col lg:grid lg:grid-cols-12 lg:items-center"
-            style={{ gap: 'clamp(24px,3.5vw,48px)' }}
+            style={{ gap: 'clamp(32px,4.5vw,60px)' }}
           >
             {/* Copy column */}
             <div className="order-1 lg:order-none lg:col-span-7 lg:row-start-1 lg:row-span-2 lg:self-center">
-              <h1 id="hero-title" className="text-hero">
+              {/* Eyebrow */}
+              <span className="hero-eyebrow">
+                <span className="hero-eyebrow-dot" aria-hidden="true" />
+                {siteConfig.tagline}
+              </span>
+
+              <h1 id="hero-title" className="text-hero" style={{ marginTop: 20 }}>
                 <span className="block" style={{ color: 'var(--color-primary)' }}>
                   Software That Grows
                 </span>
                 <span className="text-gradient block">Your Business</span>
               </h1>
 
-              <p className="text-body" style={{ marginTop: 22 }}>
+              <p className="hero-lead">
                 From websites and mobile apps to enterprise platforms and custom business
                 systems — we design and develop software that solves real problems,
                 streamlines operations and helps your business grow.
               </p>
 
-              {/* CTAs sit right under the headline on mobile too */}
-              <div
-                className="flex flex-row items-stretch sm:items-center"
-                style={{ gap: 12, marginTop: 34 }}
-              >
-                <Link
-                  to="/contact"
-                  className="inline-flex flex-1 sm:flex-none items-center justify-center min-h-[52px] px-4 sm:px-9 text-[14px] sm:text-base font-semibold transition-all hover:-translate-y-px whitespace-nowrap"
-                  style={btnPrimary}
-                >
+              {/* CTAs */}
+              <div className="hero-actions">
+                <Link to="/contact" className="hero-btn hero-btn--primary">
                   Start a Project
+                  <span className="hero-btn-arrow" aria-hidden="true">
+                    →
+                  </span>
                 </Link>
-                <Link
-                  to="/services"
-                  className="inline-flex flex-1 sm:flex-none items-center justify-center min-h-[52px] px-4 sm:px-9 text-[14px] sm:text-base font-semibold transition-colors hover:bg-[#F4F5FF] whitespace-nowrap"
-                  style={btnSecondary}
-                >
+                <Link to="/services" className="hero-btn hero-btn--ghost">
                   Explore Our Services
                 </Link>
               </div>
 
-              <ul className="flex flex-wrap items-center" style={{ gap: 8, marginTop: 28 }}>
-                {heroChips.map((chip) => (
-                  <li key={chip} className="hero-chip">
-                    {renderAppIcon('checkcircle', 'w-3.5 h-3.5')}
-                    {chip}
-                  </li>
-                ))}
-              </ul>
+              {/* Capability bar */}
+              <div className="hero-cap-bar">
+                <span className="hero-cap-label">We build</span>
+                <ul className="hero-cap-list">
+                  {heroChips.map((chip) => (
+                    <li key={chip} className="hero-cap">
+                      <span className="hero-cap-dot" aria-hidden="true" />
+                      {chip}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
 
             {/* Visual column */}
