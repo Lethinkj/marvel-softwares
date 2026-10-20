@@ -5,9 +5,8 @@ import AnimatedSection from '../components/AnimatedSection'
 import Seo from '../components/Seo'
 import { HeroIntelligentCore } from '../components/illustrations'
 import { OurProcess } from '../components/OurProcess'
+import ServiceShowcase from '../components/ServiceShowcase'
 import {
-  homeServices,
-  services,
   whyChooseUs,
   projects,
 } from '../data/siteData'
@@ -67,10 +66,6 @@ const heroHighlights = [
 export const Home: React.FC = () => {
   /* Hero image may not be present yet — fall back to the SVG illustration */
   const [heroImgOk, setHeroImgOk] = React.useState(true)
-
-  const overview = homeServices
-    .map((id) => services.find((s) => s.id === id))
-    .filter((s): s is (typeof services)[number] => Boolean(s))
 
   return (
     <div className="w-full bg-white overflow-x-clip">
@@ -216,36 +211,7 @@ export const Home: React.FC = () => {
             </p>
           </AnimatedSection>
 
-          <div className="grid-cards-3" style={{ marginTop: 48 }}>
-            {overview.map((service, i) => (
-              <article
-                key={service.id}
-                className={`flex flex-col p-7 service-card glow-border-card glow-radius-lg ${i % 3 === 1 ? 'glow-delay-1' : i % 3 === 2 ? 'glow-delay-2' : ''}`}
-                style={{ ...cardStyle, border: '1.5px solid transparent', boxShadow: undefined }}
-              >
-                <span
-                  className="flex items-center justify-center w-12 h-12 rounded-2xl"
-                  style={{ background: '#F4F5FF', color: 'var(--color-primary)', marginBottom: 18 }}
-                  aria-hidden="true"
-                >
-                  {renderAppIcon(service.icon, 'w-6 h-6')}
-                </span>
-                <h3 className="text-card-title" style={{ marginBottom: 10 }}>
-                  {service.title}
-                </h3>
-                <p className="text-body text-[15px] flex-1">{service.description}</p>
-                <Link
-                  to={`/services#${service.id}`}
-                  className="inline-flex items-center gap-2 text-[15px] font-semibold transition-colors"
-                  style={{ color: 'var(--color-primary)', marginTop: 18 }}
-                  aria-label={`Learn more about ${service.title}`}
-                >
-                  Learn More
-                  <span aria-hidden="true" className="transition-transform">→</span>
-                </Link>
-              </article>
-            ))}
-          </div>
+          <ServiceShowcase />
         </div>
       </section>
 

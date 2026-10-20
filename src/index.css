@@ -760,6 +760,184 @@ h2[id] {
   }
 }
 
+/* ============================================
+   SERVICES SHOWCASE — blended illustration rows
+   Artwork on one side, glass copy card on the
+   other; the illustration tucks under the card so
+   image and content read as one canvas.
+   ============================================ */
+.svc-showcase {
+  display: grid;
+  gap: clamp(48px, 7vw, 104px);
+  margin-top: clamp(40px, 5vw, 72px);
+}
+
+.svc-showcase-row {
+  display: grid;
+  gap: clamp(24px, 3.5vw, 48px);
+  align-items: center;
+}
+
+.svc-media {
+  position: relative;
+  z-index: 1;
+  margin-inline: -18px;
+}
+
+.svc-media::before {
+  content: '';
+  position: absolute;
+  inset: -14% -12% -14% -12%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    58% 58% at 52% 46%,
+    rgba(8, 102, 245, 0.13),
+    rgba(0, 207, 255, 0.07) 55%,
+    transparent 78%
+  );
+}
+
+.svc-copy {
+  position: relative;
+  z-index: 2;
+  border-radius: 28px;
+  padding: clamp(24px, 3.2vw, 42px);
+  background: linear-gradient(170deg, rgba(255, 255, 255, 0.94) 0%, rgba(244, 246, 255, 0.86) 100%);
+  border: 1px solid rgba(8, 102, 245, 0.12);
+  box-shadow:
+    0 2px 6px rgba(23, 32, 51, 0.04),
+    0 34px 70px -46px rgba(16, 38, 83, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.svc-copy-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 15px;
+  color: #fff;
+  background: linear-gradient(140deg, var(--color-primary), var(--color-primary-dark));
+  box-shadow: 0 10px 22px -10px rgba(0, 87, 231, 0.75);
+}
+
+.svc-copy-title {
+  margin: 18px 0 0;
+  font-size: clamp(1.35rem, 2.2vw, 1.85rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+
+.svc-copy-headline {
+  margin: 10px 0 0;
+  font-size: clamp(1rem, 1.2vw, 1.1rem);
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--color-primary-dark);
+}
+
+.svc-copy-list {
+  display: grid;
+  gap: 10px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.svc-copy-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.94rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.svc-copy-tick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  border-radius: 50%;
+  color: var(--color-primary);
+  background: rgba(0, 87, 231, 0.1);
+}
+
+.svc-copy-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--color-primary);
+  box-shadow: var(--shadow-button);
+  transition:
+    transform var(--transition-base),
+    box-shadow var(--transition-base),
+    background var(--transition-base);
+}
+
+.svc-copy-cta:hover {
+  transform: translateY(-2px);
+  background: var(--color-primary-dark);
+  box-shadow: 0 12px 26px -10px rgba(0, 87, 231, 0.7);
+}
+
+.svc-copy-cta-arrow {
+  transition: transform var(--transition-base);
+}
+
+.svc-copy-cta:hover .svc-copy-cta-arrow {
+  transform: translateX(4px);
+}
+
+@media (min-width: 992px) {
+  .svc-showcase-row {
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  }
+
+  .svc-showcase-row.is-flip .svc-media {
+    order: 2;
+  }
+
+  .svc-showcase-row.is-flip .svc-copy {
+    order: 1;
+  }
+
+  /* artwork tucks under the copy card and fades into it */
+  .svc-showcase-row .svc-media {
+    margin-left: 0;
+    margin-right: -52px;
+    -webkit-mask-image: linear-gradient(to right, #000 91%, rgba(0, 0, 0, 0) 100%);
+    mask-image: linear-gradient(to right, #000 91%, rgba(0, 0, 0, 0) 100%);
+  }
+
+  .svc-showcase-row.is-flip .svc-media {
+    margin-right: 0;
+    margin-left: -52px;
+    -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, #000 9%);
+    mask-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, #000 9%);
+  }
+}
+
+@media (max-width: 991px) {
+  .svc-media {
+    margin-inline: -8px;
+  }
+}
+
 /* --- Forms --- */
 .field-label {
   display: block;
