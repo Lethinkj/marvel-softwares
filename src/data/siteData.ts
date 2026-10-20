@@ -27,6 +27,8 @@ export interface Project {
   description: string
   tags: string[]
   color: string
+  image: string
+  url: string
 }
 
 export type ProjectCategory =
@@ -417,70 +419,35 @@ export const capabilities: { label: string; icon: string }[] = [
   { label: 'Cloud & Integration', icon: 'cloud' },
 ]
 
-// --- Projects: representative examples (NOT client claims) ---
+// --- Projects ---
 export const projectCategories: ('All' | ProjectCategory)[] = [
   'All',
   'Websites',
   'Web Applications',
-  'Mobile Apps',
-  'Enterprise Software',
-  'AI & Automation',
 ]
 
 export const projects: Project[] = [
   {
-    id: 'business-website',
-    title: 'Corporate Business Website',
+    id: 'marvelslice-portal',
+    title: 'Marvel Slice — Software Learning & Competitive Exams',
     category: 'Websites',
     description:
-      'A responsive company website example showing how clear structure, fast pages and accessible design present a business online.',
-    tags: ['React', 'TypeScript', 'Responsive Design'],
+      'Premier educational institute platform featuring course catalogs for in-demand software technologies (Full Stack, Python, Java, Data Science) and competitive exam preparation, with live batch enrollments and career placement assistance.',
+    tags: ['React', 'Vite', 'Tailwind CSS', 'EdTech', 'Responsive Web'],
     color: '#0057E7',
+    image: '/proj-imgs/marvelslice.png',
+    url: 'https://marvelslice.com/',
   },
   {
-    id: 'admin-dashboard',
-    title: 'Business Admin Dashboard',
+    id: 'marvelslice-lms',
+    title: 'MarvelSlice LMS — Learning Management System',
     category: 'Web Applications',
     description:
-      'An operations dashboard example with role-based views, reports and record management for day-to-day business tasks.',
-    tags: ['React', 'REST API', 'Dashboards'],
-    color: '#0033A0',
-  },
-  {
-    id: 'customer-mobile-app',
-    title: 'Customer Service Mobile App',
-    category: 'Mobile Apps',
-    description:
-      'A cross-platform mobile app example giving customers account access, notifications and service requests on the go.',
-    tags: ['Cross-Platform', 'Push Notifications', 'API Integration'],
+      'Comprehensive learning management system equipped with live interactive sessions, course marketplace, student progress tracking, assessment evaluations, and native Microsoft Teams integration for connected digital learning.',
+    tags: ['Next.js', 'LMS Platform', 'MS Teams Integration', 'Live Sessions', 'Role-Based Access'],
     color: '#FF5A00',
-  },
-  {
-    id: 'inventory-erp',
-    title: 'Inventory & Billing System',
-    category: 'Enterprise Software',
-    description:
-      'A connected business system example covering stock, invoicing, suppliers and sales reporting in one place.',
-    tags: ['ERP Modules', 'Reporting', 'Role Management'],
-    color: '#001F80',
-  },
-  {
-    id: 'support-assistant',
-    title: 'Document & Support Assistant',
-    category: 'AI & Automation',
-    description:
-      'An automation example that helps teams find information faster with assisted search over business documents.',
-    tags: ['AI Integration', 'Search', 'Automation'],
-    color: '#00CFFF',
-  },
-  {
-    id: 'booking-portal',
-    title: 'Booking & Customer Portal',
-    category: 'Web Applications',
-    description:
-      'A customer portal example with bookings, profiles and notifications, connected to internal business tools.',
-    tags: ['Portals', 'Authentication', 'Notifications'],
-    color: '#FFB800',
+    image: '/proj-imgs/lms.png',
+    url: 'https://lms.marvelslice.com/login',
   },
 ]
 

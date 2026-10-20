@@ -225,7 +225,7 @@ export const Home: React.FC = () => {
                 Solutions We&apos;ve Built
               </h2>
               <p className="text-body" style={{ marginTop: 14 }}>
-                Representative examples of the kinds of solutions we design and build.
+                Featured production platforms and digital experiences engineered by Marvel Softwares.
               </p>
             </div>
             <Link
@@ -237,49 +237,58 @@ export const Home: React.FC = () => {
             </Link>
           </div>
 
-          <div className="grid-cards-3" style={{ marginTop: 40 }}>
-            {projects.slice(0, 3).map((project) => (
-              <article key={project.id} className="flex flex-col overflow-hidden" style={cardStyle}>
-                <div
-                  className="flex items-center justify-between px-6"
-                  style={{
-                    height: 120,
-                    background: `linear-gradient(135deg, ${project.color}1f 0%, #fff 80%)`,
-                    borderBottom: '1px solid var(--color-border)',
-                  }}
-                  aria-hidden="true"
-                >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto" style={{ marginTop: 40 }}>
+            {projects.map((project) => (
+              <a
+                key={project.id}
+                href={project.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col h-full overflow-hidden transition-all duration-300 hover:-translate-y-1.5 group cursor-pointer text-inherit no-underline"
+                style={cardStyle}
+              >
+                <div className="relative overflow-hidden w-full aspect-video bg-slate-100 border-b border-border">
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105"
+                    loading="lazy"
+                  />
                   <span
-                    className="px-3 py-1 rounded-full text-xs font-bold bg-white"
-                    style={{ border: '1px solid var(--color-border)' }}
+                    className="absolute top-3.5 left-3.5 px-3 py-1 rounded-full text-xs font-bold bg-white/95 backdrop-blur-sm shadow-sm z-10"
+                    style={{ border: '1px solid var(--color-border)', color: 'var(--color-text)' }}
                   >
                     {project.category}
                   </span>
-                  <span
-                    className="w-10 h-10 rounded-xl bg-white flex items-center justify-center"
-                    style={{ border: '1px solid var(--color-border)' }}
-                  >
-                    <span className="w-3 h-3 rounded-full" style={{ background: project.color }} />
-                  </span>
-                </div>
-                <div className="flex flex-col flex-1 p-6">
-                  <h3 className="text-card-title">{project.title}</h3>
-                  <p className="text-body text-[15px]" style={{ marginTop: 8, flex: 1 }}>
-                    {project.description}
-                  </p>
-                  <div className="flex flex-wrap gap-2" style={{ marginTop: 16 }}>
-                    {project.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2.5 py-1 text-xs font-mono font-medium rounded-md"
-                        style={{ background: 'var(--color-surface-warm)', border: '1px solid var(--color-border)' }}
-                      >
-                        {tag}
-                      </span>
-                    ))}
+
+                  {/* Hover Overlay with Visit Live Site */}
+                  <div className="absolute inset-0 bg-slate-950/45 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-20">
+                    <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-slate-900 text-sm font-semibold shadow-xl transform translate-y-3 group-hover:translate-y-0 transition-transform duration-300 ease-out">
+                      <span>Visit Live Site</span>
+                      <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                      </svg>
+                    </span>
                   </div>
                 </div>
-              </article>
+
+                <div className="flex flex-col flex-1 p-6 sm:p-7">
+                  <div className="flex items-start justify-between gap-3">
+                    <h3 className="text-card-title text-xl font-bold group-hover:text-blue-600 transition-colors">
+                      {project.title}
+                    </h3>
+                    <span className="p-1.5 rounded-lg bg-slate-100 group-hover:bg-blue-50 text-slate-400 group-hover:text-blue-600 transition-colors shrink-0 mt-0.5" aria-hidden="true">
+                      <svg className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                      </svg>
+                    </span>
+                  </div>
+
+                  <p className="text-body text-[15px] leading-relaxed" style={{ marginTop: 12, flex: 1 }}>
+                    {project.description}
+                  </p>
+                </div>
+              </a>
             ))}
           </div>
         </div>
