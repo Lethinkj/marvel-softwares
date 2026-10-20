@@ -97,7 +97,7 @@ export function Navbar() {
           style={{ gap: 10 }}
         >
           <img
-            src="/marvel-softwares-logo-horizontal.png"
+            src="/marvel-softwares-logo-removebg-preview.png"
             alt="MARVEL SOFTWARES"
             className="brand-logo"
           />
@@ -201,9 +201,9 @@ export function Navbar() {
                 style={{ height: 'var(--nav-height)', borderBottom: '1px solid var(--color-border)' }}
               >
                 <img
-                  src="/marvel-softwares-logo-horizontal.png"
+                  src="/marvel-softwares-logo-removebg-preview.png"
                   alt="MARVEL SOFTWARES"
-                  style={{ height: '34px', width: 'auto', display: 'block' }}
+                  style={{ height: '44px', width: 'auto', display: 'block' }}
                 />
                 <button
                   type="button"
