@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom'
 import { renderAppIcon } from '../utils/iconResolver'
 import AnimatedSection from '../components/AnimatedSection'
 import Seo from '../components/Seo'
-import { EcosystemHero, ProcessConnector } from '../components/illustrations'
+import { HeroIntelligentCore } from '../components/illustrations'
+import { OurProcess } from '../components/OurProcess'
 import {
   homeServices,
   services,
   whyChooseUs,
-  homeProcess,
   capabilities,
   projects,
 } from '../data/siteData'
@@ -66,8 +66,8 @@ export const Home: React.FC = () => {
                 streamlines operations and helps businesses grow.
               </p>
             </div>
-            <div className="order-2 lg:order-none w-full max-w-xl mx-auto lg:max-w-none lg:col-span-5 lg:row-start-1 lg:row-span-2 lg:self-center">
-              <EcosystemHero />
+            <div className="order-2 lg:order-none w-full max-w-xl mx-auto lg:max-w-none lg:col-span-5 lg:row-start-1 lg:row-span-2 lg:self-center lg:w-[calc(100%+1.5rem)] lg:-mx-3">
+              <HeroIntelligentCore />
             </div>
             <div className="order-3 lg:order-none lg:col-span-7 lg:row-start-2 lg:self-start">
               <div
@@ -209,73 +209,10 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* ============ E. DEVELOPMENT PROCESS ============ */}
+      {/* ============ E. OUR PROCESS ============ */}
       <section aria-labelledby="process-title" className="section">
         <div className="container">
-          <AnimatedSection style={{ maxWidth: 720 }}>
-            <h2 id="process-title" className="text-section-title">
-              From Idea to Implementation
-            </h2>
-          </AnimatedSection>
-
-          {/* Desktop: connected 4-step row */}
-          <ol
-            className="hidden lg:grid grid-cols-4 items-stretch"
-            style={{ gap: 0, marginTop: 48, listStyle: 'none', padding: 0 }}
-          >
-            {homeProcess.map((step, i) => (
-              <li key={step.step} className="relative flex">
-                <div className="flex-1 text-center px-5">
-                  <span
-                    className="mx-auto flex items-center justify-center w-14 h-14 rounded-full bg-white text-lg font-bold"
-                    style={{
-                      color: 'var(--color-primary)',
-                      border: '2px solid var(--color-primary)',
-                    }}
-                    aria-hidden="true"
-                  >
-                    {step.step}
-                  </span>
-                  <h3 className="text-card-title" style={{ marginTop: 16, fontSize: '1.15rem' }}>
-                    {step.title}
-                  </h3>
-                  <p className="text-body text-[15px]" style={{ marginTop: 8 }}>
-                    {step.description}
-                  </p>
-                </div>
-                {i < homeProcess.length - 1 && (
-                  <div className="absolute top-7 left-[calc(50%+36px)] right-[calc(-50%+36px)]" aria-hidden="true">
-                    <ProcessConnector />
-                  </div>
-                )}
-              </li>
-            ))}
-          </ol>
-
-          {/* Mobile/tablet: vertical timeline */}
-          <ol className="lg:hidden" style={{ marginTop: 40, listStyle: 'none', padding: 0 }}>
-            {homeProcess.map((step, i) => (
-              <li key={step.step} className="flex gap-4" style={{ paddingBottom: i < 3 ? 0 : undefined }}>
-                <div className="flex flex-col items-center" aria-hidden="true">
-                  <span
-                    className="flex items-center justify-center w-11 h-11 rounded-full bg-white text-base font-bold shrink-0"
-                    style={{ color: 'var(--color-primary)', border: '2px solid var(--color-primary)' }}
-                  >
-                    {step.step}
-                  </span>
-                  {i < homeProcess.length - 1 && (
-                    <div className="flex-1 py-1 min-h-[36px]">
-                      <ProcessConnector vertical />
-                    </div>
-                  )}
-                </div>
-                <div style={{ paddingBottom: 32 }}>
-                  <h3 className="text-card-title" style={{ fontSize: '1.1rem' }}>{step.title}</h3>
-                  <p className="text-body text-[15px]" style={{ marginTop: 4 }}>{step.description}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
+          <OurProcess />
         </div>
       </section>
 

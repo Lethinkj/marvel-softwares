@@ -5,6 +5,7 @@ export { CloudDevOpsIllustration } from './CloudDevOpsIllustration'
 export { AiMlIllustration } from './AiMlIllustration'
 export { ConsultingIllustration } from './ConsultingIllustration'
 export { HeroIllustration } from './HeroIllustration'
+export { HeroIntelligentCore } from './HeroIntelligentCore'
 export { MissionIllustration } from './MissionIllustration'
 export { ContactIllustration } from './ContactIllustration'
 export {
