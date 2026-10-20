@@ -9,7 +9,6 @@ import {
   homeServices,
   services,
   whyChooseUs,
-  capabilities,
   projects,
 } from '../data/siteData'
 
@@ -34,7 +33,41 @@ const btnSecondary: React.CSSProperties = {
   borderRadius: 'var(--radius-button)',
 }
 
+/* Hero trust chips — short, factual scope labels */
+const heroChips = ['Websites', 'Web Applications', 'Mobile Apps', 'ERP Systems', 'AI & Automation']
+
+/* Hero highlight mini-cards — links point at matching service anchors */
+const heroHighlights = [
+  {
+    icon: 'web',
+    tint: 'tint-blue',
+    title: 'Web & Mobile Apps',
+    href: 'website-development',
+    description:
+      'Websites, portals and apps your customers enjoy using — responsive, fast and easy to manage.',
+  },
+  {
+    icon: 'erp',
+    tint: 'tint-orange',
+    title: 'ERP & Automation',
+    href: 'erp-business-software',
+    description:
+      'Run operations, records, billing and reporting from one connected, reliable system.',
+  },
+  {
+    icon: 'ai',
+    tint: 'tint-cyan',
+    title: 'AI & Integrations',
+    href: 'ai-automation',
+    description:
+      'Connect your tools with APIs and automation so repetitive work takes care of itself.',
+  },
+]
+
 export const Home: React.FC = () => {
+  /* Hero image may not be present yet — fall back to the SVG illustration */
+  const [heroImgOk, setHeroImgOk] = React.useState(true)
+
   const overview = homeServices
     .map((id) => services.find((s) => s.id === id))
     .filter((s): s is (typeof services)[number] => Boolean(s))
@@ -49,75 +82,121 @@ export const Home: React.FC = () => {
 
       {/* ============ A. HERO ============ */}
       <section aria-labelledby="hero-title" className="relative overflow-hidden">
-        <div className="container" style={{ paddingBlock: 'clamp(48px,6vw,80px)' }}>
-          <div className="flex flex-col lg:grid lg:grid-cols-12 lg:items-center" style={{ gap: 'clamp(20px,3vw,40px)' }}>
-            <div className="order-1 lg:order-none lg:col-span-7 lg:row-start-1 lg:self-start">
-              <h1 id="hero-title" className="text-hero" style={{ marginTop: 16 }}>
+        {/* Ambient brand glows */}
+        <div aria-hidden="true" className="hero-glow hero-glow-a" />
+        <div aria-hidden="true" className="hero-glow hero-glow-b" />
+
+        <div className="container relative" style={{ paddingTop: 'clamp(20px,3vw,36px)', paddingBottom: 'clamp(56px,8vw,112px)' }}>
+          <div
+            className="flex flex-col lg:grid lg:grid-cols-12 lg:items-center"
+            style={{ gap: 'clamp(24px,3.5vw,48px)' }}
+          >
+            {/* Copy column */}
+            <div className="order-1 lg:order-none lg:col-span-7 lg:row-start-1 lg:row-span-2 lg:self-center">
+              <h1 id="hero-title" className="text-hero">
                 <span className="block" style={{ color: 'var(--color-primary)' }}>
                   Software That Grows
                 </span>
-                <span className="block" style={{ color: 'var(--color-primary)' }}>
-                  Your Business
-                </span>
+                <span className="text-gradient block">Your Business</span>
               </h1>
+
               <p className="text-body" style={{ marginTop: 22 }}>
                 From websites and mobile apps to enterprise platforms and custom business
-                systems, we design and develop software that solves real problems,
-                streamlines operations and helps businesses grow.
+                systems — we design and develop software that solves real problems,
+                streamlines operations and helps your business grow.
               </p>
-            </div>
-            <div className="order-2 lg:order-none w-full max-w-xl mx-auto lg:max-w-none lg:col-span-5 lg:row-start-1 lg:row-span-2 lg:self-center lg:w-[calc(100%+1.5rem)] lg:-mx-3">
-              <HeroIntelligentCore />
-            </div>
-            <div className="order-3 lg:order-none lg:col-span-7 lg:row-start-2 lg:self-start">
+
+              {/* CTAs sit right under the headline on mobile too */}
               <div
                 className="flex flex-row items-stretch sm:items-center"
-                style={{ gap: 10, marginTop: 4 }}
+                style={{ gap: 12, marginTop: 34 }}
               >
                 <Link
                   to="/contact"
-                  className="inline-flex flex-1 sm:flex-none items-center justify-center min-h-[48px] px-3 sm:px-8 text-[13px] sm:text-base font-semibold transition-all hover:-translate-y-px whitespace-nowrap"
+                  className="inline-flex flex-1 sm:flex-none items-center justify-center min-h-[52px] px-4 sm:px-9 text-[14px] sm:text-base font-semibold transition-all hover:-translate-y-px whitespace-nowrap"
                   style={btnPrimary}
                 >
                   Start a Project
                 </Link>
                 <Link
                   to="/services"
-                  className="inline-flex flex-1 sm:flex-none items-center justify-center min-h-[48px] px-3 sm:px-8 text-[13px] sm:text-base font-semibold transition-colors hover:bg-[#F4F5FF] whitespace-nowrap"
+                  className="inline-flex flex-1 sm:flex-none items-center justify-center min-h-[52px] px-4 sm:px-9 text-[14px] sm:text-base font-semibold transition-colors hover:bg-[#F4F5FF] whitespace-nowrap"
                   style={btnSecondary}
                 >
                   Explore Our Services
                 </Link>
               </div>
+
+              <ul className="flex flex-wrap items-center" style={{ gap: 8, marginTop: 28 }}>
+                {heroChips.map((chip) => (
+                  <li key={chip} className="hero-chip">
+                    {renderAppIcon('checkcircle', 'w-3.5 h-3.5')}
+                    {chip}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Visual column */}
+            <div className="order-2 lg:order-none relative w-full max-w-xl mx-auto lg:max-w-none lg:col-span-5 lg:row-start-1 lg:self-center">
+              <div className="hero-visual-card">
+                {heroImgOk ? (
+                  <img
+                    src="/hero-images/hero-isometric.svg"
+                    alt="Isometric illustration of a laptop, phone and cloud surrounded by web, cloud, automation, AI, enterprise and custom software services"
+                    className="w-full h-auto"
+                    decoding="async"
+                    onError={() => setHeroImgOk(false)}
+                  />
+                ) : (
+                  <HeroIntelligentCore />
+                )}
+              </div>
+
+              {/* Floating endpoint badge */}
+              <div className="hero-float-badge hidden lg:flex" aria-hidden="true">
+                <span className="hero-float-icon">{renderAppIcon('rocket', 'w-5 h-5')}</span>
+                <span className="leading-tight">
+                  <strong className="block text-sm font-bold" style={{ color: 'var(--color-text)' }}>
+                    Idea → Launch
+                  </strong>
+                  <small className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                    Design · Build · Deploy · Support
+                  </small>
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* ============ B. CAPABILITY STRIP ============ */}
-      <section
-        aria-label="Our capabilities"
-        className="section-warm"
-        style={{ paddingBlock: 28 }}
-      >
-        <div className="container">
+          {/* Highlight mini-cards */}
           <ul
-            className="grid grid-cols-2 lg:grid-cols-4"
-            style={{ gap: 'var(--card-gap)' }}
+            className="grid grid-cols-1 sm:grid-cols-3"
+            style={{ gap: 'var(--card-gap)', marginTop: 'clamp(34px,4.5vw,60px)' }}
           >
-            {capabilities.map((cap) => (
-              <li
-                key={cap.label}
-                className="pulse-border-card flex items-center gap-3 rounded-2xl bg-white px-5 py-4"
-              >
-                <span
-                  className="flex items-center justify-center w-10 h-10 rounded-xl shrink-0"
-                  style={{ background: '#F4F5FF', color: 'var(--color-orange)' }}
-                  aria-hidden="true"
-                >
-                  {renderAppIcon(cap.icon, 'w-5 h-5')}
-                </span>
-                <span className="text-[15px] font-semibold">{cap.label}</span>
+            {heroHighlights.map((card) => (
+              <li key={card.title}>
+                <article className="hero-mini-card">
+                  <span className={`hero-mini-icon ${card.tint}`} aria-hidden="true">
+                    {renderAppIcon(card.icon, 'w-5 h-5')}
+                  </span>
+                  <h2 className="text-[1.05rem] font-bold" style={{ color: 'var(--color-text)' }}>
+                    {card.title}
+                  </h2>
+                  <p
+                    className="text-[0.9rem] leading-relaxed"
+                    style={{ color: 'var(--color-text-muted)', flex: 1 }}
+                  >
+                    {card.description}
+                  </p>
+                  <Link
+                    to={`/services#${card.href}`}
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold transition-all hover:gap-2.5"
+                    style={{ color: 'var(--color-primary)', marginTop: 4 }}
+                    aria-label={`Learn more about ${card.title}`}
+                  >
+                    Learn more <span aria-hidden="true">→</span>
+                  </Link>
+                </article>
               </li>
             ))}
           </ul>
@@ -141,14 +220,8 @@ export const Home: React.FC = () => {
             {overview.map((service, i) => (
               <article
                 key={service.id}
-                className={`flex flex-col p-7 transition-all hover:-translate-y-1 glow-border-card glow-radius-lg ${i % 3 === 1 ? 'glow-delay-1' : i % 3 === 2 ? 'glow-delay-2' : ''}`}
-                style={{ ...cardStyle, border: '1.5px solid transparent' }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = 'var(--shadow-card-hover)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = 'var(--shadow-card)'
-                }}
+                className={`flex flex-col p-7 service-card glow-border-card glow-radius-lg ${i % 3 === 1 ? 'glow-delay-1' : i % 3 === 2 ? 'glow-delay-2' : ''}`}
+                style={{ ...cardStyle, border: '1.5px solid transparent', boxShadow: undefined }}
               >
                 <span
                   className="flex items-center justify-center w-12 h-12 rounded-2xl"
