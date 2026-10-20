@@ -1,0 +1,8 @@
+services:
+  marvel-softwares:
+    build: .
+    image: marvel-softwares:latest
+    container_name: marvel-softwares
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8084}:80"
