@@ -115,28 +115,19 @@ export const Contact: React.FC = () => {
               boxShadow: 'var(--shadow-card)',
             }}
           >
-            {/* Image side (left on desktop) with mild background */}
+            {/* Image side (left on desktop) with minimal soft slate background */}
             <div
               className="order-2 lg:order-1 lg:col-span-6 flex items-center justify-center p-2 sm:p-4 lg:p-4 xl:p-6 relative overflow-hidden"
               style={{
-                background: 'linear-gradient(145deg, #eef4ff 0%, #e6effe 50%, #fef3e9 100%)',
+                background: 'linear-gradient(160deg, #f8fafc 0%, #f1f5f9 55%, #e6edf5 100%)',
                 borderRight: '1px solid var(--color-border)',
               }}
             >
-              {/* Ambient soft glow for the 3D PNG */}
+              {/* Soft subtle radial ambient light */}
               <div
-                className="absolute -top-16 -left-16 w-80 h-80 rounded-full pointer-events-none"
+                className="absolute inset-0 pointer-events-none"
                 style={{
-                  background: 'radial-gradient(circle, rgba(0, 87, 231, 0.15) 0%, transparent 70%)',
-                  filter: 'blur(30px)',
-                }}
-                aria-hidden="true"
-              />
-              <div
-                className="absolute -bottom-16 -right-16 w-80 h-80 rounded-full pointer-events-none"
-                style={{
-                  background: 'radial-gradient(circle, rgba(255, 90, 0, 0.12) 0%, transparent 70%)',
-                  filter: 'blur(30px)',
+                  background: 'radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.75) 0%, transparent 70%)',
                 }}
                 aria-hidden="true"
               />
