@@ -5,7 +5,7 @@ import Seo from '../components/Seo'
 import { projects, type Project } from '../data/siteData'
 
 const cardStyle: React.CSSProperties = {
-  background: '#fff',
+  background: 'linear-gradient(180deg, #ffffff 0%, #f9faff 100%)',
   border: '1px solid var(--color-border)',
   borderRadius: 'var(--radius-card)',
   boxShadow: 'var(--shadow-card)',
