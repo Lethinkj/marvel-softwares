@@ -6,10 +6,8 @@ import Seo from '../components/Seo'
 import { HeroIntelligentCore } from '../components/illustrations'
 import { OurProcess } from '../components/OurProcess'
 import ServiceShowcase from '../components/ServiceShowcase'
-import {
-  whyChooseUs,
-  projects,
-} from '../data/siteData'
+import WhyChooseUs from '../components/WhyChooseUs'
+import { projects } from '../data/siteData'
 
 const cardStyle: React.CSSProperties = {
   background: 'linear-gradient(180deg, #ffffff 0%, #f9faff 100%)',
@@ -222,29 +220,13 @@ export const Home: React.FC = () => {
             <h2 id="why-title" className="text-section-title">
               Technology That Works for Your Business
             </h2>
+            <p className="text-body" style={{ marginTop: 16 }}>
+              We start with how your business actually runs, then design technology around it —
+              structured to grow, easy to connect, and supported long after launch.
+            </p>
           </AnimatedSection>
-          <div className="grid-cards-4" style={{ marginTop: 48 }}>
-            {whyChooseUs.map((item, i) => (
-              <AnimatedSection key={item.title} delay={i * 0.08}>
-                <article
-                  className={`p-7 h-full bg-white mild-glow-card ${i === 1 ? 'mild-d1' : i === 2 ? 'mild-d2' : i === 3 ? 'mild-d3' : ''}`}
-                  style={cardStyle}
-                >
-                  <span
-                    className="flex items-center justify-center w-11 h-11 rounded-xl"
-                    style={{ background: '#F4F5FF', color: 'var(--color-primary)', marginBottom: 16 }}
-                    aria-hidden="true"
-                  >
-                    {renderAppIcon(item.icon, 'w-5 h-5')}
-                  </span>
-                  <h3 className="text-card-title" style={{ marginBottom: 8, fontSize: '1.1rem' }}>
-                    {item.title}
-                  </h3>
-                  <p className="text-body text-[15px]">{item.description}</p>
-                </article>
-              </AnimatedSection>
-            ))}
-          </div>
+
+          <WhyChooseUs />
         </div>
       </section>
 

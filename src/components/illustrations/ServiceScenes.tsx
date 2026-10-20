@@ -22,6 +22,7 @@ export type GlyphName =
   | 'code' | 'palette' | 'mobile' | 'chart' | 'cloud' | 'db' | 'gear' | 'rocket'
   | 'shield' | 'chat' | 'bolt' | 'globe' | 'search' | 'users' | 'box' | 'invoice'
   | 'flow' | 'lock' | 'grid' | 'bell' | 'ai' | 'monitor' | 'pen' | 'cart' | 'swap'
+  | 'target' | 'layers'
 
 const GLYPH: Record<GlyphName, React.ReactNode> = {
   code: (
@@ -62,8 +63,9 @@ const GLYPH: Record<GlyphName, React.ReactNode> = {
   ),
   gear: (
     <>
-      <circle cx="12" cy="12" r="3.2" />
-      <path d="M12 2.5v3.2M12 18.3v3.2M2.5 12h3.2M18.3 12h3.2M5.2 5.2l2.3 2.3M16.5 16.5l2.3 2.3M18.8 5.2l-2.3 2.3M7.5 16.5l-2.3 2.3" />
+      <circle cx="12" cy="12" r="6.2" />
+      <circle cx="12" cy="12" r="2.2" />
+      <path d="M12 2.6v3.2M12 18.2v3.2M2.6 12h3.2M18.2 12h3.2M5.4 5.4l2.3 2.3M16.3 16.3l2.3 2.3M18.6 5.4l-2.3 2.3M7.7 16.3l-2.3 2.3" />
     </>
   ),
   rocket: (
@@ -179,6 +181,19 @@ const GLYPH: Record<GlyphName, React.ReactNode> = {
       <path d="M4 8h13l-3-3M20 16H7l3 3" />
     </>
   ),
+  target: (
+    <>
+      <circle cx="12" cy="12" r="8.6" />
+      <circle cx="12" cy="12" r="4.6" />
+      <circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none" />
+    </>
+  ),
+  layers: (
+    <>
+      <path d="M12 2.8l9 5-9 5-9-5z" />
+      <path d="M3 12.4l9 5 9-5M3 16.8l9 5 9-5" />
+    </>
+  ),
 }
 
 const Glyph: React.FC<{ name: GlyphName; size?: number }> = ({ name, size = 24 }) => (
@@ -216,27 +231,33 @@ const FloatCard: React.FC<{
   glyph: GlyphName
   label: string
   delay?: number
-}> = ({ id, x, y, w = 172, tone, glyph, label, delay = 0 }) => (
-  <g className="svg-float" style={{ animationDelay: `${delay}s` }} filter={`url(#${id}-sh)`}>
-    <rect x={x} y={y} width={w} height={70} rx={18} fill="#fff" stroke="#E4EBF7" strokeWidth={1.5} />
-    <rect x={x + 13} y={y + 14} width={42} height={42} rx={13} fill={tone} />
-    <g transform={`translate(${x + 22} ${y + 23})`} color="#fff">
-      <Glyph name={glyph} size={24} />
+}> = ({ id, x, y, w = 172, tone, glyph, label, delay = 0 }) => {
+  /* the card grows to fit its label so long captions never spill out */
+  const fontSize = label.length > 15 ? 11.5 : label.length > 12 ? 12.5 : 13.5
+  const textW = label.length * fontSize * 0.56
+  const width = Math.max(w, Math.ceil(textW) + 80)
+  return (
+    <g className="svg-float" style={{ animationDelay: `${delay}s` }} filter={`url(#${id}-sh)`}>
+      <rect x={x} y={y} width={width} height={70} rx={18} fill="#fff" stroke="#E4EBF7" strokeWidth={1.5} />
+      <rect x={x + 13} y={y + 14} width={42} height={42} rx={13} fill={tone} />
+      <g transform={`translate(${x + 22} ${y + 23})`} color="#fff">
+        <Glyph name={glyph} size={24} />
+      </g>
+      <text
+        x={x + 66}
+        y={y + 32}
+        fontSize={fontSize}
+        fontWeight={800}
+        fill={INK}
+        fontFamily="Inter, sans-serif"
+      >
+        {label}
+      </text>
+      <rect x={x + 66} y={y + 40} width={width - 82} height={6} rx={3} fill="#CBD6E8" />
+      <rect x={x + 66} y={y + 52} width={(width - 82) * 0.58} height={6} rx={3} fill="#E2E9F5" />
     </g>
-    <text
-      x={x + 66}
-      y={y + 32}
-      fontSize={13.5}
-      fontWeight={800}
-      fill={INK}
-      fontFamily="Inter, sans-serif"
-    >
-      {label}
-    </text>
-    <rect x={x + 66} y={y + 40} width={w - 82} height={6} rx={3} fill="#CBD6E8" />
-    <rect x={x + 66} y={y + 52} width={(w - 82) * 0.58} height={6} rx={3} fill="#E2E9F5" />
-  </g>
-)
+  )
+}
 
 const SceneShell: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) => (
   <>
@@ -711,6 +732,138 @@ export const AiScene: React.FC<SceneProps> = ({ className = 'w-full h-auto', id 
       <FloatCard id={id} x={44} y={196} tone={BLUE} glyph="chat" label="Chatbots" delay={0.3} w={152} />
       <FloatCard id={id} x={30} y={392} tone={CYAN} glyph="chart" label="Smart Insights" delay={0.9} w={176} />
       <FloatCard id={id} x={398} y={404} tone={ORANGE} glyph="bolt" label="Auto Workflows" delay={1.4} w={186} />
+    </SceneSvg>
+  </div>
+)
+
+/* ---------- 7. Why choose us (technology that works) ---------- */
+
+export const WhyUsScene: React.FC<SceneProps> = ({ className = 'w-full h-auto', id = 'sc-why' }) => (
+  <div className={className}>
+    <SceneSvg id={id} label="A working software platform: dashboard, mobile app and connected services, surrounded by the four principles that guide the work">
+      {/* leader lines */}
+      <g aria-hidden="true" fill="none" stroke={LINE} strokeWidth={2} strokeDasharray="3 7">
+        <path d="M200 122 L232 146" />
+        <path d="M440 104 L420 146" />
+        <path d="M200 420 L216 356" />
+        <path d="M430 452 L410 350" />
+      </g>
+
+      {/* cloud — the float class animates `transform`, so the offset lives on an inner group */}
+      <g className="svg-float" filter={`url(#${id}-sh)`}>
+        <g transform="translate(0,-40)">
+          <path
+            d="M262 96c-11 0-19 8-20 17a16 16 0 006 31h50a15 15 0 001-30 20 20 0 00-37-18z"
+            fill="#fff"
+            stroke={BLUE}
+            strokeWidth={2.5}
+          />
+          <path
+            d="M270 158v-36m0 0l-12 13m12-13l12 13"
+            stroke={CYAN}
+            strokeWidth={4.5}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </g>
+      </g>
+
+      {/* monitor with running system */}
+      <g className="svg-float" filter={`url(#${id}-sh)`}>
+        <rect x={150} y={140} width={320} height={210} rx={20} fill="#0B1530" />
+        <rect x={158} y={148} width={304} height={194} rx={14} fill="#fff" />
+        <circle cx={176} cy={162} r={4.5} fill={ORANGE} />
+        <circle cx={191} cy={162} r={4.5} fill={YELLOW} />
+        <circle cx={206} cy={162} r={4.5} fill={GREEN} />
+        <rect x={226} y={154} width={120} height={16} rx={8} fill="#F1F5FB" />
+        <rect x={360} y={152} width={54} height={20} rx={10} fill="#E8FBF0" />
+        <circle cx={372} cy={162} r={5} fill={GREEN} className="svg-pulse" />
+        <rect x={382} y={158} width={26} height={8} rx={4} fill="#0E7A34" opacity={0.75} />
+        {/* sidebar */}
+        <rect x={158} y={184} width={58} height={158} rx={10} fill={`url(#${id}-deep)`} />
+        <circle cx={176} cy={200} r={7} fill={CYAN} />
+        {[0, 1, 2, 3].map((i) => (
+          <rect key={i} x={168} y={222 + i * 22} width={38} height={7} rx={3.5} fill="#fff" opacity={i === 0 ? 0.9 : 0.35} />
+        ))}
+        <rect x={166} y={312} width={42} height={22} rx={8} fill={ORANGE} />
+        {/* kpis */}
+        {[
+          { x: 230, v: 'Live', c: BLUE },
+          { x: 310, v: 'Sync', c: GREEN },
+          { x: 390, v: 'Apps', c: ORANGE },
+        ].map((k) => (
+          <g key={k.x}>
+            <rect x={k.x} y={190} width={68} height={44} rx={10} fill="#F7FAFF" stroke="#E6EDF8" />
+            <text x={k.x + 11} y={213} fontSize={13} fontWeight={800} fill={INK} fontFamily="Inter, sans-serif">
+              {k.v}
+            </text>
+            <rect x={k.x + 11} y={220} width={32} height={5} rx={2.5} fill={k.c} opacity={0.65} />
+          </g>
+        ))}
+        {/* chart */}
+        <rect x={230} y={248} width={228} height={94} rx={12} fill="#F7FAFF" stroke="#E6EDF8" />
+        {[0, 1, 2].map((i) => (
+          <line key={i} x1={242} y1={266 + i * 22} x2={446} y2={266 + i * 22} stroke="#E6EDF8" strokeWidth={1.5} />
+        ))}
+        <path
+          d="M244 318l28-22 26 12 26-28 28 16 26-20 30 8 24-14"
+          fill="none"
+          stroke={BLUE}
+          strokeWidth={3.5}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <circle cx={380} cy={276} r={6} fill={ORANGE} className="svg-pulse" />
+      </g>
+
+      {/* phone */}
+      <g className="svg-float" style={{ animationDelay: '1s' }} filter={`url(#${id}-sh)`}>
+        <rect x={60} y={206} width={94} height={190} rx={22} fill="#0B1530" />
+        <rect x={66} y={212} width={82} height={178} rx={17} fill="#fff" />
+        <rect x={90} y={218} width={34} height={8} rx={4} fill="#0B1530" />
+        <rect x={78} y={238} width={58} height={9} rx={4.5} fill={INK} />
+        <rect x={78} y={254} width={58} height={48} rx={9} fill={`url(#${id}-sky)`} />
+        <path d="M86 294l14-16 10 10 8-7 12 13z" fill={BLUE} opacity={0.75} />
+        <rect x={78} y={312} width={58} height={8} rx={4} fill="#E2E9F5" />
+        <rect x={78} y={326} width={58} height={22} rx={11} fill={ORANGE} />
+        <rect x={92} y={333} width={30} height={7} rx={3.5} fill="#fff" />
+        <rect x={78} y={358} width={58} height={18} rx={9} fill="#F1F5FB" />
+      </g>
+
+      {/* connected services */}
+      <g className="svg-float" style={{ animationDelay: '1.5s' }} filter={`url(#${id}-sh)`}>
+        <rect x={480} y={140} width={118} height={112} rx={18} fill="#fff" stroke="#E4EBF7" strokeWidth={1.5} />
+        <text x={494} y={164} fontSize={11} fontWeight={800} fill={INK} fontFamily="Inter, sans-serif">
+          Connected Apps
+        </text>
+        {[0, 1, 2].map((i) => (
+          <g key={i}>
+            <rect x={496} y={176 + i * 24} width={86} height={18} rx={9} fill="#F1F5FB" />
+            <circle cx={508} cy={185 + i * 24} r={4.5} fill={[BLUE, CYAN, ORANGE][i]} />
+            <rect x={518} y={182 + i * 24} width={38} height={6} rx={3} fill="#CBD6E8" />
+          </g>
+        ))}
+        <path d="M470 196 h10" stroke={LINE} strokeWidth={3} strokeLinecap="round" />
+      </g>
+
+      {/* support badge */}
+      <g className="svg-float" style={{ animationDelay: '1.9s' }} filter={`url(#${id}-sh)`}>
+        <rect x={466} y={276} width={142} height={60} rx={16} fill="#fff" stroke="#E4EBF7" strokeWidth={1.5} />
+        <rect x={478} y={288} width={36} height={36} rx={12} fill={GREEN} />
+        <g transform="translate(484 294)" color="#fff">
+          <Glyph name="shield" size={24} />
+        </g>
+        <text x={524} y={303} fontSize={12} fontWeight={800} fill={INK} fontFamily="Inter, sans-serif">
+          Monitored
+        </text>
+        <rect x={524} y={311} width={46} height={6} rx={3} fill="#CBD6E8" />
+        <circle cx={592} cy={285} r={5} fill={GREEN} className="svg-pulse" />
+      </g>
+
+      <FloatCard id={id} x={30} y={56} tone={BLUE} glyph="target" label="Built Around You" delay={0.2} w={176} />
+      <FloatCard id={id} x={434} y={40} tone={CYAN} glyph="layers" label="Scales Cleanly" delay={0.7} w={166} />
+      <FloatCard id={id} x={24} y={404} tone={ORANGE} glyph="swap" label="Connects Everything" delay={1.2} w={196} />
+      <FloatCard id={id} x={432} y={424} tone={GREEN} glyph="shield" label="Stays Supported" delay={1.6} w={180} />
     </SceneSvg>
   </div>
 )
