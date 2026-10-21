@@ -1,8 +1,9 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'motion/react'
 import Seo from '../components/Seo'
+import { renderAppIcon } from '../utils/iconResolver'
 import { projects, type Project } from '../data/siteData'
+import ProjectsCta from '../components/ProjectsCta'
 
 const cardStyle: React.CSSProperties = {
   background: 'linear-gradient(180deg, #ffffff 0%, #f9faff 100%)',
@@ -21,18 +22,75 @@ export const Projects: React.FC = () => {
       />
 
       {/* Heading + working filters */}
-      <section aria-labelledby="projects-heading">
-        <div className="container text-center" style={{ paddingBlock: 'clamp(48px,6vw,80px)', maxWidth: 780, marginInline: 'auto' }}>
-          <h1 id="projects-heading" className="text-page-title" style={{ marginTop: 16 }}>
-            Our Projects
-          </h1>
-          <p className="text-body" style={{ marginTop: 18, fontSize: '1.125rem', marginInline: 'auto' }}>
-            Explore software products and digital experiences built to solve practical
-            problems and support business goals. Every project begins with a
-            requirement. Our focus is on translating that requirement into a clear user
-            experience, a suitable technical implementation and a product that can
-            evolve with changing needs.
-          </p>
+      <section aria-labelledby="projects-heading" className="page-hero page-hero--center page-hero--cool">
+        {/* Decorative brand artwork */}
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          viewBox="0 0 1200 560"
+          preserveAspectRatio="xMidYMid slice"
+          className="page-hero-art"
+        >
+          <defs>
+            <radialGradient id="prj-hero-glow-a" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0%" stopColor="#00cfff" stopOpacity="0.22" />
+              <stop offset="100%" stopColor="#00cfff" stopOpacity="0" />
+            </radialGradient>
+            <radialGradient id="prj-hero-glow-b" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0%" stopColor="#0057e7" stopOpacity="0.16" />
+              <stop offset="100%" stopColor="#0057e7" stopOpacity="0" />
+            </radialGradient>
+            <pattern id="prj-hero-dots" width="26" height="26" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1.5" fill="#0086c9" opacity="0.16" />
+            </pattern>
+          </defs>
+
+          <ellipse cx="600" cy="20" rx="520" ry="300" fill="url(#prj-hero-glow-a)" />
+          <ellipse cx="120" cy="530" rx="340" ry="230" fill="url(#prj-hero-glow-b)" />
+          <ellipse cx="1100" cy="500" rx="320" ry="220" fill="url(#prj-hero-glow-b)" />
+          <rect width="1200" height="560" fill="url(#prj-hero-dots)" />
+
+          <g fill="none" stroke="#0086c9" strokeOpacity="0.12" strokeWidth="1.5">
+            <path d="M-40 470 Q 320 330 700 372" />
+            <path d="M-40 540 Q 340 386 720 430" />
+            <circle cx="1090" cy="120" r="160" />
+            <circle cx="1090" cy="120" r="235" />
+          </g>
+        </svg>
+
+        <div className="container page-hero-grid">
+          <div className="page-hero-copy">
+            <span className="page-hero-eyebrow">
+              <span className="page-hero-eyebrow-dot" aria-hidden="true" />
+              Selected work
+            </span>
+
+            <h1 id="projects-heading" className="text-page-title" style={{ marginTop: 18 }}>
+              Our Projects
+            </h1>
+
+            <p className="page-hero-text text-body" style={{ marginTop: 18, fontSize: '1.0625rem' }}>
+              Explore software products and digital experiences built to solve practical
+              problems and support business goals. Every project begins with a
+              requirement — and ends with a product your team can keep evolving.
+            </p>
+
+            <ul className="page-hero-chiprow">
+              {[
+                { icon: 'web', label: 'Websites' },
+                { icon: 'dashboard', label: 'Web applications' },
+                { icon: 'mobile', label: 'Learning platforms' },
+                { icon: 'layers', label: 'LMS systems' },
+              ].map((item) => (
+                <li key={item.label} className="page-hero-chiprow-item">
+                  <span className="page-hero-chiprow-icon" aria-hidden="true">
+                    {renderAppIcon(item.icon, 'w-4 h-4')}
+                  </span>
+                  {item.label}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 
@@ -116,86 +174,7 @@ export const Projects: React.FC = () => {
       </section>
 
       {/* CTA */}
-      <section aria-labelledby="projects-cta" className="section" style={{ paddingTop: 0, paddingLeft: 0, paddingRight: 0 }}>
-        <div
-          className="relative overflow-hidden text-center"
-          style={{
-            background: 'linear-gradient(120deg, var(--color-cyan) 0%, var(--color-primary) 100%)',
-            color: '#fff',
-            padding: 'clamp(48px,7vw,84px) clamp(24px,5vw,64px)',
-          }}
-        >
-          {/* Modern pattern: mesh glow + edge-faded fine grid + glass tiles */}
-          <svg
-            aria-hidden="true"
-            focusable="false"
-            viewBox="0 0 1200 400"
-            preserveAspectRatio="xMidYMid slice"
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
-          >
-            <defs>
-              <radialGradient id="projects-glow-a" cx="0.5" cy="0.5" r="0.5">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.5" />
-                <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-              </radialGradient>
-              <radialGradient id="projects-glow-b" cx="0.5" cy="0.5" r="0.5">
-                <stop offset="0%" stopColor="#001f80" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#001f80" stopOpacity="0" />
-              </radialGradient>
-              <pattern id="projects-grid" width="48" height="48" patternUnits="userSpaceOnUse">
-                <path d="M48 0 H0 V48" fill="none" stroke="#fff" strokeWidth={1} opacity={0.4} />
-              </pattern>
-              <radialGradient id="projects-grid-fade" cx="0.5" cy="0.5" r="0.65">
-                <stop offset="0%" stopColor="#fff" stopOpacity="1" />
-                <stop offset="100%" stopColor="#fff" stopOpacity="0" />
-              </radialGradient>
-              <mask id="projects-grid-mask">
-                <rect width="1200" height="400" fill="url(#projects-grid-fade)" />
-              </mask>
-            </defs>
-
-            <ellipse cx={1030} cy={360} rx={400} ry={280} fill="url(#projects-glow-a)" />
-            <ellipse cx={150} cy={40} rx={380} ry={260} fill="url(#projects-glow-b)" />
-            <rect width="1200" height="400" fill="url(#projects-grid)" mask="url(#projects-grid-mask)" />
-
-            {/* floating glass tiles */}
-            <g className="svg-float" opacity={0.5}>
-              <rect x={300} y={90} width={72} height={72} rx={16} fill="#fff" opacity={0.14} stroke="#fff" strokeWidth={1.5} />
-              <rect x={840} y={250} width={56} height={56} rx={14} fill="#fff" opacity={0.12} stroke="#fff" strokeWidth={1.5} />
-            </g>
-
-            {/* accent nodes */}
-            <g fill="#fff" opacity={0.8}>
-              <circle cx={210} cy={280} r={5} />
-              <circle cx={990} cy={120} r={5} />
-            </g>
-            <path d="M210 280 H420" fill="none" stroke="#fff" strokeWidth={2} opacity={0.4} strokeDasharray="3 12" className="svg-flow" />
-
-            <g className="svg-float" strokeLinecap="round" strokeWidth={3}>
-              <path d="M540 90 v18 M531 99 h18" stroke="#fff" opacity={0.85} />
-              <path d="M680 320 v16 M672 328 h16" stroke="#001f80" opacity={0.6} />
-            </g>
-            <circle cx={600} cy={200} r={5} fill="#fff" opacity={0.9} className="svg-pulse" />
-          </svg>
-
-          <div className="relative" style={{ zIndex: 1 }}>
-            <h2 id="projects-cta" className="text-section-title" style={{ color: '#fff' }}>
-              Have a Similar Idea? Let&apos;s Discuss It.
-            </h2>
-            <p className="text-body" style={{ color: 'rgba(255,255,255,.9)', marginTop: 14, marginInline: 'auto', maxWidth: 600 }}>
-              Share your requirements and we&apos;ll explore a practical way forward for
-              your business.
-            </p>
-            <Link
-              to="/contact"
-              className="inline-flex items-center justify-center min-h-[52px] px-8 text-base font-semibold"
-              style={{ background: '#fff', color: 'var(--color-primary)', borderRadius: 'var(--radius-button)', marginTop: 28 }}
-            >
-              Start a Project
-            </Link>
-          </div>
-        </div>
-      </section>
+      <ProjectsCta />
     </div>
   )
 }

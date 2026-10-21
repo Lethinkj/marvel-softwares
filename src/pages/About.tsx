@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { renderAppIcon } from '../utils/iconResolver'
 import AnimatedSection from '../components/AnimatedSection'
 import Seo from '../components/Seo'
@@ -21,22 +20,92 @@ export const About: React.FC = () => (
     />
 
     {/* A. Introduction */}
-    <section aria-labelledby="about-heading">
-      <div className="container text-center" style={{ paddingBlock: 'clamp(48px,6vw,80px)', maxWidth: 780, marginInline: 'auto' }}>
-        <h1 id="about-heading" className="text-page-title" style={{ marginTop: 16 }}>
-          About Us
-        </h1>
-        <p className="text-body" style={{ marginTop: 20, marginInline: 'auto' }}>
-          MARVEL SOFTWARES develops websites, applications, enterprise systems and
-          custom digital solutions that help businesses turn ideas into useful,
-          dependable technology. Our work covers the full journey from planning and
-          design to development, deployment and ongoing support.
-        </p>
-        <p className="text-body" style={{ marginTop: 14, marginInline: 'auto' }}>
-          Every business works differently. We focus on understanding your
-          requirements, designing practical solutions and building software that fits
-          your workflows, users and future plans.
-        </p>
+    <section aria-labelledby="about-heading" className="page-hero page-hero--warm">
+      {/* Decorative brand artwork */}
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        viewBox="0 0 1200 560"
+        preserveAspectRatio="xMidYMid slice"
+        className="page-hero-art"
+      >
+        <defs>
+          <radialGradient id="abt-hero-glow-a" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0%" stopColor="#ff5a00" stopOpacity="0.16" />
+            <stop offset="100%" stopColor="#ff5a00" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="abt-hero-glow-b" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0%" stopColor="#0057e7" stopOpacity="0.14" />
+            <stop offset="100%" stopColor="#0057e7" stopOpacity="0" />
+          </radialGradient>
+          <pattern id="abt-hero-dots" width="26" height="26" patternUnits="userSpaceOnUse">
+            <circle cx="2" cy="2" r="1.5" fill="#ff5a00" opacity="0.16" />
+          </pattern>
+        </defs>
+
+        <ellipse cx="200" cy="40" rx="400" ry="270" fill="url(#abt-hero-glow-a)" />
+        <ellipse cx="1080" cy="520" rx="360" ry="240" fill="url(#abt-hero-glow-b)" />
+        <rect width="1200" height="560" fill="url(#abt-hero-dots)" />
+
+        <g fill="none" stroke="#ff5a00" strokeOpacity="0.1" strokeWidth="1.5">
+          <circle cx="140" cy="150" r="150" />
+          <circle cx="140" cy="150" r="225" />
+          <circle cx="140" cy="150" r="300" />
+        </g>
+      </svg>
+
+      <div className="container page-hero-grid">
+        {/* Principles rail — leads on the left */}
+        <div className="page-hero-timeline">
+          <p className="page-hero-card-label">What guides our work</p>
+          <ul className="page-hero-timeline-list">
+            {workingPrinciples.slice(0, 3).map((item, i) => (
+              <li key={item.title} className="page-hero-timeline-item">
+                {i < 2 && <span className="page-hero-timeline-rail" aria-hidden="true" />}
+                <span className="page-hero-timeline-icon" aria-hidden="true">
+                  {renderAppIcon(item.icon, 'w-4 h-4')}
+                </span>
+                <span>
+                  <strong className="page-hero-timeline-title">{item.title}</strong>
+                  <span className="page-hero-timeline-text">{item.description}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Message */}
+        <div className="page-hero-copy">
+          <span className="page-hero-eyebrow">
+            <span className="page-hero-eyebrow-dot" aria-hidden="true" />
+            Who we are
+          </span>
+
+          <h1 id="about-heading" className="text-page-title" style={{ marginTop: 18 }}>
+            About Us
+          </h1>
+
+          <p className="page-hero-text text-body" style={{ marginTop: 18, fontSize: '1.0625rem' }}>
+            MARVEL SOFTWARES develops websites, applications, enterprise systems and custom
+            digital solutions that help businesses turn ideas into useful, dependable
+            technology. Our work covers the full journey from planning and design to
+            development, deployment and ongoing support.
+          </p>
+          <p className="page-hero-text text-body" style={{ marginTop: 14, fontSize: '1.0625rem' }}>
+            Every business works differently. We focus on understanding your requirements,
+            designing practical solutions and building software that fits your workflows,
+            users and future plans.
+          </p>
+
+          <ul className="page-hero-chips">
+            {['Planning & design', 'Development', 'Deployment', 'Ongoing support'].map((chip) => (
+              <li key={chip} className="page-hero-chip">
+                <span className="page-hero-chip-dot" aria-hidden="true" />
+                {chip}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
 
@@ -149,75 +218,6 @@ export const About: React.FC = () => (
       </div>
     </section>
 
-    {/* E. CTA */}
-    <section aria-labelledby="about-cta" className="section" style={{ paddingTop: 0, paddingLeft: 0, paddingRight: 0 }}>
-      <div
-        className="relative overflow-hidden text-center"
-        style={{
-          background: 'linear-gradient(120deg, var(--color-orange) 0%, var(--color-yellow) 100%)',
-          color: '#fff',
-          padding: 'clamp(48px,7vw,84px) clamp(24px,5vw,64px)',
-        }}
-      >
-        {/* Modern pattern: soft glow orbs + edge-faded dot grid */}
-        <svg
-          aria-hidden="true"
-          focusable="false"
-          viewBox="0 0 1200 400"
-          preserveAspectRatio="xMidYMid slice"
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
-        >
-          <defs>
-            <radialGradient id="about-glow-a" cx="0.5" cy="0.5" r="0.5">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.55" />
-              <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-            </radialGradient>
-            <radialGradient id="about-glow-b" cx="0.5" cy="0.5" r="0.5">
-              <stop offset="0%" stopColor="#7a2e00" stopOpacity="0.4" />
-              <stop offset="100%" stopColor="#7a2e00" stopOpacity="0" />
-            </radialGradient>
-            <pattern id="about-dots" width="28" height="28" patternUnits="userSpaceOnUse">
-              <circle cx="2" cy="2" r="1.6" fill="#ffffff" opacity="0.5" />
-            </pattern>
-            <linearGradient id="about-fade" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#fff" stopOpacity="0" />
-              <stop offset="50%" stopColor="#fff" stopOpacity="1" />
-              <stop offset="100%" stopColor="#fff" stopOpacity="0" />
-            </linearGradient>
-            <mask id="about-dot-mask">
-              <rect width="1200" height="400" fill="url(#about-fade)" />
-            </mask>
-          </defs>
-
-          <ellipse cx={170} cy={370} rx={380} ry={270} fill="url(#about-glow-a)" />
-          <ellipse cx={1060} cy={30} rx={360} ry={250} fill="url(#about-glow-b)" />
-          <rect width="1200" height="400" fill="url(#about-dots)" mask="url(#about-dot-mask)" />
-
-          {/* fine accent line */}
-          <line x1="0" y1="330" x2="1200" y2="60" stroke="#fff" strokeWidth={2} opacity={0.22} strokeLinecap="round" />
-          <line x1="0" y1="352" x2="1200" y2="82" stroke="#7a2e00" strokeWidth={1.5} opacity={0.28} strokeLinecap="round" />
-
-          <g className="svg-float" strokeLinecap="round" strokeWidth={3}>
-            <path d="M600 80 v18 M591 89 h18" stroke="#fff" opacity={0.85} />
-            <path d="M690 320 v16 M682 328 h16" stroke="#7a2e00" opacity={0.7} />
-          </g>
-          <circle cx={600} cy={330} r={5} fill="#fff" opacity={0.9} className="svg-pulse" />
-        </svg>
-
-        <div className="relative" style={{ zIndex: 1 }}>
-          <h2 id="about-cta" className="text-section-title" style={{ color: '#fff' }}>
-            Let&apos;s Build Something Useful Together
-          </h2>
-          <Link
-            to="/contact"
-            className="inline-flex items-center justify-center min-h-[52px] px-8 text-base font-semibold"
-            style={{ background: 'var(--color-primary-dark)', color: '#fff', borderRadius: 'var(--radius-button)', marginTop: 28 }}
-          >
-            Start a Project
-          </Link>
-        </div>
-      </div>
-    </section>
   </div>
 )
 

@@ -9,7 +9,8 @@ export const NotFound: React.FC = () => {
   const shouldReduceMotion = useReducedMotion()
 
   return (
-    <div className="relative min-h-[calc(100vh-var(--nav-height)-180px)] sm:min-h-[75vh] flex items-center justify-center bg-white text-[#1E293B] overflow-hidden section-padding py-12 sm:py-20">
+    <div className="relative min-h-[calc(100vh-var(--nav-height)-180px)] sm:min-h-[75vh] flex items-center justify-center bg-white text-[#1E293B] overflow-hidden section-padding py-12 sm:py-20"
+      style={{ paddingTop: 'calc(var(--header-offset) + 24px)' }}>
       {/* Decorative background glow backdrop */}
       <div
         className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 sm:w-[500px] md:w-[650px] h-80 sm:h-[500px] md:h-[650px] bg-gradient-to-tr from-[#F0F5FF] via-[#F0F5FF]/50 to-transparent rounded-full blur-3xl -z-10"

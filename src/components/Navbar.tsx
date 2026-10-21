@@ -127,11 +127,12 @@ export function Navbar() {
 
   return (
     <header
-      className="sticky top-0 z-50 w-full"
+      className="fixed top-0 left-0 right-0 z-50 w-full"
       style={{
         paddingTop: isScrolled ? 8 : 12,
         paddingBottom: isScrolled ? 8 : 12,
         transition: 'padding .3s ease',
+        pointerEvents: 'none',
       }}
     >
       <div
@@ -139,6 +140,7 @@ export function Navbar() {
         style={{
           maxWidth: 'var(--container-width)',
           width: 'min(100% - 24px, var(--container-width))',
+          pointerEvents: 'none',
         }}
       >
         <div
@@ -148,15 +150,17 @@ export function Navbar() {
             gap: 12,
             padding: isScrolled ? '0 6px 0 18px' : '0 8px 0 20px',
             borderRadius: 26,
-            background: 'rgba(255,255,255,.88)',
+            /* glassy at the top of the page, firmer once content scrolls under it */
+            background: isScrolled ? 'rgba(255,255,255,.78)' : 'rgba(255,255,255,.40)',
             backdropFilter: 'saturate(180%) blur(24px)',
             WebkitBackdropFilter: 'saturate(180%) blur(24px)',
-            border: '1px solid rgba(8,102,245,.12)',
+            border: '1px solid rgba(255,255,255,.55)',
             boxShadow: isScrolled
               ? '0 18px 40px -22px rgba(0,31,128,.45), 0 2px 6px -3px rgba(16,38,83,.12)'
               : '0 10px 30px -20px rgba(0,31,128,.28), 0 1px 3px -1px rgba(16,38,83,.08)',
             transition:
               'height .3s ease, padding .3s ease, box-shadow .3s ease, background .3s ease',
+            pointerEvents: 'auto',
           }}
         >
           <Link
@@ -234,7 +238,7 @@ export function Navbar() {
           aria-expanded={isMenuOpen}
           aria-controls="mobile-navigation"
           className="md:hidden flex items-center justify-center w-11 h-11 rounded-xl transition-colors shrink-0"
-          style={{ color: 'var(--color-text)', background: '#F1F5FB' }}
+          style={{ color: 'var(--color-primary)' }}
         >
           <span className="sr-only">{isMenuOpen ? 'Close menu' : 'Open menu'}</span>
           <span className="relative block w-5 h-5" aria-hidden="true">
@@ -349,7 +353,7 @@ export function Navbar() {
                   onClick={() => setIsMenuOpen(false)}
                   aria-label="Close navigation menu"
                   className="flex items-center justify-center w-10 h-10 rounded-xl transition-colors"
-                  style={{ color: 'var(--color-text)', background: '#F1F5FB' }}
+                  style={{ color: 'var(--color-primary)' }}
                 >
                   <svg
                     width="18"

@@ -73,7 +73,10 @@ export const Home: React.FC = () => {
         <div aria-hidden="true" className="hero-glow hero-glow-a" />
         <div aria-hidden="true" className="hero-glow hero-glow-b" />
 
-        <div className="container relative" style={{ paddingTop: 'clamp(56px,7vw,104px)', paddingBottom: 'clamp(56px,8vw,112px)' }}>
+        <div className="container relative" style={{
+            paddingTop: 'calc(var(--header-offset) + clamp(36px, 5.5vw, 80px))',
+            paddingBottom: 'clamp(56px,8vw,112px)',
+          }}>
           <div
             className="flex flex-col lg:grid lg:grid-cols-12 lg:items-center"
             style={{ gap: 'clamp(32px,4.5vw,60px)' }}

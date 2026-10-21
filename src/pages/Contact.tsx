@@ -1,6 +1,6 @@
 import React, { useState, useId } from 'react'
 import Seo from '../components/Seo'
-import { CheckIcon, MailIcon, PhoneIcon } from '../components/Icons'
+import { CheckIcon } from '../components/Icons'
 import { siteConfig } from '../data/siteData'
 import { submitProjectInquiry } from '../utils/inquiryApi'
 
@@ -92,76 +92,103 @@ export const Contact: React.FC = () => {
       />
 
       {/* Heading */}
-      <section aria-labelledby="contact-heading">
-        <div className="container text-center" style={{ paddingBlock: 'clamp(48px,6vw,80px)', maxWidth: 780, marginInline: 'auto' }}>
-          <h1 id="contact-heading" className="text-page-title" style={{ marginTop: 16 }}>
-            Contact Us
-          </h1>
-          <p className="text-body" style={{ marginTop: 18, fontSize: '1.125rem', marginInline: 'auto' }}>
-            Share your requirements, business goals and challenges. We&apos;ll use the
-            information to understand your needs and discuss a suitable software solution.
-            The more detail you share about your users, timeline and expectations, the
-            better we can respond.
-          </p>
+      <section aria-labelledby="contact-heading" className="page-hero page-hero--ink">
+        {/* Decorative brand artwork */}
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          viewBox="0 0 1200 560"
+          preserveAspectRatio="xMidYMid slice"
+          className="page-hero-art"
+        >
+          <defs>
+            <radialGradient id="ct-hero-glow-a" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0%" stopColor="#0057e7" stopOpacity="0.18" />
+              <stop offset="100%" stopColor="#0057e7" stopOpacity="0" />
+            </radialGradient>
+            <radialGradient id="ct-hero-glow-b" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0%" stopColor="#00cfff" stopOpacity="0.16" />
+              <stop offset="100%" stopColor="#00cfff" stopOpacity="0" />
+            </radialGradient>
+            <pattern id="ct-hero-dots" width="26" height="26" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1.5" fill="#0057e7" opacity="0.14" />
+            </pattern>
+          </defs>
+
+          <ellipse cx="980" cy="60" rx="400" ry="280" fill="url(#ct-hero-glow-a)" />
+          <ellipse cx="140" cy="520" rx="360" ry="250" fill="url(#ct-hero-glow-b)" />
+          <rect width="1200" height="560" fill="url(#ct-hero-dots)" />
+
+          <g fill="none" stroke="#0057e7" strokeOpacity="0.12" strokeWidth="1.5">
+            <circle cx="1040" cy="260" r="160" />
+            <circle cx="1040" cy="260" r="235" />
+            <circle cx="1040" cy="260" r="310" />
+          </g>
+
+          <g className="svg-float" strokeLinecap="round" strokeWidth="3">
+            <path d="M140 140 v18 M131 149 h18" stroke="#ff5a00" opacity="0.3" />
+          </g>
+        </svg>
+
+        <div className="container page-hero-grid">
+          <div className="page-hero-copy">
+            <span className="page-hero-eyebrow">
+              <span className="page-hero-eyebrow-dot" aria-hidden="true" />
+              Let&apos;s talk
+            </span>
+
+            <h1 id="contact-heading" className="text-page-title" style={{ marginTop: 18 }}>
+              Contact Us
+            </h1>
+
+            <p className="text-body" style={{ marginTop: 18, fontSize: '1.0625rem' }}>
+              Share your requirements, business goals and challenges. We&apos;ll use the
+              information to understand your needs and discuss a suitable software
+              solution. The more detail you share about your users, timeline and
+              expectations, the better we can respond.
+            </p>
+
+            <ul className="page-hero-chips">
+              {['Mon – Fri, 9:00 AM – 6:00 PM', 'Remote & on-site', 'Reply to your inquiry'].map(
+                (chip) => (
+                  <li key={chip} className="page-hero-chip">
+                    <span className="page-hero-chip-dot" aria-hidden="true" />
+                    {chip}
+                  </li>
+                ),
+              )}
+            </ul>
+          </div>
+
+          {/* What happens after you write in */}
+          <div className="page-hero-card">
+            <p className="page-hero-card-label">What happens next</p>
+            <ul className="page-hero-card-list page-hero-card-list--single">
+              {[
+                { num: '01', label: 'Send your requirements' },
+                { num: '02', label: 'We review and respond' },
+                { num: '03', label: 'We scope the solution together' },
+              ].map((step) => (
+                <li key={step.num}>
+                  <span className="page-hero-card-item">
+                    <span className="page-hero-card-num" aria-hidden="true">
+                      {step.num}
+                    </span>
+                    <span className="page-hero-card-text">{step.label}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 
-      <section aria-label="Contact information and project inquiry" className="section section-warm">
+      <section aria-label="Project inquiry" className="section section-warm">
         <div className="container">
-          {/* Contact information */}
-          <div className="text-center" style={{ maxWidth: 720, marginInline: 'auto' }}>
-            <span className="eyebrow">Contact Information</span>
-            <h2
-              id="contact-info-title"
-              className="text-section-title"
-              style={{ marginTop: 14 }}
-            >
-              Let&apos;s Build Something Great Together!
-            </h2>
-            <p className="text-body" style={{ marginTop: 14, marginInline: 'auto' }}>
-              Reach us the way that suits you best — by email, by phone, or by sending a
-              message below.
-            </p>
-          </div>
-
-          <ul className="contact-info-grid">
-            <li className="contact-info-card">
-              <span className="contact-info-icon" aria-hidden="true">
-                <MailIcon className="w-5 h-5" />
-              </span>
-              <h3 className="contact-info-label">Email</h3>
-              <a
-                href={`mailto:${siteConfig.email}`}
-                className="contact-info-value break-anywhere"
-              >
-                {siteConfig.email}
-              </a>
-            </li>
-
-            <li className="contact-info-card">
-              <span className="contact-info-icon" aria-hidden="true">
-                <PhoneIcon className="w-5 h-5" />
-              </span>
-              <h3 className="contact-info-label">Call</h3>
-              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                <a href={siteConfig.phoneHref} className="contact-info-value">
-                  {siteConfig.phone}
-                </a>
-                <span aria-hidden="true" className="contact-info-sep">
-                  |
-                </span>
-                <a href={siteConfig.phone2Href} className="contact-info-value">
-                  {siteConfig.phone2}
-                </a>
-              </div>
-            </li>
-          </ul>
-
           {/* Form */}
           <div
             className="rounded-3xl overflow-hidden bg-white grid grid-cols-1 lg:grid-cols-12"
             style={{
-              marginTop: 'clamp(28px, 4vw, 48px)',
               border: '1px solid var(--color-border)',
               boxShadow: 'var(--shadow-card)',
             }}
