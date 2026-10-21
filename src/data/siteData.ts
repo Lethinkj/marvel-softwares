@@ -25,10 +25,25 @@ export interface Project {
   title: string
   category: ProjectCategory
   description: string
+  /** short one-line teaser shown above the full description */
+  summary?: string
   tags: string[]
   color: string
   image: string
   url: string
+}
+
+export interface Faq {
+  question: string
+  answer: string
+}
+
+export interface HomeServiceCard {
+  id: string
+  icon: string
+  title: string
+  line: string
+  to: string
 }
 
 export type ProjectCategory =
@@ -61,13 +76,15 @@ export const siteConfig = {
   name: 'MARVEL SOFTWARES',
   tagline: 'Ideas into Intelligent Software.',
   // Update these with verified business details only.
-  email: 'contact@marvelsoftwares.com',
-  phone: '+1 (555) 382-7491',
-  phoneHref: 'tel:+15553827491',
+  email: 'softwaresmarvel@gmail.com',
+  phone: '+91 8088218609',
+  phoneHref: 'tel:+918088218609',
+  phone2: '+91 8903711003',
+  phone2Href: 'tel:+918903711003',
   location: 'Working with clients remotely and on-site as agreed',
   hours: 'Monday – Friday, 9:00 AM – 6:00 PM',
-  // Canonical domain for SEO metadata — replace with the production domain.
-  siteUrl: 'https://marvelsoftwares.com',
+  // Canonical domain for SEO metadata — the live site.
+  siteUrl: 'https://www.marvelsoftwares.in',
 }
 
 // --- Navigation ---
@@ -272,6 +289,77 @@ export const homeServices: string[] = [
   'erp-business-software',
   'custom-software-development',
   'ai-automation',
+]
+
+// --- Four service areas summarised on the home page ---
+export const homeServiceCards: HomeServiceCard[] = [
+  {
+    id: 'web-mobile',
+    icon: 'web',
+    title: 'Websites & Web Apps',
+    line: 'Responsive websites and browser-based applications built around how your business works.',
+    to: '/services#website-development',
+  },
+  {
+    id: 'mobile',
+    icon: 'mobile',
+    title: 'Mobile Apps',
+    line: 'Android and iOS applications your customers and teams can use wherever they are.',
+    to: '/services#mobile-app-development',
+  },
+  {
+    id: 'erp',
+    icon: 'erp',
+    title: 'ERP & Business Systems',
+    line: 'Operations, records, billing and reporting connected in one reliable platform.',
+    to: '/services#erp-business-software',
+  },
+  {
+    id: 'ai-design',
+    icon: 'ai',
+    title: 'UI/UX & AI Automation',
+    line: 'Clear interfaces plus automation that removes the repetitive work from your day.',
+    to: '/services#ai-automation',
+  },
+]
+
+// --- Frequently asked questions (home) ---
+export const homeFaqs: Faq[] = [
+  {
+    question: 'What kind of software do you build?',
+    answer:
+      'We build websites, web applications, mobile apps, ERP and business management systems, custom software, API integrations, cloud and DevOps setups, and AI and automation workflows. Most engagements start with one of these and grow from there.',
+  },
+  {
+    question: 'How long does a project take?',
+    answer:
+      'It depends on the scope. We agree the requirements, the delivery phases and the timeline during discovery, so you get a realistic schedule before the build starts rather than a date that slips later.',
+  },
+  {
+    question: 'How much does a project cost?',
+    answer:
+      'Cost depends on the features, integrations and timeline involved. After a short discovery conversation we prepare a scoped proposal that sets out the phases, the deliverables and the investment for each stage.',
+  },
+  {
+    question: 'Can you work with systems we already have?',
+    answer:
+      'Yes. We review and integrate with existing applications, databases and third-party services through APIs. We also take over, review or improve software that was built by another team.',
+  },
+  {
+    question: 'Do you handle design and UI/UX?',
+    answer:
+      'Yes. We design user flows, wireframes and interfaces, and set up design systems so a product stays consistent as it grows across web, mobile and internal tools.',
+  },
+  {
+    question: 'What happens after launch?',
+    answer:
+      'We keep the product healthy through maintenance, monitoring, security and dependency updates, and continued improvements. Support can run as an ongoing arrangement or be scoped as planned work.',
+  },
+  {
+    question: 'How do we get started?',
+    answer:
+      'Send us a message describing what you are trying to achieve. We arrange a short conversation to understand the challenge, then come back with a recommended approach and a proposal.',
+  },
 ]
 
 // --- Why choose us (home) ---

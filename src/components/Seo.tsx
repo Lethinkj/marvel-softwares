@@ -58,6 +58,13 @@ export function Seo({ title, description, path }: SeoProps) {
             url: siteConfig.siteUrl,
             email: siteConfig.email,
             telephone: siteConfig.phone,
+            contactPoint: [siteConfig.phone, siteConfig.phone2].map((telephone) => ({
+              '@type': 'ContactPoint',
+              telephone,
+              email: siteConfig.email,
+              contactType: 'customer service',
+              availableLanguage: 'en',
+            })),
             description:
               'Custom software development company building websites, applications, ERP systems and integrated business software.',
           },

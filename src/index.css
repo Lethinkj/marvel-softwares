@@ -1600,3 +1600,547 @@ h2[id] {
   transform: translateY(-4px);
   box-shadow: var(--shadow-card-hover);
 }
+
+/* ============================================
+   CONTACT INFORMATION — direct contact cards
+   ============================================ */
+.contact-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--card-gap);
+  margin: clamp(28px, 3.5vw, 44px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (max-width: 639px) {
+  .contact-info-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.contact-info-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: var(--card-padding);
+  border-radius: var(--radius-card);
+  background: linear-gradient(180deg, #ffffff 0%, #f9faff 100%);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-card);
+  transition:
+    transform var(--transition-base),
+    box-shadow var(--transition-base),
+    border-color var(--transition-base);
+}
+
+.contact-info-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.contact-info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 6px;
+  border-radius: 14px;
+  color: var(--color-primary);
+  background: #f4f5ff;
+}
+
+.contact-info-label {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.contact-info-value {
+  font-size: 1rem;
+  font-weight: 650;
+  color: var(--color-primary);
+  transition: color var(--transition-fast);
+}
+
+.contact-info-value:hover {
+  color: var(--color-primary-dark);
+  text-decoration: underline;
+}
+
+.contact-info-sep {
+  color: var(--color-border);
+}
+
+/* ============================================
+   HOME CTA — rounded brand panel instead of a
+   flat banner: message + actions on the left,
+   "what happens next" on the right.
+   ============================================ */
+.home-cta-section {
+  padding-bottom: clamp(36px, 5vw, 64px);
+}
+
+.home-cta-panel {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: clamp(24px, 3vw, 36px);
+  background:
+    radial-gradient(120% 140% at 88% 6%, rgba(0, 207, 255, 0.2) 0%, rgba(0, 207, 255, 0) 56%),
+    linear-gradient(135deg, #00227a 0%, #0033a0 42%, #0057e7 100%);
+  box-shadow:
+    0 2px 6px rgba(23, 32, 51, 0.06),
+    0 34px 70px -34px rgba(0, 34, 122, 0.65);
+}
+
+.home-cta-art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.home-cta-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: clamp(28px, 3.5vw, 56px);
+  padding: clamp(28px, 4.2vw, 64px);
+}
+
+@media (min-width: 992px) {
+  .home-cta-grid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    align-items: center;
+  }
+}
+
+/* --- Message column --- */
+.home-cta-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 16px 7px 13px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: var(--color-yellow);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.home-cta-eyebrow-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.22);
+  animation: ms-pulse-dot 2.4s ease-in-out infinite;
+}
+
+.home-cta-title {
+  margin: 22px 0 0;
+  font-size: clamp(1.9rem, 3.6vw, 3rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  color: #fff;
+  text-wrap: balance;
+}
+
+.home-cta-title-accent {
+  background: linear-gradient(95deg, #ffd166 0%, #ff9a3d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.home-cta-text {
+  margin: 18px 0 0;
+  max-width: 46ch;
+  font-size: var(--font-body-size);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.84);
+}
+
+.home-cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.home-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 54px;
+  padding: 0 28px;
+  border-radius: 999px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition:
+    transform 0.25s cubic-bezier(0.22, 0.75, 0.3, 1),
+    box-shadow 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.home-cta-btn--primary {
+  color: #fff;
+  background: linear-gradient(135deg, #ff9a3d 0%, #ff5a00 100%);
+  box-shadow: 0 14px 30px -14px rgba(255, 90, 0, 0.85);
+}
+
+.home-cta-btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 36px -14px rgba(255, 90, 0, 0.9);
+}
+
+.home-cta-btn--ghost {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.home-cta-btn--ghost:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.85);
+}
+
+.home-cta-btn-arrow {
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+.home-cta-btn:hover .home-cta-btn-arrow {
+  transform: translateX(4px);
+}
+
+.home-cta-assurances {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-cta-assurance {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.home-cta-assurance-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(0, 207, 255, 0.22);
+  border: 1px solid rgba(0, 207, 255, 0.45);
+}
+
+/* --- "What happens next" card --- */
+.home-cta-card {
+  border-radius: 24px;
+  padding: clamp(20px, 2.4vw, 30px);
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.06) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 28px 60px -34px rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.home-cta-card-label {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.home-cta-steps {
+  display: grid;
+  gap: 18px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-cta-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.home-cta-step-rail {
+  position: absolute;
+  left: 19px;
+  top: 46px;
+  bottom: -18px;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgba(0, 207, 255, 0.6), rgba(0, 207, 255, 0.12));
+}
+
+.home-cta-step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 13px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #bdefff;
+  background: rgba(0, 207, 255, 0.14);
+  border: 1px solid rgba(0, 207, 255, 0.34);
+}
+
+.home-cta-step-title {
+  margin: 3px 0 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #fff;
+}
+
+.home-cta-step-text {
+  margin: 6px 0 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* --- Contact row --- */
+.home-cta-contact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.home-cta-contact-wide {
+  grid-column: 1 / -1;
+}
+
+.home-cta-contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  transition: color var(--transition-fast);
+}
+
+.home-cta-contact-link:hover {
+  color: #fff;
+}
+
+.home-cta-contact-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 9px;
+  color: #bdefff;
+  background: rgba(0, 207, 255, 0.14);
+}
+
+.home-cta-contact-phones {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.home-cta-contact-phone {
+  color: inherit;
+  transition: color var(--transition-fast);
+}
+
+.home-cta-contact-phone:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.home-cta-contact-sep {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.home-cta-contact-note {
+  margin: 0;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+@media (max-width: 575px) {
+  .home-cta-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .home-cta-contact-sep {
+    display: none;
+  }
+
+  .home-cta-contact-phones {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}
+
+/* --- CTA on small screens: tighter padding, headline on two lines --- */
+@media (max-width: 767px) {
+  .home-cta-panel {
+    border-radius: 20px;
+  }
+
+  .home-cta-grid {
+    gap: 24px;
+    padding: 22px 20px 26px;
+  }
+
+  .home-cta-eyebrow {
+    padding: 6px 14px 6px 11px;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+  }
+
+  .home-cta-title {
+    margin-top: 18px;
+    font-size: clamp(1.55rem, 6.6vw, 1.85rem);
+  }
+
+  .home-cta-text {
+    margin-top: 14px;
+    font-size: 0.98rem;
+    line-height: 1.62;
+  }
+
+  .home-cta-actions {
+    gap: 10px;
+    margin-top: 24px;
+  }
+
+  .home-cta-btn {
+    min-height: 52px;
+    padding: 0 22px;
+  }
+
+  .home-cta-assurances {
+    gap: 9px 18px;
+    margin-top: 22px;
+  }
+
+  .home-cta-assurance {
+    font-size: 0.84rem;
+  }
+
+  .home-cta-card {
+    border-radius: 18px;
+    padding: 18px 16px 20px;
+  }
+
+  .home-cta-steps {
+    gap: 15px;
+    margin-top: 16px;
+  }
+
+  .home-cta-step {
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .home-cta-step-number {
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+    font-size: 0.75rem;
+  }
+
+  .home-cta-step-rail {
+    left: 17px;
+    top: 42px;
+    bottom: -15px;
+  }
+
+  .home-cta-step-title {
+    font-size: 0.95rem;
+  }
+
+  .home-cta-step-text {
+    margin-top: 4px;
+    font-size: 0.84rem;
+    line-height: 1.55;
+  }
+
+  .home-cta-contact {
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 16px;
+  }
+}
+
+/* --- Compact phones: keep the email on one line --- */
+@media (max-width: 359px) {
+  .home-cta-grid {
+    padding: 20px 16px 24px;
+  }
+
+  .home-cta-contact-link {
+    gap: 8px;
+    font-size: 0.8rem;
+  }
+
+  .home-cta-contact-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+  }
+
+  .home-cta-contact-note {
+    font-size: 0.75rem;
+  }
+
+  .home-cta-assurance {
+    font-size: 0.8rem;
+  }
+}

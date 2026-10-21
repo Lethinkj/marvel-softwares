@@ -1,6 +1,6 @@
 import React, { useState, useId } from 'react'
 import Seo from '../components/Seo'
-import { CheckIcon } from '../components/Icons'
+import { CheckIcon, MailIcon, PhoneIcon } from '../components/Icons'
 import { siteConfig } from '../data/siteData'
 import { submitProjectInquiry } from '../utils/inquiryApi'
 
@@ -106,11 +106,62 @@ export const Contact: React.FC = () => {
         </div>
       </section>
 
-      <section aria-label="Project inquiry" className="section section-warm">
+      <section aria-label="Contact information and project inquiry" className="section section-warm">
         <div className="container">
+          {/* Contact information */}
+          <div className="text-center" style={{ maxWidth: 720, marginInline: 'auto' }}>
+            <span className="eyebrow">Contact Information</span>
+            <h2
+              id="contact-info-title"
+              className="text-section-title"
+              style={{ marginTop: 14 }}
+            >
+              Let&apos;s Build Something Great Together!
+            </h2>
+            <p className="text-body" style={{ marginTop: 14, marginInline: 'auto' }}>
+              Reach us the way that suits you best — by email, by phone, or by sending a
+              message below.
+            </p>
+          </div>
+
+          <ul className="contact-info-grid">
+            <li className="contact-info-card">
+              <span className="contact-info-icon" aria-hidden="true">
+                <MailIcon className="w-5 h-5" />
+              </span>
+              <h3 className="contact-info-label">Email</h3>
+              <a
+                href={`mailto:${siteConfig.email}`}
+                className="contact-info-value break-anywhere"
+              >
+                {siteConfig.email}
+              </a>
+            </li>
+
+            <li className="contact-info-card">
+              <span className="contact-info-icon" aria-hidden="true">
+                <PhoneIcon className="w-5 h-5" />
+              </span>
+              <h3 className="contact-info-label">Call</h3>
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                <a href={siteConfig.phoneHref} className="contact-info-value">
+                  {siteConfig.phone}
+                </a>
+                <span aria-hidden="true" className="contact-info-sep">
+                  |
+                </span>
+                <a href={siteConfig.phone2Href} className="contact-info-value">
+                  {siteConfig.phone2}
+                </a>
+              </div>
+            </li>
+          </ul>
+
+          {/* Form */}
           <div
             className="rounded-3xl overflow-hidden bg-white grid grid-cols-1 lg:grid-cols-12"
             style={{
+              marginTop: 'clamp(28px, 4vw, 48px)',
               border: '1px solid var(--color-border)',
               boxShadow: 'var(--shadow-card)',
             }}

@@ -97,9 +97,18 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href={siteConfig.phoneHref} className="text-white/85 hover:text-white">
-                  {siteConfig.phone}
-                </a>
+                <span className="block text-white/70 text-sm">Call</span>
+                <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  <a href={siteConfig.phoneHref} className="text-white/85 hover:text-white">
+                    {siteConfig.phone}
+                  </a>
+                  <span aria-hidden="true" className="text-white/40">
+                    |
+                  </span>
+                  <a href={siteConfig.phone2Href} className="text-white/85 hover:text-white">
+                    {siteConfig.phone2}
+                  </a>
+                </span>
               </li>
               <li className="text-white/70 text-sm leading-relaxed">{siteConfig.location}</li>
             </ul>
