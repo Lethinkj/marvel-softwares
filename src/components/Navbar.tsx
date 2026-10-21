@@ -36,6 +36,7 @@ export function Navbar() {
   const linkRefs = useRef<Record<string, HTMLAnchorElement | null>>({})
 
   const isDesktop = useMediaQuery('(min-width: 768px)')
+  const isWide = useMediaQuery('(min-width: 1024px)')
 
   /**
    * Active-page highlighter.
@@ -150,8 +151,8 @@ export function Navbar() {
           style={{
             height: isScrolled ? 58 : 64,
             gap: 12,
-            padding: isScrolled ? '0 6px 0 18px' : '0 8px 0 20px',
-            borderRadius: 26,
+            padding: isScrolled ? '0 10px 0 22px' : '0 12px 0 26px',
+            borderRadius: 999,
             transition: 'height .3s ease, padding .3s ease',
             pointerEvents: 'auto',
           }}
@@ -177,7 +178,7 @@ export function Navbar() {
               ref={navRef}
               className="flex items-center"
               aria-label="Main navigation"
-              style={{ marginLeft: 'auto', gap: 2, position: 'relative' }}
+              style={{ marginInline: 'auto', gap: 2, position: 'relative' }}
             >
               {navLinks.map((link) => {
                 const active = isActiveLink(link.href)
@@ -258,6 +259,20 @@ export function Navbar() {
           </span>
         </button>
 
+          {/* CTA — wide screens only, keeps the capsule from crowding */}
+          {isWide && (
+            <Link
+              to="/contact"
+              className="nav-cta nav-cta--sm shrink-0"
+              style={{ gap: 7, borderRadius: 999 }}
+            >
+              Start a Project
+              <span aria-hidden="true" className="nav-cta-arrow">
+                →
+              </span>
+            </Link>
+          )}
+
           {/* Scroll progress hairline — sits inside the capsule */}
           <motion.div
             aria-hidden="true"
@@ -265,9 +280,9 @@ export function Navbar() {
             style={{
               scaleX: progress,
               position: 'absolute',
-              left: 22,
-              right: 22,
-              bottom: 3,
+              left: 26,
+              right: 26,
+              bottom: 4,
               height: 2,
               borderRadius: 2,
               background: 'linear-gradient(90deg, #0057E7, #00CFFF 55%, #FF5A00)',
