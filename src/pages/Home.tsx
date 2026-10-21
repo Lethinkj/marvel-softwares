@@ -68,8 +68,9 @@ export const Home: React.FC = () => {
       />
 
       {/* ============ A. HERO ============ */}
-      <section aria-labelledby="hero-title" className="relative overflow-hidden">
-        {/* Ambient brand glows */}
+      <section aria-labelledby="hero-title" className="hero-v4 relative overflow-hidden">
+        {/* Dot-grid backdrop + ambient brand glows */}
+        <div aria-hidden="true" className="hero-dotgrid" />
         <div aria-hidden="true" className="hero-glow hero-glow-a" />
         <div aria-hidden="true" className="hero-glow hero-glow-b" />
 
@@ -93,7 +94,7 @@ export const Home: React.FC = () => {
                 <span className="block" style={{ color: 'var(--color-primary)' }}>
                   Software That Grows
                 </span>
-                <span className="text-gradient block">Your Business</span>
+                <span className="hero-shimmer-text block">Your Business</span>
               </h1>
 
               <p className="hero-lead">
@@ -144,6 +145,29 @@ export const Home: React.FC = () => {
                   <HeroIntelligentCore />
                 )}
               </div>
+
+              {/* Floating capability chips — orbit the visual */}
+              <span
+                className="hero-orbit-chip hero-orbit-chip--a hidden lg:inline-flex"
+                aria-hidden="true"
+              >
+                <span className="hero-orbit-dot" style={{ background: '#0057E7' }} />
+                Mobile Apps
+              </span>
+              <span
+                className="hero-orbit-chip hero-orbit-chip--b hidden lg:inline-flex"
+                aria-hidden="true"
+              >
+                <span className="hero-orbit-dot" style={{ background: '#FF5A00' }} />
+                ERP Systems
+              </span>
+              <span
+                className="hero-orbit-chip hero-orbit-chip--c hidden lg:inline-flex"
+                aria-hidden="true"
+              >
+                <span className="hero-orbit-dot" style={{ background: '#00CFFF' }} />
+                AI &amp; Automation
+              </span>
 
               {/* Floating endpoint badge */}
               <div className="hero-float-badge hidden lg:flex" aria-hidden="true">

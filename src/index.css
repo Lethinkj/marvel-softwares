@@ -1718,6 +1718,102 @@ h2[id] {
 }
 
 /* ============================================
+   HERO v4 — dot-grid stage, shimmer headline,
+   orbiting capability chips around the visual
+   ============================================ */
+
+/* --- Subtle dot-grid backdrop, fading out downward --- */
+.hero-dotgrid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(0, 87, 231, 0.15) 1.2px, transparent 1.3px);
+  background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(78% 64% at 50% 0%, #000 0%, transparent 80%);
+  mask-image: radial-gradient(78% 64% at 50% 0%, #000 0%, transparent 80%);
+}
+
+/* --- Animated gradient headline (slow shimmer) --- */
+.hero-shimmer-text {
+  background: linear-gradient(
+    95deg,
+    #0033a0 0%,
+    #0057e7 28%,
+    #00cfff 50%,
+    #0679ff 74%,
+    #0057e7 100%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: ms-hero-shimmer 7s ease-in-out infinite;
+}
+
+@keyframes ms-hero-shimmer {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* --- Floating capability chips around the hero visual --- */
+.hero-orbit-chip {
+  position: absolute;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 87, 231, 0.14);
+  box-shadow: 0 14px 30px -16px rgba(0, 51, 160, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-text);
+  white-space: nowrap;
+  animation: ms-float 5.5s ease-in-out infinite;
+}
+
+.hero-orbit-chip--a {
+  top: 26px;
+  left: -40px;
+}
+
+.hero-orbit-chip--b {
+  top: 44%;
+  right: -46px;
+  animation-delay: -1.8s;
+}
+
+.hero-orbit-chip--c {
+  bottom: 24%;
+  left: -28px;
+  animation-delay: -3.4s;
+}
+
+.hero-orbit-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--color-primary);
+}
+
+@media (max-width: 991px) {
+  .hero-orbit-chip {
+    display: none !important;
+  }
+}
+
+/* ============================================
    HERO v2 — bigger stage, brand glow, cards
    ============================================ */
 
