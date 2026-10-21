@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import Navbar from './Navbar'
-import Footer from './Footer'
+import FooterV1 from './FooterV1'
 import BackToTop from './BackToTop'
 
 /**
@@ -52,7 +52,7 @@ export function Layout() {
       </main>
 
       {/* Global Footer */}
-      <Footer />
+      <FooterV1 />
 
       {/* Floating back-to-top button (all pages) */}
       <BackToTop />

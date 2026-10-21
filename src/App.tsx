@@ -7,6 +7,7 @@ const Services = lazy(() => import('./pages/Services'))
 const About = lazy(() => import('./pages/About'))
 const Projects = lazy(() => import('./pages/Projects'))
 const Contact = lazy(() => import('./pages/Contact'))
+const Privacy = lazy(() => import('./pages/Privacy'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 function PageFallback() {
@@ -61,6 +62,14 @@ function App() {
           element={
             <Suspense fallback={<PageFallback />}>
               <Contact />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/privacy"
+          element={
+            <Suspense fallback={<PageFallback />}>
+              <Privacy />
             </Suspense>
           }
         />
