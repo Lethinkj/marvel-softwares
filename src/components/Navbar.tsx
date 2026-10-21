@@ -144,22 +144,15 @@ export function Navbar() {
         }}
       >
         <div
-          className="relative flex items-center justify-between"
+          className={`relative flex items-center justify-between glass-bar${
+            isScrolled ? ' glass-bar--scrolled' : ''
+          }`}
           style={{
             height: isScrolled ? 58 : 64,
             gap: 12,
             padding: isScrolled ? '0 6px 0 18px' : '0 8px 0 20px',
             borderRadius: 26,
-            /* glassy at the top of the page, firmer once content scrolls under it */
-            background: isScrolled ? 'rgba(255,255,255,.78)' : 'rgba(255,255,255,.40)',
-            backdropFilter: 'saturate(180%) blur(24px)',
-            WebkitBackdropFilter: 'saturate(180%) blur(24px)',
-            border: '1px solid rgba(255,255,255,.55)',
-            boxShadow: isScrolled
-              ? '0 18px 40px -22px rgba(0,31,128,.45), 0 2px 6px -3px rgba(16,38,83,.12)'
-              : '0 10px 30px -20px rgba(0,31,128,.28), 0 1px 3px -1px rgba(16,38,83,.08)',
-            transition:
-              'height .3s ease, padding .3s ease, box-shadow .3s ease, background .3s ease',
+            transition: 'height .3s ease, padding .3s ease',
             pointerEvents: 'auto',
           }}
         >
