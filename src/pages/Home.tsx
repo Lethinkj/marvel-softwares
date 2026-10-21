@@ -8,7 +8,7 @@ import { OurProcess } from '../components/OurProcess'
 import ServiceShowcase from '../components/ServiceShowcase'
 import WhyChooseUs from '../components/WhyChooseUs'
 import HomeCta from '../components/HomeCta'
-import { projects, siteConfig } from '../data/siteData'
+import { projects } from '../data/siteData'
 
 const cardStyle: React.CSSProperties = {
   background: 'linear-gradient(180deg, #ffffff 0%, #f9faff 100%)',
@@ -84,12 +84,6 @@ export const Home: React.FC = () => {
           >
             {/* Copy column */}
             <div className="order-1 lg:order-none lg:col-span-7 lg:row-start-1 lg:row-span-2 lg:self-center">
-              {/* Eyebrow */}
-              <span className="hero-eyebrow">
-                <span className="hero-eyebrow-dot" aria-hidden="true" />
-                {siteConfig.tagline}
-              </span>
-
               <h1 id="hero-title" className="text-hero" style={{ marginTop: 20 }}>
                 <span className="block" style={{ color: 'var(--color-primary)' }}>
                   Software That Grows

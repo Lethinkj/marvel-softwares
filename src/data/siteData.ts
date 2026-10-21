@@ -74,7 +74,6 @@ export interface NavLink {
 // --- Site configuration (edit verified details here) ---
 export const siteConfig = {
   name: 'MARVEL SOFTWARES',
-  tagline: 'Ideas into Intelligent Software.',
   // Update these with verified business details only.
   email: 'softwaresmarvel@gmail.com',
   phone: '+91 8088218609',
