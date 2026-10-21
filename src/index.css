@@ -2082,6 +2082,14 @@ h2[id] {
   }
 }
 
+/* Stacked hero: the heading block always comes first, so every page reads the
+   same way on phones — title, lead paragraph, then supporting blocks. */
+@media (max-width: 991px) {
+  .page-hero-grid > .page-hero-copy {
+    order: -1;
+  }
+}
+
 .page-hero-eyebrow {
   display: inline-flex;
   align-items: center;
@@ -2403,72 +2411,6 @@ a.page-hero-card-item:hover .page-hero-card-arrow {
   border-radius: 10px;
   color: var(--hero-accent);
   background: var(--hero-accent-soft);
-}
-
-/* Principles timeline (About hero) */
-.page-hero-timeline {
-  padding: clamp(20px, 2.4vw, 28px);
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid var(--color-border);
-  box-shadow:
-    0 2px 6px rgba(23, 32, 51, 0.05),
-    0 28px 60px -34px rgba(0, 51, 160, 0.32);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-.page-hero-timeline-list {
-  display: grid;
-  gap: 20px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.page-hero-timeline-item {
-  position: relative;
-  display: grid;
-  grid-template-columns: 40px minmax(0, 1fr);
-  gap: 14px;
-  align-items: start;
-}
-
-.page-hero-timeline-rail {
-  position: absolute;
-  left: 19px;
-  top: 46px;
-  bottom: -20px;
-  width: 2px;
-  border-radius: 2px;
-  background: linear-gradient(180deg, var(--hero-accent-soft), rgba(0, 87, 231, 0.12));
-}
-
-.page-hero-timeline-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 13px;
-  color: var(--hero-accent);
-  background: var(--hero-accent-soft);
-}
-
-.page-hero-timeline-title {
-  display: block;
-  font-size: 0.98rem;
-  font-weight: 700;
-  line-height: 1.35;
-  color: var(--color-text);
-}
-
-.page-hero-timeline-text {
-  display: block;
-  margin-top: 4px;
-  font-size: 0.875rem;
-  line-height: 1.55;
-  color: var(--color-text-muted);
 }
 
 /* Reversed split — artwork first */

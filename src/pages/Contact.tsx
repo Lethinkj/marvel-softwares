@@ -132,12 +132,7 @@ export const Contact: React.FC = () => {
 
         <div className="container page-hero-grid">
           <div className="page-hero-copy">
-            <span className="page-hero-eyebrow">
-              <span className="page-hero-eyebrow-dot" aria-hidden="true" />
-              Let&apos;s talk
-            </span>
-
-            <h1 id="contact-heading" className="text-page-title" style={{ marginTop: 18 }}>
+            <h1 id="contact-heading" className="text-page-title">
               Contact Us
             </h1>
 

@@ -89,12 +89,7 @@ export const Services: React.FC = () => (
 
       <div className="container page-hero-grid">
         <div className="page-hero-copy">
-          <span className="page-hero-eyebrow">
-            <span className="page-hero-eyebrow-dot" aria-hidden="true" />
-            What we build
-          </span>
-
-          <h1 id="services-heading" className="text-page-title" style={{ marginTop: 18 }}>
+          <h1 id="services-heading" className="text-page-title">
             Our Services
           </h1>
 

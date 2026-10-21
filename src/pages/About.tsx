@@ -20,7 +20,7 @@ export const About: React.FC = () => (
     />
 
     {/* A. Introduction */}
-    <section aria-labelledby="about-heading" className="page-hero page-hero--warm">
+    <section aria-labelledby="about-heading" className="page-hero page-hero--warm page-hero--wide">
       {/* Decorative brand artwork */}
       <svg
         aria-hidden="true"
@@ -55,33 +55,9 @@ export const About: React.FC = () => (
       </svg>
 
       <div className="container page-hero-grid">
-        {/* Principles rail — leads on the left */}
-        <div className="page-hero-timeline">
-          <p className="page-hero-card-label">What guides our work</p>
-          <ul className="page-hero-timeline-list">
-            {workingPrinciples.slice(0, 3).map((item, i) => (
-              <li key={item.title} className="page-hero-timeline-item">
-                {i < 2 && <span className="page-hero-timeline-rail" aria-hidden="true" />}
-                <span className="page-hero-timeline-icon" aria-hidden="true">
-                  {renderAppIcon(item.icon, 'w-4 h-4')}
-                </span>
-                <span>
-                  <strong className="page-hero-timeline-title">{item.title}</strong>
-                  <span className="page-hero-timeline-text">{item.description}</span>
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
         {/* Message */}
         <div className="page-hero-copy">
-          <span className="page-hero-eyebrow">
-            <span className="page-hero-eyebrow-dot" aria-hidden="true" />
-            Who we are
-          </span>
-
-          <h1 id="about-heading" className="text-page-title" style={{ marginTop: 18 }}>
+          <h1 id="about-heading" className="text-page-title">
             About Us
           </h1>
 
