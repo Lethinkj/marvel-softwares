@@ -36,7 +36,6 @@ export function Navbar() {
   const linkRefs = useRef<Record<string, HTMLAnchorElement | null>>({})
 
   const isDesktop = useMediaQuery('(min-width: 768px)')
-  const isWide = useMediaQuery('(min-width: 1024px)')
 
   /**
    * Active-page highlighter.
@@ -178,7 +177,7 @@ export function Navbar() {
               ref={navRef}
               className="flex items-center"
               aria-label="Main navigation"
-              style={{ marginInline: 'auto', gap: 2, position: 'relative' }}
+              style={{ marginLeft: 'auto', marginRight: 0, gap: 2, position: 'relative' }}
             >
               {navLinks.map((link) => {
                 const active = isActiveLink(link.href)
@@ -258,20 +257,6 @@ export function Navbar() {
             />
           </span>
         </button>
-
-          {/* CTA — wide screens only, keeps the capsule from crowding */}
-          {isWide && (
-            <Link
-              to="/contact"
-              className="nav-cta nav-cta--sm shrink-0"
-              style={{ gap: 7, borderRadius: 999 }}
-            >
-              Start a Project
-              <span aria-hidden="true" className="nav-cta-arrow">
-                →
-              </span>
-            </Link>
-          )}
 
           {/* Scroll progress hairline — sits inside the capsule */}
           <motion.div
@@ -437,21 +422,9 @@ export function Navbar() {
               </nav>
 
               <div className="px-5 pt-3 pb-5 shrink-0" style={{ borderTop: '1px solid var(--color-border)' }}>
-                <Link
-                  to="/contact"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="nav-cta nav-cta--block flex items-center justify-center w-full"
-                  style={{ gap: 8, padding: '14px 20px', borderRadius: 999 }}
-                >
-                  Start a Project
-                  <span aria-hidden="true" className="nav-cta-arrow">
-                    →
-                  </span>
-                </Link>
                 <a
                   href={`mailto:${siteConfig.email}`}
                   className="block text-sm font-semibold break-anywhere text-center"
-                  style={{ color: 'var(--color-primary)', marginTop: 12 }}
                 >
                   {siteConfig.email}
                 </a>
