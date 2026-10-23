@@ -99,17 +99,6 @@ export const Services: React.FC = () => (
             first website to complex enterprise platforms, every solution is shaped around
             your workflows, your users and your long-term goals.
           </p>
-
-          <ul className="page-hero-chips">
-            {['Websites & web apps', 'Mobile apps', 'ERP & business systems', 'Custom software', 'AI & automation'].map(
-              (chip) => (
-                <li key={chip} className="page-hero-chip">
-                  <span className="page-hero-chip-dot" aria-hidden="true" />
-                  {chip}
-                </li>
-              ),
-            )}
-          </ul>
         </div>
 
         {/* Jump straight to the solution you need */}
