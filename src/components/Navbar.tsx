@@ -1,41 +1,35 @@
 import { useState, useEffect, useLayoutEffect, useRef } from 'react'
-import { createPortal } from 'react-dom'
 import { Link, useLocation } from 'react-router-dom'
-import { motion, AnimatePresence, useScroll, useSpring, useDragControls } from 'motion/react'
+import { motion, useScroll, useSpring } from 'motion/react'
 import { navLinks, siteConfig } from '../data/siteData'
 import { useMediaQuery } from '../hooks/useMediaQuery'
-import {
-  GlobeIcon,
-  LayersIcon,
-  UsersIcon,
-  BarChartIcon,
-  MailIcon,
-} from './Icons'
-
-const NAV_ICONS: Record<string, React.ReactNode> = {
-  '/': <GlobeIcon className="w-5 h-5" />,
-  '/services': <LayersIcon className="w-5 h-5" />,
-  '/about': <UsersIcon className="w-5 h-5" />,
-  '/projects': <BarChartIcon className="w-5 h-5" />,
-  '/contact': <MailIcon className="w-5 h-5" />,
-}
+import { StaggeredMenu, type StaggeredMenuItem, type StaggeredMenuSocialItem } from './StaggeredMenu'
 
 /**
  * Sticky site header — modern glass treatment.
- * Desktop: pill-style nav group with a spring-animated active indicator,
- * gradient CTA, scroll-progress hairline.
- * Tablet: same nav pill, CTA collapsed.
- * Mobile: drag-to-dismiss bottom sheet with large touch targets + CTA.
+ * Desktop (>= 1024px): pill-style nav group with a spring-animated active indicator,
+ * scroll-progress hairline.
+ * Mobile & Tablet (< 1024px): React Bits StaggeredMenu with GSAP staggered layers.
  */
 export function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const location = useLocation()
-  const menuButtonRef = useRef<HTMLButtonElement>(null)
   const navRef = useRef<HTMLElement>(null)
   const linkRefs = useRef<Record<string, HTMLAnchorElement | null>>({})
 
-  const isDesktop = useMediaQuery('(min-width: 768px)')
+  const isDesktop = useMediaQuery('(min-width: 1024px)')
+
+  const menuItems: StaggeredMenuItem[] = navLinks.map((link) => ({
+    label: link.label,
+    link: link.href,
+    ariaLabel: `Go to ${link.label}`,
+  }))
+
+  const socialItems: StaggeredMenuSocialItem[] = [
+    { label: 'Email', link: `mailto:${siteConfig.email}` },
+    { label: 'Call us', link: siteConfig.phoneHref },
+    { label: 'Privacy', link: '/privacy' },
+  ]
 
   /**
    * Active-page highlighter.
@@ -44,7 +38,6 @@ export function Navbar() {
    */
   const [pill, setPill] = useState({ x: 0, width: 0, visible: false, animate: false })
 
-  const dragControls = useDragControls()
   const { scrollYProgress } = useScroll()
   const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 30, mass: 0.3 })
 
@@ -74,7 +67,6 @@ export function Navbar() {
       })
     }
 
-    // Position before the first paint so the highlighter never slides in.
     measure()
     const frame = requestAnimationFrame(measure)
     window.addEventListener('resize', measure)
@@ -89,40 +81,6 @@ export function Navbar() {
     handleScroll()
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  const [prevPathname, setPrevPathname] = useState(location.pathname)
-  if (prevPathname !== location.pathname) {
-    setPrevPathname(location.pathname)
-    if (isMenuOpen) setIsMenuOpen(false)
-  }
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isMenuOpen) {
-        setIsMenuOpen(false)
-        menuButtonRef.current?.focus()
-      }
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isMenuOpen])
-
-  useEffect(() => {
-    if (!isMenuOpen) return
-    const original = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.body.style.overflow = original
-    }
-  }, [isMenuOpen])
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 768) setIsMenuOpen(false)
-    }
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
   }, [])
 
   return (
@@ -162,7 +120,6 @@ export function Navbar() {
           <Link
             to="/"
             aria-label="MARVEL SOFTWARES — Home"
-            onClick={() => setIsMenuOpen(false)}
             className="shrink-0 rounded-md flex items-center"
             style={{ gap: 10 }}
           >
@@ -174,7 +131,7 @@ export function Navbar() {
             />
           </Link>
 
-          {/* Navigation — desktop + tablet (right aligned) */}
+          {/* Navigation — desktop (>= 1024px) */}
           {isDesktop && (
             <nav
               ref={navRef}
@@ -225,41 +182,26 @@ export function Navbar() {
             </nav>
           )}
 
-        {/* Burger — mobile */}
-        <button
-          ref={menuButtonRef}
-          type="button"
-          onClick={() => setIsMenuOpen((v) => !v)}
-          aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-          aria-expanded={isMenuOpen}
-          aria-controls="mobile-navigation"
-          className="md:hidden flex items-center justify-center w-11 h-11 rounded-xl transition-colors shrink-0"
-          style={{ color: 'var(--color-primary)' }}
-        >
-          <span className="sr-only">{isMenuOpen ? 'Close menu' : 'Open menu'}</span>
-          <span className="relative block w-5 h-5" aria-hidden="true">
-            <span
-              className="absolute h-0.5 w-5 rounded-full transition-all duration-200"
-              style={{
-                background: 'currentColor',
-                top: isMenuOpen ? 9 : 4,
-                transform: isMenuOpen ? 'rotate(45deg)' : 'none',
-              }}
+          {/* StaggeredMenu for Tablet & Mobile (< 1024px) */}
+          {!isDesktop && (
+            <StaggeredMenu
+              position="right"
+              isFixed={true}
+              showLogo={false}
+              items={menuItems}
+              socialItems={socialItems}
+              displaySocials={true}
+              displayItemNumbering={false}
+              colors={['#00CFFF', '#0057E7', '#0033A0', '#0B1530']}
+              accentColor="#0057E7"
+              menuButtonColor="#0057E7"
+              openMenuButtonColor="#0057E7"
+              logoUrl="/marvel-softwares-logo-removebg-preview.png"
+              headerHeight={isScrolled ? 58 : 66}
+              headerPadding="0 max(16px, calc((100% - var(--container-width)) / 2 + 16px))"
+              closeOnClickAway={true}
             />
-            <span
-              className="absolute h-0.5 w-5 rounded-full transition-all duration-200"
-              style={{ background: 'currentColor', top: 9, opacity: isMenuOpen ? 0 : 1 }}
-            />
-            <span
-              className="absolute h-0.5 w-5 rounded-full transition-all duration-200"
-              style={{
-                background: 'currentColor',
-                top: isMenuOpen ? 9 : 14,
-                transform: isMenuOpen ? 'rotate(-45deg)' : 'none',
-              }}
-            />
-          </span>
-        </button>
+          )}
 
           {/* Scroll progress hairline — sits inside the capsule */}
           <motion.div
@@ -278,166 +220,6 @@ export function Navbar() {
           />
         </div>
       </div>
-
-      {typeof document !== 'undefined' &&
-        createPortal(
-          <AnimatePresence>
-            {isMenuOpen && (
-              <>
-                <motion.div
-                  key="nav-scrim"
-              aria-hidden="true"
-              onClick={() => setIsMenuOpen(false)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.22 }}
-              className="md:hidden fixed inset-0 z-[60]"
-              style={{
-                background: 'rgba(11,21,48,.45)',
-                backdropFilter: 'blur(6px)',
-                WebkitBackdropFilter: 'blur(6px)',
-              }}
-            />
-            <motion.div
-              key="nav-sheet"
-              id="mobile-navigation"
-              role="dialog"
-              aria-modal="true"
-              aria-label="Site navigation"
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{ duration: 0.36, ease: [0.16, 1, 0.3, 1] }}
-              drag="y"
-              dragListener={false}
-              dragControls={dragControls}
-              dragConstraints={{ top: 0, bottom: 0 }}
-              dragElastic={{ top: 0, bottom: 0.4 }}
-              onDragEnd={(_, info) => {
-                if (info.offset.y > 110 || info.velocity.y > 550) setIsMenuOpen(false)
-              }}
-              className="md:hidden fixed inset-x-0 bottom-0 z-[61] flex flex-col bg-white"
-              style={{
-                maxHeight: '92dvh',
-                borderRadius: '28px 28px 0 0',
-                boxShadow: '0 -24px 60px -20px rgba(0,31,128,.4)',
-                paddingBottom: 'env(safe-area-inset-bottom)',
-              }}
-            >
-              {/* drag handle */}
-              <div
-                className="flex justify-center pt-3 pb-1 shrink-0"
-                aria-hidden="true"
-                onPointerDown={(e) => dragControls.start(e)}
-                style={{ touchAction: 'none', cursor: 'grab' }}
-              >
-                <span style={{ width: 44, height: 5, borderRadius: 5, background: '#DCE4F0' }} />
-              </div>
-
-              <div
-                className="flex items-center justify-between px-5 shrink-0"
-                style={{ borderBottom: '1px solid var(--color-border)', paddingBlock: 10 }}
-              >
-                <img
-                  src="/marvel-softwares-logo-removebg-preview.png"
-                  alt="MARVEL SOFTWARES"
-                  style={{ height: 40, width: 'auto', display: 'block' }}
-                />
-                <button
-                  type="button"
-                  onClick={() => setIsMenuOpen(false)}
-                  aria-label="Close navigation menu"
-                  className="flex items-center justify-center w-10 h-10 rounded-xl transition-colors"
-                  style={{ color: 'var(--color-primary)' }}
-                >
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2.5}
-                    strokeLinecap="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M18 6 6 18 M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-
-              <nav aria-label="Mobile navigation" className="flex-1 overflow-y-auto px-5 py-4">
-                <ul className="flex flex-col" style={{ gap: 8, listStyle: 'none', margin: 0, padding: 0 }}>
-                  {navLinks.map((link, i) => {
-                    const active = isActiveLink(link.href)
-                    return (
-                      <motion.li
-                        key={link.href}
-                        initial={{ opacity: 0, y: 22 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3, delay: 0.06 + i * 0.05, ease: [0.16, 1, 0.3, 1] }}
-                      >
-                        <Link
-                          to={link.href}
-                          onClick={() => setIsMenuOpen(false)}
-                          aria-current={active ? 'page' : undefined}
-                          className="flex items-center"
-                          style={{
-                            gap: 14,
-                            minHeight: 60,
-                            padding: '8px 14px',
-                            borderRadius: 18,
-                            background: '#F7FAFF',
-                            border: '1.5px solid transparent',
-                          }}
-                        >
-                          <span
-                            aria-hidden="true"
-                            className="flex items-center justify-center w-11 h-11 rounded-xl shrink-0"
-                            style={{
-                              background: '#fff',
-                              color: 'var(--color-primary)',
-                            }}
-                          >
-                            {NAV_ICONS[link.href]}
-                          </span>
-                          <span
-                            className="flex-1"
-                            style={{
-                              fontSize: '1.05rem',
-                              fontWeight: active ? 700 : 500,
-                              color: active ? 'var(--color-primary)' : 'var(--color-text)',
-                            }}
-                          >
-                            {link.label}
-                          </span>
-                          <span
-                            aria-hidden="true"
-                            style={{ color: '#B9C6DD', fontWeight: 700 }}
-                          >
-                            →
-                          </span>
-                        </Link>
-                      </motion.li>
-                    )
-                  })}
-                </ul>
-              </nav>
-
-              <div className="px-5 pt-3 pb-5 shrink-0" style={{ borderTop: '1px solid var(--color-border)' }}>
-                <a
-                  href={`mailto:${siteConfig.email}`}
-                  className="block text-sm font-semibold break-anywhere text-center"
-                >
-                  {siteConfig.email}
-                </a>
-              </div>
-            </motion.div>
-              </>
-            )}
-          </AnimatePresence>,
-          document.body,
-        )}
     </header>
   )
 }

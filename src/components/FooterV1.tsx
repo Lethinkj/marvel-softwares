@@ -83,11 +83,6 @@ export function FooterV1() {
             </nav>
           </div>
         </div>
-
-        {/* --- Oversized wordmark --- */}
-        <div className="footer-wordmark" aria-hidden="true">
-          <span>MARVEL SOFTWARES</span>
-        </div>
       </div>
 
       {/* --- Legal bar (Blue Theme, No Border Radius) --- */}

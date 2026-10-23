@@ -19,5 +19,8 @@ export { default as Footer } from './Footer'
 export * from './Layout'
 export { default as Layout } from './Layout'
 
+export * from './StaggeredMenu'
+export { default as StaggeredMenu } from './StaggeredMenu'
+
 export * from './avatars'
 export { default as TeamAvatar } from './avatars/TeamAvatar'
