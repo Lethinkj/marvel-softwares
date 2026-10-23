@@ -438,7 +438,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
       </div>
 
       <header className="staggered-menu-header" aria-label="Main navigation header">
-        {showLogo || open ? (
+        {showLogo && (
           <div className="sm-logo" aria-label="Logo">
             <Link to="/" onClick={closeMenu} className="flex items-center" aria-label="MARVEL SOFTWARES — Home">
               <img
@@ -451,8 +451,6 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
               />
             </Link>
           </div>
-        ) : (
-          <div className="sm-logo-spacer" style={{ flex: 1 }} aria-hidden="true" />
         )}
         <button
           ref={toggleBtnRef}
@@ -473,6 +471,20 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 
       <aside id="staggered-menu-panel" ref={panelRef} className="staggered-menu-panel" aria-hidden={!open}>
         <div className="sm-panel-inner">
+          {/* Logo rides directly inside the sidebar panel */}
+          <div className="sm-panel-top">
+            <Link to="/" onClick={closeMenu} className="sm-panel-logo" aria-label="MARVEL SOFTWARES — Home">
+              <img
+                src={logoUrl || '/marvel-softwares-logo-removebg-preview.png'}
+                alt="MARVEL SOFTWARES"
+                className="sm-logo-img"
+                draggable={false}
+                width={120}
+                height={32}
+              />
+            </Link>
+          </div>
+
           <ul className="sm-panel-list" role="list" data-numbering={displayItemNumbering || undefined}>
             {items && items.length ? (
               items.map((it, idx) => (

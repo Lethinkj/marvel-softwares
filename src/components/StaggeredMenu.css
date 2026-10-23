@@ -54,36 +54,25 @@
   pointer-events: auto;
 }
 
-/* --- Header Bar --- */
+/* --- Header Bar (Toggle button stays anchored at top right) --- */
 .staggered-menu-header {
   position: absolute;
   top: 0;
   left: 0;
+  right: 0;
   width: 100%;
   height: var(--sm-header-height, auto);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding: var(--sm-header-padding, 0 16px);
   background: transparent;
   pointer-events: none;
   z-index: 20;
-  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .staggered-menu-header > * {
   pointer-events: auto;
-}
-
-/* When open, header aligns precisely with the menu panel on the right */
-.staggered-menu-wrapper[data-open] .staggered-menu-header {
-  width: var(--sm-menu-width);
-  max-width: var(--sm-menu-max-width);
-  right: 0;
-  left: auto;
-  box-sizing: border-box;
-  padding-left: var(--sm-menu-pad-x);
-  padding-right: var(--sm-menu-pad-x);
 }
 
 .sm-logo {
@@ -237,10 +226,27 @@
   flex-direction: column;
   min-height: 100%;
   box-sizing: border-box;
-  padding-top: clamp(62px, 9.5vh, 76px);
+  padding-top: 0;
   padding-bottom: max(32px, env(safe-area-inset-bottom, 24px) + 20px);
   padding-left: var(--sm-menu-pad-x);
   padding-right: var(--sm-menu-pad-x);
+}
+
+/* --- Panel Top Row (Logo moves directly with the sidebar) --- */
+.sm-panel-top {
+  display: flex;
+  align-items: center;
+  min-height: var(--sm-header-height, 66px);
+  padding-right: 48px; /* Safe clearance for the toggle button */
+  margin-bottom: clamp(0.75rem, 2vh, 1.5rem);
+  flex-shrink: 0;
+}
+
+.sm-panel-logo {
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+  text-decoration: none;
 }
 
 .sm-panel-list {
