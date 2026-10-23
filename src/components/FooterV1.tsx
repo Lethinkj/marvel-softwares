@@ -1,26 +1,14 @@
 import { Link } from 'react-router-dom'
-import { navLinks, services, siteConfig } from '../data/siteData'
+import { navLinks, siteConfig } from '../data/siteData'
 import { MailIcon, PhoneIcon } from './Icons'
 
 /**
  * FooterV1 — editorial dark footer.
- * A brand column with the logo and contact actions, the site's own menu
- * split across three hairline-topped columns, an oversized outlined
- * wordmark and a slim legal bar.
+ * Brand column with logo and description on the left;
+ * Explore (all main pages) and Reach us on the right.
  */
 
 const CURRENT_YEAR = new Date().getFullYear()
-
-/** The same six services the site leads with. */
-const PRODUCT_LINKS = services.slice(0, 6).map((service) => ({
-  label: service.title,
-  to: `/services#${service.id}`,
-}))
-
-/** Drop links already covered by the Services column. */
-const EXPLORE_LINKS = navLinks.filter(
-  (link) => link.href !== '/' && link.href !== '/services' && link.href !== '/contact',
-)
 
 export function FooterV1() {
   return (
@@ -64,20 +52,9 @@ export function FooterV1() {
             <nav className="footer-col" aria-label="Explore">
               <h3 className="footer-col-title">Explore</h3>
               <ul className="footer-col-list">
-                {EXPLORE_LINKS.map((link) => (
+                {navLinks.map((link) => (
                   <li key={link.href}>
                     <Link to={link.href}>{link.label}</Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-
-            <nav className="footer-col" aria-label="Services">
-              <h3 className="footer-col-title">Services</h3>
-              <ul className="footer-col-list">
-                {PRODUCT_LINKS.map((link) => (
-                  <li key={link.to}>
-                    <Link to={link.to}>{link.label}</Link>
                   </li>
                 ))}
               </ul>
@@ -105,6 +82,11 @@ export function FooterV1() {
               </ul>
             </nav>
           </div>
+        </div>
+
+        {/* --- Oversized wordmark --- */}
+        <div className="footer-wordmark" aria-hidden="true">
+          <span>MARVEL SOFTWARES</span>
         </div>
       </div>
 

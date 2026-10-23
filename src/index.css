@@ -1067,13 +1067,13 @@ h2[id] {
   display: grid;
   gap: 34px;
   padding-top: clamp(40px, 5vw, 64px);
-  padding-bottom: clamp(32px, 4vw, 52px);
+  padding-bottom: 0;
 }
 
 @media (min-width: 900px) {
   .footer-top {
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.8fr);
-    gap: clamp(28px, 4vw, 64px);
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.25fr);
+    gap: clamp(36px, 5vw, 72px);
     align-items: start;
   }
 }
@@ -1081,22 +1081,12 @@ h2[id] {
 .footer-links {
   display: grid;
   gap: 28px;
-  padding-top: 28px;
-  border-top: 1px solid rgba(20, 32, 58, 0.16);
 }
 
-@media (min-width: 640px) {
+@media (min-width: 540px) {
   .footer-links {
-    grid-template-columns: minmax(0, 0.65fr) minmax(0, 1.2fr) minmax(max-content, 1.15fr);
-    gap: clamp(20px, 3vw, 40px);
-  }
-}
-
-@media (min-width: 900px) {
-  .footer-links {
-    grid-template-columns: minmax(0, 0.65fr) minmax(0, 1.2fr) minmax(max-content, 1.15fr);
-    border-left: 1px solid rgba(20, 32, 58, 0.16);
-    padding-left: clamp(28px, 4vw, 56px);
+    grid-template-columns: minmax(130px, 1fr) minmax(210px, 1.35fr);
+    gap: clamp(24px, 4vw, 56px);
   }
 }
 
@@ -1222,6 +1212,32 @@ h2[id] {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(20, 32, 58, 0.82);
+}
+
+/* --- Oversized outlined wordmark --- */
+.footer-wordmark {
+  container-type: inline-size;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  margin-top: clamp(26px, 4vw, 52px);
+  margin-bottom: 0;
+  line-height: 0.8;
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none;
+}
+
+.footer-wordmark span {
+  flex: 0 0 auto;
+  /* fallback for browsers without container query units */
+  font-size: clamp(1.2rem, 6.4vw, 6.6rem);
+  /* sized against the container so the full name always fits */
+  font-size: 8.5cqw;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(20, 32, 58, 0.25);
 }
 
 /* --- Legal bar (Blue Theme, No Border Radius) --- */
