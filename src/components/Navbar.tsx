@@ -129,17 +129,16 @@ export function Navbar() {
     <header
       className="fixed top-0 left-0 right-0 z-50 w-full"
       style={{
-        paddingTop: isScrolled ? 8 : 12,
-        paddingBottom: isScrolled ? 8 : 12,
-        transition: 'padding .3s ease',
+        paddingTop: 0,
+        paddingBottom: 0,
+        transition: 'all .3s ease',
         pointerEvents: 'none',
       }}
     >
       <div
-        className="mx-auto"
+        className="w-full"
         style={{
-          maxWidth: 'var(--container-width)',
-          width: 'min(100% - 24px, var(--container-width))',
+          width: '100%',
           pointerEvents: 'none',
         }}
       >
@@ -148,10 +147,14 @@ export function Navbar() {
             isScrolled ? ' glass-bar--scrolled' : ''
           }`}
           style={{
-            height: isScrolled ? 58 : 64,
+            height: isScrolled ? 58 : 66,
             gap: 12,
-            padding: isScrolled ? '0 10px 0 22px' : '0 12px 0 26px',
-            borderRadius: 999,
+            padding: '0 max(16px, calc((100% - var(--container-width)) / 2 + 16px))',
+            borderRadius: 0,
+            borderLeft: 'none',
+            borderRight: 'none',
+            borderTop: 'none',
+            borderBottom: '1px solid rgba(0, 87, 231, 0.12)',
             transition: 'height .3s ease, padding .3s ease',
             pointerEvents: 'auto',
           }}

@@ -29,7 +29,7 @@ export function BackToTop() {
       aria-label="Scroll back to top"
       aria-hidden={!visible}
       tabIndex={visible ? 0 : -1}
-      className="fixed bottom-6 right-6 z-40 flex items-center justify-center w-12 h-12 rounded-full text-white transition-all duration-200"
+      className="fixed bottom-20 right-4 md:bottom-20 md:right-6 lg:bottom-6 lg:right-6 z-40 flex items-center justify-center w-12 h-12 rounded-full text-white transition-all duration-200"
       style={{
         background: 'var(--color-orange)',
         boxShadow: '0 6px 18px -8px rgba(255,90,0,.6)',

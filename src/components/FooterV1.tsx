@@ -17,12 +17,12 @@ const PRODUCT_LINKS = services.slice(0, 6).map((service) => ({
   to: `/services#${service.id}`,
 }))
 
-export function FooterV1() {
-  const scrollToTop = () => {
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    window.scrollTo({ top: 0, left: 0, behavior: reduced ? 'auto' : 'smooth' })
-  }
+/** Drop links already covered by the Services column. */
+const EXPLORE_LINKS = navLinks.filter(
+  (link) => link.href !== '/' && link.href !== '/services' && link.href !== '/contact',
+)
 
+export function FooterV1() {
   return (
     <footer className="site-footer" aria-labelledby="footer-v1-heading">
       <h2 id="footer-v1-heading" className="sr-only">
@@ -60,69 +60,63 @@ export function FooterV1() {
             </div>
           </div>
 
-          <nav className="footer-col" aria-label="Explore">
-            <h3 className="footer-col-title">Explore</h3>
-            <ul className="footer-col-list">
-              {navLinks.map((link) => (
-                <li key={link.href}>
-                  <Link to={link.href}>{link.label}</Link>
+          <div className="footer-links">
+            <nav className="footer-col" aria-label="Explore">
+              <h3 className="footer-col-title">Explore</h3>
+              <ul className="footer-col-list">
+                {EXPLORE_LINKS.map((link) => (
+                  <li key={link.href}>
+                    <Link to={link.href}>{link.label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            <nav className="footer-col" aria-label="Services">
+              <h3 className="footer-col-title">Services</h3>
+              <ul className="footer-col-list">
+                {PRODUCT_LINKS.map((link) => (
+                  <li key={link.to}>
+                    <Link to={link.to}>{link.label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            <nav className="footer-col" aria-label="Reach us">
+              <h3 className="footer-col-title">Reach us</h3>
+
+              {/* Contact details */}
+              <ul className="footer-col-list footer-col-list--details">
+                <li>
+                  <a href={`mailto:${siteConfig.email}`} className="footer-detail-link whitespace-nowrap">
+                    {siteConfig.email}
+                  </a>
                 </li>
-              ))}
-            </ul>
-          </nav>
-
-          <nav className="footer-col" aria-label="Services">
-            <h3 className="footer-col-title">Services</h3>
-            <ul className="footer-col-list">
-              {PRODUCT_LINKS.map((link) => (
-                <li key={link.to}>
-                  <Link to={link.to}>{link.label}</Link>
+                <li className="footer-detail-phones">
+                  <a href={siteConfig.phoneHref} className="footer-detail-link">
+                    {siteConfig.phone}
+                  </a>
+                  <a href={siteConfig.phone2Href} className="footer-detail-link">
+                    {siteConfig.phone2}
+                  </a>
                 </li>
-              ))}
-            </ul>
-          </nav>
-
-          <nav className="footer-col" aria-label="Reach us">
-            <h3 className="footer-col-title">Reach us</h3>
-
-            {/* Contact details */}
-            <ul className="footer-col-list footer-col-list--details">
-              <li>
-                <a href={`mailto:${siteConfig.email}`} className="footer-detail-link break-anywhere">
-                  {siteConfig.email}
-                </a>
-              </li>
-              <li className="footer-detail-phones">
-                <a href={siteConfig.phoneHref} className="footer-detail-link">
-                  {siteConfig.phone}
-                </a>
-                <a href={siteConfig.phone2Href} className="footer-detail-link">
-                  {siteConfig.phone2}
-                </a>
-              </li>
-              <li className="footer-detail-note">{siteConfig.hours}</li>
-            </ul>
-          </nav>
+                <li className="footer-detail-note">{siteConfig.hours}</li>
+              </ul>
+            </nav>
+          </div>
         </div>
+      </div>
 
-        {/* --- Oversized wordmark --- */}
-        <div className="footer-wordmark" aria-hidden="true">
-          <span>MARVEL SOFTWARES</span>
-        </div>
-
-        {/* --- Legal bar --- */}
-        <div className="footer-bottom">
-          <p>
+      {/* --- Legal bar (Blue Theme, No Border Radius) --- */}
+      <div className="footer-bottom-wrap">
+        <div className="container footer-bottom">
+          <p className="footer-copyright">
             © {CURRENT_YEAR} MARVEL SOFTWARES. All rights reserved.
           </p>
           <ul className="footer-legal">
             <li>
               <Link to="/privacy">Privacy policy</Link>
-            </li>
-            <li>
-              <button type="button" onClick={scrollToTop}>
-                Back to top
-              </button>
             </li>
           </ul>
         </div>
