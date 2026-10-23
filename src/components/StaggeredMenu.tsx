@@ -209,7 +209,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
             ease: 'power3.out',
             stagger: { each: 0.08, from: 'start' },
             onComplete: () => {
-              gsap.set(socialLinks, { clearProps: 'opacity' })
+              gsap.set(socialLinks, { clearProps: 'transform,opacity' })
             },
           },
           socialsStart + 0.04,
@@ -348,13 +348,19 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
     }
   }, [playClose, animateIcon, animateColor, onMenuClose])
 
-  // Prevent background scroll when fixed menu is open
+  // Prevent background scroll and blur background page content when fixed menu is open
   useEffect(() => {
-    if (!isFixed || !open) return
+    if (!isFixed || !open) {
+      document.body.classList.remove('nav-menu-open')
+      return
+    }
     const original = document.body.style.overflow
     document.body.style.overflow = 'hidden'
+    document.body.classList.add('nav-menu-open')
+
     return () => {
       document.body.style.overflow = original
+      document.body.classList.remove('nav-menu-open')
     }
   }, [isFixed, open])
 

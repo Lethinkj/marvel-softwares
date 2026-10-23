@@ -144,6 +144,15 @@ h2[id] {
   scroll-margin-top: var(--anchor-offset);
 }
 
+/* --- Blur and dim all background page contents when mobile/tablet navigation menu is open --- */
+body.nav-menu-open #root {
+  filter: blur(12px) brightness(0.78);
+  -webkit-filter: blur(12px) brightness(0.78);
+  transition: filter 0.3s cubic-bezier(0.16, 1, 0.3, 1), -webkit-filter 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  user-select: none;
+}
+
 /* --- Container --- */
 .container {
   width: min(100% - 48px, var(--container-width));
