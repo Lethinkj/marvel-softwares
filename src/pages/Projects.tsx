@@ -1,7 +1,6 @@
 import React from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import Seo from '../components/Seo'
-import { renderAppIcon } from '../utils/iconResolver'
 import { projects, type Project } from '../data/siteData'
 import ProjectsCta from '../components/ProjectsCta'
 
@@ -69,22 +68,6 @@ export const Projects: React.FC = () => {
               problems and support business goals. Every project begins with a
               requirement — and ends with a product your team can keep evolving.
             </p>
-
-            <ul className="page-hero-chiprow">
-              {[
-                { icon: 'web', label: 'Websites' },
-                { icon: 'dashboard', label: 'Web applications' },
-                { icon: 'mobile', label: 'Learning platforms' },
-                { icon: 'layers', label: 'LMS systems' },
-              ].map((item) => (
-                <li key={item.label} className="page-hero-chiprow-item">
-                  <span className="page-hero-chiprow-icon" aria-hidden="true">
-                    {renderAppIcon(item.icon, 'w-4 h-4')}
-                  </span>
-                  {item.label}
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
       </section>

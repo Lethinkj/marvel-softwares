@@ -72,15 +72,6 @@ export const About: React.FC = () => (
             designing practical solutions and building software that fits your workflows,
             users and future plans.
           </p>
-
-          <ul className="page-hero-chips">
-            {['Planning & design', 'Development', 'Deployment', 'Ongoing support'].map((chip) => (
-              <li key={chip} className="page-hero-chip">
-                <span className="page-hero-chip-dot" aria-hidden="true" />
-                {chip}
-              </li>
-            ))}
-          </ul>
         </div>
       </div>
     </section>

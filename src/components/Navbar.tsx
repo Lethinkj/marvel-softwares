@@ -39,7 +39,7 @@ export function Navbar() {
   const [pill, setPill] = useState({ x: 0, width: 0, visible: false, animate: false })
 
   const { scrollYProgress } = useScroll()
-  const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 30, mass: 0.3 })
+  const progress = useSpring(scrollYProgress, { stiffness: 280, damping: 40, mass: 0.1, restDelta: 0.001 })
 
   const isActiveLink = (href: string) =>
     href === '/' ? location.pathname === '/' : location.pathname.startsWith(href)
@@ -203,19 +203,20 @@ export function Navbar() {
             />
           )}
 
-          {/* Scroll progress hairline — sits inside the capsule */}
+          {/* Scroll progress tracking hairline — flush edge-to-edge along the topbar bottom edge */}
           <motion.div
             aria-hidden="true"
             className="origin-left"
             style={{
               scaleX: progress,
               position: 'absolute',
-              left: 26,
-              right: 26,
-              bottom: 4,
-              height: 2,
-              borderRadius: 2,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              height: 2.5,
               background: 'linear-gradient(90deg, #0057E7, #00CFFF 55%, #FF5A00)',
+              pointerEvents: 'none',
+              zIndex: 30,
             }}
           />
         </div>
