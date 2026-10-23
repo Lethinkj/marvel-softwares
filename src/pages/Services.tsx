@@ -17,7 +17,7 @@ import {
   AiFlowIllustration,
   MaintenanceIllustration,
 } from '../components/illustrations'
-import { homeServices, services } from '../data/siteData'
+import { services } from '../data/siteData'
 
 function ServiceArt({ id }: { id: string }) {
   switch (id) {
@@ -101,27 +101,6 @@ export const Services: React.FC = () => (
           </p>
         </div>
 
-        {/* Jump straight to the solution you need */}
-        <ul className="page-hero-strip">
-          {services.map((service) => (
-            <li key={service.id}>
-              <a
-                href={`#${service.id}`}
-                className={`page-hero-strip-item${
-                  homeServices.includes(service.id) ? '' : ' page-hero-strip-item--extra'
-                }`}
-              >
-                <span className="page-hero-strip-icon" aria-hidden="true">
-                  {renderAppIcon(service.icon, 'w-4 h-4')}
-                </span>
-                <span className="page-hero-strip-title">{service.title}</span>
-                <span aria-hidden="true" className="page-hero-strip-arrow">
-                  →
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
       </div>
     </section>
 

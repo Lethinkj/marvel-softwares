@@ -142,17 +142,6 @@ export const Contact: React.FC = () => {
               solution. The more detail you share about your users, timeline and
               expectations, the better we can respond.
             </p>
-
-            <ul className="page-hero-chips">
-              {['Mon – Fri, 9:00 AM – 6:00 PM', 'Remote & on-site', 'Reply to your inquiry'].map(
-                (chip) => (
-                  <li key={chip} className="page-hero-chip">
-                    <span className="page-hero-chip-dot" aria-hidden="true" />
-                    {chip}
-                  </li>
-                ),
-              )}
-            </ul>
           </div>
 
           {/* What happens after you write in */}
