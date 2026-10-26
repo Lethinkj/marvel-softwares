@@ -76,9 +76,6 @@ export const ServicesCta: React.FC = () => (
                     {renderAppIcon(service.icon, 'w-5 h-5')}
                   </span>
                   <span className="svc-cta-tile-title">{service.title}</span>
-                  <span aria-hidden="true" className="svc-cta-tile-arrow">
-                    →
-                  </span>
                 </a>
               </li>
             ))}
@@ -87,9 +84,6 @@ export const ServicesCta: React.FC = () => (
           <div className="svc-cta-actions">
             <Link to="/contact" className="svc-cta-btn svc-cta-btn--primary">
               Discuss Your Project
-              <span aria-hidden="true" className="svc-cta-btn-arrow">
-                →
-              </span>
             </Link>
             <Link to="/projects" className="svc-cta-btn svc-cta-btn--ghost">
               See our work

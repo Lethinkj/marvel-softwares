@@ -129,9 +129,6 @@ export const HomeCta: React.FC = () => (
             <div className="home-cta-actions">
               <Link to="/contact" className="home-cta-btn home-cta-btn--primary">
                 Start a Project
-                <span className="home-cta-btn-arrow" aria-hidden="true">
-                  →
-                </span>
               </Link>
               <Link to="/services" className="home-cta-btn home-cta-btn--ghost">
                 Explore Our Services

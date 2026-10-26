@@ -633,8 +633,8 @@ export const CustomScene: React.FC<SceneProps> = ({ className = 'w-full h-auto',
         <text x={210} y={158} fill="#fff">workflow =</text>
         <text x={282} y={158} fill={CYAN}>build()</text>
         <text x={170} y={184} fill="#8EA0BF">{'if (order.paid) {'}</text>
-        <text x={186} y={208} fill={GREEN}>→ fulfil(order)</text>
-        <text x={186} y={232} fill={YELLOW}>→ notify(team)</text>
+        <text x={186} y={208} fill={GREEN}>fulfil(order)</text>
+        <text x={186} y={232} fill={YELLOW}>notify(team)</text>
         <text x={170} y={256} fill="#8EA0BF">{'}'}</text>
         <text x={186} y={280} fill="#FF7A45">return</text>
         <text x={234} y={280} fill="#fff">ship()</text>

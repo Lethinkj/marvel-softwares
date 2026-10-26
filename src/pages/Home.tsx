@@ -101,9 +101,6 @@ export const Home: React.FC = () => {
               <div className="hero-actions">
                 <Link to="/contact" className="hero-btn hero-btn--primary">
                   Start a Project
-                  <span className="hero-btn-arrow" aria-hidden="true">
-                    →
-                  </span>
                 </Link>
                 <Link to="/services" className="hero-btn hero-btn--ghost">
                   Explore Our Services
@@ -168,7 +165,7 @@ export const Home: React.FC = () => {
                 <span className="hero-float-icon">{renderAppIcon('rocket', 'w-5 h-5')}</span>
                 <span className="leading-tight">
                   <strong className="block text-sm font-bold" style={{ color: 'var(--color-text)' }}>
-                    Idea → Launch
+                    Idea to Launch
                   </strong>
                   <small className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
                     Design · Build · Deploy · Support
@@ -204,7 +201,7 @@ export const Home: React.FC = () => {
                     style={{ color: 'var(--color-primary)', marginTop: 4 }}
                     aria-label={`Learn more about ${card.title}`}
                   >
-                    Learn more <span aria-hidden="true">→</span>
+                    Learn more
                   </Link>
                 </article>
               </li>

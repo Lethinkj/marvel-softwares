@@ -906,14 +906,6 @@ body.nav-menu-open #root {
   box-shadow: 0 12px 26px -10px rgba(0, 87, 231, 0.7);
 }
 
-.svc-copy-cta-arrow {
-  transition: transform var(--transition-base);
-}
-
-.svc-copy-cta:hover .svc-copy-cta-arrow {
-  transform: translateX(4px);
-}
-
 @media (min-width: 992px) {
   .svc-showcase-row {
     grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
@@ -1233,13 +1225,14 @@ body.nav-menu-open #root {
 
 .footer-bottom {
   display: flex;
-  flex-direction: column-reverse;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
   gap: 8px;
   padding: 14px 0;
   border-radius: 0;
   font-size: 0.8125rem;
   color: rgba(255, 255, 255, 0.9);
+  text-align: center;
 }
 
 @media (min-width: 480px) {
@@ -1249,6 +1242,7 @@ body.nav-menu-open #root {
     justify-content: space-between;
     gap: 16px;
     padding: 16px 0;
+    text-align: left;
   }
 }
 
@@ -1256,8 +1250,14 @@ body.nav-menu-open #root {
   margin: 0;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.92);
-  text-align: left;
+  text-align: center;
   line-height: 1.5;
+}
+
+@media (min-width: 480px) {
+  .footer-copyright {
+    text-align: left;
+  }
 }
 
 .footer-legal {
@@ -1652,15 +1652,6 @@ body.nav-menu-open #root {
   transform: translateY(-2px);
   background: #f7faff;
   border-color: rgba(0, 87, 231, 0.5);
-}
-
-.hero-btn-arrow {
-  display: inline-block;
-  transition: transform 0.25s cubic-bezier(0.22, 0.75, 0.3, 1);
-}
-
-.hero-btn:hover .hero-btn-arrow {
-  transform: translateX(4px);
 }
 
 .hero-cap-bar {
@@ -2512,20 +2503,6 @@ a.page-hero-card-item:hover .page-hero-card-arrow {
   color: #fff;
 }
 
-.svc-cta-tile-arrow {
-  flex-shrink: 0;
-  color: rgba(255, 255, 255, 0.55);
-  font-weight: 700;
-  transition:
-    color 0.25s ease,
-    transform 0.25s ease;
-}
-
-.svc-cta-tile:hover .svc-cta-tile-arrow {
-  color: #fff;
-  transform: translateX(3px);
-}
-
 .svc-cta-actions {
   display: flex;
   flex-wrap: wrap;
@@ -2575,15 +2552,6 @@ a.page-hero-card-item:hover .page-hero-card-arrow {
   transform: translateY(-2px);
   background: rgba(255, 255, 255, 0.18);
   border-color: rgba(255, 255, 255, 0.75);
-}
-
-.svc-cta-btn-arrow {
-  display: inline-block;
-  transition: transform 0.25s ease;
-}
-
-.svc-cta-btn:hover .svc-cta-btn-arrow {
-  transform: translateX(4px);
 }
 
 /* ============================================
@@ -2706,23 +2674,6 @@ a.page-hero-card-item:hover .page-hero-card-arrow {
   text-align: left;
 }
 
-.proj-cta-btn-chip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  color: #fff;
-  background: linear-gradient(135deg, #00cfff 0%, #0057e7 100%);
-  transition: transform 0.25s ease;
-}
-
-.proj-cta-btn:hover .proj-cta-btn-chip {
-  transform: translateX(3px);
-}
-
 /* --- Capability list --- */
 .proj-cta-capabilities {
   padding: clamp(18px, 2.2vw, 26px);
@@ -2771,19 +2722,6 @@ a.page-hero-card-item:hover .page-hero-card-arrow {
 .proj-cta-capability:hover {
   background: rgba(255, 255, 255, 0.16);
   border-color: rgba(255, 255, 255, 0.36);
-  transform: translateX(2px);
-}
-
-.proj-cta-capability span {
-  color: rgba(255, 255, 255, 0.55);
-  font-weight: 700;
-  transition:
-    color 0.2s ease,
-    transform 0.2s ease;
-}
-
-.proj-cta-capability:hover span {
-  color: #fff;
   transform: translateX(2px);
 }
 
@@ -2939,15 +2877,6 @@ a.page-hero-card-item:hover .page-hero-card-arrow {
   transform: translateY(-2px);
   background: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.85);
-}
-
-.home-cta-btn-arrow {
-  display: inline-block;
-  transition: transform 0.25s ease;
-}
-
-.home-cta-btn:hover .home-cta-btn-arrow {
-  transform: translateX(4px);
 }
 
 .home-cta-assurances {

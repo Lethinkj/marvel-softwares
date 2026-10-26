@@ -63,9 +63,6 @@ export const ServiceShowcase: React.FC = () => {
 
               <Link to={`/services#${service.id}`} className="svc-copy-cta">
                 Learn more
-                <span aria-hidden="true" className="svc-copy-cta-arrow">
-                  →
-                </span>
               </Link>
             </div>
           </AnimatedSection>

@@ -75,9 +75,6 @@ export const ProjectsCta: React.FC = () => (
             {/* Single wide action */}
             <Link to="/contact" className="proj-cta-btn">
               <span className="proj-cta-btn-label">Start a Project</span>
-              <span aria-hidden="true" className="proj-cta-btn-chip">
-                →
-              </span>
             </Link>
           </div>
 
@@ -89,7 +86,6 @@ export const ProjectsCta: React.FC = () => (
                 <li key={item.to}>
                   <Link to={item.to} className="proj-cta-capability">
                     {item.label}
-                    <span aria-hidden="true">→</span>
                   </Link>
                 </li>
               ))}

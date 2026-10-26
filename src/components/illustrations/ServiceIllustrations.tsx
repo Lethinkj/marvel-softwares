@@ -363,8 +363,8 @@ export const CustomSoftwareIllustration: React.FC<IllustrationProps> = ({
         <g fontFamily="monospace" fontSize={10}>
           <text x={42} y={90} fill="#FF7A45" fontWeight="bold">const</text><text x={82} y={90} fill="#fff">flow =</text><text x={132} y={90} fill="#00CFFF">auto()</text>
           <text x={42} y={110} fill="#8EA0BF">if (order.paid) {'{'}</text>
-          <text x={56} y={130} fill="#00C42B">→ fulfill(order)</text>
-          <text x={56} y={150} fill="#FFB800">→ notify(team)</text>
+          <text x={56} y={130} fill="#00C42B">fulfill(order)</text>
+          <text x={56} y={150} fill="#FFB800">notify(team)</text>
           <text x={42} y={170} fill="#8EA0BF">{'}'}</text>
         </g>
         <rect x={42} y={186} width={10} height={16} fill="#FF5A00">

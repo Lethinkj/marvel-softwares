@@ -59,7 +59,6 @@ export const HomeBelowHero: React.FC = () => (
             style={sectionLinkStyle}
           >
             View all services
-            <span aria-hidden="true">→</span>
           </Link>
         </div>
 
@@ -91,12 +90,6 @@ export const HomeBelowHero: React.FC = () => (
                   style={{ color: 'var(--color-primary)', marginTop: 20 }}
                 >
                   Learn more
-                  <span
-                    aria-hidden="true"
-                    className="transition-transform duration-300 group-hover:translate-x-1"
-                  >
-                    →
-                  </span>
                 </span>
               </Link>
             </AnimatedSection>
@@ -173,7 +166,6 @@ export const HomeBelowHero: React.FC = () => (
               style={{ color: 'var(--color-primary)', marginTop: 26 }}
             >
               More about us
-              <span aria-hidden="true">→</span>
             </Link>
           </div>
         </div>
@@ -200,7 +192,6 @@ export const HomeBelowHero: React.FC = () => (
             style={sectionLinkStyle}
           >
             View all projects
-            <span aria-hidden="true">→</span>
           </Link>
         </div>
 
@@ -264,12 +255,6 @@ export const HomeBelowHero: React.FC = () => (
                     style={{ color: 'var(--color-primary)', marginTop: 20 }}
                   >
                     View Project
-                    <span
-                      aria-hidden="true"
-                      className="transition-transform duration-300 group-hover:translate-x-1"
-                    >
-                      →
-                    </span>
                   </span>
                 </div>
               </a>
@@ -342,9 +327,6 @@ export const HomeBelowHero: React.FC = () => (
             }}
           >
             Talk to us
-            <span aria-hidden="true" style={{ marginLeft: 8 }}>
-              →
-            </span>
           </Link>
         </div>
       </div>
@@ -378,7 +360,6 @@ export const HomeBelowHero: React.FC = () => (
               style={{ color: 'var(--color-primary)', marginTop: 20 }}
             >
               Ask us directly
-              <span aria-hidden="true">→</span>
             </Link>
           </div>
 
@@ -438,9 +419,6 @@ export const HomeBelowHero: React.FC = () => (
             }}
           >
             Let&apos;s Talk
-            <span aria-hidden="true" style={{ marginLeft: 8 }}>
-              →
-            </span>
           </Link>
         </div>
       </div>

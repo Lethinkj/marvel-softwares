@@ -174,7 +174,7 @@ export const Services: React.FC = () => (
                     className="inline-flex items-center justify-center min-h-[48px] px-6 text-[15px] font-semibold"
                     style={{ color: 'var(--color-primary)' }}
                   >
-                    View Projects <span aria-hidden="true" style={{ marginLeft: 6 }}>→</span>
+                    View Projects
                   </Link>
                 </div>
               </div>
