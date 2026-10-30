@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { gsap } from 'gsap'
 import './StaggeredMenu.css'
 
@@ -19,7 +19,6 @@ export interface StaggeredMenuSocialItem {
 
 export interface StaggeredMenuProps {
   position?: 'left' | 'right'
-  colors?: string[]
   items?: StaggeredMenuItem[]
   socialItems?: StaggeredMenuSocialItem[]
   displaySocials?: boolean
@@ -42,7 +41,6 @@ export interface StaggeredMenuProps {
 
 export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   position = 'right',
-  colors = ['#00CFFF', '#0057E7', '#0033A0', '#0B1530'],
   items = [],
   socialItems = [],
   displaySocials = true,
@@ -51,7 +49,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   logoUrl = '/marvel-softwares-logo-removebg-preview.png',
   showLogo = true,
   menuButtonColor = '#0057E7',
-  openMenuButtonColor = '#0057E7',
+  openMenuButtonColor = '#14203a',
   accentColor = '#0057E7',
   changeMenuColorOnOpen = true,
   isFixed = false,
@@ -63,11 +61,10 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   onItemClick,
 }) => {
   const navigate = useNavigate()
+  const location = useLocation()
   const [open, setOpen] = useState(false)
   const openRef = useRef(false)
   const panelRef = useRef<HTMLElement>(null)
-  const preLayersRef = useRef<HTMLDivElement>(null)
-  const preLayerElsRef = useRef<HTMLElement[]>([])
   const line1Ref = useRef<HTMLSpanElement>(null)
   const line2Ref = useRef<HTMLSpanElement>(null)
   const line3Ref = useRef<HTMLSpanElement>(null)
@@ -79,28 +76,17 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   const colorTweenRef = useRef<gsap.core.Tween | null>(null)
   const toggleBtnRef = useRef<HTMLButtonElement>(null)
   const busyRef = useRef(false)
-  const itemEntranceTweenRef = useRef<gsap.core.Tween | null>(null)
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       const panel = panelRef.current
-      const preContainer = preLayersRef.current
       const l1 = line1Ref.current
       const l2 = line2Ref.current
       const l3 = line3Ref.current
       if (!panel || !l1 || !l2 || !l3) return
 
-      let preLayers: HTMLElement[] = []
-      if (preContainer) {
-        preLayers = Array.from(preContainer.querySelectorAll<HTMLElement>('.sm-prelayer'))
-      }
-      preLayerElsRef.current = preLayers
-
       const offscreen = position === 'left' ? -100 : 100
-      gsap.set([panel, ...preLayers], { xPercent: offscreen, opacity: 1 })
-      if (preContainer) {
-        gsap.set(preContainer, { xPercent: 0, opacity: 1 })
-      }
+      gsap.set(panel, { xPercent: offscreen, opacity: 1 })
       gsap.set(l1, { transformOrigin: '50% 50%', y: 0, rotate: 0 })
       gsap.set(l2, { transformOrigin: '50% 50%', opacity: 1, scaleX: 1 })
       gsap.set(l3, { transformOrigin: '50% 50%', y: 0, rotate: 0 })
@@ -111,7 +97,6 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 
   const buildOpenTimeline = useCallback(() => {
     const panel = panelRef.current
-    const layers = preLayerElsRef.current
     if (!panel) return null
 
     openTlRef.current?.kill()
@@ -119,103 +104,15 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
       closeTweenRef.current.kill()
       closeTweenRef.current = null
     }
-    itemEntranceTweenRef.current?.kill()
-
-    const itemEls = Array.from(panel.querySelectorAll<HTMLElement>('.sm-panel-itemLabel'))
-    const numberEls = Array.from(panel.querySelectorAll<HTMLElement>('.sm-panel-list[data-numbering] .sm-panel-item'))
-    const socialTitle = panel.querySelector<HTMLElement>('.sm-socials-title')
-    const socialLinks = Array.from(panel.querySelectorAll<HTMLElement>('.sm-socials-link'))
 
     const offscreen = position === 'left' ? -100 : 100
-    const layerStates = layers.map((el) => ({ el, start: offscreen }))
-    const panelStart = offscreen
-
-    if (itemEls.length) {
-      gsap.set(itemEls, { yPercent: 140, rotate: 10 })
-    }
-    if (numberEls.length) {
-      gsap.set(numberEls, { '--sm-num-opacity': 0 })
-    }
-    if (socialTitle) {
-      gsap.set(socialTitle, { opacity: 0 })
-    }
-    if (socialLinks.length) {
-      gsap.set(socialLinks, { y: 25, opacity: 0 })
-    }
-
     const tl = gsap.timeline({ paused: true })
-
-    layerStates.forEach((ls, i) => {
-      tl.fromTo(ls.el, { xPercent: ls.start }, { xPercent: 0, duration: 0.5, ease: 'power4.out' }, i * 0.07)
-    })
-    const lastTime = layerStates.length ? (layerStates.length - 1) * 0.07 : 0
-    const panelInsertTime = lastTime + (layerStates.length ? 0.08 : 0)
-    const panelDuration = 0.65
     tl.fromTo(
       panel,
-      { xPercent: panelStart },
-      { xPercent: 0, duration: panelDuration, ease: 'power4.out' },
-      panelInsertTime,
+      { xPercent: offscreen },
+      { xPercent: 0, duration: 0.25, ease: 'power2.out' },
+      0,
     )
-
-    if (itemEls.length) {
-      const itemsStartRatio = 0.15
-      const itemsStart = panelInsertTime + panelDuration * itemsStartRatio
-      tl.to(
-        itemEls,
-        {
-          yPercent: 0,
-          rotate: 0,
-          duration: 1,
-          ease: 'power4.out',
-          stagger: { each: 0.1, from: 'start' },
-        },
-        itemsStart,
-      )
-      if (numberEls.length) {
-        tl.to(
-          numberEls,
-          {
-            duration: 0.6,
-            ease: 'power2.out',
-            '--sm-num-opacity': 1,
-            stagger: { each: 0.08, from: 'start' },
-          },
-          itemsStart + 0.1,
-        )
-      }
-    }
-
-    if (socialTitle || socialLinks.length) {
-      const socialsStart = panelInsertTime + panelDuration * 0.4
-      if (socialTitle) {
-        tl.to(
-          socialTitle,
-          {
-            opacity: 1,
-            duration: 0.5,
-            ease: 'power2.out',
-          },
-          socialsStart,
-        )
-      }
-      if (socialLinks.length) {
-        tl.to(
-          socialLinks,
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.55,
-            ease: 'power3.out',
-            stagger: { each: 0.08, from: 'start' },
-            onComplete: () => {
-              gsap.set(socialLinks, { clearProps: 'transform,opacity' })
-            },
-          },
-          socialsStart + 0.04,
-        )
-      }
-    }
 
     openTlRef.current = tl
     return tl
@@ -238,33 +135,18 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   const playClose = useCallback(() => {
     openTlRef.current?.kill()
     openTlRef.current = null
-    itemEntranceTweenRef.current?.kill()
 
     const panel = panelRef.current
-    const layers = preLayerElsRef.current
     if (!panel) return
 
-    const all = [...layers, panel]
     closeTweenRef.current?.kill()
     const offscreen = position === 'left' ? -100 : 100
-    closeTweenRef.current = gsap.to(all, {
+    closeTweenRef.current = gsap.to(panel, {
       xPercent: offscreen,
-      duration: 0.32,
-      ease: 'power3.in',
+      duration: 0.2,
+      ease: 'power2.in',
       overwrite: 'auto',
       onComplete: () => {
-        const itemEls = Array.from(panel.querySelectorAll<HTMLElement>('.sm-panel-itemLabel'))
-        if (itemEls.length) {
-          gsap.set(itemEls, { yPercent: 140, rotate: 10 })
-        }
-        const numberEls = Array.from(panel.querySelectorAll<HTMLElement>('.sm-panel-list[data-numbering] .sm-panel-item'))
-        if (numberEls.length) {
-          gsap.set(numberEls, { '--sm-num-opacity': 0 })
-        }
-        const socialTitle = panel.querySelector<HTMLElement>('.sm-socials-title')
-        const socialLinks = Array.from(panel.querySelectorAll<HTMLElement>('.sm-socials-link'))
-        if (socialTitle) gsap.set(socialTitle, { opacity: 0 })
-        if (socialLinks.length) gsap.set(socialLinks, { y: 25, opacity: 0 })
         busyRef.current = false
       },
     })
@@ -425,18 +307,6 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
       {/* Backdrop overlay for the remaining screen area */}
       <div className="sm-scrim" onClick={closeMenu} aria-hidden="true" />
 
-      <div ref={preLayersRef} className="sm-prelayers" aria-hidden="true">
-        {(() => {
-          const raw = colors && colors.length ? colors.slice(0, 4) : ['#1e1e22', '#35353c']
-          const arr = [...raw]
-          if (arr.length >= 3) {
-            const mid = Math.floor(arr.length / 2)
-            arr.splice(mid, 1)
-          }
-          return arr.map((c, i) => <div key={i} className="sm-prelayer" style={{ background: c }} />)
-        })()}
-      </div>
-
       <header className="staggered-menu-header" aria-label="Main navigation header">
         {showLogo && (
           <div className="sm-logo" aria-label="Logo">
@@ -471,7 +341,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 
       <aside id="staggered-menu-panel" ref={panelRef} className="staggered-menu-panel" aria-hidden={!open}>
         <div className="sm-panel-inner">
-          {/* Logo rides directly inside the sidebar panel */}
+          {/* Top — White Header Band */}
           <div className="sm-panel-top">
             <Link to="/" onClick={closeMenu} className="sm-panel-logo" aria-label="MARVEL SOFTWARES — Home">
               <img
@@ -485,33 +355,44 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
             </Link>
           </div>
 
-          <ul className="sm-panel-list" role="list" data-numbering={displayItemNumbering || undefined}>
-            {items && items.length ? (
-              items.map((it, idx) => (
-                <li className="sm-panel-itemWrap" key={it.label + idx}>
-                  <a
-                    className="sm-panel-item"
-                    href={it.link}
-                    aria-label={it.ariaLabel}
-                    data-index={idx + 1}
-                    onClick={(e) => handleItemClick(it, e)}
-                  >
-                    <span className="sm-panel-itemLabel">{it.label}</span>
-                  </a>
-                </li>
-              ))
-            ) : (
-              <li className="sm-panel-itemWrap" aria-hidden="true">
-                <span className="sm-panel-item">
-                  <span className="sm-panel-itemLabel">No items</span>
-                </span>
-              </li>
-            )}
-          </ul>
+          {/* Middle — Ash Silver Formal Menu */}
+          <div className="sm-panel-body">
+            <ul className="sm-panel-list" role="list" data-numbering={displayItemNumbering || undefined}>
+              {items && items.length ? (
+                items.map((it, idx) => {
+                  const active =
+                    it.link === '/'
+                      ? location.pathname === '/'
+                      : location.pathname.startsWith(it.link)
 
+                  return (
+                    <li className="sm-panel-itemWrap" key={it.label + idx}>
+                      <a
+                        className={`sm-panel-item ${active ? 'sm-panel-item--active' : ''}`}
+                        href={it.link}
+                        aria-label={it.ariaLabel || it.label}
+                        aria-current={active ? 'page' : undefined}
+                        data-index={idx + 1}
+                        onClick={(e) => handleItemClick(it, e)}
+                      >
+                        <span className="sm-panel-itemLabel">{it.label}</span>
+                      </a>
+                    </li>
+                  )
+                })
+              ) : (
+                <li className="sm-panel-itemWrap" aria-hidden="true">
+                  <span className="sm-panel-item">
+                    <span className="sm-panel-itemLabel">No items</span>
+                  </span>
+                </li>
+              )}
+            </ul>
+          </div>
+
+          {/* Bottom — White Socials Band */}
           {displaySocials && socialItems && socialItems.length > 0 && (
-            <div className="sm-socials" aria-label="Social links">
-              <h3 className="sm-socials-title">Socials</h3>
+            <div className="sm-socials" aria-label="Quick links">
               <ul className="sm-socials-list" role="list">
                 {socialItems.map((s, i) => (
                   <li key={s.label + i} className="sm-socials-item">

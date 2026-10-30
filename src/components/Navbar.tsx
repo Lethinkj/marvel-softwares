@@ -125,10 +125,9 @@ export function Navbar() {
               socialItems={socialItems}
               displaySocials={true}
               displayItemNumbering={false}
-              colors={['#00CFFF', '#0057E7', '#0033A0', '#0B1530']}
               accentColor="#0057E7"
               menuButtonColor="#0057E7"
-              openMenuButtonColor="#0057E7"
+              openMenuButtonColor="#0F172A"
               logoUrl="/marvel-softwares-logo-removebg-preview.png"
               headerHeight={isScrolled ? 58 : 66}
               headerPadding="0 max(16px, calc((100% - var(--container-width)) / 2 + 16px))"
