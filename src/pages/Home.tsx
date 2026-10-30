@@ -1,9 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { renderAppIcon } from '../utils/iconResolver'
 import AnimatedSection from '../components/AnimatedSection'
 import Seo from '../components/Seo'
-import { HeroIntelligentCore } from '../components/illustrations'
 import { OurProcess } from '../components/OurProcess'
 import ServiceShowcase from '../components/ServiceShowcase'
 import WhyChooseUs from '../components/WhyChooseUs'
@@ -24,41 +22,7 @@ const btnSecondary: React.CSSProperties = {
   borderRadius: 'var(--radius-button)',
 }
 
-/* Hero trust chips — short, factual scope labels */
-const heroChips = ['Websites', 'Web Applications', 'Mobile Apps', 'ERP Systems', 'AI & Automation']
-
-/* Hero highlight mini-cards — links point at matching service anchors */
-const heroHighlights = [
-  {
-    icon: 'web',
-    tint: 'tint-blue',
-    title: 'Web & Mobile Apps',
-    href: 'website-development',
-    description:
-      'Websites, portals and apps your customers enjoy using — responsive, fast and easy to manage.',
-  },
-  {
-    icon: 'erp',
-    tint: 'tint-orange',
-    title: 'ERP & Automation',
-    href: 'erp-business-software',
-    description:
-      'Run operations, records, billing and reporting from one connected, reliable system.',
-  },
-  {
-    icon: 'ai',
-    tint: 'tint-cyan',
-    title: 'AI & Integrations',
-    href: 'ai-automation',
-    description:
-      'Connect your tools with APIs and automation so repetitive work takes care of itself.',
-  },
-]
-
 export const Home: React.FC = () => {
-  /* Hero image may not be present yet — fall back to the SVG illustration */
-  const [heroImgOk, setHeroImgOk] = React.useState(true)
-
   return (
     <div className="w-full bg-white overflow-x-clip">
       <Seo
@@ -74,27 +38,28 @@ export const Home: React.FC = () => {
         <div aria-hidden="true" className="hero-glow hero-glow-a" />
         <div aria-hidden="true" className="hero-glow hero-glow-b" />
 
-        <div className="container relative" style={{
+        <div
+          className="w-full relative px-6 sm:px-10 lg:px-16 xl:px-20 max-w-[1720px] mx-auto"
+          style={{
             paddingTop: 'calc(var(--header-offset) + clamp(36px, 5.5vw, 80px))',
             paddingBottom: 'clamp(56px,8vw,112px)',
-          }}>
+          }}
+        >
           <div
-            className="flex flex-col lg:grid lg:grid-cols-12 lg:items-center"
-            style={{ gap: 'clamp(32px,4.5vw,60px)' }}
+            className="flex flex-col lg:grid lg:grid-cols-12 lg:items-start"
+            style={{ gap: 'clamp(32px,4.5vw,64px)' }}
           >
             {/* Copy column */}
-            <div className="order-1 lg:order-none lg:col-span-7 lg:row-start-1 lg:row-span-2 lg:self-center">
-              <h1 id="hero-title" className="text-hero" style={{ marginTop: 20 }}>
+            <div className="order-1 lg:order-none lg:col-span-6 lg:row-start-1 lg:row-span-2 lg:self-start text-left">
+              <h1 id="hero-title" className="text-hero" style={{ marginTop: 0 }}>
                 <span className="block" style={{ color: 'var(--color-primary)' }}>
                   Software That Grows
                 </span>
                 <span className="hero-shimmer-text block">Your Business</span>
               </h1>
 
-              <p className="hero-lead">
-                From websites and mobile apps to enterprise platforms and custom business
-                systems — we design and develop software that solves real problems,
-                streamlines operations and helps your business grow.
+              <p className="hero-lead text-justify" style={{ maxWidth: '62ch', textAlign: 'justify' }}>
+                From high-performing websites and intuitive mobile applications to connected enterprise ERP platforms and custom software architectures — we engineer scalable digital solutions tailored directly around the way your organization operates. Whether your goal is modernizing customer-facing digital touchpoints, automating complex operational workflows, or establishing a resilient and secure technological foundation from the ground up, our dedicated engineering team manages the complete product lifecycle from discovery and UX design through to deployment, ongoing optimization, and dependable long-term support.
               </p>
 
               {/* CTAs */}
@@ -106,107 +71,18 @@ export const Home: React.FC = () => {
                   Explore Our Services
                 </Link>
               </div>
-
-              {/* Capability bar */}
-              <div className="hero-cap-bar">
-                <span className="hero-cap-label">We build</span>
-                <ul className="hero-cap-list">
-                  {heroChips.map((chip) => (
-                    <li key={chip} className="hero-cap">
-                      <span className="hero-cap-dot" aria-hidden="true" />
-                      {chip}
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </div>
 
             {/* Visual column */}
-            <div className="order-2 lg:order-none relative w-full max-w-xl mx-auto lg:max-w-none lg:col-span-5 lg:row-start-1 lg:self-center">
-              <div className="hero-visual-card">
-                {heroImgOk ? (
-                  <img
-                    src="/hero-images/hero-isometric.svg"
-                    alt="Isometric illustration of a laptop, phone and cloud surrounded by web, cloud, automation, AI, enterprise and custom software services"
-                    className="w-full h-auto"
-                    decoding="async"
-                    onError={() => setHeroImgOk(false)}
-                  />
-                ) : (
-                  <HeroIntelligentCore />
-                )}
-              </div>
-
-              {/* Floating capability chips — orbit the visual */}
-              <span
-                className="hero-orbit-chip hero-orbit-chip--a hidden lg:inline-flex"
-                aria-hidden="true"
-              >
-                <span className="hero-orbit-dot" style={{ background: '#0057E7' }} />
-                Mobile Apps
-              </span>
-              <span
-                className="hero-orbit-chip hero-orbit-chip--b hidden lg:inline-flex"
-                aria-hidden="true"
-              >
-                <span className="hero-orbit-dot" style={{ background: '#FF5A00' }} />
-                ERP Systems
-              </span>
-              <span
-                className="hero-orbit-chip hero-orbit-chip--c hidden lg:inline-flex"
-                aria-hidden="true"
-              >
-                <span className="hero-orbit-dot" style={{ background: '#00CFFF' }} />
-                AI &amp; Automation
-              </span>
-
-              {/* Floating endpoint badge */}
-              <div className="hero-float-badge hidden lg:flex" aria-hidden="true">
-                <span className="hero-float-icon">{renderAppIcon('rocket', 'w-5 h-5')}</span>
-                <span className="leading-tight">
-                  <strong className="block text-sm font-bold" style={{ color: 'var(--color-text)' }}>
-                    Idea to Launch
-                  </strong>
-                  <small className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                    Design · Build · Deploy · Support
-                  </small>
-                </span>
-              </div>
+            <div className="order-2 lg:order-none relative w-full lg:col-span-6 lg:row-start-1 lg:self-start flex justify-center pt-2">
+              <img
+                src="/hero/home.png"
+                alt="Marvel Softwares digital solutions and software development workspace"
+                className="w-full h-auto max-w-[620px] xl:max-w-[680px] drop-shadow-xl transition-transform"
+                decoding="async"
+              />
             </div>
           </div>
-
-          {/* Highlight mini-cards */}
-          <ul
-            className="grid grid-cols-1 sm:grid-cols-3"
-            style={{ gap: 'var(--card-gap)', marginTop: 'clamp(34px,4.5vw,60px)' }}
-          >
-            {heroHighlights.map((card) => (
-              <li key={card.title}>
-                <article className="hero-mini-card">
-                  <span className={`hero-mini-icon ${card.tint}`} aria-hidden="true">
-                    {renderAppIcon(card.icon, 'w-5 h-5')}
-                  </span>
-                  <h2 className="text-[1.05rem] font-bold" style={{ color: 'var(--color-text)' }}>
-                    {card.title}
-                  </h2>
-                  <p
-                    className="text-[0.9rem] leading-relaxed"
-                    style={{ color: 'var(--color-text-muted)', flex: 1 }}
-                  >
-                    {card.description}
-                  </p>
-                  <Link
-                    to={`/services#${card.href}`}
-                    className="inline-flex items-center gap-1.5 text-sm font-semibold transition-all hover:gap-2.5"
-                    style={{ color: 'var(--color-primary)', marginTop: 4 }}
-                    aria-label={`Learn more about ${card.title}`}
-                  >
-                    Learn more
-                  </Link>
-                </article>
-              </li>
-            ))}
-          </ul>
         </div>
       </section>
 

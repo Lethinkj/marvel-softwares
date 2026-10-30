@@ -1,7 +1,6 @@
 import React from 'react'
 import { renderAppIcon } from '../utils/iconResolver'
 import AnimatedSection from './AnimatedSection'
-import { WhyUsScene } from './illustrations/ServiceScenes'
 import { whyChooseUs } from '../data/siteData'
 
 /**
@@ -13,7 +12,13 @@ import { whyChooseUs } from '../data/siteData'
 export const WhyChooseUs: React.FC = () => (
   <div className="why-grid">
     <AnimatedSection direction="up" className="why-media">
-      <WhyUsScene id="sc-why" />
+      <img
+        src="/Connected SaaS Platform Ecosystem.png"
+        alt="Connected SaaS platform ecosystem illustration"
+        className="w-full h-auto"
+        loading="lazy"
+        decoding="async"
+      />
     </AnimatedSection>
 
     <AnimatedSection direction="up" delay={0.12} className="why-list">

@@ -1,44 +1,114 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { renderAppIcon } from '../utils/iconResolver'
 import AnimatedSection from '../components/AnimatedSection'
 import Seo from '../components/Seo'
 import { CheckIcon } from '../components/Icons'
 import ServicesCta from '../components/ServicesCta'
-import {
-  WebsiteDevIllustration,
-  WebAppIllustration,
-  MobileAppIllustration,
-  ErpIllustration,
-  CustomSoftwareIllustration,
-  UiUxCanvasIllustration,
-  ApiIntegrationIllustration,
-  CloudDeployIllustration,
-  AiFlowIllustration,
-  MaintenanceIllustration,
-} from '../components/illustrations'
+import { MaintenanceIllustration } from '../components/illustrations'
 import { services } from '../data/siteData'
 
 function ServiceArt({ id }: { id: string }) {
   switch (id) {
     case 'website-development':
-      return <WebsiteDevIllustration />
+      return (
+        <img
+          src="/services/Better Websites, Brighter Growth.png"
+          alt="Responsive website on laptop and phone with performance and growth graphics"
+          className="w-full h-auto"
+          loading="lazy"
+          decoding="async"
+        />
+      )
     case 'web-application-development':
-      return <WebAppIllustration />
+      return (
+        <img
+          src="/services/3D Web Design Workspace Illustration.png"
+          alt="3D web design workspace illustration — designer building a website"
+          className="w-full h-auto"
+          loading="lazy"
+          decoding="async"
+        />
+      )
     case 'mobile-app-development':
-      return <MobileAppIllustration />
+      return (
+        <img
+          src="/services/Floating Task Management UI Showcase.png"
+          alt="Floating task management app UI on three phones"
+          className="w-full h-auto"
+          loading="lazy"
+          decoding="async"
+        />
+      )
     case 'erp-business-software':
-      return <ErpIllustration />
+      return (
+        <img
+          src="/services/4ab1d0b9-bedd-4544-869b-6af29062e587.png"
+          alt="One connected business system — ERP dashboard connected to operations modules"
+          className="w-full h-auto"
+          loading="lazy"
+          decoding="async"
+        />
+      )
     case 'custom-software-development':
-      return <CustomSoftwareIllustration />
+      return (
+        <img
+          src="/services/Custom Software Development Workspace.png"
+          alt="Custom software development workspace illustration"
+          className="w-full h-auto"
+          loading="lazy"
+          decoding="async"
+        />
+      )
     case 'ui-ux-design':
-      return <UiUxCanvasIllustration />
+      return (
+        <img
+          src="/services/Isometric UX Design Workflow Scene.png"
+          alt="Isometric UX design workflow scene illustration"
+          className="w-full h-auto"
+          loading="lazy"
+          decoding="async"
+        />
+      )
     case 'api-integration':
-      return <ApiIntegrationIllustration />
+      return (
+        <img
+          src="/services/Connected API Ecosystem Hub.png"
+          alt="Connected API ecosystem hub illustration"
+          className="w-full h-auto"
+          loading="lazy"
+          decoding="async"
+        />
+      )
     case 'cloud-devops':
-      return <CloudDeployIllustration />
+      return (
+        <img
+          src="/services/3D DevOps Cloud Infrastructure Hub.png"
+          alt="3D DevOps cloud infrastructure hub illustration"
+          className="w-full h-auto"
+          loading="lazy"
+          decoding="async"
+        />
+      )
     case 'ai-automation':
-      return <AiFlowIllustration />
+      return (
+        <img
+          src="/services/AI Automation Infographic Robot.png"
+          alt="AI automation infographic robot illustration"
+          className="w-full h-auto"
+          loading="lazy"
+          decoding="async"
+        />
+      )
+    case 'maintenance-consulting':
+      return (
+        <img
+          src="/services/Software Maintenance Isometric Workspace.png"
+          alt="Software maintenance isometric workspace illustration"
+          className="w-full h-auto"
+          loading="lazy"
+          decoding="async"
+        />
+      )
     default:
       return <MaintenanceIllustration />
   }
@@ -124,18 +194,11 @@ export const Services: React.FC = () => (
                 className={artLeft ? 'md:order-1' : 'md:order-2'}
                 direction={artLeft ? 'left' : 'right'}
               >
-                <div className="w-full max-w-lg mx-auto">
+                <div className="w-full max-w-xl mx-auto scale-110 relative z-10">
                   <ServiceArt id={service.id} />
                 </div>
               </AnimatedSection>
               <div className={artLeft ? 'md:order-2' : 'md:order-1'}>
-                <span
-                  className="inline-flex items-center justify-center w-14 h-14 rounded-2xl"
-                  style={{ background: '#F4F5FF', color: 'var(--color-primary)', marginBottom: 20 }}
-                  aria-hidden="true"
-                >
-                  {renderAppIcon(service.icon, 'w-7 h-7')}
-                </span>
                 <h2 id={`${service.id}-title`} className="text-section-title">
                   {service.headline}
                 </h2>
@@ -169,13 +232,7 @@ export const Services: React.FC = () => (
                   >
                     {service.cta}
                   </Link>
-                  <Link
-                    to="/projects"
-                    className="inline-flex items-center justify-center min-h-[48px] px-6 text-[15px] font-semibold"
-                    style={{ color: 'var(--color-primary)' }}
-                  >
-                    View Projects
-                  </Link>
+
                 </div>
               </div>
             </div>

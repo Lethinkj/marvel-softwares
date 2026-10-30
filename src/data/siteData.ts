@@ -89,8 +89,8 @@ export const siteConfig = {
 // --- Navigation ---
 export const navLinks: NavLink[] = [
   { label: 'Home', href: '/' },
-  { label: 'Services', href: '/services' },
   { label: 'About', href: '/about' },
+  { label: 'Services', href: '/services' },
   { label: 'Projects', href: '/projects' },
   { label: 'Contact', href: '/contact' },
 ]

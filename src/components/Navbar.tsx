@@ -1,6 +1,5 @@
-import { useState, useEffect, useLayoutEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { motion, useScroll, useSpring } from 'motion/react'
 import { navLinks, siteConfig } from '../data/siteData'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { StaggeredMenu, type StaggeredMenuItem, type StaggeredMenuSocialItem } from './StaggeredMenu'
@@ -14,8 +13,6 @@ import { StaggeredMenu, type StaggeredMenuItem, type StaggeredMenuSocialItem } f
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const location = useLocation()
-  const navRef = useRef<HTMLElement>(null)
-  const linkRefs = useRef<Record<string, HTMLAnchorElement | null>>({})
 
   const isDesktop = useMediaQuery('(min-width: 1024px)')
 
@@ -31,50 +28,8 @@ export function Navbar() {
     { label: 'Privacy', link: '/privacy' },
   ]
 
-  /**
-   * Active-page highlighter.
-   * Measured manually and moved with a horizontal transform only, so it can
-   * never drift vertically or animate in from an off-screen position.
-   */
-  const [pill, setPill] = useState({ x: 0, width: 0, visible: false, animate: false })
-
-  const { scrollYProgress } = useScroll()
-  const progress = useSpring(scrollYProgress, { stiffness: 280, damping: 40, mass: 0.1, restDelta: 0.001 })
-
   const isActiveLink = (href: string) =>
     href === '/' ? location.pathname === '/' : location.pathname.startsWith(href)
-
-  const activeHref = navLinks.find((link) => isActiveLink(link.href))?.href ?? null
-
-  useLayoutEffect(() => {
-    if (!isDesktop) return
-
-    const measure = () => {
-      const nav = navRef.current
-      if (!nav) return
-      const link = activeHref ? linkRefs.current[activeHref] : null
-      if (!link) {
-        setPill((p) => ({ ...p, visible: false }))
-        return
-      }
-      const navRect = nav.getBoundingClientRect()
-      const linkRect = link.getBoundingClientRect()
-      setPill({
-        x: linkRect.left - navRect.left,
-        width: linkRect.width,
-        visible: true,
-        animate: true,
-      })
-    }
-
-    measure()
-    const frame = requestAnimationFrame(measure)
-    window.addEventListener('resize', measure)
-    return () => {
-      cancelAnimationFrame(frame)
-      window.removeEventListener('resize', measure)
-    }
-  }, [activeHref, isDesktop])
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 12)
@@ -134,51 +89,29 @@ export function Navbar() {
           {/* Navigation — desktop (>= 1024px) */}
           {isDesktop && (
             <nav
-              ref={navRef}
               className="flex items-center"
               aria-label="Main navigation"
-              style={{ marginLeft: 'auto', marginRight: 0, gap: 2, position: 'relative' }}
+              style={{ marginLeft: 'auto', marginRight: 0, gap: 4 }}
             >
               {navLinks.map((link) => {
                 const active = isActiveLink(link.href)
                 return (
                   <Link
                     key={link.href}
-                    ref={(el) => {
-                      linkRefs.current[link.href] = el
-                    }}
                     to={link.href}
                     aria-current={active ? 'page' : undefined}
-                    className="nav-pill-link relative rounded-full transition-colors"
+                    className="nav-pill-link relative transition-colors"
                     style={{
-                      padding: '9px 16px',
-                      fontSize: '0.93rem',
+                      padding: '8px 16px',
+                      fontSize: '0.94rem',
                       fontWeight: active ? 700 : 500,
-                      color: active ? '#fff' : 'var(--color-text)',
-                      zIndex: 1,
+                      color: active ? 'var(--color-primary)' : 'var(--color-text)',
                     }}
                   >
-                    <span className="relative z-10">{link.label}</span>
+                    <span>{link.label}</span>
                   </Link>
                 )
               })}
-
-              {/* Active-page highlighter — horizontal movement only */}
-              <span
-                aria-hidden="true"
-                className="absolute top-0 bottom-0 left-0 rounded-full pointer-events-none"
-                style={{
-                  zIndex: 0,
-                  width: pill.width,
-                  transform: `translateX(${pill.x}px)`,
-                  opacity: pill.visible ? 1 : 0,
-                  background: 'linear-gradient(135deg, #0057E7 0%, #0033A0 100%)',
-                  boxShadow: '0 10px 22px -12px rgba(0,87,231,.9)',
-                  transition: pill.animate
-                    ? 'transform .45s cubic-bezier(.22,.75,.3,1), width .45s cubic-bezier(.22,.75,.3,1), opacity .2s ease'
-                    : 'none',
-                }}
-              />
             </nav>
           )}
 
@@ -202,23 +135,6 @@ export function Navbar() {
               closeOnClickAway={true}
             />
           )}
-
-          {/* Scroll progress tracking hairline — flush edge-to-edge along the topbar bottom edge */}
-          <motion.div
-            aria-hidden="true"
-            className="origin-left"
-            style={{
-              scaleX: progress,
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              bottom: 0,
-              height: 2.5,
-              background: 'linear-gradient(90deg, #0057E7, #00CFFF 55%, #FF5A00)',
-              pointerEvents: 'none',
-              zIndex: 30,
-            }}
-          />
         </div>
       </div>
     </header>
