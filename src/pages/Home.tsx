@@ -1,7 +1,8 @@
 import React from 'react'
 import AnimatedSection from '../components/AnimatedSection'
 import Seo from '../components/Seo'
-import { TargetIcon, EyeIcon } from '../components/Icons'
+import MissionBadge from '../components/MissionBadge'
+import VisionBadge from '../components/VisionBadge'
 import { OurProcess } from '../components/OurProcess'
 import ServiceShowcase from '../components/ServiceShowcase'
 import WhyChooseUs from '../components/WhyChooseUs'
@@ -28,7 +29,7 @@ export const Home: React.FC = () => {
       />
 
       {/* ============ A. HERO ============ */}
-      <section id="home" aria-labelledby="hero-title" className="hero-v4 relative overflow-hidden bg-[#e0f2fe]">
+      <section id="home" aria-labelledby="hero-title" className="hero-v4 hero-deep relative overflow-hidden">
         {/* Dot-grid backdrop + ambient brand glows */}
         <div aria-hidden="true" className="hero-dotgrid" />
         <div aria-hidden="true" className="hero-glow hero-glow-a" />
@@ -43,18 +44,18 @@ export const Home: React.FC = () => {
         >
           <div
             className="flex flex-col lg:grid lg:grid-cols-12 lg:items-center"
-            style={{ gap: 'clamp(28px, 4vw, 56px)' }}
+            style={{ gap: 'clamp(20px, 2.5vw, 36px)' }}
           >
             {/* Copy column */}
             <div className="order-1 lg:order-none lg:col-span-6 text-left">
               <h1 id="hero-title" className="text-hero" style={{ marginTop: 0 }}>
-                <span className="block" style={{ color: 'var(--color-primary)' }}>
-                  Software That Grows
+                <span className="hero-shimmer-text block">Software That Grows</span>
+                <span className="hero-shimmer-text block" style={{ animationDelay: '-3.5s' }}>
+                  Your Business
                 </span>
-                <span className="hero-shimmer-text block">Your Business</span>
               </h1>
 
-              <p className="hero-lead text-left text-slate-600 mt-5 leading-relaxed" style={{ maxWidth: '62ch' }}>
+              <p className="hero-lead text-justify text-slate-600 mt-5 leading-relaxed indent-8 sm:indent-10" style={{ maxWidth: '64ch' }}>
                 From high-performing websites and intuitive mobile applications to connected enterprise ERP platforms and custom software architectures — we engineer scalable digital solutions tailored directly around the way your organization operates. Whether your goal is modernizing customer-facing digital touchpoints, automating complex operational workflows, or establishing a resilient and secure technological foundation from the ground up, our dedicated engineering team manages the complete product lifecycle from discovery and UX design through to deployment, ongoing optimization, and dependable long-term support.
               </p>
 
@@ -70,11 +71,11 @@ export const Home: React.FC = () => {
             </div>
 
             {/* Visual column */}
-            <div className="order-2 lg:order-none relative w-full lg:col-span-6 flex justify-center pt-2">
+            <div className="order-2 lg:order-none relative w-full lg:col-span-6 flex justify-center lg:justify-start pt-2">
               <img
                 src="/hero/home.png"
                 alt="Marvel Softwares digital solutions and software development workspace"
-                className="w-full h-auto max-w-[558px] xl:max-w-[612px] drop-shadow-xl transition-transform"
+                className="w-full h-auto max-w-[580px] lg:max-w-[660px] xl:max-w-[720px] lg:scale-105 xl:scale-110 origin-left drop-shadow-xl transition-transform"
                 decoding="async"
               />
             </div>
@@ -93,31 +94,31 @@ export const Home: React.FC = () => {
         }}
       >
         <div className="container relative z-10">
-          {/* About Us Visual (Left) + Content (Right) */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-            {/* Visual column with about.png (Left on desktop) */}
-            <div className="order-2 lg:order-1 lg:col-span-6 flex justify-center">
+          {/* About Us Visual (Left, 40%) + Content (Right, 60%) */}
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,4fr)_minmax(0,6fr)] gap-10 lg:gap-14 xl:gap-16 items-center">
+            {/* Visual column with about.png (Left on desktop - 40%) */}
+            <div className="order-2 lg:order-1 flex justify-center w-full">
               <AnimatedSection delay={0.15} className="w-full flex justify-center">
                 <img
                   src="/about.png"
                   alt="About Marvel Softwares technology and engineering excellence"
-                  className="w-full h-auto max-w-[560px] xl:max-w-[620px] drop-shadow-lg transition-transform hover:scale-[1.02] duration-300"
+                  className="w-full h-auto max-w-[480px] lg:max-w-full drop-shadow-lg transition-transform hover:scale-[1.02] duration-300"
                   decoding="async"
                 />
               </AnimatedSection>
             </div>
 
-            {/* Copy (Right on desktop) */}
-            <div className="order-1 lg:order-2 lg:col-span-6 text-left">
+            {/* Copy (Right on desktop - 60%) */}
+            <div className="order-1 lg:order-2 text-left w-full">
               <AnimatedSection>
                 <h2 id="about-us-title" className="text-section-title text-left">
                   About Us
                 </h2>
                 <div className="mt-6 space-y-4 text-justify text-slate-600 leading-relaxed text-base sm:text-lg">
-                  <p>
+                  <p className="indent-8 sm:indent-10">
                     MARVEL SOFTWARES is a full-cycle technology and software engineering company committed to designing, developing, and deploying robust digital systems that drive tangible business results. We partner with ambitious enterprises and growing organizations to build intuitive web applications, high-performance mobile apps, interconnected ERP platforms, and custom software architectures tailored precisely to operational realities.
                   </p>
-                  <p>
+                  <p className="indent-8 sm:indent-10">
                     Our engineering philosophy balances modern technical innovation with dependable architecture — guiding projects from strategic discovery and user experience design through to agile implementation, comprehensive testing, secure cloud deployment, and proactive long-term maintenance. By aligning deep technical domain expertise with our clients' commercial objectives, we create digital solutions that reduce friction, automate workflows, and empower businesses to scale sustainably.
                   </p>
                 </div>
@@ -131,77 +132,39 @@ export const Home: React.FC = () => {
       <section
         id="mission-vision"
         aria-label="Our mission and vision"
-        className="section relative overflow-hidden"
+        className="section section-warm relative overflow-hidden"
         style={{
           paddingTop: 'clamp(48px, 6vw, 84px)',
           paddingBottom: 'clamp(48px, 6vw, 84px)',
         }}
       >
-        {/* Decorative concentric circles + dot pattern + ambient glows (matching Services page hero art) */}
-        <svg
-          aria-hidden="true"
-          focusable="false"
-          viewBox="0 0 1200 420"
-          preserveAspectRatio="xMidYMid slice"
-          className="page-hero-art"
-        >
-          <defs>
-            <radialGradient id="mv-art-glow-a" cx="0.5" cy="0.5" r="0.5">
-              <stop offset="0%" stopColor="#0057e7" stopOpacity="0.16" />
-              <stop offset="100%" stopColor="#0057e7" stopOpacity="0" />
-            </radialGradient>
-            <radialGradient id="mv-art-glow-b" cx="0.5" cy="0.5" r="0.5">
-              <stop offset="0%" stopColor="#ff5a00" stopOpacity="0.12" />
-              <stop offset="100%" stopColor="#ff5a00" stopOpacity="0" />
-            </radialGradient>
-            <pattern id="mv-art-dots" width="26" height="26" patternUnits="userSpaceOnUse">
-              <circle cx="2" cy="2" r="1.5" fill="#0057e7" opacity="0.16" />
-            </pattern>
-          </defs>
-
-          <ellipse cx="1040" cy="100" rx="380" ry="260" fill="url(#mv-art-glow-a)" />
-          <ellipse cx="80" cy="360" rx="300" ry="200" fill="url(#mv-art-glow-b)" />
-          <rect width="1200" height="420" fill="url(#mv-art-dots)" />
-
-          <g fill="none" stroke="#0057e7" strokeOpacity="0.15" strokeWidth="1.5">
-            <circle cx="1060" cy="130" r="140" />
-            <circle cx="1060" cy="130" r="210" />
-            <circle cx="1060" cy="130" r="280" />
-            <circle cx="1060" cy="130" r="350" />
-          </g>
-        </svg>
-
         <div className="container relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-14 w-full">
-            {/* Left: Our Mission */}
+            {/* Mission column — badge beside heading */}
             <AnimatedSection delay={0.1} className="w-full">
-              <div className="flex flex-col text-left">
-                <div className="flex items-center gap-3.5 mb-4">
-                  <span className="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-50 text-[#0057e7] border border-blue-100/70 shadow-sm shrink-0" aria-hidden="true">
-                    <TargetIcon className="w-6 h-6" />
-                  </span>
-                  <h3 id="mission-title" className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              <div className="h-full">
+                <div className="flex items-center justify-center gap-4 sm:gap-5 mb-4">
+                  <MissionBadge className="w-20 sm:w-24 lg:w-28 shrink-0" />
+                  <h2 id="mission-title" className="text-section-title text-center">
                     Our Mission
-                  </h3>
+                  </h2>
                 </div>
-                <p className="text-body text-left leading-relaxed text-slate-600 w-full text-base sm:text-lg">
+                <p className="text-body text-justify leading-relaxed text-slate-600 w-full text-base sm:text-lg">
                   To engineer practical, scalable, and user-focused digital solutions that eliminate operational bottlenecks, automate repetitive processes, and solve complex business challenges with precision. We are committed to crafting resilient software using modern engineering best practices, transparent communication, and continuous delivery — empowering our partners with the technical clarity and efficiency required to thrive in a competitive, fast-moving digital economy.
                 </p>
               </div>
             </AnimatedSection>
 
-            {/* Right: Our Vision */}
+            {/* Vision column — badge beside heading */}
             <AnimatedSection delay={0.2} className="w-full">
-              <div className="flex flex-col text-left">
-                <div className="flex items-center gap-3.5 mb-4">
-                  <span className="flex items-center justify-center w-12 h-12 rounded-xl bg-orange-50 text-[#ff5a00] border border-orange-100/70 shadow-sm shrink-0" aria-hidden="true">
-                    <EyeIcon className="w-6 h-6" />
-                  </span>
-                  <h3 id="vision-title" className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              <div className="h-full">
+                <div className="flex items-center justify-center gap-4 sm:gap-5 mb-4">
+                  <VisionBadge className="w-20 sm:w-24 lg:w-28 shrink-0" />
+                  <h2 id="vision-title" className="text-section-title text-center">
                     Our Vision
-                  </h3>
+                  </h2>
                 </div>
-                <p className="text-body text-left leading-relaxed text-slate-600 w-full text-base sm:text-lg">
+                <p className="text-body text-justify leading-relaxed text-slate-600 w-full text-base sm:text-lg">
                   To establish MARVEL SOFTWARES as a premier digital transformation partner, renowned for making enterprise-grade software accessible, scalable, and genuinely transformative for organizations worldwide. We envision a future where intelligently engineered software seamlessly bridges organizational gaps, elevates human potential, and accelerates business innovation across every industry we serve.
                 </p>
               </div>

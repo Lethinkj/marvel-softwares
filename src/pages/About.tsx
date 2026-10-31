@@ -5,10 +5,9 @@ import Seo from '../components/Seo'
 import { workingPrinciples, teamRoles } from '../data/siteData'
 
 const cardStyle: React.CSSProperties = {
-  background: '#fff',
-  border: '1px solid var(--color-border)',
+  border: '1px solid transparent',
   borderRadius: 'var(--radius-card)',
-  boxShadow: 'var(--shadow-card)',
+  boxShadow: 'none',
 }
 
 export const About: React.FC = () => (

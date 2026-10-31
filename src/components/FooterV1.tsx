@@ -143,7 +143,7 @@ export function FooterV1() {
               <li>
                 <div className="footer-contact-item">
                   <PhoneIcon className="w-4 h-4 shrink-0 text-blue-400 mt-1" />
-                  <div className="flex flex-wrap items-center gap-x-2 text-[0.88rem]">
+                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-2 text-[0.88rem]">
                     <a href={siteConfig.phoneHref} className="hover:text-blue-400 transition-colors whitespace-nowrap">
                       {siteConfig.phone}
                     </a>
@@ -154,16 +154,20 @@ export function FooterV1() {
                   </div>
                 </div>
               </li>
-              <li className="footer-contact-item">
-                <svg className="w-4 h-4 shrink-0 text-blue-400 mt-1" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
-                  <circle cx="12" cy="12" r="10" />
-                  <polyline points="12 6 12 12 16 14" />
-                </svg>
-                <span>{siteConfig.hours}</span>
+              <li>
+                <div className="footer-contact-item">
+                  <svg className="w-4 h-4 shrink-0 text-blue-400 mt-1" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                  <span>{siteConfig.hours}</span>
+                </div>
               </li>
-              <li className="footer-contact-item">
-                <MapPinIcon className="w-4 h-4 shrink-0 text-blue-400 mt-1" />
-                <span>{siteConfig.location}</span>
+              <li>
+                <div className="footer-contact-item footer-contact-item--location">
+                  <MapPinIcon className="w-4 h-4 shrink-0 text-blue-400" />
+                  <span>{siteConfig.location}</span>
+                </div>
               </li>
             </ul>
           </div>

@@ -177,12 +177,11 @@ export const Contact: React.FC = () => {
               boxShadow: 'var(--shadow-card)',
             }}
           >
-            {/* Image side (left on desktop) with minimal soft slate background */}
+            {/* Image side: Hidden on mobile and small tablet (< 1024px / lg), shown on desktop */}
             <div
-              className="order-2 lg:order-1 lg:col-span-6 flex items-center justify-center p-2 sm:p-4 lg:p-4 xl:p-6 relative overflow-hidden"
+              className="hidden lg:flex lg:col-span-6 items-center justify-center p-6 sm:p-8 lg:p-4 xl:p-6 relative overflow-hidden border-r border-slate-200"
               style={{
                 background: 'linear-gradient(160deg, #f8fafc 0%, #f1f5f9 55%, #e6edf5 100%)',
-                borderRight: '1px solid var(--color-border)',
               }}
             >
               {/* Soft subtle radial ambient light */}
@@ -198,13 +197,13 @@ export const Contact: React.FC = () => {
               <img
                 src="/Isometric Software Teamwork Workspace.png"
                 alt="Isometric Software Teamwork Workspace"
-                className="relative z-10 w-full h-auto max-w-[660px] lg:scale-105 object-contain drop-shadow-2xl transition-transform duration-500 hover:scale-[1.08]"
+                className="relative z-10 w-full h-auto max-w-[660px] lg:scale-105 object-contain drop-shadow-2xl transition-transform duration-500 hover:scale-[1.04]"
                 loading="lazy"
               />
             </div>
 
-            {/* Form side (right on desktop, first on mobile) - Clean White */}
-            <div className="order-1 lg:order-2 lg:col-span-6 bg-white p-6 sm:p-10 lg:p-12 flex flex-col justify-center">
+            {/* Form side (full width on mobile/tab, 6 cols on desktop) - Clean White */}
+            <div className="col-span-1 lg:col-span-6 bg-white p-6 sm:p-10 lg:p-12 flex flex-col justify-center">
               {isSubmitted ? (
                 <div role="status" aria-live="polite" className="text-center" style={{ paddingBlock: 32 }}>
                   <span

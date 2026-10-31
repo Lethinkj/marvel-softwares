@@ -33,7 +33,7 @@ export const ServiceShowcase: React.FC = () => {
               <h3 className="svc-copy-title">{service.title}</h3>
 
               {/* Main narrative content */}
-              <p className="text-body text-slate-600 text-left leading-relaxed text-base sm:text-lg">
+              <p className="text-body text-slate-600 text-justify leading-relaxed text-base sm:text-lg">
                 {service.paragraphs?.[0] ?? service.description}
               </p>
             </div>
