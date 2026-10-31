@@ -28,8 +28,11 @@ export function Navbar() {
     { label: 'Privacy', link: '/privacy' },
   ]
 
-  const isActiveLink = (href: string) =>
-    href === '/' ? location.pathname === '/' : location.pathname.startsWith(href)
+  const isActiveLink = (href: string) => {
+    if (href === '/') return location.pathname === '/' && !location.hash
+    if (href.startsWith('/#')) return location.pathname === '/' && location.hash === href.substring(1)
+    return location.pathname.startsWith(href)
+  }
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 12)
@@ -56,84 +59,94 @@ export function Navbar() {
         }}
       >
         <div
-          className={`relative flex items-center justify-between glass-bar${
+          className={`relative glass-bar${
             isScrolled ? ' glass-bar--scrolled' : ''
           }`}
           style={{
             height: isScrolled ? 58 : 66,
-            gap: 12,
-            padding: '0 max(16px, calc((100% - var(--container-width)) / 2 + 16px))',
+            padding: 0,
             borderRadius: 0,
             borderLeft: 'none',
             borderRight: 'none',
             borderTop: 'none',
             borderBottom: '1px solid rgba(0, 87, 231, 0.12)',
-            transition: 'height .3s ease, padding .3s ease',
+            transition: 'height .3s ease',
             pointerEvents: 'auto',
           }}
         >
-          <Link
-            to="/"
-            aria-label="MARVEL SOFTWARES — Home"
-            className="shrink-0 rounded-md flex items-center"
-            style={{ gap: 10 }}
-          >
-            <img
-              src="/marvel-softwares-logo-removebg-preview.png"
-              alt="MARVEL SOFTWARES"
-              className="brand-logo"
-              style={{ height: isScrolled ? 40 : 46, transition: 'height .3s ease' }}
-            />
-          </Link>
-
-          {/* Navigation — desktop (>= 1024px) */}
-          {isDesktop && (
-            <nav
-              className="flex items-center"
-              aria-label="Main navigation"
-              style={{ marginLeft: 'auto', marginRight: 0, gap: 4 }}
+          <div className="container flex items-center justify-between h-full" style={{ gap: 12 }}>
+            <Link
+              to="/"
+              aria-label="MARVEL SOFTWARES — Home"
+              className="shrink-0 rounded-md flex items-center"
+              style={{ gap: 10 }}
             >
-              {navLinks.map((link) => {
-                const active = isActiveLink(link.href)
-                return (
-                  <Link
-                    key={link.href}
-                    to={link.href}
-                    aria-current={active ? 'page' : undefined}
-                    className="nav-pill-link relative transition-colors"
-                    style={{
-                      padding: '8px 16px',
-                      fontSize: '0.94rem',
-                      fontWeight: active ? 700 : 500,
-                      color: active ? 'var(--color-primary)' : 'var(--color-text)',
-                    }}
-                  >
-                    <span>{link.label}</span>
-                  </Link>
-                )
-              })}
-            </nav>
-          )}
+              <img
+                src="/marvel-softwares-logo-removebg-preview.png"
+                alt="MARVEL SOFTWARES"
+                className="brand-logo"
+                style={{ height: isScrolled ? 40 : 46, transition: 'height .3s ease' }}
+              />
+            </Link>
 
-          {/* StaggeredMenu for Tablet & Mobile (< 1024px) */}
-          {!isDesktop && (
-            <StaggeredMenu
-              position="right"
-              isFixed={true}
-              showLogo={false}
-              items={menuItems}
-              socialItems={socialItems}
-              displaySocials={true}
-              displayItemNumbering={false}
-              accentColor="#0057E7"
-              menuButtonColor="#0057E7"
-              openMenuButtonColor="#0F172A"
-              logoUrl="/marvel-softwares-logo-removebg-preview.png"
-              headerHeight={isScrolled ? 58 : 66}
-              headerPadding="0 max(16px, calc((100% - var(--container-width)) / 2 + 16px))"
-              closeOnClickAway={true}
-            />
-          )}
+            {/* Navigation — desktop (>= 1024px) */}
+            {isDesktop && (
+              <nav
+                className="flex items-center"
+                aria-label="Main navigation"
+                style={{ marginLeft: 'auto', marginRight: 0, gap: 4 }}
+              >
+                {navLinks.map((link) => {
+                  const active = isActiveLink(link.href)
+                  return (
+                    <Link
+                      key={link.href}
+                      to={link.href}
+                      aria-current={active ? 'page' : undefined}
+                      onClick={() => {
+                        if (link.href.startsWith('/#') && location.pathname === '/') {
+                          const targetId = link.href.substring(2)
+                          const el = document.getElementById(targetId)
+                          if (el) {
+                            el.scrollIntoView({ behavior: 'smooth' })
+                          }
+                        }
+                      }}
+                      className="nav-pill-link relative transition-colors"
+                      style={{
+                        padding: '8px 16px',
+                        fontSize: '0.94rem',
+                        fontWeight: active ? 700 : 500,
+                        color: active ? 'var(--color-primary)' : 'var(--color-text)',
+                      }}
+                    >
+                      <span>{link.label}</span>
+                    </Link>
+                  )
+                })}
+              </nav>
+            )}
+
+            {/* StaggeredMenu for Tablet & Mobile (< 1024px) */}
+            {!isDesktop && (
+              <StaggeredMenu
+                position="right"
+                isFixed={true}
+                showLogo={false}
+                items={menuItems}
+                socialItems={socialItems}
+                displaySocials={true}
+                displayItemNumbering={false}
+                accentColor="#0057E7"
+                menuButtonColor="#0057E7"
+                openMenuButtonColor="#0F172A"
+                logoUrl="/marvel-softwares-logo-removebg-preview.png"
+                headerHeight={isScrolled ? 58 : 66}
+                headerPadding="0"
+                closeOnClickAway={true}
+              />
+            )}
+          </div>
         </div>
       </div>
     </header>

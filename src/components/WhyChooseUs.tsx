@@ -1,39 +1,29 @@
 import React from 'react'
-import { renderAppIcon } from '../utils/iconResolver'
 import AnimatedSection from './AnimatedSection'
-import { whyChooseUs } from '../data/siteData'
 
-/**
- * WhyChooseUs — "Technology That Works for Your Business"
- * Artwork on the left, the four principles as a connected rail on the right.
- * Each principle maps to a labelled card inside the illustration, so the
- * picture and the list read as one story.
- */
 export const WhyChooseUs: React.FC = () => (
-  <div className="why-grid">
-    <AnimatedSection direction="up" className="why-media">
-      <img
-        src="/Connected SaaS Platform Ecosystem.png"
-        alt="Connected SaaS platform ecosystem illustration"
-        className="w-full h-auto"
-        loading="lazy"
-        decoding="async"
-      />
+  <div className="why-grid items-center">
+    {/* 1. Illustration — approximately 10-15% larger for increased presence */}
+    <AnimatedSection direction="up" className="why-media w-full flex justify-center">
+      <div className="w-full relative scale-100 lg:scale-105 xl:scale-110 origin-center transition-transform duration-300">
+        <img
+          src="/Futuristic Developer Tech Ecosystem.png"
+          alt="The Technology Behind Every Solution — Futuristic Developer Tech Ecosystem"
+          className="w-full h-auto rounded-2xl drop-shadow-2xl object-cover"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
     </AnimatedSection>
 
-    <AnimatedSection direction="up" delay={0.12} className="why-list">
-      {whyChooseUs.map((item) => (
-        <article key={item.title} className="why-item">
-          <span className="why-item-rail" aria-hidden="true" />
-          <span className="why-item-icon" aria-hidden="true">
-            {renderAppIcon(item.icon, 'w-5 h-5')}
-          </span>
-          <div className="why-item-body">
-            <h3 className="why-item-title">{item.title}</h3>
-            <p className="why-item-text">{item.description}</p>
-          </div>
-        </article>
-      ))}
+    {/* 2. Vertically centered content with subheading & enhanced readability */}
+    <AnimatedSection direction="up" delay={0.12} className="flex flex-col justify-center self-center py-2 lg:py-4">
+      <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 tracking-tight leading-snug mb-4 sm:mb-5">
+        The Technology Behind Every Solution
+      </h3>
+      <p className="text-body text-slate-600 text-base sm:text-lg leading-relaxed text-left font-normal max-w-[54ch]">
+        We combine modern technologies, proven frameworks and powerful development tools to bring ideas to life. From intuitive web applications to complex enterprise platforms, our technology choices focus on performance, security and scalability. By embracing continuous innovation, we build solutions that adapt to changing business needs and create lasting value.
+      </p>
     </AnimatedSection>
   </div>
 )

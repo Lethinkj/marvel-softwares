@@ -282,7 +282,19 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
     onItemClick?.(it, e)
     if (e.defaultPrevented) return
 
-    if (it.link.startsWith('/')) {
+    if (it.link.startsWith('/#')) {
+      e.preventDefault()
+      const targetHash = it.link.substring(1)
+      if (location.pathname === '/') {
+        const el = document.querySelector(targetHash)
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' })
+        }
+      } else {
+        navigate(it.link)
+      }
+      closeMenu()
+    } else if (it.link.startsWith('/')) {
       e.preventDefault()
       navigate(it.link)
       closeMenu()
@@ -362,8 +374,10 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
                 items.map((it, idx) => {
                   const active =
                     it.link === '/'
-                      ? location.pathname === '/'
-                      : location.pathname.startsWith(it.link)
+                      ? location.pathname === '/' && !location.hash
+                      : it.link.startsWith('/#')
+                        ? location.pathname === '/' && location.hash === it.link.substring(1)
+                        : location.pathname.startsWith(it.link)
 
                   return (
                     <li className="sm-panel-itemWrap" key={it.label + idx}>

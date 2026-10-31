@@ -278,8 +278,6 @@ export const OurProcessSvg: React.FC<{ className?: string; active?: boolean }> =
         </linearGradient>
       </defs>
 
-      <rect width="1600" height="1000" fill={WHITE} />
-
       <g className="op-heading">
         <line
           className="op-rule"
@@ -457,25 +455,18 @@ export const OurProcess: React.FC = () => {
 
   return (
     <div ref={ref}>
-      <h2
-        id="process-title"
-        className="text-center lg:sr-only"
-        style={{
-          margin: 0,
-          fontWeight: 800,
-          fontSize: 'clamp(1.7rem, 7vw, 2.4rem)',
-          letterSpacing: '0.01em',
-        }}
-      >
-        <span style={{ color: NAVY }}>OUR </span>
-        <span style={{ color: BLUE }}>PROCESS</span>
-      </h2>
-      <p
-        className="lg:hidden text-center"
-        style={{ color: GRAY, marginTop: 8, fontSize: '0.98rem', fontWeight: 500 }}
-      >
-        From your idea to a reliable digital solution
-      </p>
+      <div className="lg:hidden text-center mb-6">
+        <div className="section-badge mx-auto">
+          <span className="section-badge-dot" />
+          <span>Development Lifecycle</span>
+        </div>
+        <h2 id="process-title" className="text-section-title text-center">
+          Our Process
+        </h2>
+        <p className="section-subtitle text-center mx-auto">
+          From your idea to a reliable digital solution
+        </p>
+      </div>
 
       <div className="hidden lg:block" style={{ marginTop: 8 }}>
         <OurProcessSvg active={active} />

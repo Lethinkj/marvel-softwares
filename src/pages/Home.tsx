@@ -5,7 +5,10 @@ import Seo from '../components/Seo'
 import { OurProcess } from '../components/OurProcess'
 import ServiceShowcase from '../components/ServiceShowcase'
 import WhyChooseUs from '../components/WhyChooseUs'
-import HomeCta from '../components/HomeCta'
+import OurTeam from '../components/OurTeam'
+import UpcomingProjects from '../components/UpcomingProjects'
+import OurClients from '../components/OurClients'
+import ContactSection from '../components/ContactSection'
 import { projects } from '../data/siteData'
 
 const cardStyle: React.CSSProperties = {
@@ -39,18 +42,23 @@ export const Home: React.FC = () => {
         <div aria-hidden="true" className="hero-glow hero-glow-b" />
 
         <div
-          className="w-full relative px-6 sm:px-10 lg:px-16 xl:px-20 max-w-[1720px] mx-auto"
+          className="container relative"
           style={{
-            paddingTop: 'calc(var(--header-offset) + clamp(36px, 5.5vw, 80px))',
-            paddingBottom: 'clamp(56px,8vw,112px)',
+            paddingTop: 'calc(var(--header-offset) + clamp(28px, 4vw, 56px))',
+            paddingBottom: 'clamp(16px, 2.5vw, 32px)',
           }}
         >
           <div
-            className="flex flex-col lg:grid lg:grid-cols-12 lg:items-start"
-            style={{ gap: 'clamp(32px,4.5vw,64px)' }}
+            className="flex flex-col lg:grid lg:grid-cols-12 lg:items-center"
+            style={{ gap: 'clamp(28px, 4vw, 56px)' }}
           >
             {/* Copy column */}
-            <div className="order-1 lg:order-none lg:col-span-6 lg:row-start-1 lg:row-span-2 lg:self-start text-left">
+            <div className="order-1 lg:order-none lg:col-span-6 text-left">
+              <div className="section-badge">
+                <span className="section-badge-dot" />
+                <span>Custom Software Engineering</span>
+              </div>
+
               <h1 id="hero-title" className="text-hero" style={{ marginTop: 0 }}>
                 <span className="block" style={{ color: 'var(--color-primary)' }}>
                   Software That Grows
@@ -58,7 +66,7 @@ export const Home: React.FC = () => {
                 <span className="hero-shimmer-text block">Your Business</span>
               </h1>
 
-              <p className="hero-lead text-justify" style={{ maxWidth: '62ch', textAlign: 'justify' }}>
+              <p className="hero-lead text-left text-slate-600 mt-5 leading-relaxed" style={{ maxWidth: '62ch' }}>
                 From high-performing websites and intuitive mobile applications to connected enterprise ERP platforms and custom software architectures — we engineer scalable digital solutions tailored directly around the way your organization operates. Whether your goal is modernizing customer-facing digital touchpoints, automating complex operational workflows, or establishing a resilient and secure technological foundation from the ground up, our dedicated engineering team manages the complete product lifecycle from discovery and UX design through to deployment, ongoing optimization, and dependable long-term support.
               </p>
 
@@ -74,7 +82,7 @@ export const Home: React.FC = () => {
             </div>
 
             {/* Visual column */}
-            <div className="order-2 lg:order-none relative w-full lg:col-span-6 lg:row-start-1 lg:self-start flex justify-center pt-2">
+            <div className="order-2 lg:order-none relative w-full lg:col-span-6 flex justify-center pt-2">
               <img
                 src="/hero/home.png"
                 alt="Marvel Softwares digital solutions and software development workspace"
@@ -86,14 +94,85 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
+      {/* ============ B. ABOUT US, OUR MISSION & OUR VISION ============ */}
+      <section
+        id="about"
+        aria-labelledby="about-us-title"
+        className="section section-warm relative overflow-hidden"
+        style={{ paddingTop: 'clamp(28px, 3.5vw, 52px)' }}
+      >
+        {/* Ambient brand glows */}
+        <div aria-hidden="true" className="hero-glow hero-glow-a opacity-20 pointer-events-none" />
+        <div aria-hidden="true" className="hero-glow hero-glow-b opacity-20 pointer-events-none" />
+
+        <div className="container relative z-10">
+          <div className="w-full mx-auto flex flex-col items-center">
+            
+            {/* 1. About Us */}
+            <AnimatedSection className="w-full text-center">
+              <div className="section-badge mx-auto">
+                <span className="section-badge-dot" />
+                <span>About Marvel Softwares</span>
+              </div>
+              <h2 id="about-us-title" className="text-section-title text-center">
+                About Us
+              </h2>
+              <div className="mt-6 space-y-4 text-left text-slate-600 text-base sm:text-lg leading-relaxed max-w-4xl mx-auto">
+                <p>
+                  MARVEL SOFTWARES is a full-cycle technology and software engineering company committed to designing, developing, and deploying robust digital systems that drive tangible business results. We partner with ambitious enterprises and growing organizations to build intuitive web applications, high-performance mobile apps, interconnected ERP platforms, and custom software architectures tailored precisely to operational realities.
+                </p>
+                <p>
+                  Our engineering philosophy balances modern technical innovation with dependable architecture — guiding projects from strategic discovery and user experience design through to agile implementation, comprehensive testing, secure cloud deployment, and proactive long-term maintenance. By aligning deep technical domain expertise with our clients' commercial objectives, we create digital solutions that reduce friction, automate workflows, and empower businesses to scale sustainably.
+                </p>
+              </div>
+            </AnimatedSection>
+
+            {/* Divider */}
+            <div className="w-24 h-0.5 bg-blue-200/80 my-12 rounded-full" />
+
+            {/* 2. Our Mission (Left) & Our Vision (Right) in Same Line */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 w-full">
+              {/* Left: Our Mission */}
+              <AnimatedSection delay={0.1} className="w-full">
+                <div className="flex flex-col items-center h-full p-8 sm:p-10 rounded-2xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
+                  <h3 className="text-card-title text-xl sm:text-2xl font-bold text-slate-900 text-center mb-3">
+                    Our Mission
+                  </h3>
+                  <p className="text-body text-left leading-relaxed text-slate-600 w-full">
+                    To engineer practical, scalable, and user-focused digital solutions that eliminate operational bottlenecks, automate repetitive processes, and solve complex business challenges with precision. We are committed to crafting resilient software using modern engineering best practices, transparent communication, and continuous delivery — empowering our partners with the technical clarity and efficiency required to thrive in a competitive, fast-moving digital economy.
+                  </p>
+                </div>
+              </AnimatedSection>
+
+              {/* Right: Our Vision */}
+              <AnimatedSection delay={0.2} className="w-full">
+                <div className="flex flex-col items-center h-full p-8 sm:p-10 rounded-2xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
+                  <h3 className="text-card-title text-xl sm:text-2xl font-bold text-slate-900 text-center mb-3">
+                    Our Vision
+                  </h3>
+                  <p className="text-body text-left leading-relaxed text-slate-600 w-full">
+                    To establish MARVEL SOFTWARES as a premier digital transformation partner, renowned for making enterprise-grade software accessible, scalable, and genuinely transformative for organizations worldwide. We envision a future where intelligently engineered software seamlessly bridges organizational gaps, elevates human potential, and accelerates business innovation across every industry we serve.
+                  </p>
+                </div>
+              </AnimatedSection>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       {/* ============ C. SERVICES OVERVIEW ============ */}
-      <section aria-labelledby="services-title" className="section">
+      <section id="services" aria-labelledby="services-title" className="section">
         <div className="container">
           <AnimatedSection style={{ maxWidth: 720 }}>
+            <div className="section-badge">
+              <span className="section-badge-dot" />
+              <span>End-to-End Capabilities</span>
+            </div>
             <h2 id="services-title" className="text-section-title">
-              Software Solutions for Every Stage of Your Business
+              Our Services
             </h2>
-            <p className="text-body" style={{ marginTop: 16 }}>
+            <p className="section-subtitle">
               From your first digital product to complex enterprise systems, we build
               technology around the way your business works.
             </p>
@@ -103,40 +182,49 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* ============ D. WHY CHOOSE US ============ */}
-      <section aria-labelledby="why-title" className="section section-warm">
+      {/* ============ D. OUR PROCESS ============ */}
+      <section aria-labelledby="process-title" className="section section-warm">
+        <div className="container">
+          <OurProcess />
+        </div>
+      </section>
+
+      {/* ============ E. TECHNOLOGIES ============ */}
+      <section id="technologies" aria-labelledby="technologies-title" className="section">
         <div className="container">
           <AnimatedSection style={{ maxWidth: 720 }}>
-            <h2 id="why-title" className="text-section-title">
-              Technology That Works for Your Business
+            <div className="section-badge">
+              <span className="section-badge-dot" />
+              <span>Modern Tech Stack</span>
+            </div>
+            <h2 id="technologies-title" className="text-section-title">
+              Technologies
             </h2>
-            <p className="text-body" style={{ marginTop: 16 }}>
-              We start with how your business actually runs, then design technology around it —
-              structured to grow, easy to connect, and supported long after launch.
-            </p>
           </AnimatedSection>
 
           <WhyChooseUs />
         </div>
       </section>
 
-      {/* ============ E. OUR PROCESS ============ */}
-      <section aria-labelledby="process-title" className="section">
-        <div className="container">
-          <OurProcess />
-        </div>
+      {/* ============ F. OUR TEAM ============ */}
+      <section id="team" aria-labelledby="team-heading" className="section section-warm">
+        <OurTeam />
       </section>
 
-      {/* ============ F. SELECTED PROJECTS ============ */}
-      <section aria-labelledby="work-title" className="section section-warm">
+      {/* ============ G. SELECTED PROJECTS ============ */}
+      <section id="projects" aria-labelledby="work-title" className="section">
         <div className="container">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
             <div style={{ maxWidth: 640 }}>
+              <div className="section-badge">
+                <span className="section-badge-dot" />
+                <span>Featured Work</span>
+              </div>
               <h2 id="work-title" className="text-section-title">
-                Solutions We&apos;ve Built
+                Our Projects
               </h2>
-              <p className="text-body" style={{ marginTop: 14 }}>
-                Featured production platforms and digital experiences engineered by Marvel Softwares.
+              <p className="section-subtitle">
+                Explore our portfolio of scalable web applications, digital platforms, and custom software solutions engineered for performance and reliability.
               </p>
             </div>
             <Link
@@ -205,8 +293,20 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* ============ G. FINAL CTA ============ */}
-      <HomeCta />
+      {/* ============ H. UPCOMING PROJECTS ============ */}
+      <section id="upcoming-projects" aria-labelledby="upcoming-title" className="section section-warm">
+        <UpcomingProjects />
+      </section>
+
+      {/* ============ I. OUR CLIENTS ============ */}
+      <section id="clients" aria-labelledby="clients-heading" className="section">
+        <OurClients />
+      </section>
+
+      {/* ============ J. CONTACT US ============ */}
+      <section id="contact" aria-labelledby="contact-heading" className="section section-warm">
+        <ContactSection />
+      </section>
     </div>
   )
 }

@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { renderAppIcon } from '../utils/iconResolver'
 import AnimatedSection from './AnimatedSection'
 import { ServiceScene } from './illustrations/ServiceScenes'
@@ -38,32 +37,9 @@ export const ServiceShowcase: React.FC = () => {
               </span>
               <h3 className="svc-copy-title">{service.title}</h3>
               <p className="svc-copy-headline">{service.headline}</p>
-              <p className="text-body" style={{ marginTop: 10 }}>
-                {service.description}
+              <p className="text-body text-left" style={{ marginTop: 14 }}>
+                {service.paragraphs?.[0] ?? service.description}
               </p>
-
-              <ul className="svc-copy-list">
-                {service.capabilities.slice(0, 4).map((c) => (
-                  <li key={c}>
-                    <span className="svc-copy-tick" aria-hidden="true">
-                      <svg viewBox="0 0 16 16" width="11" height="11" fill="none">
-                        <path
-                          d="M3 8.4l3.2 3.2L13 4.8"
-                          stroke="currentColor"
-                          strokeWidth="2.2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                    {c}
-                  </li>
-                ))}
-              </ul>
-
-              <Link to={`/services#${service.id}`} className="svc-copy-cta">
-                Learn more
-              </Link>
             </div>
           </AnimatedSection>
         )
