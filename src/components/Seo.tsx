@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { siteConfig } from '../data/siteData'
+import { homeFaqs, siteConfig } from '../data/siteData'
 
 interface SeoProps {
   title: string
@@ -43,6 +43,12 @@ export function Seo({ title, description, path }: SeoProps) {
     setMeta('meta[property="og:description"]', 'og:description', description, 'property')
     setMeta('meta[property="og:url"]', 'og:url', canonical, 'property')
     setMeta('meta[property="og:type"]', 'og:type', 'website', 'property')
+    setMeta('meta[property="og:site_name"]', 'og:site_name', siteConfig.name, 'property')
+    setMeta('meta[property="og:image"]', 'og:image', `${siteConfig.siteUrl}/marvel-softwares-logo-horizontal.png`, 'property')
+    setMeta('meta[name="twitter:card"]', 'twitter:card', 'summary_large_image', 'name')
+    setMeta('meta[name="twitter:title"]', 'twitter:title', title, 'name')
+    setMeta('meta[name="twitter:description"]', 'twitter:description', description, 'name')
+    setMeta('meta[name="twitter:image"]', 'twitter:image', `${siteConfig.siteUrl}/marvel-softwares-logo-horizontal.png`, 'name')
 
     const scriptId = 'ms-structured-data'
     if (!document.getElementById(scriptId)) {
@@ -56,6 +62,7 @@ export function Seo({ title, description, path }: SeoProps) {
             '@type': 'Organization',
             name: 'MARVEL SOFTWARES',
             url: siteConfig.siteUrl,
+            logo: `${siteConfig.siteUrl}/marvel-softwares-logo-horizontal.png`,
             email: siteConfig.email,
             telephone: siteConfig.phone,
             contactPoint: [siteConfig.phone, siteConfig.phone2].map((telephone) => ({
@@ -72,6 +79,45 @@ export function Seo({ title, description, path }: SeoProps) {
             '@type': 'WebSite',
             name: 'MARVEL SOFTWARES',
             url: siteConfig.siteUrl,
+            potentialAction: {
+              '@type': 'ContactAction',
+              target: `${siteConfig.siteUrl}/#contact`,
+              name: 'Contact Marvel Softwares',
+            },
+          },
+          {
+            '@type': 'ProfessionalService',
+            name: 'Marvel Softwares',
+            url: siteConfig.siteUrl,
+            image: `${siteConfig.siteUrl}/marvel-softwares-logo-horizontal.png`,
+            description:
+              'Software development company providing website development, web applications, mobile apps, ERP systems, UI/UX design, AI automation and custom software development.',
+            areaServed: [
+              { '@type': 'Country', name: 'India' },
+              { '@type': 'State', name: 'Tamil Nadu' },
+              { '@type': 'City', name: 'Nagercoil' },
+              { '@type': 'AdministrativeArea', name: 'Kanyakumari' },
+            ],
+            serviceType: [
+              'Custom software development',
+              'Website development',
+              'Web application development',
+              'Mobile app development',
+              'ERP software development',
+              'UI/UX design',
+              'AI automation',
+            ],
+          },
+          {
+            '@type': 'FAQPage',
+            mainEntity: homeFaqs.map((faq) => ({
+              '@type': 'Question',
+              name: faq.question,
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: faq.answer,
+              },
+            })),
           },
         ],
       })

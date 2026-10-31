@@ -23,17 +23,15 @@ const IconBase = ({ children }: { children: React.ReactNode }) => (
   </g>
 )
 
-/* 1 — Meet with Client: two people in conversation */
+/* 1 — Meet with Client: a handshake between client and team */
 const MeetIcon = () => (
   <IconBase>
-    <circle cx="13.5" cy="18" r="5.5" fill={PALE_BLUE} />
-    <path d="M4 37c0-5.4 4.3-9.3 9.5-9.3 1.4 0 2.7.3 3.9.8" />
-    <path d="M13 37c0-3.9 1.8-7 4.6-8.6" />
-    <path
-      d="M26.5 8.5h12a5 5 0 0 1 5 5V21a5 5 0 0 1-5 5h-4.4L28.6 30.5v-4.6h-2.1a5 5 0 0 1-5-5V13.5a5 5 0 0 1 5-5z"
-      fill={WHITE}
-    />
-    <path d="M29 15h9.5M29 19.5h6" stroke={LIGHT_BLUE} strokeWidth="2.2" />
+    <path d="M5 18.5l8.5-5.2 7.7 4.4-5.4 5.4-4.7-2.6" fill={PALE_BLUE} />
+    <path d="M43 18.5l-8.5-5.2-7.7 4.4 5.4 5.4 4.7-2.6" fill={PALE_BLUE} />
+    <path d="M15.8 22.8l5.8 5.8c1.2 1.2 3.1 1.2 4.3 0l6.6-6.6" fill={WHITE} />
+    <path d="M21.6 28.6l-2.4 2.4c-1.2 1.2-3.1 1.2-4.3 0s-1.2-3.1 0-4.3l3.1-3.1" />
+    <path d="M26 28.6l2 2c1.2 1.2 3.1 1.2 4.3 0s1.2-3.1 0-4.3l-2.1-2.1" />
+    <path d="M10 15.5l-4 4M38 15.5l4 4" stroke={ORANGE} strokeWidth="2.6" />
   </IconBase>
 )
 
@@ -49,14 +47,15 @@ const RequirementsIcon = () => (
   </IconBase>
 )
 
-/* 3 — Project Planning: scheduled tasks with a milestone marker */
+/* 3 — Project Planning: roadmap lanes with a milestone marker */
 const PlanningIcon = () => (
   <IconBase>
-    <rect x="5" y="9" width="21" height="6.5" rx="3.25" fill={LIGHT_BLUE} stroke="none" />
-    <rect x="12" y="18" width="24" height="6.5" rx="3.25" fill={BLUE} stroke="none" />
-    <rect x="7" y="27" width="18" height="6.5" rx="3.25" fill={PALE_BLUE} />
-    <path d="M36.5 8v30" stroke={ORANGE} strokeWidth="2.2" strokeDasharray="3 4.5" />
-    <circle cx="36.5" cy="7" r="2.6" fill={ORANGE} stroke="none" />
+    <path d="M6 12h10l4 6h10l4 7h8" stroke={LIGHT_BLUE} strokeWidth="3" />
+    <path d="M6 34h10l4-6h10l4-7h8" stroke={BLUE} strokeWidth="3" />
+    <circle cx="6" cy="12" r="3" fill={PALE_BLUE} />
+    <circle cx="6" cy="34" r="3" fill={PALE_BLUE} />
+    <circle cx="42" cy="25" r="4.5" fill={ORANGE} stroke={WHITE} strokeWidth="2" />
+    <path d="M42 8v8M42 34v6" stroke={ORANGE} strokeWidth="2.2" strokeDasharray="2.5 3.5" />
   </IconBase>
 )
 
@@ -165,22 +164,61 @@ const MaintenanceIcon = () => (
   </IconBase>
 )
 
+void [
+  MeetIcon,
+  RequirementsIcon,
+  PlanningIcon,
+  HomepageIcon,
+  DesignIcon,
+  DevelopmentIcon,
+  TestingIcon,
+  LaunchIcon,
+  MaintenanceIcon,
+]
+
 interface ProcessStep {
   title: string[]
   desc: string
   icon: React.ReactNode
 }
 
+const ProcessIcon = ({ name, x, y }: { name: string; x?: number; y?: number }) => (
+  <svg
+    x={x}
+    y={y}
+    width="44"
+    height="44"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="op-professional-icon"
+    aria-hidden="true"
+  >
+    {name === 'users' && <><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></>}
+    {name === 'clipboard' && <><rect x="4" y="4" width="16" height="18" rx="2" /><path d="M9 4V2h6v2M8 10h8M8 14h6M8 18h4" /></>}
+    {name === 'planning' && <><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6" /><circle cx="8" cy="15" r="1" /><circle cx="11" cy="11" r="1" /><circle cx="14" cy="13" r="1" /><circle cx="18" cy="7" r="1" /></>}
+    {name === 'dashboard' && <><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M8 13h3M8 17h6M15 13h2" /></>}
+    {name === 'design' && <><path d="M4 4h16v13H4zM8 21h8M12 17v4" /><path d="m8 13 6-6 2 2-6 6-3 1z" /></>}
+    {name === 'code' && <path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 4l-4 16" />}
+    {name === 'checkcircle' && <><path d="M21 12a9 9 0 1 1-5.3-8.2" /><path d="m9 12 2 2 6-6" /></>}
+    {name === 'rocket' && <><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2a2.18 2.18 0 0 0-.09-2.91 2.18 2.18 0 0 0-2.91-.09z" /><path d="M12 15 9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22 22 0 0 1-4 2z" /><circle cx="17" cy="7" r="1.5" /></>}
+    {name === 'cloud' && <><path d="M17.5 19H9a7 7 0 1 1 6.7-9h1.8a4.5 4.5 0 1 1 0 9Z" /><path d="M12 13v5M9.5 15.5 12 13l2.5 2.5" /></>}
+  </svg>
+)
+
 const PROCESS_STEPS: ProcessStep[] = [
-  { title: ['Meet with Client'], desc: 'Align on your vision', icon: <MeetIcon /> },
-  { title: ['Requirement', 'Gathering'], desc: 'Capture every detail', icon: <RequirementsIcon /> },
-  { title: ['Project Planning'], desc: 'Map scope & timeline', icon: <PlanningIcon /> },
-  { title: ['Homepage', 'Confirmation'], desc: 'Approve the structure', icon: <HomepageIcon /> },
-  { title: ['UI/UX Design'], desc: 'Craft the experience', icon: <DesignIcon /> },
-  { title: ['Development &', 'Progress Updates'], desc: 'Build in weekly sprints', icon: <DevelopmentIcon /> },
-  { title: ['Testing &', 'Quality Assurance'], desc: 'Verify every detail', icon: <TestingIcon /> },
-  { title: ['Launch'], desc: 'Go live with confidence', icon: <LaunchIcon /> },
-  { title: ['Maintenance &', 'Support'], desc: 'Keep it running strong', icon: <MaintenanceIcon /> },
+  { title: ['Meet with Client'], desc: 'Align on your vision', icon: <ProcessIcon name="users" /> },
+  { title: ['Requirement', 'Gathering'], desc: 'Capture every detail', icon: <ProcessIcon name="clipboard" /> },
+  { title: ['Project Planning'], desc: 'Map scope & timeline', icon: <ProcessIcon name="planning" /> },
+  { title: ['Homepage', 'Confirmation'], desc: 'Approve the structure', icon: <ProcessIcon name="dashboard" /> },
+  { title: ['UI/UX Design'], desc: 'Craft the experience', icon: <ProcessIcon name="design" /> },
+  { title: ['Development &', 'Progress Updates'], desc: 'Build in weekly sprints', icon: <ProcessIcon name="code" /> },
+  { title: ['Testing &', 'Quality Assurance'], desc: 'Verify every detail', icon: <ProcessIcon name="checkcircle" /> },
+  { title: ['Launch'], desc: 'Go live with confidence', icon: <ProcessIcon name="rocket" /> },
+  { title: ['Maintenance &', 'Support'], desc: 'Keep it running strong', icon: <ProcessIcon name="cloud" /> },
 ]
 
 const POS: Array<[number, number]> = [
@@ -338,16 +376,11 @@ export const OurProcessSvg: React.FC<{ className?: string; active?: boolean }> =
               strokeWidth="1.5"
             />
             <g className="op-icon" style={{ animationDelay: `${delay + 0.16}s` }}>
-              <svg
+              <ProcessIcon
+                name={['users', 'clipboard', 'planning', 'dashboard', 'design', 'code', 'checkcircle', 'rocket', 'cloud'][i]}
                 x={x + 44}
                 y={cy - 22}
-                width={44}
-                height={44}
-                viewBox="0 0 48 48"
-                aria-hidden="true"
-              >
-                {step.icon}
-              </svg>
+              />
             </g>
 
             <line
@@ -406,7 +439,7 @@ export const OurProcess: React.FC = () => {
 
   return (
     <div ref={ref}>
-      <div className="text-center max-w-3xl mx-auto mb-4 sm:mb-6">
+      <div className={`op-heading text-center max-w-3xl mx-auto mb-4 sm:mb-6 ${inView ? 'is-visible' : ''}`}>
         <h2 id="process-title" className="text-section-title text-center">
           Our Process
         </h2>
@@ -442,9 +475,9 @@ export const OurProcess: React.FC = () => {
                   }}
                   aria-hidden="true"
                 >
-                  <svg viewBox="0 0 48 48" width="34" height="34">
+                  <span className="op-list-icon" style={{ animationDelay: `${0.2 + i * 0.1}s` }}>
                     {step.icon}
-                  </svg>
+                  </span>
                 </span>
                 {i < PROCESS_STEPS.length - 1 && <MobileConnector />}
               </div>

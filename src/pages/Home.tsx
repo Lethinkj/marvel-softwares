@@ -23,8 +23,8 @@ export const Home: React.FC = () => {
   return (
     <div className="w-full bg-white overflow-x-clip">
       <Seo
-        title="Marvel Softwares | Custom Software Development"
-        description="Websites, web applications, mobile apps, ERP systems and custom software solutions built around your business requirements."
+        title="Marvel Softwares | Software Development Company in India"
+        description="Marvel Softwares builds websites, web apps, mobile apps, ERP systems, UI/UX experiences, AI automation and custom software for businesses in India, Kanyakumari and Nagercoil."
         path="/"
       />
 
