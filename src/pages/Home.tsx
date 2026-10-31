@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import AnimatedSection from '../components/AnimatedSection'
 import Seo from '../components/Seo'
 import MissionBadge from '../components/MissionBadge'
@@ -20,6 +20,32 @@ const cardStyle: React.CSSProperties = {
 }
 
 export const Home: React.FC = () => {
+  const [previewProject, setPreviewProject] = useState<(typeof projects)[number] | null>(null)
+  const [previewDevice, setPreviewDevice] = useState<'mobile' | 'desktop'>('desktop')
+  const [previewFailed, setPreviewFailed] = useState(false)
+  const previewTimeoutRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    if (!previewProject) return
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setPreviewProject(null)
+    }
+    setPreviewDevice(window.matchMedia('(max-width: 640px)').matches ? 'mobile' : 'desktop')
+    const previewHost = new URL(previewProject.url).hostname
+    setPreviewFailed(previewHost === 'marvelslice.com' || previewHost.endsWith('.marvelslice.com'))
+    previewTimeoutRef.current = window.setTimeout(() => setPreviewFailed(true), 5000)
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', handleKeyDown)
+      if (previewTimeoutRef.current !== null) {
+        window.clearTimeout(previewTimeoutRef.current)
+        previewTimeoutRef.current = null
+      }
+    }
+  }, [previewProject])
+
   return (
     <div className="w-full bg-white overflow-x-clip">
       <Seo
@@ -240,11 +266,8 @@ export const Home: React.FC = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full" style={{ marginTop: 28 }}>
             {projects.map((project) => (
-              <a
+              <article
                 key={project.id}
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="flex flex-col h-full overflow-hidden transition-all duration-300 hover:-translate-y-1.5 group cursor-pointer text-inherit no-underline"
                 style={cardStyle}
               >
@@ -263,13 +286,18 @@ export const Home: React.FC = () => {
                   </span>
 
                   {/* Hover Overlay with Visit Live Site */}
-                  <div className="absolute inset-0 bg-slate-950/45 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-20">
-                    <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-slate-900 text-sm font-semibold shadow-xl transform translate-y-3 group-hover:translate-y-0 transition-transform duration-300 ease-out">
-                      <span>Visit Live Site</span>
+                  <div className="project-live-overlay absolute inset-0 bg-slate-950/45 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-20">
+                    <button
+                      type="button"
+                      onClick={() => setPreviewProject(project)}
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-slate-900 text-sm font-semibold shadow-xl transform translate-y-3 group-hover:translate-y-0 transition-transform duration-300 ease-out"
+                      style={{ color: '#0f172a', background: '#ffffff' }}
+                    >
+                      <span>Preview Live Site</span>
                       <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
                       </svg>
-                    </span>
+                    </button>
                   </div>
                 </div>
 
@@ -289,7 +317,7 @@ export const Home: React.FC = () => {
                     {project.description}
                   </p>
                 </div>
-              </a>
+              </article>
             ))}
           </div>
         </div>
@@ -309,6 +337,79 @@ export const Home: React.FC = () => {
       <section id="contact" aria-labelledby="contact-heading" className="section section-warm">
         <ContactSection />
       </section>
+
+      {previewProject && (
+        <div
+          className="project-preview-backdrop"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setPreviewProject(null)
+          }}
+        >
+          <div
+            className={`project-preview-modal project-preview-modal--${previewDevice}`}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="project-preview-title"
+          >
+            <div className="project-preview-header">
+              <div>
+                <p className="project-preview-kicker">
+                  {previewDevice === 'mobile' ? 'Mobile preview' : 'Desktop preview'}
+                </p>
+                <h2 id="project-preview-title">{previewProject.title}</h2>
+              </div>
+              <button
+                type="button"
+                className="project-preview-close"
+                aria-label="Close project preview"
+                onClick={() => setPreviewProject(null)}
+              >
+                ×
+              </button>
+            </div>
+            <div className="project-preview-frame">
+              {previewFailed ? (
+                <div className="project-preview-fallback">
+                  <img
+                    src={previewProject.image}
+                    alt={`${previewProject.title} preview`}
+                    className="project-preview-fallback-image"
+                  />
+                  <div className="project-preview-fallback-note">
+                    <strong>Live preview is unavailable here</strong>
+                    <span>This website blocks embedded previews. Open it in a new tab to view it live.</span>
+                    <a href={previewProject.url} target="_blank" rel="noopener noreferrer">
+                      Open live site
+                    </a>
+                  </div>
+                </div>
+              ) : (
+                <iframe
+                  src={previewProject.url}
+                  title={`${previewProject.title} live preview`}
+                  loading="eager"
+                  className="project-preview-iframe"
+                  onLoad={() => {
+                    if (previewTimeoutRef.current !== null) {
+                      window.clearTimeout(previewTimeoutRef.current)
+                      previewTimeoutRef.current = null
+                    }
+                    setPreviewFailed(false)
+                  }}
+                  onError={() => setPreviewFailed(true)}
+                />
+              )}
+            </div>
+            <div className="project-preview-footer">
+              <span>Preview sized for your current device</span>
+              <a href={previewProject.url} target="_blank" rel="noopener noreferrer">
+                Open live site
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

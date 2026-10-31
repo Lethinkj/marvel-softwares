@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { renderAppIcon } from '../utils/iconResolver'
 import AnimatedSection from './AnimatedSection'
@@ -36,7 +36,25 @@ const CheckIcon: React.FC = () => (
  * Everything below the home hero.
  * Kept separate so the hero section can be worked on independently.
  */
-export const HomeBelowHero: React.FC = () => (
+export const HomeBelowHero: React.FC = () => {
+  const [previewProject, setPreviewProject] = useState<(typeof projects)[number] | null>(null)
+  const [previewDevice, setPreviewDevice] = useState<'mobile' | 'desktop'>('desktop')
+
+  useEffect(() => {
+    if (!previewProject) return
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setPreviewProject(null)
+    }
+    setPreviewDevice(window.matchMedia('(max-width: 640px)').matches ? 'mobile' : 'desktop')
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [previewProject])
+
+  return (
   <>
     {/* ============ SERVICES ============ */}
     <section aria-labelledby="services-title" className="section">
@@ -201,10 +219,7 @@ export const HomeBelowHero: React.FC = () => (
         >
           {projects.map((project, i) => (
             <AnimatedSection key={project.id} as="div" delay={i * 0.08} className="h-full">
-              <a
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
+              <article
                 className="build-card group flex flex-col h-full overflow-hidden"
                 style={cardStyle}
               >
@@ -250,14 +265,27 @@ export const HomeBelowHero: React.FC = () => (
                     ))}
                   </ul>
 
-                  <span
-                    className="inline-flex items-center gap-2 text-[15px] font-semibold"
-                    style={{ color: 'var(--color-primary)', marginTop: 20 }}
-                  >
-                    View Project
-                  </span>
+                  <div className="flex flex-wrap items-center gap-3" style={{ marginTop: 20 }}>
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-2 text-[15px] font-semibold"
+                      style={{ color: 'var(--color-primary)' }}
+                      onClick={() => setPreviewProject(project)}
+                    >
+                      Visit Live
+                    </button>
+                    <a
+                      href={project.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-[13px] font-semibold"
+                      style={{ color: 'var(--color-text-muted)' }}
+                    >
+                      Open in new tab
+                    </a>
+                  </div>
                 </div>
-              </a>
+              </article>
             </AnimatedSection>
           ))}
         </div>
@@ -423,7 +451,55 @@ export const HomeBelowHero: React.FC = () => (
         </div>
       </div>
     </section>
-  </>
-)
+      {previewProject && (
+        <div
+          className="project-preview-backdrop"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setPreviewProject(null)
+          }}
+        >
+          <div
+            className={`project-preview-modal project-preview-modal--${previewDevice}`}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="project-preview-title"
+          >
+            <div className="project-preview-header">
+              <div>
+                <p className="project-preview-kicker">
+                  {previewDevice === 'mobile' ? 'Mobile preview' : 'Desktop preview'}
+                </p>
+                <h2 id="project-preview-title">{previewProject.title}</h2>
+              </div>
+              <button
+                type="button"
+                className="project-preview-close"
+                aria-label="Close project preview"
+                onClick={() => setPreviewProject(null)}
+              >
+                ×
+              </button>
+            </div>
+            <div className="project-preview-frame">
+              <iframe
+                src={previewProject.url}
+                title={`${previewProject.title} live preview`}
+                loading="eager"
+                className="project-preview-iframe"
+              />
+            </div>
+            <div className="project-preview-footer">
+              <span>Preview sized for your current device</span>
+              <a href={previewProject.url} target="_blank" rel="noopener noreferrer">
+                Open live site
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
 
 export default HomeBelowHero
