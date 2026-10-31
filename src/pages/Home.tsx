@@ -31,8 +31,7 @@ export const Home: React.FC = () => {
       if (event.key === 'Escape') setPreviewProject(null)
     }
     setPreviewDevice(window.matchMedia('(max-width: 640px)').matches ? 'mobile' : 'desktop')
-    const previewHost = new URL(previewProject.url).hostname
-    setPreviewFailed(previewHost === 'marvelslice.com' || previewHost.endsWith('.marvelslice.com'))
+    setPreviewFailed(false)
     previewTimeoutRef.current = window.setTimeout(() => setPreviewFailed(true), 5000)
     document.body.style.overflow = 'hidden'
     window.addEventListener('keydown', handleKeyDown)
@@ -371,14 +370,11 @@ export const Home: React.FC = () => {
             <div className="project-preview-frame">
               {previewFailed ? (
                 <div className="project-preview-fallback">
-                  <img
-                    src={previewProject.image}
-                    alt={`${previewProject.title} preview`}
-                    className="project-preview-fallback-image"
-                  />
                   <div className="project-preview-fallback-note">
-                    <strong>Live preview is unavailable here</strong>
-                    <span>This website blocks embedded previews. Open it in a new tab to view it live.</span>
+                    <strong>Live preview cannot be embedded</strong>
+                    <span>
+                      Allow this domain in the project server&apos;s frame policy to load the website here.
+                    </span>
                     <a href={previewProject.url} target="_blank" rel="noopener noreferrer">
                       Open live site
                     </a>
