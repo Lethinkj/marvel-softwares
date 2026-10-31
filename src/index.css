@@ -1474,7 +1474,7 @@ body.nav-menu-open #root {
 /* --- Legal Bottom Bar --- */
 .footer-bottom-wrap {
   width: 100%;
-  background: #040810;
+  background: #c0c0c0;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -1485,9 +1485,9 @@ body.nav-menu-open #root {
   justify-content: center;
   text-align: center;
   gap: 12px;
-  padding: 16px 0;
+  padding: 2px 0;
   font-size: 0.8125rem;
-  color: #94a3b8;
+  color: #000000;
 }
 
 @media (min-width: 640px) {
@@ -1496,12 +1496,11 @@ body.nav-menu-open #root {
     justify-content: space-between;
     text-align: left;
     padding-right: 88px; /* Ensures floating back-to-top button never overlaps! */
-  }
-}
+  }}
 
 .footer-copyright {
   margin: 0;
-  color: #94a3b8;
+  color: #000000;
   text-align: center;
 }
 
@@ -1522,26 +1521,26 @@ body.nav-menu-open #root {
 }
 
 .footer-legal a {
-  color: #94a3b8;
+  color: #000000;
   transition: color 0.2s ease;
   text-decoration: none;
 }
 
 .footer-legal a:hover {
-  color: #ffffff;
+  color: #000000;
 }
 
 .footer-legal a {
   font-size: 0.8125rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.85);
+  color: #000000;
   transition: color 0.2s ease;
   text-decoration: none;
   white-space: nowrap;
 }
 
 .footer-legal a:hover {
-  color: #ffffff;
+  color: #000000;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
