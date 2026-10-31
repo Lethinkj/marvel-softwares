@@ -27,15 +27,7 @@ function App() {
             </Suspense>
           }
         />
-        {/* All previous subpages now smoothly redirect to their respective sections on the one-page homepage */}
-        <Route path="/about" element={<Navigate to="/#about" replace />} />
-        <Route path="/services" element={<Navigate to="/#services" replace />} />
-        <Route path="/team" element={<Navigate to="/#team" replace />} />
-        <Route path="/projects" element={<Navigate to="/#projects" replace />} />
-        <Route path="/work" element={<Navigate to="/#projects" replace />} />
-        <Route path="/contact" element={<Navigate to="/#contact" replace />} />
-        <Route path="/process" element={<Navigate to="/#services" replace />} />
-        <Route path="/privacy" element={<Navigate to="/#contact" replace />} />
+        {/* The site is intentionally a single-page experience. */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

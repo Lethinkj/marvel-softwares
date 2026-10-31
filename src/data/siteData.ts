@@ -332,28 +332,28 @@ export const homeServiceCards: HomeServiceCard[] = [
     icon: 'web',
     title: 'Websites & Web Apps',
     line: 'Responsive websites and browser-based applications built around how your business works.',
-    to: '/services#website-development',
+    to: '/#website-development',
   },
   {
     id: 'mobile',
     icon: 'mobile',
     title: 'Mobile Apps',
     line: 'Android and iOS applications your customers and teams can use wherever they are.',
-    to: '/services#mobile-app-development',
+    to: '/#mobile-app-development',
   },
   {
     id: 'erp',
     icon: 'erp',
     title: 'ERP & Business Systems',
     line: 'Operations, records, billing and reporting connected in one reliable platform.',
-    to: '/services#erp-business-software',
+    to: '/#erp-business-software',
   },
   {
     id: 'ai-design',
     icon: 'ai',
     title: 'UI/UX & AI Automation',
     line: 'Clear interfaces plus automation that removes the repetitive work from your day.',
-    to: '/services#ai-automation',
+    to: '/#ai-automation',
   },
 ]
 

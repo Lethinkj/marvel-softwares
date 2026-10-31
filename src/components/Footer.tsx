@@ -93,7 +93,7 @@ export function Footer() {
               {services.slice(0, 6).map((service) => (
                 <li key={service.id}>
                   <Link
-                    to={`/services#${service.id}`}
+                    to={`/#${service.id}`}
                     className="inline-flex items-center min-h-[38px] text-[14.5px] font-medium transition-colors"
                     style={{ color: 'rgba(255,255,255,.78)' }}
                     onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
@@ -115,7 +115,7 @@ export function Footer() {
               {services.slice(6).map((service) => (
                 <li key={service.id}>
                   <Link
-                    to={`/services#${service.id}`}
+                    to={`/#${service.id}`}
                     className="inline-flex items-center min-h-[38px] text-[14.5px] font-medium transition-colors"
                     style={{ color: 'rgba(255,255,255,.78)' }}
                     onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
@@ -144,7 +144,7 @@ export function Footer() {
         >
           <p>© {CURRENT_YEAR} MARVEL SOFTWARES. All rights reserved.</p>
           <Link
-            to="/privacy"
+            to="/#contact"
             className="hover:text-white transition-colors"
             style={{ color: 'rgba(255,255,255,.45)' }}
           >

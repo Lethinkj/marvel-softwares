@@ -54,7 +54,7 @@ export const HomeBelowHero: React.FC = () => (
           </AnimatedSection>
 
           <Link
-            to="/services"
+            to="/#services"
             className="inline-flex items-center gap-2 shrink-0"
             style={sectionLinkStyle}
           >
@@ -62,11 +62,11 @@ export const HomeBelowHero: React.FC = () => (
           </Link>
         </div>
 
-        <div className="grid-cards-4" style={{ marginTop: 40 }}>
+        <div className="grid-cards-4" style={{ marginTop: 28 }}>
           {homeServiceCards.map((service, i) => (
             <AnimatedSection key={service.id} as="div" delay={i * 0.06} className="h-full">
               <Link
-                to={service.to}
+                to={service.to.replace(/^\/services/, '') || '#services'}
                 className="build-card group flex flex-col h-full p-6"
                 style={cardStyle}
               >
@@ -161,7 +161,7 @@ export const HomeBelowHero: React.FC = () => (
             </ul>
 
             <Link
-              to="/about"
+              to="/#about"
               className="inline-flex items-center gap-2 text-[15px] font-semibold"
               style={{ color: 'var(--color-primary)', marginTop: 26 }}
             >
@@ -187,7 +187,7 @@ export const HomeBelowHero: React.FC = () => (
           </AnimatedSection>
 
           <Link
-            to="/projects"
+            to="/#projects"
             className="inline-flex items-center gap-2 shrink-0"
             style={sectionLinkStyle}
           >
@@ -197,7 +197,7 @@ export const HomeBelowHero: React.FC = () => (
 
         <div
           className="grid grid-cols-1 lg:grid-cols-2"
-          style={{ marginTop: 40, gap: 'var(--card-gap)' }}
+          style={{ marginTop: 28, gap: 'var(--card-gap)' }}
         >
           {projects.map((project, i) => (
             <AnimatedSection key={project.id} as="div" delay={i * 0.08} className="h-full">
@@ -276,7 +276,7 @@ export const HomeBelowHero: React.FC = () => (
           </p>
         </AnimatedSection>
 
-        <div className="grid-cards-3" style={{ marginTop: 40 }}>
+        <div className="grid-cards-3" style={{ marginTop: 28 }}>
           {whyChooseUs.map((item, i) => (
             <AnimatedSection key={item.title} as="div" delay={i * 0.08} className="h-full">
               <article className="p-7 h-full" style={cardStyle}>
@@ -317,7 +317,7 @@ export const HomeBelowHero: React.FC = () => (
             </p>
           </div>
           <Link
-            to="/contact"
+            to="/#contact"
             className="inline-flex items-center justify-center min-h-[46px] px-5 text-[14px] font-semibold shrink-0"
             style={{
               background: 'var(--color-primary)',
@@ -355,7 +355,7 @@ export const HomeBelowHero: React.FC = () => (
               A few things people usually ask us. If yours is not here, just send a message.
             </p>
             <Link
-              to="/contact"
+              to="/#contact"
               className="inline-flex items-center gap-2 text-[15px] font-semibold"
               style={{ color: 'var(--color-primary)', marginTop: 20 }}
             >
@@ -409,7 +409,7 @@ export const HomeBelowHero: React.FC = () => (
         </p>
         <div style={{ marginTop: 30 }}>
           <Link
-            to="/contact"
+            to="/#contact"
             className="inline-flex items-center justify-center min-h-[54px] px-8 text-base font-semibold"
             style={{
               background: '#fff',

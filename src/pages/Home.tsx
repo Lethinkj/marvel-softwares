@@ -89,13 +89,13 @@ export const Home: React.FC = () => {
         aria-labelledby="about-us-title"
         className="section bg-white relative overflow-hidden"
         style={{
-          paddingTop: 'clamp(48px, 6vw, 96px)',
-          paddingBottom: 'clamp(48px, 6vw, 96px)',
+          paddingTop: 'clamp(36px, 4vw, 64px)',
+          paddingBottom: 'clamp(36px, 4vw, 64px)',
         }}
       >
         <div className="container relative z-10">
           {/* About Us Visual (Left, 40%) + Content (Right, 60%) */}
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,4fr)_minmax(0,6fr)] gap-10 lg:gap-14 xl:gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,4fr)_minmax(0,6fr)] gap-8 lg:gap-10 xl:gap-12 items-center">
             {/* Visual column with about.png (Left on desktop - 40%) */}
             <div className="order-2 lg:order-1 flex justify-center w-full">
               <AnimatedSection delay={0.15} className="w-full flex justify-center">
@@ -134,12 +134,12 @@ export const Home: React.FC = () => {
         aria-label="Our mission and vision"
         className="section section-warm relative overflow-hidden"
         style={{
-          paddingTop: 'clamp(48px, 6vw, 84px)',
-          paddingBottom: 'clamp(48px, 6vw, 84px)',
+          paddingTop: 'clamp(36px, 4vw, 60px)',
+          paddingBottom: 'clamp(36px, 4vw, 60px)',
         }}
       >
         <div className="container relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-14 w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 w-full">
             {/* Mission column — badge beside heading */}
             <AnimatedSection delay={0.1} className="w-full">
               <div className="h-full">
@@ -230,7 +230,7 @@ export const Home: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full" style={{ marginTop: 40 }}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full" style={{ marginTop: 28 }}>
             {projects.map((project) => (
               <a
                 key={project.id}

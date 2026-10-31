@@ -14,7 +14,7 @@ export const UpcomingProjects: React.FC = () => {
         </p>
       </AnimatedSection>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full" style={{ marginTop: 40 }}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full" style={{ marginTop: 24 }}>
         {upcomingProjects.map((project: UpcomingProject, index: number) => (
           <AnimatedSection key={project.id} delay={index * 0.12}>
             <div className="flex flex-col h-full overflow-hidden rounded-2xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 group">

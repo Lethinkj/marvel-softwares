@@ -59,10 +59,10 @@
   /* --- Layout --- */
   --container-width: 1720px;
   --page-gutter: clamp(16px, 4vw, 32px);
-  --section-space-desktop: 100px;
-  --section-space-tablet: 72px;
-  --section-space-mobile: 52px;
-  --section-space: clamp(52px, 7vw, 100px);
+  --section-space-desktop: 52px;
+  --section-space-tablet: 44px;
+  --section-space-mobile: 28px;
+  --section-space: clamp(28px, 3.2vw, 52px);
   --content-gap: clamp(20px, 3vw, 40px);
   --card-padding: clamp(20px, 2.5vw, 32px);
   --card-gap: clamp(16px, 2.4vw, 28px);
@@ -877,13 +877,13 @@ body.nav-menu-open #root {
    ============================================ */
 .svc-showcase {
   display: grid;
-  gap: clamp(48px, 7vw, 104px);
-  margin-top: clamp(40px, 5vw, 72px);
+  gap: clamp(20px, 3vw, 40px);
+  margin-top: clamp(24px, 3vw, 36px);
 }
 
 .svc-showcase-row {
   display: grid;
-  gap: clamp(24px, 3.5vw, 48px);
+  gap: clamp(16px, 2vw, 28px);
   align-items: center;
 }
 
@@ -2257,7 +2257,7 @@ body.nav-menu-open #root {
   align-items: center;
   /* the top bar floats over the hero — leave room for it */
   padding-top: calc(var(--header-offset) + clamp(20px, 3vw, 40px));
-  padding-bottom: clamp(44px, 6vw, 88px);
+  padding-bottom: clamp(32px, 4vw, 56px);
 }
 
 @media (min-width: 992px) {
@@ -2470,6 +2470,50 @@ a.page-hero-card-item:hover .page-hero-card-arrow {
 
 .page-hero--wide .page-hero-chips {
   justify-content: center;
+}
+
+/* Compact alternating layout used by the detailed services page. */
+.services-page-hero .page-hero-grid {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.services-page-hero .page-hero-copy {
+  max-width: 760px;
+}
+
+.services-page-hero {
+  display: none;
+}
+
+.services-page-row {
+  min-height: 0;
+}
+
+@media (min-width: 768px) {
+  .services-page-row > div {
+    min-width: 0;
+  }
+
+  .services-page-row h2 {
+    text-align: center;
+  }
+}
+
+.services-page-title {
+  margin: 0;
+  font-size: clamp(1.45rem, 1.8vw, 2rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: var(--color-text);
+}
+
+.services-page-description {
+  margin-top: 10px;
+  max-width: 72ch;
+  line-height: 1.55;
+  text-align: justify;
 }
 
 /* Icon chip row (centred variant) */

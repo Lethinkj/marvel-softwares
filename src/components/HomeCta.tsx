@@ -127,10 +127,10 @@ export const HomeCta: React.FC = () => (
             </p>
 
             <div className="home-cta-actions">
-              <Link to="/contact" className="home-cta-btn home-cta-btn--primary">
+              <Link to="/#contact" className="home-cta-btn home-cta-btn--primary">
                 Start a Project
               </Link>
-              <Link to="/services" className="home-cta-btn home-cta-btn--ghost">
+              <Link to="/#services" className="home-cta-btn home-cta-btn--ghost">
                 Explore Our Services
               </Link>
             </div>

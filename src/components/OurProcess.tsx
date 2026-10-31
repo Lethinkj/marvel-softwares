@@ -406,7 +406,7 @@ export const OurProcess: React.FC = () => {
 
   return (
     <div ref={ref}>
-      <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
+      <div className="text-center max-w-3xl mx-auto mb-6 sm:mb-8">
         <h2 id="process-title" className="text-section-title text-center">
           Our Process
         </h2>
@@ -421,7 +421,7 @@ export const OurProcess: React.FC = () => {
 
       <ol
         className={`lg:hidden op-list ${active ? 'is-inview' : ''}`}
-        style={{ marginTop: 32, listStyle: 'none', padding: 0 }}
+        style={{ marginTop: 20, listStyle: 'none', padding: 0 }}
       >
         {PROCESS_STEPS.map((step, i) => (
           <li key={step.title.join()} className="op-list-item" style={{ animationDelay: `${0.12 + i * 0.09}s` }}>
