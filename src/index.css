@@ -163,6 +163,26 @@ h2[id] {
   scroll-margin-top: var(--anchor-offset);
 }
 
+/* --- Consistent page-level scroll reveals --- */
+.scroll-scene {
+  --scroll-scene-offset: 30px;
+  opacity: 0;
+  transform: translate3d(0, var(--scroll-scene-offset), 0);
+  transition:
+    opacity 650ms cubic-bezier(0.21, 0.47, 0.32, 0.98),
+    transform 700ms cubic-bezier(0.21, 0.47, 0.32, 0.98);
+  will-change: opacity, transform;
+}
+
+.scroll-scene[data-scroll-direction='up'] {
+  --scroll-scene-offset: -30px;
+}
+
+.scroll-scene--visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
 /* --- Blur and dim all background page contents when mobile/tablet navigation menu is open --- */
 body.nav-menu-open #root {
   filter: blur(12px) brightness(0.78);
@@ -1729,6 +1749,13 @@ body.nav-menu-open #root {
 
   .entry-reveal {
     display: none;
+  }
+
+  .scroll-scene,
+  .scroll-scene--visible {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }
 

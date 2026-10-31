@@ -41,6 +41,65 @@ function ScrollToTop() {
   return null
 }
 
+function ScrollSceneObserver() {
+  useEffect(() => {
+    let lastScrollY = window.scrollY
+    let direction: 'up' | 'down' = 'down'
+    const observedSections = new Set<HTMLElement>()
+
+    const updateDirection = () => {
+      const currentScrollY = window.scrollY
+      if (Math.abs(currentScrollY - lastScrollY) > 4) {
+        direction = currentScrollY > lastScrollY ? 'down' : 'up'
+        lastScrollY = currentScrollY
+      }
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const section = entry.target as HTMLElement
+          section.classList.add('scroll-scene')
+          section.dataset.scrollDirection = direction
+          section.classList.toggle('scroll-scene--visible', entry.isIntersecting)
+        })
+      },
+      {
+        threshold: 0.08,
+        rootMargin: '-8% 0px -8% 0px',
+      },
+    )
+
+    const observeSections = () => {
+      document.querySelectorAll<HTMLElement>('#main-content section[id]').forEach((section) => {
+        if (observedSections.has(section)) return
+        observedSections.add(section)
+        observer.observe(section)
+      })
+    }
+
+    const mutationObserver = new MutationObserver(observeSections)
+    const mainContent = document.getElementById('main-content')
+    if (mainContent) {
+      mutationObserver.observe(mainContent, { childList: true, subtree: true })
+    }
+    observeSections()
+    window.addEventListener('scroll', updateDirection, { passive: true })
+
+    return () => {
+      observer.disconnect()
+      mutationObserver.disconnect()
+      window.removeEventListener('scroll', updateDirection)
+      observedSections.forEach((section) => {
+        section.classList.remove('scroll-scene', 'scroll-scene--visible')
+        delete section.dataset.scrollDirection
+      })
+    }
+  }, [])
+
+  return null
+}
+
 /**
  * Main Layout wrapper component for Marvel Softwares.
  *
@@ -62,6 +121,7 @@ export function Layout() {
 
       {/* Automatically reset scroll position on route change */}
       <ScrollToTop />
+      <ScrollSceneObserver />
 
       {/* Responsive Navigation */}
       <Navbar />
