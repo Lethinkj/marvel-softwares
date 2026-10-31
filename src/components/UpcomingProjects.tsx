@@ -6,10 +6,6 @@ export const UpcomingProjects: React.FC = () => {
   return (
     <div className="container">
       <AnimatedSection style={{ maxWidth: 720 }} className="text-center sm:text-left">
-        <div className="section-badge">
-          <span className="section-badge-dot" />
-          <span>Product Roadmap</span>
-        </div>
         <h2 id="upcoming-title" className="text-section-title">
           Upcoming Projects
         </h2>
@@ -18,7 +14,7 @@ export const UpcomingProjects: React.FC = () => {
         </p>
       </AnimatedSection>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto" style={{ marginTop: 40 }}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full" style={{ marginTop: 40 }}>
         {upcomingProjects.map((project: UpcomingProject, index: number) => (
           <AnimatedSection key={project.id} delay={index * 0.12}>
             <div className="flex flex-col h-full overflow-hidden rounded-2xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 group">
@@ -49,12 +45,12 @@ export const UpcomingProjects: React.FC = () => {
               {/* Content body */}
               <div className="flex flex-col flex-1 p-6 sm:p-7">
                 <div className="flex items-start justify-between gap-3">
-                  <h3 className="text-card-title text-xl font-bold group-hover:text-blue-600 transition-colors">
+                  <h3 className="text-card-title group-hover:text-blue-600 transition-colors">
                     {project.title}
                   </h3>
                 </div>
 
-                <p className="text-body text-[15px] leading-relaxed mt-3 flex-1">
+                <p className="text-body leading-relaxed mt-3 flex-1">
                   {project.description}
                 </p>
 

@@ -18,10 +18,10 @@ export const WhyChooseUs: React.FC = () => (
 
     {/* 2. Vertically centered content with subheading & enhanced readability */}
     <AnimatedSection direction="up" delay={0.12} className="flex flex-col justify-center self-center py-2 lg:py-4">
-      <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 tracking-tight leading-snug mb-4 sm:mb-5">
+      <h3 className="text-card-title text-slate-900 leading-snug mb-4 sm:mb-5">
         The Technology Behind Every Solution
       </h3>
-      <p className="text-body text-slate-600 text-base sm:text-lg leading-relaxed text-left font-normal max-w-[54ch]">
+      <p className="text-body text-slate-600 leading-relaxed text-left max-w-[54ch]">
         We combine modern technologies, proven frameworks and powerful development tools to bring ideas to life. From intuitive web applications to complex enterprise platforms, our technology choices focus on performance, security and scalability. By embracing continuous innovation, we build solutions that adapt to changing business needs and create lasting value.
       </p>
     </AnimatedSection>

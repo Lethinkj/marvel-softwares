@@ -14,10 +14,11 @@
     --content-gap: 16px;
     --section-space: 36px;
     --nav-height: 58px;
-    --font-hero: 1.43rem;
-    --font-page-title: 1.37rem;
-    --font-section-title: 1.31rem;
-    --font-card-title: 0.91rem;
+    --font-hero: 1.5rem;
+    --font-page-title: 1.4rem;
+    --font-section-title: 1.35rem;
+    --font-section-subtitle: 0.95rem;
+    --font-card-title: 1rem;
     --font-body-size: 0.9rem;
   }
 

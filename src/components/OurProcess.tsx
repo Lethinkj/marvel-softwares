@@ -250,7 +250,7 @@ export const OurProcessSvg: React.FC<{ className?: string; active?: boolean }> =
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 1600 1000"
+      viewBox="0 140 1600 860"
       width="100%"
       preserveAspectRatio="xMidYMid meet"
       role="img"
@@ -277,55 +277,6 @@ export const OurProcessSvg: React.FC<{ className?: string; active?: boolean }> =
           <stop offset="60%" stopColor="#0866F5" stopOpacity="0" />
         </linearGradient>
       </defs>
-
-      <g className="op-heading">
-        <line
-          className="op-rule"
-          x1="455"
-          y1="78"
-          x2="588"
-          y2="78"
-          stroke={LIGHT_BLUE}
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
-        <circle cx="588" cy="78" r="4" fill={BLUE} />
-        <line
-          className="op-rule"
-          x1="1012"
-          y1="78"
-          x2="1145"
-          y2="78"
-          stroke={LIGHT_BLUE}
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
-        <circle cx="1012" cy="78" r="4" fill={BLUE} />
-
-        <text
-          className="op-title"
-          x="800"
-          y="96"
-          textAnchor="middle"
-          fontSize="56"
-          fontWeight="800"
-          letterSpacing="0.5"
-        >
-          <tspan fill={NAVY}>OUR</tspan>
-          <tspan dx="14" fill={BLUE}>PROCESS</tspan>
-        </text>
-        <text
-          className="op-subtitle"
-          x="800"
-          y="140"
-          textAnchor="middle"
-          fontSize="23"
-          fontWeight="500"
-          fill={GRAY}
-        >
-          From your idea to a reliable digital solution
-        </text>
-      </g>
 
       <g aria-hidden="true">
         <Connector line={row0a.line} arrow={row0a.arrow} delay={0.45} />
@@ -455,11 +406,7 @@ export const OurProcess: React.FC = () => {
 
   return (
     <div ref={ref}>
-      <div className="lg:hidden text-center mb-6">
-        <div className="section-badge mx-auto">
-          <span className="section-badge-dot" />
-          <span>Development Lifecycle</span>
-        </div>
+      <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
         <h2 id="process-title" className="text-section-title text-center">
           Our Process
         </h2>

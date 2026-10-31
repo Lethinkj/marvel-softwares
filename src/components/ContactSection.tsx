@@ -86,10 +86,6 @@ export const ContactSection: React.FC = () => {
   return (
     <div className="container">
       <AnimatedSection style={{ maxWidth: 720 }} className="text-center sm:text-left mb-10">
-        <div className="section-badge">
-          <span className="section-badge-dot" />
-          <span>Start a Project</span>
-        </div>
         <h2 id="contact-heading" className="text-section-title">
           Contact Us
         </h2>

@@ -107,10 +107,6 @@ export const OurTeam: React.FC = () => {
     <div className="container">
       {/* Section Header */}
       <AnimatedSection style={{ maxWidth: 720 }} className="text-center sm:text-left">
-        <div className="section-badge">
-          <span className="section-badge-dot" />
-          <span>Core Team & Leadership</span>
-        </div>
         <h2 id="team-heading" className="text-section-title">
           Our Team
         </h2>
@@ -150,7 +146,7 @@ export const OurTeam: React.FC = () => {
 
                   {/* Name & Role */}
                   <div className="mt-5">
-                    <h3 className="text-xl font-bold text-slate-900 tracking-tight leading-snug group-hover:text-blue-600 transition-colors">
+                    <h3 className="text-card-title group-hover:text-blue-600 transition-colors">
                       {member.name}
                     </h3>
                     <p className="text-sm text-blue-600 font-semibold mt-1">
@@ -159,7 +155,7 @@ export const OurTeam: React.FC = () => {
                   </div>
 
                   {/* Bio */}
-                  <p className="text-[14px] text-slate-600 leading-relaxed mt-3 flex-1">
+                  <p className="text-body text-sm leading-relaxed mt-3 flex-1">
                     {member.bio}
                   </p>
 

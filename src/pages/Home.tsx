@@ -54,11 +54,6 @@ export const Home: React.FC = () => {
           >
             {/* Copy column */}
             <div className="order-1 lg:order-none lg:col-span-6 text-left">
-              <div className="section-badge">
-                <span className="section-badge-dot" />
-                <span>Custom Software Engineering</span>
-              </div>
-
               <h1 id="hero-title" className="text-hero" style={{ marginTop: 0 }}>
                 <span className="block" style={{ color: 'var(--color-primary)' }}>
                   Software That Grows
@@ -99,25 +94,20 @@ export const Home: React.FC = () => {
         id="about"
         aria-labelledby="about-us-title"
         className="section section-warm relative overflow-hidden"
-        style={{ paddingTop: 'clamp(28px, 3.5vw, 52px)' }}
+        style={{ paddingTop: 'clamp(36px, 4.5vw, 68px)', paddingBottom: 'clamp(36px, 4.5vw, 68px)' }}
       >
         {/* Ambient brand glows */}
         <div aria-hidden="true" className="hero-glow hero-glow-a opacity-20 pointer-events-none" />
         <div aria-hidden="true" className="hero-glow hero-glow-b opacity-20 pointer-events-none" />
 
         <div className="container relative z-10">
-          <div className="w-full mx-auto flex flex-col items-center">
-            
-            {/* 1. About Us */}
+          <div className="w-full flex flex-col">
+            {/* 1. First: About Us Heading & Narrative Paragraphs */}
             <AnimatedSection className="w-full text-center">
-              <div className="section-badge mx-auto">
-                <span className="section-badge-dot" />
-                <span>About Marvel Softwares</span>
-              </div>
               <h2 id="about-us-title" className="text-section-title text-center">
                 About Us
               </h2>
-              <div className="mt-6 space-y-4 text-left text-slate-600 text-base sm:text-lg leading-relaxed max-w-4xl mx-auto">
+              <div className="mt-8 space-y-5 text-left text-slate-600 leading-relaxed w-full text-base sm:text-lg">
                 <p>
                   MARVEL SOFTWARES is a full-cycle technology and software engineering company committed to designing, developing, and deploying robust digital systems that drive tangible business results. We partner with ambitious enterprises and growing organizations to build intuitive web applications, high-performance mobile apps, interconnected ERP platforms, and custom software architectures tailored precisely to operational realities.
                 </p>
@@ -128,14 +118,14 @@ export const Home: React.FC = () => {
             </AnimatedSection>
 
             {/* Divider */}
-            <div className="w-24 h-0.5 bg-blue-200/80 my-12 rounded-full" />
+            <div className="w-24 h-0.5 bg-blue-200/80 my-10 sm:my-12 rounded-full mx-auto" />
 
-            {/* 2. Our Mission (Left) & Our Vision (Right) in Same Line */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 w-full">
+            {/* 2. Next: Left Mission, Right Vision */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 w-full">
               {/* Left: Our Mission */}
               <AnimatedSection delay={0.1} className="w-full">
-                <div className="flex flex-col items-center h-full p-8 sm:p-10 rounded-2xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
-                  <h3 className="text-card-title text-xl sm:text-2xl font-bold text-slate-900 text-center mb-3">
+                <div className="flex flex-col h-full p-8 sm:p-10 rounded-2xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
+                  <h3 className="text-card-title text-center mb-3">
                     Our Mission
                   </h3>
                   <p className="text-body text-left leading-relaxed text-slate-600 w-full">
@@ -146,8 +136,8 @@ export const Home: React.FC = () => {
 
               {/* Right: Our Vision */}
               <AnimatedSection delay={0.2} className="w-full">
-                <div className="flex flex-col items-center h-full p-8 sm:p-10 rounded-2xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
-                  <h3 className="text-card-title text-xl sm:text-2xl font-bold text-slate-900 text-center mb-3">
+                <div className="flex flex-col h-full p-8 sm:p-10 rounded-2xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
+                  <h3 className="text-card-title text-center mb-3">
                     Our Vision
                   </h3>
                   <p className="text-body text-left leading-relaxed text-slate-600 w-full">
@@ -156,7 +146,6 @@ export const Home: React.FC = () => {
                 </div>
               </AnimatedSection>
             </div>
-
           </div>
         </div>
       </section>
@@ -165,10 +154,6 @@ export const Home: React.FC = () => {
       <section id="services" aria-labelledby="services-title" className="section">
         <div className="container">
           <AnimatedSection style={{ maxWidth: 720 }}>
-            <div className="section-badge">
-              <span className="section-badge-dot" />
-              <span>End-to-End Capabilities</span>
-            </div>
             <h2 id="services-title" className="text-section-title">
               Our Services
             </h2>
@@ -193,13 +178,12 @@ export const Home: React.FC = () => {
       <section id="technologies" aria-labelledby="technologies-title" className="section">
         <div className="container">
           <AnimatedSection style={{ maxWidth: 720 }}>
-            <div className="section-badge">
-              <span className="section-badge-dot" />
-              <span>Modern Tech Stack</span>
-            </div>
             <h2 id="technologies-title" className="text-section-title">
               Technologies
             </h2>
+            <p className="section-subtitle">
+              Modern frameworks, cloud architectures, and battle-tested engineering practices powering your digital products.
+            </p>
           </AnimatedSection>
 
           <WhyChooseUs />
@@ -216,10 +200,6 @@ export const Home: React.FC = () => {
         <div className="container">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
             <div style={{ maxWidth: 640 }}>
-              <div className="section-badge">
-                <span className="section-badge-dot" />
-                <span>Featured Work</span>
-              </div>
               <h2 id="work-title" className="text-section-title">
                 Our Projects
               </h2>
@@ -236,7 +216,7 @@ export const Home: React.FC = () => {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto" style={{ marginTop: 40 }}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full" style={{ marginTop: 40 }}>
             {projects.map((project) => (
               <a
                 key={project.id}
@@ -273,7 +253,7 @@ export const Home: React.FC = () => {
 
                 <div className="flex flex-col flex-1 p-6 sm:p-7">
                   <div className="flex items-start justify-between gap-3">
-                    <h3 className="text-card-title text-xl font-bold group-hover:text-blue-600 transition-colors">
+                    <h3 className="text-card-title group-hover:text-blue-600 transition-colors">
                       {project.title}
                     </h3>
                     <span className="p-1.5 rounded-lg bg-slate-100 group-hover:bg-blue-50 text-slate-400 group-hover:text-blue-600 transition-colors shrink-0 mt-0.5" aria-hidden="true">

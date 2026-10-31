@@ -49,10 +49,11 @@
   /* --- Typography (fluid: smooth auto-scaling for mobile, tablet, PC) --- */
   --font-hero: clamp(2.1rem, 3.8vw + 0.8rem, 3.6rem);
   --font-page-title: clamp(1.8rem, 3vw + 0.75rem, 3.1rem);
-  --font-section-title: clamp(1.65rem, 2vw + 0.85rem, 2.45rem);
-  --font-card-title: clamp(1.1rem, 0.7vw + 0.85rem, 1.35rem);
-  --font-body-size: clamp(0.95rem, 0.25vw + 0.85rem, 1.0625rem);
-  --font-small: clamp(0.8125rem, 0.2vw + 0.75rem, 0.875rem);
+  --font-section-title: clamp(1.65rem, 1.8vw + 0.9rem, 2.35rem);
+  --font-section-subtitle: clamp(1rem, 0.35vw + 0.88rem, 1.15rem);
+  --font-card-title: clamp(1.1rem, 0.4vw + 0.95rem, 1.25rem);
+  --font-body-size: clamp(0.9375rem, 0.2vw + 0.875rem, 1.025rem);
+  --font-small: clamp(0.8125rem, 0.15vw + 0.75rem, 0.875rem);
   --font-label: 0.75rem;
 
   /* --- Layout --- */
@@ -102,13 +103,30 @@ html {
 
 body {
   margin: 0;
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family: var(--font-sans);
   font-size: var(--font-body-size);
   line-height: 1.65;
   color: var(--color-text);
   background-color: var(--color-background);
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+a,
+button,
+input,
+textarea,
+select {
+  font-family: var(--font-sans);
 }
 
 img,
@@ -409,8 +427,9 @@ body.nav-menu-open #root {
   transform: rotate(-8deg) scale(1.1);
 }
 
-/* --- Type scale --- */
+/* --- Type scale (Uniform, Fluid, Consistent across Mobile, Tablet, PC) --- */
 .text-hero {
+  font-family: var(--font-sans);
   font-size: var(--font-hero);
   font-weight: 800;
   line-height: 1.12;
@@ -420,6 +439,7 @@ body.nav-menu-open #root {
 }
 
 .text-page-title {
+  font-family: var(--font-sans);
   font-size: var(--font-page-title);
   font-weight: 800;
   line-height: 1.12;
@@ -428,31 +448,9 @@ body.nav-menu-open #root {
   text-wrap: balance;
 }
 
-.text-section-title {
-  font-size: var(--font-section-title);
-  font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: -0.025em;
-  color: var(--color-text);
-  text-wrap: balance;
-}
-
-.text-card-title {
-  font-size: var(--font-card-title);
-  font-weight: 700;
-  line-height: 1.3;
-  letter-spacing: -0.015em;
-  color: var(--color-text);
-}
-
-.text-body {
-  font-size: var(--font-body-size);
-  line-height: 1.7;
-  color: var(--color-text-muted);
-  max-width: 68ch;
-}
-
+/* All section badges across the home page share this exact 1 style */
 .section-badge {
+  font-family: var(--font-sans);
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -475,12 +473,44 @@ body.nav-menu-open #root {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* All section headings across the entire home page share this exact 1 size */
+.text-section-title {
+  font-family: var(--font-sans);
+  font-size: var(--font-section-title) !important;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: var(--color-text);
+  text-wrap: balance;
+}
+
+/* All section subheadings across the entire home page share this exact 1 size */
 .section-subtitle {
-  font-size: var(--font-body-size);
+  font-family: var(--font-sans);
+  font-size: var(--font-section-subtitle) !important;
+  font-weight: 400;
   line-height: 1.65;
   color: var(--color-text-muted);
   max-width: 64ch;
   margin-top: 0.875rem;
+}
+
+/* All card titles across the home page share this exact 1 size */
+.text-card-title {
+  font-family: var(--font-sans);
+  font-size: var(--font-card-title) !important;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--color-text);
+}
+
+/* All body paragraphs across the home page share this exact 1 size */
+.text-body {
+  font-family: var(--font-sans);
+  font-size: var(--font-body-size);
+  line-height: 1.7;
+  color: var(--color-text-muted);
 }
 
 .eyebrow {
@@ -899,10 +929,11 @@ body.nav-menu-open #root {
 
 .svc-copy-title {
   margin: 18px 0 0;
-  font-size: clamp(1.35rem, 2.2vw, 1.85rem);
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.01em;
+  font-family: var(--font-sans);
+  font-size: var(--font-card-title);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
   color: var(--color-text);
 }
 
