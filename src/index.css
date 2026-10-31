@@ -1496,7 +1496,8 @@ body.nav-menu-open #root {
     justify-content: space-between;
     text-align: left;
     padding-right: 88px; /* Ensures floating back-to-top button never overlaps! */
-  }}
+  }
+}
 
 .footer-copyright {
   margin: 0;
@@ -1506,7 +1507,8 @@ body.nav-menu-open #root {
 
 @media (min-width: 640px) {
   .footer-copyright {
-    text-align: left;
+    flex: 1;
+    text-align: center;
   }
 }
 
