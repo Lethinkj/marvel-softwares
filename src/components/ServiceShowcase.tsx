@@ -1,15 +1,12 @@
 import React from 'react'
-import { renderAppIcon } from '../utils/iconResolver'
 import AnimatedSection from './AnimatedSection'
 import { ServiceScene } from './illustrations/ServiceScenes'
 import { homeServices, services } from '../data/siteData'
 
 /**
  * ServiceShowcase
- * Alternating "story" rows for the home-page services section:
- * one custom illustration + one content block, swapping sides row by row.
- * The copy card is translucent and sits over the edge of the artwork so
- * image and content read as a single canvas.
+ * Alternating rows for the home-page services section:
+ * image (35%) + content (65%), swapping sides row by row.
  */
 export const ServiceShowcase: React.FC = () => {
   const overview = homeServices
@@ -31,13 +28,12 @@ export const ServiceShowcase: React.FC = () => {
               <ServiceScene id={`svc${i}`} serviceId={service.id} />
             </div>
 
-            <div className="svc-copy">
-              <span className="svc-copy-badge" aria-hidden="true">
-                {renderAppIcon(service.icon, 'w-5 h-5')}
-              </span>
+            <div className="svc-copy text-left">
+              {/* Single h3 heading */}
               <h3 className="svc-copy-title">{service.title}</h3>
-              <p className="svc-copy-headline">{service.headline}</p>
-              <p className="text-body text-left" style={{ marginTop: 14 }}>
+
+              {/* Main narrative content */}
+              <p className="text-body text-slate-600 text-left leading-relaxed text-base sm:text-lg">
                 {service.paragraphs?.[0] ?? service.description}
               </p>
             </div>

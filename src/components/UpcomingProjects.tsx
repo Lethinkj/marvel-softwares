@@ -5,7 +5,7 @@ import { upcomingProjects, type UpcomingProject } from '../data/siteData'
 export const UpcomingProjects: React.FC = () => {
   return (
     <div className="container">
-      <AnimatedSection style={{ maxWidth: 720 }} className="text-center sm:text-left">
+      <AnimatedSection style={{ maxWidth: 720 }} className="text-center mx-auto">
         <h2 id="upcoming-title" className="text-section-title">
           Upcoming Projects
         </h2>

@@ -54,7 +54,23 @@ export function FooterV1() {
               <ul className="footer-col-list">
                 {navLinks.map((link) => (
                   <li key={link.href}>
-                    <Link to={link.href}>{link.label}</Link>
+                    <a
+                      href={link.href}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        const targetId = link.href.replace(/^#/, '')
+                        const el = document.getElementById(targetId)
+                        if (el) {
+                          const headerOffset = 70
+                          const elementPosition = el.getBoundingClientRect().top
+                          const offsetPosition = elementPosition + window.pageYOffset - headerOffset
+                          window.scrollTo({ top: offsetPosition, behavior: 'smooth' })
+                          window.history.pushState(null, '', link.href)
+                        }
+                      }}
+                    >
+                      {link.label}
+                    </a>
                   </li>
                 ))}
               </ul>
@@ -93,7 +109,7 @@ export function FooterV1() {
           </p>
           <ul className="footer-legal">
             <li>
-              <Link to="/privacy">Privacy policy</Link>
+              <a href="#contact">Contact & Support</a>
             </li>
           </ul>
         </div>

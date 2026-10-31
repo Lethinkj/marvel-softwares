@@ -106,7 +106,7 @@ export const OurTeam: React.FC = () => {
   return (
     <div className="container">
       {/* Section Header */}
-      <AnimatedSection style={{ maxWidth: 720 }} className="text-center sm:text-left">
+      <AnimatedSection style={{ maxWidth: 720 }} className="text-center mx-auto">
         <h2 id="team-heading" className="text-section-title">
           Our Team
         </h2>

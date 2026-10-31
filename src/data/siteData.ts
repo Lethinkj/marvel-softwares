@@ -87,14 +87,14 @@ export const siteConfig = {
   siteUrl: 'https://www.marvelsoftwares.in',
 }
 
-// --- Navigation ---
+// --- Navigation (Single-page sections) ---
 export const navLinks: NavLink[] = [
-  { label: 'Home', href: '/' },
-  { label: 'About', href: '/#about' },
-  { label: 'Services', href: '/services' },
-  { label: 'Team', href: '/#team' },
-  { label: 'Projects', href: '/projects' },
-  { label: 'Contact', href: '/#contact' },
+  { label: 'Home', href: '#home' },
+  { label: 'About', href: '#about' },
+  { label: 'Services', href: '#services' },
+  { label: 'Team', href: '#team' },
+  { label: 'Projects', href: '#projects' },
+  { label: 'Contact', href: '#contact' },
 ]
 
 // --- All services (Services page + footer) ---
@@ -107,7 +107,7 @@ export const services: Service[] = [
     description:
       'Professional, responsive websites designed to communicate your brand, engage visitors and support your business goals.',
     paragraphs: [
-      'We engineer custom, high-performance websites designed to elevate your brand presence, engage prospective clients, and communicate your business value with unmistakable clarity. From responsive corporate platforms and conversion-focused landing pages to dynamic content-managed sites, our development prioritizes technical speed, search engine visibility, accessibility, and seamless cross-device performance—delivering fast, reliable digital experiences that turn visitors into lasting clients.',
+      'We engineer custom, high-performance websites designed to elevate your brand presence, engage prospective clients, and communicate your business value with unmistakable clarity. From responsive corporate platforms and conversion-focused landing pages to dynamic content-managed systems, every solution is built from the ground up for technical speed, search engine visibility, rock-solid security, and seamless cross-device responsiveness. By combining thoughtful UX architecture with clean, modern code and intuitive publishing tools, we deliver fast, accessible, and scalable digital experiences that establish lasting credibility and turn casual visitors into loyal clients.',
     ],
     capabilities: [
       'Business and corporate websites',
@@ -128,7 +128,7 @@ export const services: Service[] = [
     description:
       'Powerful browser-based applications tailored to your workflows, customers and operational needs.',
     paragraphs: [
-      'We develop scalable, browser-based web applications and SaaS platforms engineered to handle complex business logic and demanding user workflows with uncompromising stability. Using modern frontend frameworks and resilient backend architectures, our solutions incorporate real-time data synchronization, secure role-based access, and seamless third-party API integrations, turning complicated operational requirements into intuitive, dependable software that drives everyday business efficiency.',
+      'We build powerful, scalable web applications and cloud-native SaaS platforms engineered to streamline complex business logic and support demanding daily operational workflows. Utilizing modern frontend technologies and resilient, modular backend architectures, our web apps feature real-time data synchronization, enterprise-grade role-based permissions, automated background processing, and secure third-party integrations. From intuitive customer portals and administrative dashboards to mission-critical business tools, we engineer secure, high-throughput web platforms that eliminate bottlenecks, enhance productivity, and adapt effortlessly as your organization expands.',
     ],
     capabilities: [
       'SaaS products',
@@ -149,7 +149,7 @@ export const services: Service[] = [
     description:
       'Mobile experiences that help customers and teams access your services wherever they are.',
     paragraphs: [
-      'We design and build native and cross-platform mobile applications for iOS and Android that deliver exceptional usability and dependable performance on the go. Covering the complete product lifecycle from UX architecture to deployment, our mobile engineering incorporates biometric authentication, offline data caching, push notifications, and resilient cloud backends—ensuring secure, fluid, and engaging experiences across all user devices.',
+      'We design and develop native and cross-platform mobile applications for iOS and Android that provide fluid, intuitive, and dependable user experiences on any device. Covering the complete product lifecycle from UX conceptualization and interface design through app store deployment, our mobile engineering incorporates biometric authentication, offline synchronization, push notifications, and resilient cloud backends. Whether you require a customer-facing digital product or an internal mobile tool for field operations, we deliver high-performing, secure mobile solutions that keep your users engaged and connected wherever they are.',
     ],
     capabilities: [
       'Android applications',
@@ -170,7 +170,7 @@ export const services: Service[] = [
     description:
       'Connected business systems that help manage operations, records, people, inventory and reporting in one place.',
     paragraphs: [
-      'We build comprehensive enterprise resource planning (ERP) systems and bespoke business software that unify your company\'s core operations under one intuitive platform. By centralizing inventory management, automated billing, customer records, and departmental workflows with granular access permissions and real-time reporting analytics, our ERP solutions eliminate operational bottlenecks and grant leadership total visibility over organizational performance.',
+      'We engineer comprehensive enterprise resource planning (ERP) systems and tailored business management software that unify your entire operational ecosystem into a single, cohesive platform. By centralizing inventory tracking, automated billing, customer management, procurement, and departmental workflows with granular access controls and real-time analytics, our solutions eliminate data silos and costly manual overhead. We design each module specifically around your unique operating model, providing management with total operational transparency, dependable business intelligence, and the scalability required to fuel long-term corporate growth.',
     ],
     capabilities: [
       'Inventory and stock management',
@@ -192,7 +192,7 @@ export const services: Service[] = [
     description:
       'Purpose-built software designed around your unique processes, requirements and long-term goals.',
     paragraphs: [
-      'When off-the-shelf software falls short, we engineer bespoke software solutions tailored exclusively to your organization\'s proprietary workflows, technical environment, and long-term objectives. From custom internal automation engines and data pipeline tools to modernizing legacy architectures, we build resilient, secure, and maintainable systems designed to integrate smoothly with existing infrastructure and scale with your business.',
+      'When standard off-the-shelf software fails to address your operational challenges, we engineer purpose-built custom software solutions tailored specifically to your company\'s proprietary workflows and strategic goals. From bespoke internal workflow engines and automated data processing pipelines to modernizing legacy enterprise systems, our engineering team constructs maintainable, scalable, and secure architectures. We focus on seamless integration with your existing technology stack, minimal disruption to ongoing operations, and building flexible foundations that empower your team to innovate faster and maintain a lasting competitive edge.',
     ],
     capabilities: [
       'Internal business tools',
@@ -276,7 +276,7 @@ export const services: Service[] = [
     description:
       'Practical AI and automation capabilities that help reduce repetitive work and make information more useful.',
     paragraphs: [
-      'We integrate practical, high-impact artificial intelligence and intelligent workflow automation directly into your day-to-day business tools. By combining custom language models, intelligent document processing, and conversational interfaces with smart automation pipelines, we help your organization eliminate repetitive manual tasks, reduce turnaround times, and turn operational data into actionable business intelligence.',
+      'We implement practical, high-impact artificial intelligence and intelligent workflow automation designed to eliminate repetitive operational tasks and unlock new efficiencies across your business. By integrating custom machine learning models, intelligent document processing, natural language assistants, and smart decision pipelines directly into your software environment, we help teams accelerate turnaround times and minimize human error. From automated customer inquiries to deep predictive analytics, our automation solutions transform unstructured company data into valuable business intelligence that drives faster, more confident decision-making.',
     ],
     capabilities: [
       'AI-enabled applications',

@@ -187,14 +187,14 @@ export const Services: React.FC = () => (
         >
           <div className="container" style={{ paddingBlock: 'clamp(44px,5vw,72px)' }}>
             <div
-              className="grid grid-cols-1 md:grid-cols-2 items-center"
+              className={`grid grid-cols-1 items-center ${artLeft ? 'md:grid-cols-[2fr_3fr]' : 'md:grid-cols-[3fr_2fr]'}`}
               style={{ gap: 'clamp(28px,4vw,56px)' }}
             >
               <AnimatedSection
                 className={artLeft ? 'md:order-1' : 'md:order-2'}
                 direction={artLeft ? 'left' : 'right'}
               >
-                <div className="w-full max-w-xl mx-auto scale-110 relative z-10">
+                <div className="w-full max-w-xl mx-auto relative z-10">
                   <ServiceArt id={service.id} />
                 </div>
               </AnimatedSection>

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
 import { navLinks, siteConfig } from '../data/siteData'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { StaggeredMenu, type StaggeredMenuItem, type StaggeredMenuSocialItem } from './StaggeredMenu'
@@ -10,36 +9,95 @@ import { StaggeredMenu, type StaggeredMenuItem, type StaggeredMenuSocialItem } f
  * scroll-progress hairline.
  * Mobile & Tablet (< 1024px): React Bits StaggeredMenu with GSAP staggered layers.
  */
+const SECTION_GROUPS = [
+  { nav: 'contact', ids: ['contact'] },
+  { nav: 'projects', ids: ['clients', 'upcoming-projects', 'projects'] },
+  { nav: 'team', ids: ['team'] },
+  { nav: 'services', ids: ['technologies', 'process', 'services'] },
+  { nav: 'about', ids: ['mission-vision', 'about'] },
+  { nav: 'home', ids: ['home'] },
+]
+
 export function Navbar() {
+  const [activeSection, setActiveSection] = useState<string>('home')
   const [isScrolled, setIsScrolled] = useState(false)
-  const location = useLocation()
 
   const isDesktop = useMediaQuery('(min-width: 1024px)')
 
   const menuItems: StaggeredMenuItem[] = navLinks.map((link) => ({
     label: link.label,
     link: link.href,
-    ariaLabel: `Go to ${link.label}`,
+    ariaLabel: `Go to ${link.label} section`,
   }))
 
   const socialItems: StaggeredMenuSocialItem[] = [
     { label: 'Email', link: `mailto:${siteConfig.email}` },
     { label: 'Call us', link: siteConfig.phoneHref },
-    { label: 'Privacy', link: '/privacy' },
+    { label: 'Contact', link: '#contact' },
   ]
 
-  const isActiveLink = (href: string) => {
-    if (href === '/') return location.pathname === '/' && !location.hash
-    if (href.startsWith('/#')) return location.pathname === '/' && location.hash === href.substring(1)
-    return location.pathname.startsWith(href)
-  }
-
+  // Track active section both when scrolling down and scrolling up
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 12)
+    const handleScroll = () => {
+      const scrollY = window.scrollY
+      setIsScrolled(scrollY > 12)
+
+      if (scrollY < 180) {
+        setActiveSection('home')
+        return
+      }
+
+      const scrollBottom = window.innerHeight + scrollY
+      const docHeight = document.documentElement.scrollHeight
+      if (docHeight - scrollBottom < 80) {
+        setActiveSection('contact')
+        return
+      }
+
+      const focalY = 160
+      for (const group of SECTION_GROUPS) {
+        for (const id of group.ids) {
+          const el = document.getElementById(id)
+          if (el) {
+            const rect = el.getBoundingClientRect()
+            if (rect.top <= focalY && rect.bottom >= focalY) {
+              setActiveSection(group.nav)
+              return
+            }
+          }
+        }
+      }
+    }
+
     handleScroll()
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault()
+    const targetId = href.replace(/^#/, '')
+    const el = document.getElementById(targetId)
+    if (el) {
+      const headerOffset = 70
+      const elementPosition = el.getBoundingClientRect().top
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      })
+      window.history.pushState(null, '', `#${targetId}`)
+      setActiveSection(targetId)
+    }
+  }
+
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    window.history.pushState(null, '', '/')
+    setActiveSection('home')
+  }
 
   return (
     <header
@@ -75,8 +133,9 @@ export function Navbar() {
           }}
         >
           <div className="container flex items-center justify-between h-full" style={{ gap: 12 }}>
-            <Link
-              to="/"
+            <a
+              href="#home"
+              onClick={handleLogoClick}
               aria-label="MARVEL SOFTWARES — Home"
               className="shrink-0 rounded-md flex items-center"
               style={{ gap: 10 }}
@@ -87,7 +146,7 @@ export function Navbar() {
                 className="brand-logo"
                 style={{ height: isScrolled ? 40 : 46, transition: 'height .3s ease' }}
               />
-            </Link>
+            </a>
 
             {/* Navigation — desktop (>= 1024px) */}
             {isDesktop && (
@@ -97,22 +156,17 @@ export function Navbar() {
                 style={{ marginLeft: 'auto', marginRight: 0, gap: 4 }}
               >
                 {navLinks.map((link) => {
-                  const active = isActiveLink(link.href)
+                  const targetId = link.href.replace(/^#/, '')
+                  const active = activeSection === targetId
                   return (
-                    <Link
+                    <a
                       key={link.href}
-                      to={link.href}
+                      href={link.href}
                       aria-current={active ? 'page' : undefined}
-                      onClick={() => {
-                        if (link.href.startsWith('/#') && location.pathname === '/') {
-                          const targetId = link.href.substring(2)
-                          const el = document.getElementById(targetId)
-                          if (el) {
-                            el.scrollIntoView({ behavior: 'smooth' })
-                          }
-                        }
-                      }}
-                      className="nav-pill-link relative transition-colors"
+                      onClick={(e) => handleNavClick(e, link.href)}
+                      className={`nav-pill-link relative transition-colors duration-200 ${
+                        active ? 'nav-pill-link--active' : ''
+                      }`}
                       style={{
                         padding: '8px 16px',
                         fontSize: '0.94rem',
@@ -121,7 +175,7 @@ export function Navbar() {
                       }}
                     >
                       <span>{link.label}</span>
-                    </Link>
+                    </a>
                   )
                 })}
               </nav>
@@ -135,6 +189,7 @@ export function Navbar() {
                 showLogo={false}
                 items={menuItems}
                 socialItems={socialItems}
+                activeSection={activeSection}
                 displaySocials={true}
                 displayItemNumbering={false}
                 accentColor="#0057E7"

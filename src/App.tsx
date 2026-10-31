@@ -3,12 +3,6 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
 
 const Home = lazy(() => import('./pages/Home'))
-const Services = lazy(() => import('./pages/Services'))
-const About = lazy(() => import('./pages/About'))
-const Projects = lazy(() => import('./pages/Projects'))
-const Contact = lazy(() => import('./pages/Contact'))
-const Privacy = lazy(() => import('./pages/Privacy'))
-const NotFound = lazy(() => import('./pages/NotFound'))
 
 function PageFallback() {
   return (
@@ -33,57 +27,16 @@ function App() {
             </Suspense>
           }
         />
-        <Route
-          path="/services"
-          element={
-            <Suspense fallback={<PageFallback />}>
-              <Services />
-            </Suspense>
-          }
-        />
-        <Route
-          path="/about"
-          element={
-            <Suspense fallback={<PageFallback />}>
-              <About />
-            </Suspense>
-          }
-        />
-        <Route
-          path="/projects"
-          element={
-            <Suspense fallback={<PageFallback />}>
-              <Projects />
-            </Suspense>
-          }
-        />
-        <Route
-          path="/contact"
-          element={
-            <Suspense fallback={<PageFallback />}>
-              <Contact />
-            </Suspense>
-          }
-        />
-        <Route
-          path="/privacy"
-          element={
-            <Suspense fallback={<PageFallback />}>
-              <Privacy />
-            </Suspense>
-          }
-        />
-        {/* Graceful redirects for legacy routes */}
-        <Route path="/work" element={<Navigate to="/projects" replace />} />
-        <Route path="/process" element={<Navigate to="/" replace />} />
-        <Route
-          path="*"
-          element={
-            <Suspense fallback={<PageFallback />}>
-              <NotFound />
-            </Suspense>
-          }
-        />
+        {/* All previous subpages now smoothly redirect to their respective sections on the one-page homepage */}
+        <Route path="/about" element={<Navigate to="/#about" replace />} />
+        <Route path="/services" element={<Navigate to="/#services" replace />} />
+        <Route path="/team" element={<Navigate to="/#team" replace />} />
+        <Route path="/projects" element={<Navigate to="/#projects" replace />} />
+        <Route path="/work" element={<Navigate to="/#projects" replace />} />
+        <Route path="/contact" element={<Navigate to="/#contact" replace />} />
+        <Route path="/process" element={<Navigate to="/#services" replace />} />
+        <Route path="/privacy" element={<Navigate to="/#contact" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
   )

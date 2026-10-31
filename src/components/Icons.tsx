@@ -100,6 +100,24 @@ export const TargetIcon: React.FC<IconProps> = ({ className = 'w-5 h-5', ...prop
   </svg>
 )
 
+// Eye / Vision / Foresight Icon
+export const EyeIcon: React.FC<IconProps> = ({ className = 'w-5 h-5', ...props }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+    className={className}
+    {...props}
+  >
+    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+    <circle cx="12" cy="12" r="3" />
+  </svg>
+)
+
 // Diamond / Craft / Quality Icon
 export const DiamondIcon: React.FC<IconProps> = ({ className = 'w-5 h-5', ...props }) => (
   <svg
@@ -609,8 +627,12 @@ export const AppIcon: React.FC<AppIconProps> = ({ name, className = 'w-5 h-5' })
     case 'connect':
     case 'terminal':
       return <TerminalIcon className={className} />
+    case 'mission':
     case 'target':
       return <TargetIcon className={className} />
+    case 'vision':
+    case 'eye':
+      return <EyeIcon className={className} />
     case 'shield':
       return <ShieldIcon className={className} />
     case 'feedback':

@@ -90,7 +90,7 @@ export const About: React.FC = () => (
               >
                 {renderAppIcon('target', 'w-6 h-6')}
               </span>
-              <h3 className="text-card-title">Our Mission</h3>
+              <h3 className="text-2xl font-bold text-slate-900">Our Mission</h3>
               <p className="text-body" style={{ marginTop: 10 }}>
                 To create practical, reliable and user-focused software that helps
                 businesses solve problems and work more effectively.
@@ -106,7 +106,7 @@ export const About: React.FC = () => (
               >
                 {renderAppIcon('growth', 'w-6 h-6')}
               </span>
-              <h3 className="text-card-title">Our Vision</h3>
+              <h3 className="text-2xl font-bold text-slate-900">Our Vision</h3>
               <p className="text-body" style={{ marginTop: 10 }}>
                 To make useful digital technology accessible to businesses of different
                 sizes through thoughtful engineering, adaptable solutions and continuous
@@ -121,7 +121,7 @@ export const About: React.FC = () => (
     {/* C. Working principles */}
     <section aria-labelledby="principles-heading" className="section">
       <div className="container">
-        <AnimatedSection style={{ maxWidth: 720 }}>
+        <AnimatedSection style={{ maxWidth: 720 }} className="text-center mx-auto">
           <h2 id="principles-heading" className="text-section-title">
             What Guides Our Work
           </h2>
@@ -154,7 +154,7 @@ export const About: React.FC = () => (
     {/* D. Team */}
     <section aria-labelledby="team-heading" className="section section-warm">
       <div className="container">
-        <AnimatedSection style={{ maxWidth: 720 }}>
+        <AnimatedSection style={{ maxWidth: 720 }} className="text-center mx-auto">
           <h2 id="team-heading" className="text-section-title">
             Meet Our Team
           </h2>

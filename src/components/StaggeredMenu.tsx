@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { gsap } from 'gsap'
 import './StaggeredMenu.css'
 
@@ -33,6 +33,7 @@ export interface StaggeredMenuProps {
   isFixed?: boolean
   closeOnClickAway?: boolean
   headerPadding?: string
+  activeSection?: string
   headerHeight?: string | number
   onMenuOpen?: () => void
   onMenuClose?: () => void
@@ -56,11 +57,11 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   closeOnClickAway = true,
   headerPadding,
   headerHeight,
+  activeSection,
   onMenuOpen,
   onMenuClose,
   onItemClick,
 }) => {
-  const navigate = useNavigate()
   const location = useLocation()
   const [open, setOpen] = useState(false)
   const openRef = useRef(false)
@@ -282,21 +283,25 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
     onItemClick?.(it, e)
     if (e.defaultPrevented) return
 
-    if (it.link.startsWith('/#')) {
+    if (it.link.startsWith('#') || it.link.startsWith('/#')) {
       e.preventDefault()
-      const targetHash = it.link.substring(1)
-      if (location.pathname === '/') {
-        const el = document.querySelector(targetHash)
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth' })
-        }
-      } else {
-        navigate(it.link)
+      const targetId = it.link.replace(/^(\/)?#/, '')
+      const el = document.getElementById(targetId)
+      if (el) {
+        const headerOffset = 70
+        const elementPosition = el.getBoundingClientRect().top
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth',
+        })
+        window.history.pushState(null, '', `#${targetId}`)
       }
       closeMenu()
-    } else if (it.link.startsWith('/')) {
+    } else if (it.link === '/') {
       e.preventDefault()
-      navigate(it.link)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      window.history.pushState(null, '', '/')
       closeMenu()
     } else {
       closeMenu()
@@ -372,11 +377,13 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
             <ul className="sm-panel-list" role="list" data-numbering={displayItemNumbering || undefined}>
               {items && items.length ? (
                 items.map((it, idx) => {
-                  const active =
-                    it.link === '/'
+                  const itemSection = it.link.replace(/^(\/)?#/, '')
+                  const active = activeSection
+                    ? itemSection === activeSection || (it.link === '/' && activeSection === 'home')
+                    : it.link === '/'
                       ? location.pathname === '/' && !location.hash
-                      : it.link.startsWith('/#')
-                        ? location.pathname === '/' && location.hash === it.link.substring(1)
+                      : it.link.startsWith('/#') || it.link.startsWith('#')
+                        ? location.hash === `#${itemSection}`
                         : location.pathname.startsWith(it.link)
 
                   return (

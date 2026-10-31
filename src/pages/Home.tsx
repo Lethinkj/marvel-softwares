@@ -1,7 +1,7 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import AnimatedSection from '../components/AnimatedSection'
 import Seo from '../components/Seo'
+import { TargetIcon, EyeIcon } from '../components/Icons'
 import { OurProcess } from '../components/OurProcess'
 import ServiceShowcase from '../components/ServiceShowcase'
 import WhyChooseUs from '../components/WhyChooseUs'
@@ -18,13 +18,6 @@ const cardStyle: React.CSSProperties = {
   boxShadow: 'var(--shadow-card)',
 }
 
-const btnSecondary: React.CSSProperties = {
-  background: '#fff',
-  color: 'var(--color-primary)',
-  border: '2px solid var(--color-primary)',
-  borderRadius: 'var(--radius-button)',
-}
-
 export const Home: React.FC = () => {
   return (
     <div className="w-full bg-white overflow-x-clip">
@@ -35,7 +28,7 @@ export const Home: React.FC = () => {
       />
 
       {/* ============ A. HERO ============ */}
-      <section aria-labelledby="hero-title" className="hero-v4 relative overflow-hidden">
+      <section id="home" aria-labelledby="hero-title" className="hero-v4 relative overflow-hidden bg-[#e0f2fe]">
         {/* Dot-grid backdrop + ambient brand glows */}
         <div aria-hidden="true" className="hero-dotgrid" />
         <div aria-hidden="true" className="hero-glow hero-glow-a" />
@@ -45,7 +38,7 @@ export const Home: React.FC = () => {
           className="container relative"
           style={{
             paddingTop: 'calc(var(--header-offset) + clamp(28px, 4vw, 56px))',
-            paddingBottom: 'clamp(16px, 2.5vw, 32px)',
+            paddingBottom: 'clamp(32px, 4vw, 56px)',
           }}
         >
           <div
@@ -67,12 +60,12 @@ export const Home: React.FC = () => {
 
               {/* CTAs */}
               <div className="hero-actions">
-                <Link to="/contact" className="hero-btn hero-btn--primary">
+                <a href="#contact" className="hero-btn hero-btn--primary">
                   Start a Project
-                </Link>
-                <Link to="/services" className="hero-btn hero-btn--ghost">
+                </a>
+                <a href="#services" className="hero-btn hero-btn--ghost">
                   Explore Our Services
-                </Link>
+                </a>
               </div>
             </div>
 
@@ -81,7 +74,7 @@ export const Home: React.FC = () => {
               <img
                 src="/hero/home.png"
                 alt="Marvel Softwares digital solutions and software development workspace"
-                className="w-full h-auto max-w-[620px] xl:max-w-[680px] drop-shadow-xl transition-transform"
+                className="w-full h-auto max-w-[558px] xl:max-w-[612px] drop-shadow-xl transition-transform"
                 decoding="async"
               />
             </div>
@@ -89,59 +82,43 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* ============ B. ABOUT US, OUR MISSION & OUR VISION ============ */}
+      {/* ============ B. ABOUT US ============ */}
       <section
         id="about"
         aria-labelledby="about-us-title"
-        className="section section-warm relative overflow-hidden"
-        style={{ paddingTop: 'clamp(36px, 4.5vw, 68px)', paddingBottom: 'clamp(36px, 4.5vw, 68px)' }}
+        className="section bg-white relative overflow-hidden"
+        style={{
+          paddingTop: 'clamp(48px, 6vw, 96px)',
+          paddingBottom: 'clamp(48px, 6vw, 96px)',
+        }}
       >
-        {/* Ambient brand glows */}
-        <div aria-hidden="true" className="hero-glow hero-glow-a opacity-20 pointer-events-none" />
-        <div aria-hidden="true" className="hero-glow hero-glow-b opacity-20 pointer-events-none" />
-
         <div className="container relative z-10">
-          <div className="w-full flex flex-col">
-            {/* 1. First: About Us Heading & Narrative Paragraphs */}
-            <AnimatedSection className="w-full text-center">
-              <h2 id="about-us-title" className="text-section-title text-center">
-                About Us
-              </h2>
-              <div className="mt-8 space-y-5 text-left text-slate-600 leading-relaxed w-full text-base sm:text-lg">
-                <p>
-                  MARVEL SOFTWARES is a full-cycle technology and software engineering company committed to designing, developing, and deploying robust digital systems that drive tangible business results. We partner with ambitious enterprises and growing organizations to build intuitive web applications, high-performance mobile apps, interconnected ERP platforms, and custom software architectures tailored precisely to operational realities.
-                </p>
-                <p>
-                  Our engineering philosophy balances modern technical innovation with dependable architecture — guiding projects from strategic discovery and user experience design through to agile implementation, comprehensive testing, secure cloud deployment, and proactive long-term maintenance. By aligning deep technical domain expertise with our clients' commercial objectives, we create digital solutions that reduce friction, automate workflows, and empower businesses to scale sustainably.
-                </p>
-              </div>
-            </AnimatedSection>
-
-            {/* Divider */}
-            <div className="w-24 h-0.5 bg-blue-200/80 my-10 sm:my-12 rounded-full mx-auto" />
-
-            {/* 2. Next: Left Mission, Right Vision */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 w-full">
-              {/* Left: Our Mission */}
-              <AnimatedSection delay={0.1} className="w-full">
-                <div className="flex flex-col h-full p-8 sm:p-10 rounded-2xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
-                  <h3 className="text-card-title text-center mb-3">
-                    Our Mission
-                  </h3>
-                  <p className="text-body text-left leading-relaxed text-slate-600 w-full">
-                    To engineer practical, scalable, and user-focused digital solutions that eliminate operational bottlenecks, automate repetitive processes, and solve complex business challenges with precision. We are committed to crafting resilient software using modern engineering best practices, transparent communication, and continuous delivery — empowering our partners with the technical clarity and efficiency required to thrive in a competitive, fast-moving digital economy.
-                  </p>
-                </div>
+          {/* About Us Visual (Left) + Content (Right) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+            {/* Visual column with about.png (Left on desktop) */}
+            <div className="order-2 lg:order-1 lg:col-span-6 flex justify-center">
+              <AnimatedSection delay={0.15} className="w-full flex justify-center">
+                <img
+                  src="/about.png"
+                  alt="About Marvel Softwares technology and engineering excellence"
+                  className="w-full h-auto max-w-[560px] xl:max-w-[620px] drop-shadow-lg transition-transform hover:scale-[1.02] duration-300"
+                  decoding="async"
+                />
               </AnimatedSection>
+            </div>
 
-              {/* Right: Our Vision */}
-              <AnimatedSection delay={0.2} className="w-full">
-                <div className="flex flex-col h-full p-8 sm:p-10 rounded-2xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
-                  <h3 className="text-card-title text-center mb-3">
-                    Our Vision
-                  </h3>
-                  <p className="text-body text-left leading-relaxed text-slate-600 w-full">
-                    To establish MARVEL SOFTWARES as a premier digital transformation partner, renowned for making enterprise-grade software accessible, scalable, and genuinely transformative for organizations worldwide. We envision a future where intelligently engineered software seamlessly bridges organizational gaps, elevates human potential, and accelerates business innovation across every industry we serve.
+            {/* Copy (Right on desktop) */}
+            <div className="order-1 lg:order-2 lg:col-span-6 text-left">
+              <AnimatedSection>
+                <h2 id="about-us-title" className="text-section-title text-left">
+                  About Us
+                </h2>
+                <div className="mt-6 space-y-4 text-justify text-slate-600 leading-relaxed text-base sm:text-lg">
+                  <p>
+                    MARVEL SOFTWARES is a full-cycle technology and software engineering company committed to designing, developing, and deploying robust digital systems that drive tangible business results. We partner with ambitious enterprises and growing organizations to build intuitive web applications, high-performance mobile apps, interconnected ERP platforms, and custom software architectures tailored precisely to operational realities.
+                  </p>
+                  <p>
+                    Our engineering philosophy balances modern technical innovation with dependable architecture — guiding projects from strategic discovery and user experience design through to agile implementation, comprehensive testing, secure cloud deployment, and proactive long-term maintenance. By aligning deep technical domain expertise with our clients' commercial objectives, we create digital solutions that reduce friction, automate workflows, and empower businesses to scale sustainably.
                   </p>
                 </div>
               </AnimatedSection>
@@ -150,10 +127,93 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
+      {/* ============ C. OUR MISSION & OUR VISION ============ */}
+      <section
+        id="mission-vision"
+        aria-label="Our mission and vision"
+        className="section relative overflow-hidden"
+        style={{
+          paddingTop: 'clamp(48px, 6vw, 84px)',
+          paddingBottom: 'clamp(48px, 6vw, 84px)',
+        }}
+      >
+        {/* Decorative concentric circles + dot pattern + ambient glows (matching Services page hero art) */}
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          viewBox="0 0 1200 420"
+          preserveAspectRatio="xMidYMid slice"
+          className="page-hero-art"
+        >
+          <defs>
+            <radialGradient id="mv-art-glow-a" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0%" stopColor="#0057e7" stopOpacity="0.16" />
+              <stop offset="100%" stopColor="#0057e7" stopOpacity="0" />
+            </radialGradient>
+            <radialGradient id="mv-art-glow-b" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0%" stopColor="#ff5a00" stopOpacity="0.12" />
+              <stop offset="100%" stopColor="#ff5a00" stopOpacity="0" />
+            </radialGradient>
+            <pattern id="mv-art-dots" width="26" height="26" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1.5" fill="#0057e7" opacity="0.16" />
+            </pattern>
+          </defs>
+
+          <ellipse cx="1040" cy="100" rx="380" ry="260" fill="url(#mv-art-glow-a)" />
+          <ellipse cx="80" cy="360" rx="300" ry="200" fill="url(#mv-art-glow-b)" />
+          <rect width="1200" height="420" fill="url(#mv-art-dots)" />
+
+          <g fill="none" stroke="#0057e7" strokeOpacity="0.15" strokeWidth="1.5">
+            <circle cx="1060" cy="130" r="140" />
+            <circle cx="1060" cy="130" r="210" />
+            <circle cx="1060" cy="130" r="280" />
+            <circle cx="1060" cy="130" r="350" />
+          </g>
+        </svg>
+
+        <div className="container relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-14 w-full">
+            {/* Left: Our Mission */}
+            <AnimatedSection delay={0.1} className="w-full">
+              <div className="flex flex-col text-left">
+                <div className="flex items-center gap-3.5 mb-4">
+                  <span className="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-50 text-[#0057e7] border border-blue-100/70 shadow-sm shrink-0" aria-hidden="true">
+                    <TargetIcon className="w-6 h-6" />
+                  </span>
+                  <h3 id="mission-title" className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                    Our Mission
+                  </h3>
+                </div>
+                <p className="text-body text-left leading-relaxed text-slate-600 w-full text-base sm:text-lg">
+                  To engineer practical, scalable, and user-focused digital solutions that eliminate operational bottlenecks, automate repetitive processes, and solve complex business challenges with precision. We are committed to crafting resilient software using modern engineering best practices, transparent communication, and continuous delivery — empowering our partners with the technical clarity and efficiency required to thrive in a competitive, fast-moving digital economy.
+                </p>
+              </div>
+            </AnimatedSection>
+
+            {/* Right: Our Vision */}
+            <AnimatedSection delay={0.2} className="w-full">
+              <div className="flex flex-col text-left">
+                <div className="flex items-center gap-3.5 mb-4">
+                  <span className="flex items-center justify-center w-12 h-12 rounded-xl bg-orange-50 text-[#ff5a00] border border-orange-100/70 shadow-sm shrink-0" aria-hidden="true">
+                    <EyeIcon className="w-6 h-6" />
+                  </span>
+                  <h3 id="vision-title" className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                    Our Vision
+                  </h3>
+                </div>
+                <p className="text-body text-left leading-relaxed text-slate-600 w-full text-base sm:text-lg">
+                  To establish MARVEL SOFTWARES as a premier digital transformation partner, renowned for making enterprise-grade software accessible, scalable, and genuinely transformative for organizations worldwide. We envision a future where intelligently engineered software seamlessly bridges organizational gaps, elevates human potential, and accelerates business innovation across every industry we serve.
+                </p>
+              </div>
+            </AnimatedSection>
+          </div>
+        </div>
+      </section>
+
       {/* ============ C. SERVICES OVERVIEW ============ */}
       <section id="services" aria-labelledby="services-title" className="section">
         <div className="container">
-          <AnimatedSection style={{ maxWidth: 720 }}>
+          <AnimatedSection style={{ maxWidth: 720 }} className="text-center mx-auto">
             <h2 id="services-title" className="text-section-title">
               Our Services
             </h2>
@@ -168,7 +228,7 @@ export const Home: React.FC = () => {
       </section>
 
       {/* ============ D. OUR PROCESS ============ */}
-      <section aria-labelledby="process-title" className="section section-warm">
+      <section id="process" aria-labelledby="process-title" className="section section-warm">
         <div className="container">
           <OurProcess />
         </div>
@@ -177,7 +237,7 @@ export const Home: React.FC = () => {
       {/* ============ E. TECHNOLOGIES ============ */}
       <section id="technologies" aria-labelledby="technologies-title" className="section">
         <div className="container">
-          <AnimatedSection style={{ maxWidth: 720 }}>
+          <AnimatedSection style={{ maxWidth: 720 }} className="text-center mx-auto">
             <h2 id="technologies-title" className="text-section-title">
               Technologies
             </h2>
@@ -198,22 +258,13 @@ export const Home: React.FC = () => {
       {/* ============ G. SELECTED PROJECTS ============ */}
       <section id="projects" aria-labelledby="work-title" className="section">
         <div className="container">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-            <div style={{ maxWidth: 640 }}>
-              <h2 id="work-title" className="text-section-title">
-                Our Projects
-              </h2>
-              <p className="section-subtitle">
-                Explore our portfolio of scalable web applications, digital platforms, and custom software solutions engineered for performance and reliability.
-              </p>
-            </div>
-            <Link
-              to="/projects"
-              className="inline-flex items-center justify-center min-h-[48px] px-6 text-[15px] font-semibold shrink-0"
-              style={btnSecondary}
-            >
-              View All Projects
-            </Link>
+          <div className="flex flex-col items-center text-center gap-4 max-w-2xl mx-auto">
+            <h2 id="work-title" className="text-section-title">
+              Our Projects
+            </h2>
+            <p className="section-subtitle">
+              Explore our portfolio of scalable web applications, digital platforms, and custom software solutions engineered for performance and reliability.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full" style={{ marginTop: 40 }}>

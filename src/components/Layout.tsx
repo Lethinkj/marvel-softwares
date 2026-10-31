@@ -14,18 +14,27 @@ function ScrollToTop() {
   useEffect(() => {
     if (hash) {
       setTimeout(() => {
-        const el = document.querySelector(hash)
+        const id = hash.replace(/^#/, '')
+        const el = document.getElementById(id)
         if (el) {
-          el.scrollIntoView({ behavior: 'smooth' })
+          const headerOffset = 70
+          const elementPosition = el.getBoundingClientRect().top
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth',
+          })
         }
-      }, 60)
+      }, 80)
       return
     }
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'instant' as ScrollBehavior,
-    })
+    if (pathname === '/' && !hash) {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'instant' as ScrollBehavior,
+      })
+    }
   }, [pathname, hash])
 
   return null
