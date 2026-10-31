@@ -2121,6 +2121,10 @@ body.nav-menu-open #root {
 }
 
 @media (max-width: 640px), (hover: none), (pointer: coarse) {
+  .project-card {
+    cursor: pointer;
+  }
+
   .project-live-overlay {
     position: static !important;
     opacity: 1 !important;

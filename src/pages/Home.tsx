@@ -19,6 +19,13 @@ const cardStyle: React.CSSProperties = {
   boxShadow: 'var(--shadow-card)',
 }
 
+const getPreviewUrl = (url: string) => {
+  const host = new URL(url).hostname
+  if (host === 'marvelslice.com') return '/preview/marvelslice/'
+  if (host === 'lms.marvelslice.com') return '/preview/lms/login'
+  return url
+}
+
 export const Home: React.FC = () => {
   const [previewProject, setPreviewProject] = useState<(typeof projects)[number] | null>(null)
   const [previewDevice, setPreviewDevice] = useState<'mobile' | 'desktop'>('desktop')
@@ -267,8 +274,18 @@ export const Home: React.FC = () => {
             {projects.map((project) => (
               <article
                 key={project.id}
-                className="flex flex-col h-full overflow-hidden transition-all duration-300 hover:-translate-y-1.5 group cursor-pointer text-inherit no-underline"
+                className="project-card flex flex-col h-full overflow-hidden transition-all duration-300 hover:-translate-y-1.5 group cursor-pointer text-inherit no-underline"
                 style={cardStyle}
+                role="button"
+                tabIndex={0}
+                aria-label={`Preview ${project.title}`}
+                onClick={() => setPreviewProject(project)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault()
+                    setPreviewProject(project)
+                  }
+                }}
               >
                 <div className="relative overflow-hidden w-full aspect-video bg-slate-100 border-b border-border">
                   <img
@@ -288,7 +305,10 @@ export const Home: React.FC = () => {
                   <div className="project-live-overlay absolute inset-0 bg-slate-950/45 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-20">
                     <button
                       type="button"
-                      onClick={() => setPreviewProject(project)}
+                      onClick={(event) => {
+                        event.stopPropagation()
+                        setPreviewProject(project)
+                      }}
                       className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-slate-900 text-sm font-semibold shadow-xl transform translate-y-3 group-hover:translate-y-0 transition-transform duration-300 ease-out"
                       style={{ color: '#0f172a', background: '#ffffff' }}
                     >
@@ -382,7 +402,7 @@ export const Home: React.FC = () => {
                 </div>
               ) : (
                 <iframe
-                  src={previewProject.url}
+                  src={getPreviewUrl(previewProject.url)}
                   title={`${previewProject.title} live preview`}
                   loading="eager"
                   className="project-preview-iframe"
