@@ -139,17 +139,10 @@ export function Footer() {
 
         {/* ── Bottom bar ── */}
         <div
-          className="mt-14 flex flex-col sm:flex-row items-center justify-between gap-3 text-[13px]"
+          className="mt-14 flex flex-col sm:flex-row items-center justify-center gap-3 text-[13px]"
           style={{ borderTop: '1px solid rgba(255,255,255,.12)', paddingTop: '24px', paddingBottom: '28px', color: 'rgba(255,255,255,.45)' }}
         >
           <p>© {CURRENT_YEAR} MARVEL SOFTWARES. All rights reserved.</p>
-          <Link
-            to="/#contact"
-            className="hover:text-white transition-colors"
-            style={{ color: 'rgba(255,255,255,.45)' }}
-          >
-            Privacy Policy
-          </Link>
         </div>
 
       </div>

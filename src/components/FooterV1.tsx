@@ -180,18 +180,6 @@ export function FooterV1() {
           <p className="footer-copyright">
             © {CURRENT_YEAR} MARVEL SOFTWARES. All rights reserved.
           </p>
-          <ul className="footer-legal">
-            <li>
-              <a href="#contact" onClick={(e) => scrollToSection(e, '#contact')}>
-                Privacy Policy
-              </a>
-            </li>
-            <li>
-              <a href="#contact" onClick={(e) => scrollToSection(e, '#contact')}>
-                Terms of Service
-              </a>
-            </li>
-          </ul>
         </div>
       </div>
     </footer>

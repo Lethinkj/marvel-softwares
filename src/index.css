@@ -59,10 +59,10 @@
   /* --- Layout --- */
   --container-width: 1720px;
   --page-gutter: clamp(16px, 4vw, 32px);
-  --section-space-desktop: 52px;
-  --section-space-tablet: 44px;
-  --section-space-mobile: 28px;
-  --section-space: clamp(28px, 3.2vw, 52px);
+  --section-space-desktop: 40px;
+  --section-space-tablet: 34px;
+  --section-space-mobile: 22px;
+  --section-space: clamp(22px, 2.4vw, 40px);
   --content-gap: clamp(20px, 3vw, 40px);
   --card-padding: clamp(20px, 2.5vw, 32px);
   --card-gap: clamp(16px, 2.4vw, 28px);
@@ -877,13 +877,13 @@ body.nav-menu-open #root {
    ============================================ */
 .svc-showcase {
   display: grid;
-  gap: clamp(20px, 3vw, 40px);
-  margin-top: clamp(24px, 3vw, 36px);
+  gap: clamp(14px, 2vw, 28px);
+  margin-top: clamp(18px, 2.5vw, 28px);
 }
 
 .svc-showcase-row {
   display: grid;
-  gap: clamp(16px, 2vw, 28px);
+  gap: clamp(12px, 1.6vw, 22px);
   align-items: center;
 }
 

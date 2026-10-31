@@ -85,7 +85,7 @@ export const ContactSection: React.FC = () => {
 
   return (
     <div className="container">
-      <AnimatedSection style={{ maxWidth: 720 }} className="text-center mx-auto mb-6">
+      <AnimatedSection style={{ maxWidth: 720 }} className="text-center mx-auto mb-4">
         <h2 id="contact-heading" className="text-section-title">
           Contact Us
         </h2>
