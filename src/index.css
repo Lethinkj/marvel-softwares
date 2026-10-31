@@ -1714,6 +1714,22 @@ body.nav-menu-open #root {
     opacity: 1 !important;
     animation: none !important;
   }
+  .hero-aurora,
+  .hero-light-sweep,
+  .hero-deep .hero-dotgrid,
+  .entry-reveal,
+  .entry-reveal__content,
+  .entry-reveal__line,
+  .entry-reveal__tagline,
+  .entry-reveal__halo {
+    animation: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .entry-reveal {
+    display: none;
+  }
 }
 
 @media (max-width: 767px) {
@@ -1883,6 +1899,7 @@ body.nav-menu-open #root {
 
 /* --- Deep-blue hero variant (Home first section) --- */
 .hero-deep {
+  isolation: isolate;
   background:
     radial-gradient(62% 80% at 80% 8%, rgba(0, 183, 255, 0.16), transparent 62%),
     linear-gradient(180deg, #0e4fd2 0%, #0b40b4 55%, #093691 100%);
@@ -1918,6 +1935,160 @@ body.nav-menu-open #root {
 
 .hero-deep .hero-btn--ghost:hover {
   background: #ffffff;
+}
+
+/* --- Cinematic hero atmosphere --- */
+.hero-aurora,
+.hero-light-sweep {
+  position: absolute;
+  pointer-events: none;
+}
+
+.hero-aurora {
+  z-index: -1;
+  width: min(58vw, 760px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(26px);
+  opacity: 0.7;
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+
+.hero-aurora-a {
+  top: -34%;
+  left: 18%;
+  background: radial-gradient(circle, rgba(0, 229, 255, 0.24), transparent 66%);
+  animation: hero-aurora-drift-a 15s ease-in-out infinite alternate;
+}
+
+.hero-aurora-b {
+  right: -14%;
+  bottom: -48%;
+  background: radial-gradient(circle, rgba(255, 166, 0, 0.2), transparent 64%);
+  animation: hero-aurora-drift-b 19s ease-in-out infinite alternate;
+}
+
+.hero-light-sweep {
+  z-index: 0;
+  top: -30%;
+  left: -45%;
+  width: 48%;
+  height: 170%;
+  opacity: 0.22;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.06) 35%,
+    rgba(0, 229, 255, 0.35) 50%,
+    rgba(255, 255, 255, 0.06) 65%,
+    transparent 100%
+  );
+  filter: blur(18px);
+  transform: rotate(12deg);
+  animation: hero-light-sweep 9s ease-in-out infinite;
+}
+
+.hero-deep > .container {
+  z-index: 1;
+}
+
+@keyframes hero-aurora-drift-a {
+  0% { transform: translate3d(-5%, -2%, 0) scale(0.94); }
+  100% { transform: translate3d(12%, 9%, 0) scale(1.08); }
+}
+
+@keyframes hero-light-sweep {
+  0%, 100% { transform: translateX(0) rotate(12deg); opacity: 0.08; }
+  45% { opacity: 0.28; }
+  70% { transform: translateX(360%) rotate(12deg); opacity: 0.2; }
+}
+
+/* --- First-load branded reveal --- */
+.entry-reveal {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #061d68;
+  animation: entry-reveal-bg 1.65s ease forwards;
+}
+
+.entry-reveal__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  animation: entry-content-in 0.9s cubic-bezier(0.21, 0.47, 0.32, 0.98) both;
+}
+
+.entry-reveal__logo {
+  width: min(390px, 72vw);
+  filter: brightness(0) invert(1);
+}
+
+.entry-reveal__line {
+  width: 0;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, #63e6ff, transparent);
+  animation: entry-line-expand 0.75s 0.35s ease forwards;
+}
+
+.entry-reveal__tagline {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: entry-tagline-in 0.6s 0.55s ease forwards;
+}
+
+.entry-reveal__halo {
+  position: absolute;
+  width: min(80vw, 820px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 207, 255, 0.25), transparent 66%);
+  animation: entry-halo-pulse 1.65s ease-in-out both;
+}
+
+.entry-reveal--leaving {
+  pointer-events: none;
+}
+
+@keyframes entry-reveal-bg {
+  0%, 64% { opacity: 1; }
+  100% { opacity: 0; visibility: hidden; }
+}
+
+@keyframes entry-content-in {
+  0% { opacity: 0; transform: translateY(18px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes entry-line-expand {
+  to { width: min(250px, 48vw); }
+}
+
+@keyframes entry-tagline-in {
+  to { opacity: 1; }
+}
+
+@keyframes entry-halo-pulse {
+  0% { transform: scale(0.7); opacity: 0; }
+  45% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.25); opacity: 0; }
+}
+
+@keyframes hero-aurora-drift-b {
+  0% { transform: translate3d(8%, 4%, 0) scale(1.04); }
+  100% { transform: translate3d(-10%, -8%, 0) scale(0.92); }
 }
 
 /* --- Animated gradient headline (slow shimmer) --- */

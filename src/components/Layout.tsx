@@ -3,6 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom'
 import Navbar from './Navbar'
 import FooterV1 from './FooterV1'
 import BackToTop from './BackToTop'
+import EntryReveal from './EntryReveal'
 
 /**
  * ScrollToTop component restores viewport scroll position to (0, 0)
@@ -53,6 +54,7 @@ function ScrollToTop() {
 export function Layout() {
   return (
     <div className="min-h-screen flex flex-col bg-white text-slate-900">
+      <EntryReveal />
       {/* Skip to content link for keyboard / screen reader accessibility */}
       <a href="#main-content" className="skip-link">
         Skip to content

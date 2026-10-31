@@ -29,11 +29,18 @@ export const Home: React.FC = () => {
       />
 
       {/* ============ A. HERO ============ */}
-      <section id="home" aria-labelledby="hero-title" className="hero-v4 hero-deep relative overflow-hidden">
+      <section
+        id="home"
+        aria-labelledby="hero-title"
+        className="hero-v4 hero-deep relative overflow-hidden"
+      >
         {/* Dot-grid backdrop + ambient brand glows */}
         <div aria-hidden="true" className="hero-dotgrid" />
         <div aria-hidden="true" className="hero-glow hero-glow-a" />
         <div aria-hidden="true" className="hero-glow hero-glow-b" />
+        <div aria-hidden="true" className="hero-aurora hero-aurora-a" />
+        <div aria-hidden="true" className="hero-aurora hero-aurora-b" />
+        <div aria-hidden="true" className="hero-light-sweep" />
 
         <div
           className="container relative"
