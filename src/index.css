@@ -310,12 +310,23 @@ body.nav-menu-open #root {
 .animate-marquee-ltr {
   display: flex;
   width: max-content;
-  animation: marquee-ltr 45s linear infinite;
   will-change: transform;
+  pointer-events: none;
 }
 
-.animate-marquee-ltr:hover {
-  animation-play-state: paused;
+.client-logo-belt {
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  scrollbar-width: none;
+}
+
+.client-logo-belt::-webkit-scrollbar {
+  display: none;
+}
+
+.client-logo-belt.is-dragging {
+  cursor: grabbing;
 }
 
 /* --- Soft pulsing gradient border (static pattern, gentle glow) --- */
@@ -1464,7 +1475,7 @@ body.nav-menu-open #root {
 /* --- Legal Bottom Bar --- */
 .footer-bottom-wrap {
   width: 100%;
-  background: #c0c0c0;
+  background: linear-gradient(180deg, #f1f1f1 0%, #c0c0c0 52%, #a8a8a8 100%);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
