@@ -1872,6 +1872,23 @@ body.nav-menu-open #root {
   margin-top: 32px;
 }
 
+@media (min-width: 1024px) {
+  .hero-copy {
+    grid-column: 1 / span 6;
+    grid-row: 1;
+  }
+
+  .hero-visual {
+    grid-column: 7 / span 6;
+    grid-row: 1 / span 2;
+  }
+
+  .hero-actions {
+    grid-column: 1 / span 6;
+    grid-row: 2;
+  }
+}
+
 .hero-btn {
   display: inline-flex;
   align-items: center;

@@ -54,7 +54,7 @@ export const Home: React.FC = () => {
             style={{ gap: 'clamp(20px, 2.5vw, 36px)' }}
           >
             {/* Copy column */}
-            <div className="order-1 lg:order-none lg:col-span-6 text-left">
+            <div className="hero-copy order-1 lg:order-none text-left">
               <h1 id="hero-title" className="text-hero" style={{ marginTop: 0 }}>
                 <span className="hero-shimmer-text block">Software That Grows</span>
                 <span className="hero-shimmer-text block" style={{ animationDelay: '-3.5s' }}>
@@ -66,25 +66,26 @@ export const Home: React.FC = () => {
                 From high-performing websites and intuitive mobile applications to connected enterprise ERP platforms and custom software architectures — we engineer scalable digital solutions tailored directly around the way your organization operates. Whether your goal is modernizing customer-facing digital touchpoints, automating complex operational workflows, or establishing a resilient and secure technological foundation from the ground up, our dedicated engineering team manages the complete product lifecycle from discovery and UX design through to deployment, ongoing optimization, and dependable long-term support.
               </p>
 
-              {/* CTAs */}
-              <div className="hero-actions">
-                <a href="#contact" className="hero-btn hero-btn--primary">
-                  Start a Project
-                </a>
-                <a href="#services" className="hero-btn hero-btn--ghost">
-                  Explore Our Services
-                </a>
-              </div>
             </div>
 
             {/* Visual column */}
-            <div className="order-2 lg:order-none relative w-full lg:col-span-6 flex justify-center lg:justify-start pt-2">
+            <div className="hero-visual order-2 lg:order-none relative w-full flex justify-center lg:justify-start pt-2">
               <img
                 src="/hero/home.png"
                 alt="Marvel Softwares digital solutions and software development workspace"
                 className="w-full h-auto max-w-[580px] lg:max-w-[660px] xl:max-w-[720px] lg:scale-105 xl:scale-110 origin-left drop-shadow-xl transition-transform"
                 decoding="async"
               />
+            </div>
+
+            {/* CTAs */}
+            <div className="hero-actions order-3 lg:order-none">
+              <a href="#contact" className="hero-btn hero-btn--primary">
+                Start a Project
+              </a>
+              <a href="#services" className="hero-btn hero-btn--ghost">
+                Explore Our Services
+              </a>
             </div>
           </div>
         </div>
