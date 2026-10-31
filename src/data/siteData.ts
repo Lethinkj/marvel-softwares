@@ -81,6 +81,9 @@ export const siteConfig = {
   phoneHref: 'tel:+918088218609',
   phone2: '+91 8903711003',
   phone2Href: 'tel:+918903711003',
+  whatsapp: '+91 8088218609',
+  whatsappHref:
+    'https://wa.me/918088218609?text=Hello%20Marvel%20Softwares!%20I%20would%20like%20to%20inquire%20about%20your%20software%20and%20web%20development%20services.',
   location: 'Working with clients remotely and on-site as agreed',
   hours: 'Monday – Friday, 9:00 AM – 6:00 PM',
   // Canonical domain for SEO metadata — the live site.

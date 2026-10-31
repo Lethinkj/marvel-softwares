@@ -1160,229 +1160,227 @@ body.nav-menu-open #root {
    hairline-topped link columns, oversized outlined
    wordmark and a slim legal bar.
    ============================================ */
+/* ============================================
+   FOOTER REDESIGN — Dark Modern Tech Ecosystem
+   ============================================ */
 .site-footer {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(180deg, #d7dbe2 0%, #c3c9d2 100%);
-  color: #14203a;
-  border-top: 1px solid rgba(20, 32, 58, 0.12);
+  background: linear-gradient(180deg, #0a1428 0%, #050b16 100%);
+  color: #e2e8f0;
+  border-top: 1px solid rgba(0, 87, 231, 0.25);
 }
 
-.footer-top {
+.footer-glow {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1200px;
+  height: 220px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(0, 87, 231, 0.18), transparent 70%);
+  pointer-events: none;
+}
+
+.footer-grid {
   display: grid;
-  gap: 34px;
-  padding-top: clamp(40px, 5vw, 64px);
-  padding-bottom: clamp(36px, 4.5vw, 56px);
+  grid-template-columns: 1fr;
+  gap: 32px;
+  padding-top: clamp(36px, 4.5vw, 52px);
+  padding-bottom: clamp(18px, 2.5vw, 28px);
 }
 
-@media (min-width: 900px) {
-  .footer-top {
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.25fr);
-    gap: clamp(36px, 5vw, 72px);
+@media (min-width: 640px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 36px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer-grid {
+    grid-template-columns: 1.3fr 1.05fr 0.95fr 1.25fr;
+    gap: clamp(28px, 3.5vw, 52px);
     align-items: start;
   }
 }
 
-.footer-links {
-  display: grid;
-  gap: 28px;
-}
-
-@media (min-width: 540px) {
-  .footer-links {
-    grid-template-columns: minmax(130px, 1fr) minmax(210px, 1.35fr);
-    gap: clamp(24px, 4vw, 56px);
-  }
+.footer-brand-col {
+  display: flex;
+  flex-direction: column;
 }
 
 .footer-logo {
-  display: inline-block;
-  margin-bottom: 18px;
+  display: flex;
+  justify-content: center;
+  max-width: 36ch;
+  margin-bottom: 14px;
 }
 
 .footer-logo img {
   display: block;
-  width: 132px;
-  height: auto;
+  height: 70px;
+  width: auto;
+  max-width: 140px;
+  object-fit: contain;
 }
 
 .footer-tagline {
   margin: 0;
-  max-width: 36ch;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   line-height: 1.6;
-  color: rgba(20, 32, 58, 0.72);
+  color: #94a3b8;
+  max-width: 36ch;
 }
 
-.footer-contact {
+.footer-contact-actions {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 10px;
-  margin-top: 22px;
+  margin-top: 18px;
 }
 
-.footer-contact a {
+.footer-action-btn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 11px;
-  border: 1px solid rgba(20, 32, 58, 0.22);
-  color: rgba(20, 32, 58, 0.82);
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: 9px;
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.2s ease;
+  text-decoration: none;
 }
 
-.footer-contact a:hover {
-  background: rgba(255, 255, 255, 0.45);
-  border-color: rgba(20, 32, 58, 0.45);
-  color: #14203a;
+.footer-action-btn:hover {
+  background: rgba(0, 87, 231, 0.28);
+  border-color: rgba(0, 87, 231, 0.65);
+  color: #ffffff !important;
   transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0, 87, 231, 0.25);
+}
+
+.footer-action-btn--whatsapp:hover {
+  background: rgba(37, 211, 102, 0.2) !important;
+  border-color: rgba(37, 211, 102, 0.6) !important;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.25) !important;
 }
 
 .footer-col {
-  padding-top: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .footer-col-title {
   margin: 0 0 16px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -0.01em;
-  color: #14203a;
+  color: #ffffff;
 }
 
 .footer-col-list {
-  display: grid;
-  gap: 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.footer-col-list a {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
+.footer-link {
+  display: inline-block;
   font-size: 0.9rem;
-  color: rgba(20, 32, 58, 0.7);
-  transition: color 0.2s ease;
+  color: #94a3b8;
+  transition: all 0.2s ease;
+  text-decoration: none;
 }
 
-.footer-col-list a:hover {
-  color: var(--color-primary);
+.footer-link:hover {
+  color: #38bdf8;
+  transform: translateX(3px);
 }
 
-.footer-col-list--details {
-  margin-top: 18px;
-  padding-top: 0;
+.footer-contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.footer-col-list--details li {
-  font-size: 0.85rem;
-  color: rgba(20, 32, 58, 0.65);
-}
-
-.footer-detail-link {
-  font-size: 0.82rem;
-  color: rgba(20, 32, 58, 0.7);
-  transition: color 0.2s ease;
-  white-space: nowrap;
-}
-
-.footer-detail-link:hover {
-  color: var(--color-primary);
-}
-
-.footer-detail-phones {
-  display: grid;
-  gap: 5px;
-  justify-items: start;
-}
-
-.footer-detail-note {
+.footer-contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.88rem;
+  color: #94a3b8;
   line-height: 1.55;
 }
 
-.footer-badge {
-  padding: 3px 9px;
-  border-radius: 999px;
-  background: rgba(20, 32, 58, 0.1);
-  border: 1px solid rgba(20, 32, 58, 0.22);
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(20, 32, 58, 0.82);
+.footer-contact-item a {
+  color: #94a3b8;
+  transition: color 0.2s ease;
+  text-decoration: none;
 }
 
-/* --- Legal bar (Blue Theme, No Border Radius) --- */
+.footer-contact-item a:hover {
+  color: #38bdf8;
+}
+
+/* --- Legal Bottom Bar --- */
 .footer-bottom-wrap {
   width: 100%;
-  background: linear-gradient(135deg, #0033a0 0%, #001f66 100%);
-  border-top: 1px solid rgba(0, 87, 231, 0.35);
-  border-radius: 0;
+  background: #040810;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .footer-bottom {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 14px 0;
-  border-radius: 0;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 13px 0;
   font-size: 0.8125rem;
-  color: rgba(255, 255, 255, 0.9);
-  text-align: center;
+  color: #94a3b8;
 }
 
-@media (min-width: 480px) {
+@media (min-width: 640px) {
   .footer-bottom {
     flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 16px 0;
-    text-align: left;
+    padding-right: 88px; /* Ensures floating back-to-top button never overlaps! */
   }
 }
 
 .footer-copyright {
   margin: 0;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.92);
-  text-align: center;
-  line-height: 1.5;
-}
-
-@media (min-width: 480px) {
-  .footer-copyright {
-    text-align: left;
-  }
+  color: #94a3b8;
 }
 
 .footer-legal {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-@media (min-width: 480px) and (max-width: 1200px) {
-  .footer-legal {
-    padding-right: 64px;
-  }
+.footer-legal a {
+  color: #94a3b8;
+  transition: color 0.2s ease;
+  text-decoration: none;
 }
 
-@media (min-width: 480px) {
-  .footer-legal {
-    justify-content: flex-end;
-  }
+.footer-legal a:hover {
+  color: #ffffff;
 }
 
 .footer-legal a {
