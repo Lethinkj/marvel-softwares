@@ -87,7 +87,7 @@ export const siteConfig = {
   location: 'Working with clients remotely and on-site as agreed',
   hours: 'Monday – Friday, 9:00 AM – 6:00 PM',
   // Canonical domain for SEO metadata — the live site.
-  siteUrl: 'https://www.marvelsoftwares.in',
+  siteUrl: 'https://marvelsoftwares.in',
 }
 
 // --- Navigation (Single-page sections) ---
@@ -399,44 +399,54 @@ export const homeFaqs: Faq[] = [
 // --- FAQ page ---
 export const faqPageFaqs: Faq[] = [
   {
-    question: 'What services does Marvel Softwares provide?',
+    question: 'What core software development services does Marvel Softwares provide?',
     answer:
-      'We provide website development, custom software development, mobile applications, ERP, CRM, AI/ML, e-commerce and digital marketing services.',
+      'We provide end-to-end technology solutions across six core domains: (1) Custom Website Development, (2) Web Application Development & SaaS Platforms, (3) iOS, Android & Cross-Platform Mobile App Development, (4) Tailored ERP & Business Management Software, (5) Custom Business Software & Legacy System Modernization, and (6) AI Solutions & Intelligent Workflow Automation.',
   },
   {
-    question: 'Can you develop customized software for my business?',
+    question: 'Do you develop software for clients across different states and cities in India?',
     answer:
-      'Yes. We develop customized software based on your business requirements, workflows and operational needs.',
+      'Yes. MARVEL SOFTWARES is an India-based technology company serving businesses across all 28 Indian States and 8 Union Territories. We regularly collaborate with enterprises, startups, and growing organizations in key commercial and tech hubs including Tamil Nadu (Chennai, Coimbatore, Madurai, Tirunelveli, Nagercoil, Kanyakumari), Kerala (Kochi, Thiruvananthapuram, Kozhikode), Karnataka (Bengaluru, Mysuru), Telangana (Hyderabad), Andhra Pradesh (Visakhapatnam, Vijayawada), Maharashtra (Mumbai, Pune), and Delhi NCR through structured agile sprints, video consultations, and scheduled on-site milestone reviews.',
   },
   {
-    question: 'Do you develop websites for startups and small businesses?',
+    question: 'Do you work with international clients outside of India?',
     answer:
-      'Yes. We develop professional websites for startups, small businesses and established companies.',
+      'Yes. We partner with international clients across the United States, United Kingdom, Canada, Australia, the United Arab Emirates, and other global markets. We ensure strategic timezone overlap, conduct clear English sprint communication, and deliver high-velocity full-stack engineering under international NDAs and complete intellectual property ownership.',
   },
   {
-    question: 'Can you develop ERP software?',
+    question: 'Why choose custom software or a custom ERP over commercial off-the-shelf software?',
     answer:
-      'Yes. We can develop ERP solutions for inventory, sales, purchase, finance, HR and business management.',
+      'Off-the-shelf software often imposes costly recurring per-user monthly subscription fees, rigid processes that force you to alter how your team works, and unnecessary feature bloat. A custom solution engineered by Marvel Softwares gives you 100% code ownership, zero seat-based subscription penalties, and an interface built specifically around your exact business workflows and reporting requirements.',
   },
   {
-    question: 'Do you provide mobile application development?',
+    question: 'Who owns the source code and intellectual property of the software you build?',
     answer:
-      'Yes. We develop mobile applications based on project requirements and suitable Android, iOS or cross-platform technologies.',
+      'You retain 100% intellectual property (IP) and full source code ownership upon milestone completion. We provide complete code repository access, technical documentation, and deployment configurations with zero vendor lock-in.',
   },
   {
-    question: 'Do you offer internships for students?',
+    question: 'How do you handle project requirements, timelines, and pricing?',
     answer:
-      'We offer internship opportunities in selected software development domains, subject to availability.',
+      'We begin with an initial consultation and requirement discovery to understand your operational goals and technical scope. We then deliver a clear, transparent milestone-based proposal outlining architectural choices, development phases, sprint deliverables, and fixed-price estimates with no hidden charges.',
   },
   {
-    question: 'How can I start a software development project?',
+    question: 'Can you integrate modern AI and automated workflows into our existing software?',
     answer:
-      'Contact our team through the enquiry form, email or phone. Share your requirements, and we can discuss the project scope and proposal.',
+      'Yes. We build intelligent document processing, predictive machine learning models, conversational AI assistants, and automated data extraction pipelines that integrate seamlessly into your current ERP, database, CRM, or web platform via secure REST/GraphQL APIs.',
   },
   {
-    question: 'Do you provide maintenance and technical support?',
+    question: 'Can you modernize or upgrade our existing legacy software applications?',
     answer:
-      'Yes. Maintenance and support options can be arranged according to project requirements and agreed service terms.',
+      'Yes. We specialize in legacy application modernization, migrating aging desktop applications and monolithic codebases into scalable, cloud-native web and mobile platforms using phased migration strategies that ensure continuous business continuity without operational downtime.',
+  },
+  {
+    question: 'Do you provide ongoing technical support, maintenance, and system upgrades?',
+    answer:
+      'Yes. Following deployment, we offer dependable maintenance arrangements covering continuous server monitoring, security patching, dependency upgrades, bug fixes, and feature enhancements to ensure your software continues to perform reliably as your business scales.',
+  },
+  {
+    question: 'Do you offer practical technical learning or internship opportunities?',
+    answer:
+      'Yes. We offer practical internship opportunities in software engineering, modern web technologies, and mobile app development for eligible students and aspiring developers, subject to intake availability.',
   },
 ]
 

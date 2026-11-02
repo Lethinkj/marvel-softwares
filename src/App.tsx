@@ -1,8 +1,8 @@
 import { lazy, Suspense } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
+import Home from './pages/Home'
 
-const Home = lazy(() => import('./pages/Home'))
 const Faq = lazy(() => import('./pages/Faq'))
 
 function PageFallback() {
@@ -20,14 +20,7 @@ function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route
-          path="/"
-          element={
-            <Suspense fallback={<PageFallback />}>
-              <Home />
-            </Suspense>
-          }
-        />
+        <Route path="/" element={<Home />} />
         <Route
           path="/faq"
           element={

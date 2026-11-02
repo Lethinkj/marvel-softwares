@@ -68,8 +68,9 @@ export const Home: React.FC = () => {
     <div className="w-full bg-white overflow-x-clip">
       <Seo
         title="Marvel Softwares | Software Development Company in India"
-        description="Marvel Softwares builds websites, web apps, mobile apps, ERP systems, UI/UX experiences, AI automation and custom software for businesses in India, Kanyakumari and Nagercoil."
+        description="MARVEL SOFTWARES is an India-based software development company delivering custom web applications, mobile apps, ERP systems, and AI automation for businesses across India and global markets."
         path="/"
+        keywords="software development company in India, software company in India, software development services, IT solutions company, custom software development, web application development, mobile app development, ERP software development, AI automation solutions, software company in Tamil Nadu, software company in Bangalore, software development partner"
       />
 
       {/* ============ A. HERO ============ */}
@@ -117,6 +118,8 @@ export const Home: React.FC = () => {
               <img
                 src="/hero/home.png"
                 alt="Marvel Softwares digital solutions and software development workspace"
+                width={1672}
+                height={941}
                 className="w-full h-auto max-w-[580px] lg:max-w-[660px] xl:max-w-[720px] lg:scale-105 xl:scale-110 origin-left drop-shadow-xl transition-transform"
                 decoding="async"
               />
@@ -154,6 +157,8 @@ export const Home: React.FC = () => {
                 <img
                   src="/about.png"
                   alt="About Marvel Softwares technology and engineering excellence"
+                  width={1536}
+                  height={1024}
                   className="w-full h-auto max-w-[480px] lg:max-w-full drop-shadow-lg transition-transform hover:scale-[1.02] duration-300"
                   decoding="async"
                 />

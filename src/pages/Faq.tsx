@@ -5,9 +5,10 @@ export const Faq = () => {
   return (
     <div className="w-full bg-white overflow-x-clip">
       <Seo
-        title="Frequently Asked Questions | Marvel Softwares"
-        description="Find answers to frequently asked questions about Marvel Softwares — our services, custom software, websites, ERP, mobile apps, internships, project kickoff and support."
+        title="Frequently Asked Questions (FAQ) | Marvel Softwares"
+        description="Find answers to frequently asked questions about Marvel Softwares — our custom software development, websites, ERP systems, mobile applications, AI solutions, project process, and technical support."
         path="/faq"
+        keywords="Marvel Softwares FAQ, software development questions, custom software FAQ, ERP development cost, mobile app development India, software development process, software company in India FAQ"
         faqs={faqPageFaqs}
       />
 

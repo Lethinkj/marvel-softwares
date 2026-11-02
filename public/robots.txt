@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /preview/
 
-Sitemap: https://www.marvelsoftwares.in/sitemap.xml
+Sitemap: https://marvelsoftwares.in/sitemap.xml

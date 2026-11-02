@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Homepage: Comprehensive software development services & company overview -->
   <url>
-    <loc>https://www.marvelsoftwares.in/</loc>
+    <loc>https://marvelsoftwares.in/</loc>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+
+  <!-- FAQ Page: Frequently Asked Questions & Client Guidance -->
+  <url>
+    <loc>https://marvelsoftwares.in/faq</loc>
+    <lastmod>2026-11-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
 </urlset>
