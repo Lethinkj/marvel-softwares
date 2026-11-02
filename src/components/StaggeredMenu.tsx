@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
 import './StaggeredMenu.css'
 
@@ -63,6 +63,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   onItemClick,
 }) => {
   const location = useLocation()
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const openRef = useRef(false)
   const panelRef = useRef<HTMLElement>(null)
@@ -163,8 +164,8 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
       spinTweenRef.current = gsap
         .timeline()
         .to(l2, { opacity: 0, scaleX: 0, duration: 0.2, ease: 'power2.in' }, 0)
-        .to(l1, { y: 7, rotate: 45, duration: 0.32, ease: 'power3.out' }, 0.04)
-        .to(l3, { y: -7, rotate: -45, duration: 0.32, ease: 'power3.out' }, 0.04)
+        .to(l1, { y: 6, rotate: 45, duration: 0.32, ease: 'power3.out' }, 0.04)
+        .to(l3, { y: -6, rotate: -45, duration: 0.32, ease: 'power3.out' }, 0.04)
     } else {
       spinTweenRef.current = gsap
         .timeline()
@@ -296,12 +297,14 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
           behavior: 'smooth',
         })
         window.history.pushState(null, '', `#${targetId}`)
+      } else {
+        navigate(`/#${targetId}`)
       }
       closeMenu()
     } else if (it.link === '/') {
       e.preventDefault()
+      navigate('/')
       window.scrollTo({ top: 0, behavior: 'smooth' })
-      window.history.pushState(null, '', '/')
       closeMenu()
     } else {
       closeMenu()
@@ -358,7 +361,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 
       <aside id="staggered-menu-panel" ref={panelRef} className="staggered-menu-panel" aria-hidden={!open}>
         <div className="sm-panel-inner">
-          {/* Top — White Header Band */}
+          {/* Top — White Header Band with Logo */}
           <div className="sm-panel-top">
             <Link to="/" onClick={closeMenu} className="sm-panel-logo" aria-label="MARVEL SOFTWARES — Home">
               <img

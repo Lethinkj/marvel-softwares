@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { homeServices, navLinks, services, siteConfig } from '../data/siteData'
 import { MailIcon, PhoneIcon, MapPinIcon } from './Icons'
 
@@ -25,6 +26,8 @@ function SocialIcon({ type }: { type: (typeof socialLinks)[number]['icon'] }) {
 }
 
 export function FooterV1() {
+  const navigate = useNavigate()
+
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault()
     const targetId = href.replace(/^#/, '')
@@ -35,6 +38,8 @@ export function FooterV1() {
       const offsetPosition = elementPosition + window.pageYOffset - headerOffset
       window.scrollTo({ top: offsetPosition, behavior: 'smooth' })
       window.history.pushState(null, '', href)
+    } else {
+      navigate(`/#${targetId}`)
     }
   }
 
@@ -130,6 +135,11 @@ export function FooterV1() {
                   </a>
                 </li>
               ))}
+              <li>
+                <Link to="/faq" className="footer-link">
+                  FAQ
+                </Link>
+              </li>
             </ul>
           </nav>
 
@@ -137,6 +147,16 @@ export function FooterV1() {
           <nav className="footer-col" aria-label="Other ventures">
             <h3 className="footer-col-title">Our Other Ventures</h3>
             <ul className="footer-col-list">
+              <li>
+                <a
+                  href="https://www.marvelvillas.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-link"
+                >
+                  Marvel Villas
+                </a>
+              </li>
               <li>
                 <a
                   href="https://marvelslice.com/"

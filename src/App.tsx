@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
 
 const Home = lazy(() => import('./pages/Home'))
+const Faq = lazy(() => import('./pages/Faq'))
 
 function PageFallback() {
   return (
@@ -24,6 +25,14 @@ function App() {
           element={
             <Suspense fallback={<PageFallback />}>
               <Home />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/faq"
+          element={
+            <Suspense fallback={<PageFallback />}>
+              <Faq />
             </Suspense>
           }
         />

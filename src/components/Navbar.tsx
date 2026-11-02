@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { navLinks, siteConfig } from '../data/siteData'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { StaggeredMenu, type StaggeredMenuItem, type StaggeredMenuSocialItem } from './StaggeredMenu'
@@ -11,6 +12,7 @@ import { StaggeredMenu, type StaggeredMenuItem, type StaggeredMenuSocialItem } f
  */
 const SECTION_GROUPS = [
   { nav: 'contact', ids: ['contact'] },
+  { nav: 'testimonials', ids: ['testimonials'] },
   { nav: 'projects', ids: ['clients', 'upcoming-projects', 'projects'] },
   { nav: 'team', ids: ['team'] },
   { nav: 'services', ids: ['technologies', 'process', 'services'] },
@@ -22,6 +24,7 @@ export function Navbar() {
   const [activeSection, setActiveSection] = useState<string>('home')
   const [isScrolled, setIsScrolled] = useState(false)
 
+  const navigate = useNavigate()
   const isDesktop = useMediaQuery('(min-width: 1024px)')
 
   const menuItems: StaggeredMenuItem[] = navLinks.map((link) => ({
@@ -89,13 +92,15 @@ export function Navbar() {
       })
       window.history.pushState(null, '', `#${targetId}`)
       setActiveSection(targetId)
+    } else {
+      navigate(`/#${targetId}`)
     }
   }
 
   const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
+    navigate('/')
     window.scrollTo({ top: 0, behavior: 'smooth' })
-    window.history.pushState(null, '', '/')
     setActiveSection('home')
   }
 

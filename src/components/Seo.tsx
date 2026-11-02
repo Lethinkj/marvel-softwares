@@ -1,10 +1,11 @@
 import { useEffect } from 'react'
-import { homeFaqs, siteConfig } from '../data/siteData'
+import { homeFaqs, siteConfig, type Faq } from '../data/siteData'
 
 interface SeoProps {
   title: string
   description: string
   path: string
+  faqs?: Faq[]
 }
 
 /**
@@ -12,7 +13,7 @@ interface SeoProps {
  * Open Graph tags and Organization/WebSite structured data
  * (verified business info only — no ratings or addresses).
  */
-export function Seo({ title, description, path }: SeoProps) {
+export function Seo({ title, description, path, faqs = homeFaqs }: SeoProps) {
   useEffect(() => {
     document.title = title
 
@@ -51,11 +52,14 @@ export function Seo({ title, description, path }: SeoProps) {
     setMeta('meta[name="twitter:image"]', 'twitter:image', `${siteConfig.siteUrl}/marvel-softwares-logo-horizontal.png`, 'name')
 
     const scriptId = 'ms-structured-data'
-    if (!document.getElementById(scriptId)) {
-      const script = document.createElement('script')
+    let script = document.getElementById(scriptId) as HTMLScriptElement | null
+    if (!script) {
+      script = document.createElement('script')
       script.id = scriptId
       script.type = 'application/ld+json'
-      script.textContent = JSON.stringify({
+      document.head.appendChild(script)
+    }
+    script.textContent = JSON.stringify({
         '@context': 'https://schema.org',
         '@graph': [
           {
@@ -110,7 +114,7 @@ export function Seo({ title, description, path }: SeoProps) {
           },
           {
             '@type': 'FAQPage',
-            mainEntity: homeFaqs.map((faq) => ({
+            mainEntity: faqs.map((faq) => ({
               '@type': 'Question',
               name: faq.question,
               acceptedAnswer: {
@@ -121,9 +125,7 @@ export function Seo({ title, description, path }: SeoProps) {
           },
         ],
       })
-      document.head.appendChild(script)
-    }
-  }, [title, description, path])
+  }, [title, description, path, faqs])
 
   return null
 }

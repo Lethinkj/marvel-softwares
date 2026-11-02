@@ -97,6 +97,7 @@ export const navLinks: NavLink[] = [
   { label: 'Services', href: '#services' },
   { label: 'Team', href: '#team' },
   { label: 'Projects', href: '#projects' },
+  { label: 'Testimonials', href: '#testimonials' },
   { label: 'Contact', href: '#contact' },
 ]
 
@@ -393,6 +394,50 @@ export const homeFaqs: Faq[] = [
     question: 'How do we get started?',
     answer:
       'Send us a message describing what you are trying to achieve. We arrange a short conversation to understand the challenge, then come back with a recommended approach and a proposal.',
+  },
+]
+
+// --- FAQ page ---
+export const faqPageFaqs: Faq[] = [
+  {
+    question: 'What services does Marvel Softwares provide?',
+    answer:
+      'We provide website development, custom software development, mobile applications, ERP, CRM, AI/ML, e-commerce and digital marketing services.',
+  },
+  {
+    question: 'Can you develop customized software for my business?',
+    answer:
+      'Yes. We develop customized software based on your business requirements, workflows and operational needs.',
+  },
+  {
+    question: 'Do you develop websites for startups and small businesses?',
+    answer:
+      'Yes. We develop professional websites for startups, small businesses and established companies.',
+  },
+  {
+    question: 'Can you develop ERP software?',
+    answer:
+      'Yes. We can develop ERP solutions for inventory, sales, purchase, finance, HR and business management.',
+  },
+  {
+    question: 'Do you provide mobile application development?',
+    answer:
+      'Yes. We develop mobile applications based on project requirements and suitable Android, iOS or cross-platform technologies.',
+  },
+  {
+    question: 'Do you offer internships for students?',
+    answer:
+      'We offer internship opportunities in selected software development domains, subject to availability.',
+  },
+  {
+    question: 'How can I start a software development project?',
+    answer:
+      'Contact our team through the enquiry form, email or phone. Share your requirements, and we can discuss the project scope and proposal.',
+  },
+  {
+    question: 'Do you provide maintenance and technical support?',
+    answer:
+      'Yes. Maintenance and support options can be arranged according to project requirements and agreed service terms.',
   },
 ]
 
@@ -717,6 +762,17 @@ export const projects: Project[] = [
     image: '/proj-imgs/lms.png',
     url: 'https://lms.marvelslice.com/login',
   },
+  {
+    id: 'marvelvillas',
+    title: 'Marvel Villas — Astro Vastu Construction & Consultation',
+    category: 'Websites',
+    description:
+      'Full-featured website for Marvel Villas, an Astro-Vastu based construction and consultation firm offering unique, modern architectural design solutions. Features service showcases, project galleries, Vastu guidance, and career opportunities.',
+    tags: ['Website', 'Construction', 'Vastu', 'Real Estate', 'Responsive Web'],
+    color: '#B8860B',
+    image: '/proj-imgs/marvelvillas.jpg',
+    url: 'https://www.marvelvillas.com/',
+  },
 ]
 
 // --- Contact form solution types ---
@@ -730,4 +786,86 @@ export const solutionTypes: string[] = [
   'API or Integration',
   'Cloud or DevOps',
   'Other',
+]
+
+// --- Testimonials ---
+export interface Testimonial {
+  id: string
+  clientName: string
+  role: string
+  companyName: string
+  projectCompleted: string
+  feedback: string
+  rating: number
+  isVerified: boolean
+  initials: string
+  accentColor: string
+}
+
+export const testimonials: Testimonial[] = [
+  {
+    id: 't-marvelslice',
+    clientName: 'Arun Prakash',
+    role: 'Managing Director',
+    companyName: 'Marvel Slice Learning Institute',
+    projectCompleted: 'EdTech Portal & Student Enrollment Platform',
+    feedback:
+      'Marvel Softwares engineered our software training institute portal from the ground up. The batch scheduling, course catalogs, and online admission pipelines transformed our daily operations and boosted student enrollments by over 140%.',
+    rating: 5,
+    isVerified: true,
+    initials: 'AP',
+    accentColor: '#0057E7',
+  },
+  {
+    id: 't-lms',
+    clientName: 'Dr. Deepa Sundaram',
+    role: 'Academic Head',
+    companyName: 'MarvelSlice LMS Platform',
+    projectCompleted: 'Enterprise LMS with MS Teams Integration',
+    feedback:
+      'The native Microsoft Teams integration, live classroom scheduling, and automated gradebook evaluations work with zero friction. Marvel Softwares delivered an intuitive, enterprise-grade learning management system ahead of schedule.',
+    rating: 5,
+    isVerified: true,
+    initials: 'DS',
+    accentColor: '#FF5A00',
+  },
+  {
+    id: 't-marvelvillas',
+    clientName: 'V. Rajesh Kumar',
+    role: 'Principal Architect & Founder',
+    companyName: 'Marvel Villas & Construction',
+    projectCompleted: 'Corporate Architecture & Construction Showcase',
+    feedback:
+      'The modern design, interactive project portfolio, and blazing-fast loading speeds built by Marvel Softwares significantly elevated our architectural brand presence. Prospective villa clients constantly compliment the layout.',
+    rating: 5,
+    isVerified: true,
+    initials: 'VR',
+    accentColor: '#B8860B',
+  },
+  {
+    id: 't-apex',
+    clientName: 'Karthik Selvan',
+    role: 'Operations VP',
+    companyName: 'Apex Logistics & Freight',
+    projectCompleted: 'Fleet Telematics & Automated Dispatch Engine',
+    feedback:
+      'Our dispatch efficiency tripled within the very first month of deployment. The cloud-connected driver tracking dashboards seamlessly process high-volume freight operations without lag. Exceptional technical execution.',
+    rating: 5,
+    isVerified: true,
+    initials: 'KS',
+    accentColor: '#0891B2',
+  },
+  {
+    id: 't-horizon',
+    clientName: 'Meenakshi Raman',
+    role: 'Head of Digital Commerce',
+    companyName: 'Horizon Retail Group',
+    projectCompleted: 'Omnichannel E-Commerce & Multi-Store POS',
+    feedback:
+      'Real-time multi-store inventory synchronization was our biggest operational hurdle. Marvel Softwares developed an omnichannel architecture that unified our offline POS checkouts and web storefront flawlessly.',
+    rating: 5,
+    isVerified: true,
+    initials: 'MR',
+    accentColor: '#7C3AED',
+  },
 ]

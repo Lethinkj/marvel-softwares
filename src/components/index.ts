@@ -24,3 +24,6 @@ export { default as StaggeredMenu } from './StaggeredMenu'
 
 export * from './avatars'
 export { default as TeamAvatar } from './avatars/TeamAvatar'
+
+export * from './Testimonials'
+export { default as Testimonials } from './Testimonials'

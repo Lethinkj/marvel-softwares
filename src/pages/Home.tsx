@@ -9,6 +9,7 @@ import WhyChooseUs from '../components/WhyChooseUs'
 import OurTeam from '../components/OurTeam'
 import UpcomingProjects from '../components/UpcomingProjects'
 import OurClients from '../components/OurClients'
+import Testimonials from '../components/Testimonials'
 import ContactSection from '../components/ContactSection'
 import { projects } from '../data/siteData'
 
@@ -20,16 +21,22 @@ const cardStyle: React.CSSProperties = {
 }
 
 const getPreviewUrl = (url: string) => {
-  const host = new URL(url).hostname
-  if (host === 'marvelslice.com') return '/preview/marvelslice/'
-  if (host === 'lms.marvelslice.com') return '/preview/lms/login'
-  return url
+  try {
+    const host = new URL(url).hostname
+    if (host === 'marvelslice.com' || host === 'www.marvelslice.com') return '/preview/marvelslice/'
+    if (host === 'lms.marvelslice.com') return '/preview/lms/login'
+    if (host === 'marvelvillas.com' || host === 'www.marvelvillas.com') return '/preview/marvelvillas/'
+    return url
+  } catch {
+    return url
+  }
 }
 
 export const Home: React.FC = () => {
   const [previewProject, setPreviewProject] = useState<(typeof projects)[number] | null>(null)
   const [previewDevice, setPreviewDevice] = useState<'mobile' | 'desktop'>('desktop')
   const [previewFailed, setPreviewFailed] = useState(false)
+  const [iframeLoading, setIframeLoading] = useState(true)
   const previewTimeoutRef = useRef<number | null>(null)
 
   useEffect(() => {
@@ -39,7 +46,11 @@ export const Home: React.FC = () => {
     }
     setPreviewDevice(window.matchMedia('(max-width: 640px)').matches ? 'mobile' : 'desktop')
     setPreviewFailed(false)
-    previewTimeoutRef.current = window.setTimeout(() => setPreviewFailed(true), 5000)
+    setIframeLoading(true)
+    previewTimeoutRef.current = window.setTimeout(() => {
+      setPreviewFailed(true)
+      setIframeLoading(false)
+    }, 20000)
     document.body.style.overflow = 'hidden'
     window.addEventListener('keydown', handleKeyDown)
     return () => {
@@ -270,7 +281,7 @@ export const Home: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full" style={{ marginTop: 28 }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full" style={{ marginTop: 28 }}>
             {projects.map((project) => (
               <article
                 key={project.id}
@@ -291,32 +302,91 @@ export const Home: React.FC = () => {
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105"
+                    className="w-full h-full object-cover object-top transition-all duration-500 ease-out group-hover:scale-105 group-hover:blur-[3.5px]"
                     loading="lazy"
                   />
-                  <span
-                    className="absolute top-3.5 left-3.5 px-3 py-1 rounded-full text-xs font-bold bg-white/95 backdrop-blur-sm shadow-sm z-10"
-                    style={{ border: '1px solid var(--color-border)', color: 'var(--color-text)' }}
-                  >
+                  {/* Category badge - top left */}
+                  <span className="project-category-badge absolute top-3 left-3 sm:top-3.5 sm:left-3.5 z-10">
                     {project.category}
                   </span>
 
-                  {/* Hover Overlay with Visit Live Site */}
-                  <div className="project-live-overlay absolute inset-0 bg-slate-950/45 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-20">
+                  {/* Corner Click to preview badge - visible on PC, Mobile & all */}
+                  <span className="project-corner-badge absolute top-3 right-3 sm:top-3.5 sm:right-3.5 z-10">
+                    <svg
+                      width="15"
+                      height="15"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="shrink-0"
+                      aria-hidden="true"
+                    >
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                    <span>Click to preview</span>
+                  </span>
+
+                  {/* Hover Overlay with 2 buttons: Preview & Visit Live */}
+                  <div className="project-live-overlay absolute inset-0 bg-slate-950/40 backdrop-blur-[1.5px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2.5 sm:gap-3 p-3 z-20">
                     <button
                       type="button"
                       onClick={(event) => {
                         event.stopPropagation()
                         setPreviewProject(project)
                       }}
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-slate-900 text-sm font-semibold shadow-xl transform translate-y-3 group-hover:translate-y-0 transition-transform duration-300 ease-out"
-                      style={{ color: '#0f172a', background: '#ffffff' }}
+                      className="project-preview-btn transform translate-y-2 group-hover:translate-y-0"
+                      aria-label={`Preview ${project.title}`}
                     >
-                      <span>Preview Live Site</span>
-                      <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#0057E7"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="shrink-0"
+                        aria-hidden="true"
+                      >
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
                       </svg>
+                      <span>Preview</span>
                     </button>
+
+                    <a
+                      href={project.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(event) => {
+                        event.stopPropagation()
+                      }}
+                      className="project-visit-btn transform translate-y-2 group-hover:translate-y-0"
+                      aria-label={`Visit live site for ${project.title}`}
+                    >
+                      <span>Visit Live</span>
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="shrink-0"
+                        aria-hidden="true"
+                      >
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                        <polyline points="15 3 21 3 21 9" />
+                        <line x1="10" y1="14" x2="21" y2="3" />
+                      </svg>
+                    </a>
                   </div>
                 </div>
 
@@ -335,6 +405,62 @@ export const Home: React.FC = () => {
                   <p className="text-body text-[15px] leading-relaxed" style={{ marginTop: 12, flex: 1 }}>
                     {project.description}
                   </p>
+
+                  {/* Mobile 2 Buttons: Preview & Visit Live (always visible on mobile) */}
+                  <div className="mt-4 pt-3.5 border-t border-slate-100 flex items-center gap-2.5 sm:hidden">
+                    <button
+                      type="button"
+                      onClick={(event) => {
+                        event.stopPropagation()
+                        setPreviewProject(project)
+                      }}
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-blue-50 text-[#0057E7] border border-blue-200/80 text-xs font-semibold hover:bg-blue-100 active:scale-95 transition-all"
+                      aria-label={`Preview ${project.title}`}
+                    >
+                      <svg
+                        width="15"
+                        height="15"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="shrink-0"
+                      >
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                      <span>Preview</span>
+                    </button>
+                    <a
+                      href={project.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(event) => {
+                        event.stopPropagation()
+                      }}
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-[#0057E7] text-white text-xs font-semibold shadow-xs hover:bg-[#0046b8] active:scale-95 transition-all text-center no-underline"
+                      aria-label={`Visit live site for ${project.title}`}
+                    >
+                      <span>Visit Live</span>
+                      <svg
+                        width="13"
+                        height="13"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="shrink-0"
+                      >
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                        <polyline points="15 3 21 3 21 9" />
+                        <line x1="10" y1="14" x2="21" y2="3" />
+                      </svg>
+                    </a>
+                  </div>
                 </div>
               </article>
             ))}
@@ -352,8 +478,13 @@ export const Home: React.FC = () => {
         <OurClients />
       </section>
 
-      {/* ============ J. CONTACT US ============ */}
-      <section id="contact" aria-labelledby="contact-heading" className="section section-warm">
+      {/* ============ J. TESTIMONIALS ============ */}
+      <section id="testimonials" aria-labelledby="testimonials-heading" className="section section-warm">
+        <Testimonials />
+      </section>
+
+      {/* ============ K. CONTACT US ============ */}
+      <section id="contact" aria-labelledby="contact-heading" className="section">
         <ContactSection />
       </section>
 
@@ -387,13 +518,21 @@ export const Home: React.FC = () => {
                 ×
               </button>
             </div>
-            <div className="project-preview-frame">
+            <div className="project-preview-frame relative">
+              {iframeLoading && !previewFailed && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-white/95 backdrop-blur-xs z-10">
+                  <div className="w-9 h-9 rounded-full border-3 border-[#0057E7]/20 border-t-[#0057E7] animate-spin" />
+                  <span className="text-xs text-[#0033A0] font-semibold tracking-wide">
+                    Loading live preview...
+                  </span>
+                </div>
+              )}
               {previewFailed ? (
                 <div className="project-preview-fallback">
                   <div className="project-preview-fallback-note">
-                    <strong>Live preview cannot be embedded</strong>
+                    <strong>Live preview could not be loaded</strong>
                     <span>
-                      Allow this domain in the project server&apos;s frame policy to load the website here.
+                      The external website might be taking too long to respond or restricting embedding.
                     </span>
                     <a href={previewProject.url} target="_blank" rel="noopener noreferrer">
                       Open live site
@@ -412,8 +551,12 @@ export const Home: React.FC = () => {
                       previewTimeoutRef.current = null
                     }
                     setPreviewFailed(false)
+                    setIframeLoading(false)
                   }}
-                  onError={() => setPreviewFailed(true)}
+                  onError={() => {
+                    setPreviewFailed(true)
+                    setIframeLoading(false)
+                  }}
                 />
               )}
             </div>
