@@ -21,7 +21,7 @@ export default function EntryReveal() {
       <div className="entry-reveal__halo" />
       <div className="entry-reveal__content">
         <img
-          src="/marvel-softwares-logo-horizontal.png"
+          src="/images/brand/logo-horizontal.avif"
           alt=""
           className="entry-reveal__logo"
         />

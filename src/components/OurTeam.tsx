@@ -24,7 +24,7 @@ interface MemberMetadata {
 const memberMetadataMap: Record<string, MemberMetadata> = {
   'Alex Chen': {
     initials: 'AC',
-    photo: '/team/alex-chen.jpg',
+    photo: '/images/team/alex-chen.avif',
     avatarBg: 'bg-gradient-to-br from-blue-100 via-sky-50 to-indigo-50',
     avatarBorder: 'border-blue-200/90',
     avatarRing: 'ring-blue-100/70',
@@ -40,7 +40,7 @@ const memberMetadataMap: Record<string, MemberMetadata> = {
   },
   'Sarah Mitchell': {
     initials: 'SM',
-    photo: '/team/sarah-mitchell.jpg',
+    photo: '/images/team/sarah-mitchell.avif',
     avatarBg: 'bg-gradient-to-br from-indigo-100 via-violet-50 to-indigo-50',
     avatarBorder: 'border-indigo-200/90',
     avatarRing: 'ring-indigo-100/70',
@@ -56,7 +56,7 @@ const memberMetadataMap: Record<string, MemberMetadata> = {
   },
   'Marcus Johnson': {
     initials: 'MJ',
-    photo: '/team/marcus-johnson.jpg',
+    photo: '/images/team/marcus-johnson.avif',
     avatarBg: 'bg-gradient-to-br from-sky-100 via-cyan-50 to-blue-50',
     avatarBorder: 'border-sky-200/90',
     avatarRing: 'ring-sky-100/70',
@@ -72,7 +72,7 @@ const memberMetadataMap: Record<string, MemberMetadata> = {
   },
   'Elena Rodriguez': {
     initials: 'ER',
-    photo: '/team/elena-rodriguez.jpg',
+    photo: '/images/team/elena-rodriguez.avif',
     avatarBg: 'bg-gradient-to-br from-blue-100 via-indigo-50 to-sky-50',
     avatarBorder: 'border-blue-200/90',
     avatarRing: 'ring-blue-100/70',
@@ -98,7 +98,7 @@ const getMemberMeta = (name: string): MemberMetadata => {
     .slice(0, 2)
   return {
     initials,
-    photo: '/team/alex-chen.jpg',
+    photo: '/images/team/alex-chen.avif',
     avatarBg: 'bg-gradient-to-br from-blue-100 via-sky-50 to-blue-50',
     avatarBorder: 'border-blue-200/90',
     avatarRing: 'ring-blue-100/70',

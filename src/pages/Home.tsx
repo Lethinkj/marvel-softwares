@@ -116,10 +116,11 @@ export const Home: React.FC = () => {
             {/* Visual column */}
             <div className="hero-visual order-2 lg:order-none relative w-full flex justify-center lg:justify-start pt-2">
               <img
-                src="/hero/home.png"
+                src="/images/hero/hero-home.avif"
                 alt="Marvel Softwares digital solutions and software development workspace"
                 width={1672}
                 height={941}
+                fetchPriority="high"
                 className="w-full h-auto max-w-[580px] lg:max-w-[660px] xl:max-w-[720px] lg:scale-105 xl:scale-110 origin-left drop-shadow-xl transition-transform"
                 decoding="async"
               />
@@ -155,7 +156,7 @@ export const Home: React.FC = () => {
             <div className="order-2 lg:order-1 flex justify-center w-full">
               <AnimatedSection delay={0.15} className="w-full flex justify-center">
                 <img
-                  src="/about.png"
+                  src="/images/about/about-marvel.avif"
                   alt="About Marvel Softwares technology and engineering excellence"
                   width={1536}
                   height={1024}

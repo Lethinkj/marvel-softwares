@@ -146,7 +146,7 @@ export const ContactSection: React.FC = () => {
             />
 
             <img
-              src="/Isometric Software Teamwork Workspace.png"
+              src="/images/contact/software-teamwork.avif"
               alt="Isometric Software Teamwork Workspace"
               className="relative z-10 w-full h-auto max-w-[560px] lg:scale-105 object-contain drop-shadow-2xl transition-transform duration-500 hover:scale-[1.04]"
               loading="lazy"

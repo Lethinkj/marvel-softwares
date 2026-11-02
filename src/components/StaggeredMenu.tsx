@@ -47,7 +47,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   displaySocials = true,
   displayItemNumbering = false,
   className,
-  logoUrl = '/marvel-softwares-logo-removebg-preview.png',
+  logoUrl = '/images/brand/logo.avif',
   showLogo = true,
   menuButtonColor = '#0057E7',
   openMenuButtonColor = '#14203a',
@@ -332,7 +332,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
           <div className="sm-logo" aria-label="Logo">
             <Link to="/" onClick={closeMenu} className="flex items-center" aria-label="MARVEL SOFTWARES — Home">
               <img
-                src={logoUrl || '/marvel-softwares-logo-removebg-preview.png'}
+                src={logoUrl || '/images/brand/logo.avif'}
                 alt="Logo"
                 className="sm-logo-img"
                 draggable={false}
@@ -365,7 +365,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
           <div className="sm-panel-top">
             <Link to="/" onClick={closeMenu} className="sm-panel-logo" aria-label="MARVEL SOFTWARES — Home">
               <img
-                src={logoUrl || '/marvel-softwares-logo-removebg-preview.png'}
+                src={logoUrl || '/images/brand/logo.avif'}
                 alt="MARVEL SOFTWARES"
                 className="sm-logo-img"
                 draggable={false}

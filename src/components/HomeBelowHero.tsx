@@ -126,7 +126,7 @@ export const HomeBelowHero: React.FC = () => {
           <div className="order-2 lg:order-1 lg:col-span-5">
             <div className="intro-media">
               <img
-                src="/hero-images/home-engineering.jpg"
+                src="/images/hero/home-engineering.avif"
                 alt="Development workspace showing a laptop, phone and labelled engineering capabilities."
                 width={1600}
                 height={963}

@@ -1,150 +1,259 @@
-import { Link } from 'react-router-dom'
-import { navLinks, services, siteConfig } from '../data/siteData'
+import React from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { homeServices, navLinks, services, siteConfig } from '../data/siteData'
+import { MailIcon, PhoneIcon, MapPinIcon } from './Icons'
 
 const CURRENT_YEAR = new Date().getFullYear()
 
-/**
- * Deep-navy footer — fully aligned, responsive 4-column grid.
- * Mobile: stacked single column
- * Tablet (md): 2×2 grid
- * Desktop (lg): 4 equal columns
- */
-export function Footer() {
+const socialLinks = [
+  { label: 'YouTube', href: 'https://www.youtube.com/', color: '#ff0000', icon: 'youtube' },
+  { label: 'Instagram', href: 'https://www.instagram.com/', color: '#e1306c', icon: 'instagram' },
+  { label: 'X', href: 'https://x.com/', color: '#000000', icon: 'x' },
+  { label: 'Facebook', href: 'https://www.facebook.com/', color: '#1877f2', icon: 'facebook' },
+] as const
+
+function SocialIcon({ type }: { type: (typeof socialLinks)[number]['icon'] }) {
+  if (type === 'youtube') {
+    return (
+      <path
+        fill="currentColor"
+        d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.9V8.1l6.5 3.9-6.5 3.9Z"
+      />
+    )
+  }
+  if (type === 'instagram') {
+    return (
+      <path
+        fill="currentColor"
+        d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm5.25-3.25a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5Z"
+      />
+    )
+  }
+  if (type === 'facebook') {
+    return (
+      <path
+        fill="currentColor"
+        d="M13.5 22v-9h3l.5-3h-3.5V8.1c0-.9.3-1.6 1.7-1.6h1.8V3.8c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3V10H7.5v3h2.8v9h3.2Z"
+      />
+    )
+  }
   return (
-    <footer
-      aria-labelledby="footer-heading"
-      className="text-white"
-      style={{ background: '#111827' }}
-    >
+    <path
+      fill="currentColor"
+      d="M18.9 2h3.7l-8.1 9.3L24 22h-7.5l-5.9-7.2L4.3 22H.6l8.7-10L0 2h7.7l5.3 6.6L18.9 2Zm-1.3 18h2L6.5 3.9H4.4L17.6 20Z"
+    />
+  )
+}
+
+export function Footer() {
+  const navigate = useNavigate()
+
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault()
+    const targetId = href.replace(/^#/, '')
+    const el = document.getElementById(targetId)
+    if (el) {
+      const headerOffset = 70
+      const elementPosition = el.getBoundingClientRect().top
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset
+      window.scrollTo({ top: offsetPosition, behavior: 'smooth' })
+      window.history.pushState(null, '', href)
+    } else {
+      navigate(`/#${targetId}`)
+    }
+  }
+
+  return (
+    <footer className="site-footer" aria-labelledby="footer-heading">
       <h2 id="footer-heading" className="sr-only">
         MARVEL SOFTWARES footer
       </h2>
 
-      <div className="container" style={{ paddingBlock: '72px 0' }}>
+      {/* Top subtle ambient glow backdrop */}
+      <div className="footer-glow" aria-hidden="true" />
 
-        {/* ── Main grid ── */}
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8 xl:gap-12">
-
-          {/* Col 1 – Brand */}
-          <div className="sm:col-span-2 lg:col-span-1">
-            <Link to="/" aria-label="MARVEL SOFTWARES — Home" className="inline-block">
-              <img
-                src="/marvel-softwares-logo-removebg-preview.png"
-                alt="MARVEL SOFTWARES"
-                style={{ width: '170px', height: 'auto' }}
-              />
-            </Link>
-            <p
-              className="mt-4 text-[14.5px] leading-relaxed"
-              style={{ color: 'rgba(255,255,255,.72)', maxWidth: '36ch' }}
+      <div className="container relative z-10">
+        {/* --- 5-Column Balanced Grid --- */}
+        <div className="footer-grid">
+          {/* Col 1: Brand & Bio */}
+          <div className="footer-brand-col">
+            <a
+              href="#home"
+              onClick={(e) => scrollToSection(e, '#home')}
+              aria-label="MARVEL SOFTWARES — Back to top"
+              className="footer-logo"
             >
-              We build websites, web apps, mobile apps, ERP systems and custom software
-              that help businesses grow and operate smarter.
+              <img
+                src="/images/brand/logo.avif"
+                alt="MARVEL SOFTWARES"
+                width={140}
+                height={70}
+                loading="lazy"
+                decoding="async"
+                style={{ maxHeight: 70, width: 'auto', display: 'block' }}
+              />
+            </a>
+
+            <p className="footer-tagline">
+              Engineering high-performance software, custom ERP platforms, modern web & mobile applications, and AI automations for forward-thinking enterprises worldwide.
             </p>
 
-            {/* Contact info inline under description */}
-            <div className="mt-5 flex flex-col gap-2 text-[13.5px]" style={{ color: 'rgba(255,255,255,.65)' }}>
-              <a
-                href={`mailto:${siteConfig.email}`}
-                className="hover:text-white transition-colors break-all"
-              >
-                {siteConfig.email}
-              </a>
-              <div className="flex flex-wrap items-center gap-x-2">
-                <a href={siteConfig.phoneHref} className="hover:text-white transition-colors">
-                  {siteConfig.phone}
+            <div className="footer-social-links" aria-label="Social media links">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-social-link"
+                  aria-label={`Marvel Softwares on ${social.label}`}
+                  title={social.label}
+                  style={{ color: social.color }}
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <SocialIcon type={social.icon} />
+                  </svg>
                 </a>
-                <span aria-hidden="true" className="opacity-40">|</span>
-                <a href={siteConfig.phone2Href} className="hover:text-white transition-colors">
-                  {siteConfig.phone2}
-                </a>
-              </div>
+              ))}
             </div>
           </div>
 
-          {/* Col 2 – Explore */}
-          <nav aria-label="Footer pages">
-            <h3 className="text-[11px] font-bold uppercase tracking-[0.16em] mb-5" style={{ color: 'rgba(255,255,255,.45)' }}>
-              Explore
-            </h3>
-            <ul className="flex flex-col gap-0.5">
+          {/* Col 2: Services */}
+          <nav className="footer-col" aria-label="Services navigation">
+            <h3 className="footer-col-title">Services</h3>
+            <ul className="footer-col-list">
+              {homeServices.map((id) => {
+                const service = services.find((s) => s.id === id)
+                if (!service) return null
+                return (
+                  <li key={service.id}>
+                    <a
+                      href={`/#${service.id}`}
+                      onClick={(e) => scrollToSection(e, `/#${service.id}`)}
+                      className="footer-link"
+                    >
+                      {service.title}
+                    </a>
+                  </li>
+                )
+              })}
+            </ul>
+          </nav>
+
+          {/* Col 3: Explore */}
+          <nav className="footer-col" aria-label="Explore navigation">
+            <h3 className="footer-col-title">Explore</h3>
+            <ul className="footer-col-list">
               {navLinks.map((link) => (
                 <li key={link.href}>
-                  <Link
-                    to={link.href}
-                    className="inline-flex items-center min-h-[38px] text-[14.5px] font-medium transition-colors"
-                    style={{ color: 'rgba(255,255,255,.78)' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,.78)')}
+                  <a
+                    href={link.href}
+                    onClick={(e) => scrollToSection(e, link.href)}
+                    className="footer-link"
                   >
                     {link.label}
-                  </Link>
+                  </a>
                 </li>
               ))}
+              <li>
+                <Link to="/faq" className="footer-link">
+                  FAQ
+                </Link>
+              </li>
             </ul>
           </nav>
 
-          {/* Col 3 – Services */}
-          <nav aria-label="Footer services">
-            <h3 className="text-[11px] font-bold uppercase tracking-[0.16em] mb-5" style={{ color: 'rgba(255,255,255,.45)' }}>
-              Services
-            </h3>
-            <ul className="flex flex-col gap-0.5">
-              {services.slice(0, 6).map((service) => (
-                <li key={service.id}>
-                  <Link
-                    to={`/#${service.id}`}
-                    className="inline-flex items-center min-h-[38px] text-[14.5px] font-medium transition-colors"
-                    style={{ color: 'rgba(255,255,255,.78)' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,.78)')}
-                  >
-                    {service.title}
-                  </Link>
-                </li>
-              ))}
+          {/* Col 4: Other ventures */}
+          <nav className="footer-col" aria-label="Other ventures">
+            <h3 className="footer-col-title">Our Other Ventures</h3>
+            <ul className="footer-col-list">
+              <li>
+                <a
+                  href="https://marvelslice.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-link"
+                >
+                  Marvel Slice
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://lms.marvelslice.com/login"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-link"
+                >
+                  MarvelSlice LMS
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.marvelvillas.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-link"
+                >
+                  Marvel Villas
+                </a>
+              </li>
             </ul>
           </nav>
 
-          {/* Col 4 – More Services */}
-          <nav aria-label="Footer more services">
-            <h3 className="text-[11px] font-bold uppercase tracking-[0.16em] mb-5" style={{ color: 'rgba(255,255,255,.45)' }}>
-              More Services
-            </h3>
-            <ul className="flex flex-col gap-0.5">
-              {services.slice(6).map((service) => (
-                <li key={service.id}>
-                  <Link
-                    to={`/#${service.id}`}
-                    className="inline-flex items-center min-h-[38px] text-[14.5px] font-medium transition-colors"
-                    style={{ color: 'rgba(255,255,255,.78)' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,.78)')}
-                  >
-                    {service.title}
-                  </Link>
-                </li>
-              ))}
+          {/* Col 5: Reach Us */}
+          <div className="footer-col" aria-label="Reach us">
+            <h3 className="footer-col-title">Reach Us</h3>
+            <ul className="footer-contact-list">
+              <li>
+                <a
+                  href={`mailto:${siteConfig.email}`}
+                  className="footer-contact-item"
+                >
+                  <MailIcon className="w-4 h-4 shrink-0 text-blue-400 mt-1" />
+                  <span className="break-all">{siteConfig.email}</span>
+                </a>
+              </li>
+              <li>
+                <div className="footer-contact-item">
+                  <PhoneIcon className="w-4 h-4 shrink-0 text-blue-400 mt-1" />
+                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-2 text-[0.88rem]">
+                    <a href={siteConfig.phoneHref} className="hover:text-blue-400 transition-colors whitespace-nowrap">
+                      {siteConfig.phone}
+                    </a>
+                    <span aria-hidden="true" className="text-slate-500">|</span>
+                    <a href={siteConfig.phone2Href} className="hover:text-blue-400 transition-colors whitespace-nowrap">
+                      {siteConfig.phone2}
+                    </a>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div className="footer-contact-item">
+                  <svg className="w-4 h-4 shrink-0 text-blue-400 mt-1" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                  <span>{siteConfig.hours}</span>
+                </div>
+              </li>
+              <li>
+                <div className="footer-contact-item footer-contact-item--location">
+                  <MapPinIcon className="w-4 h-4 shrink-0 text-blue-400" />
+                  <span>{siteConfig.location}</span>
+                </div>
+              </li>
             </ul>
-
-            {/* Address under More Services col */}
-            <p
-              className="mt-5 text-[13px] leading-relaxed"
-              style={{ color: 'rgba(255,255,255,.45)' }}
-            >
-              {siteConfig.location}
-            </p>
-          </nav>
+          </div>
         </div>
+      </div>
 
-        {/* ── Bottom bar ── */}
-        <div
-          className="mt-14 flex flex-col sm:flex-row items-center justify-center gap-3 text-[13px]"
-          style={{ borderTop: '1px solid rgba(255,255,255,.12)', paddingTop: '24px', paddingBottom: '28px', color: 'rgba(255,255,255,.45)' }}
-        >
-          <p>© {CURRENT_YEAR} MARVEL SOFTWARES. All rights reserved.</p>
+      {/* --- Legal Bar --- */}
+      <div className="footer-bottom-wrap">
+        <div className="container footer-bottom">
+          <p className="footer-copyright">
+            © {CURRENT_YEAR} MARVEL SOFTWARES. All rights reserved.
+          </p>
         </div>
-
       </div>
     </footer>
   )

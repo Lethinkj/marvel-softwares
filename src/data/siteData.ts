@@ -637,7 +637,7 @@ export const upcomingProjects: UpcomingProject[] = [
     targetRelease: 'Q2 2027',
     tags: ['Cloud ERP', 'Enterprise Software', 'Inventory Management', 'Real-Time Analytics'],
     accentColor: '#FF5A00',
-    image: '/proj-imgs/shree-gold-erp.jpg',
+    image: '/images/projects/shree-gold-erp.avif',
   },
 ]
 
@@ -744,7 +744,7 @@ export const projects: Project[] = [
       'Premier educational institute platform featuring course catalogs for in-demand software technologies (Full Stack, Python, Java, Data Science) and competitive exam preparation, with live batch enrollments and career placement assistance.',
     tags: ['React', 'Vite', 'Tailwind CSS', 'EdTech', 'Responsive Web'],
     color: '#0057E7',
-    image: '/proj-imgs/marvelslice.png',
+    image: '/images/projects/marvelslice.avif',
     url: 'https://marvelslice.com/',
   },
   {
@@ -755,7 +755,7 @@ export const projects: Project[] = [
       'Comprehensive learning management system equipped with live interactive sessions, course marketplace, student progress tracking, assessment evaluations, and native Microsoft Teams integration for connected digital learning.',
     tags: ['Next.js', 'LMS Platform', 'MS Teams Integration', 'Live Sessions', 'Role-Based Access'],
     color: '#FF5A00',
-    image: '/proj-imgs/lms.png',
+    image: '/images/projects/lms.avif',
     url: 'https://lms.marvelslice.com/login',
   },
   {
@@ -766,7 +766,7 @@ export const projects: Project[] = [
       'Full-featured website for Marvel Villas, an Astro-Vastu based construction and consultation firm offering unique, modern architectural design solutions. Features service showcases, project galleries, Vastu guidance, and career opportunities.',
     tags: ['Website', 'Construction', 'Vastu', 'Real Estate', 'Responsive Web'],
     color: '#B8860B',
-    image: '/proj-imgs/marvelvillas.jpg',
+    image: '/images/projects/marvelvillas.avif',
     url: 'https://www.marvelvillas.com/',
   },
 ]
@@ -812,7 +812,7 @@ export const testimonials: Testimonial[] = [
     isVerified: true,
     initials: 'AP',
     accentColor: '#0057E7',
-    avatar: '/team/alex-chen.jpg',
+    avatar: '/images/team/alex-chen.avif',
   },
   {
     id: 't-lms',
@@ -826,7 +826,7 @@ export const testimonials: Testimonial[] = [
     isVerified: true,
     initials: 'DS',
     accentColor: '#FF5A00',
-    avatar: '/team/sarah-mitchell.jpg',
+    avatar: '/images/team/sarah-mitchell.avif',
   },
   {
     id: 't-marvelvillas',
@@ -840,7 +840,7 @@ export const testimonials: Testimonial[] = [
     isVerified: true,
     initials: 'VR',
     accentColor: '#B8860B',
-    avatar: '/team/marcus-johnson.jpg',
+    avatar: '/images/team/marcus-johnson.avif',
   },
   {
     id: 't-apex',
@@ -854,7 +854,7 @@ export const testimonials: Testimonial[] = [
     isVerified: true,
     initials: 'KS',
     accentColor: '#0891B2',
-    avatar: '/team/alex-chen.jpg',
+    avatar: '/images/team/alex-chen.avif',
   },
   {
     id: 't-horizon',
@@ -868,6 +868,6 @@ export const testimonials: Testimonial[] = [
     isVerified: true,
     initials: 'MR',
     accentColor: '#7C3AED',
-    avatar: '/team/elena-rodriguez.jpg',
+    avatar: '/images/team/elena-rodriguez.avif',
   },
 ]

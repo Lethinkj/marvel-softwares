@@ -103,20 +103,6 @@ export default defineConfig({
           })
         },
       },
-      '/images': {
-        target: 'https://lms.marvelslice.com',
-        changeOrigin: true,
-        secure: true,
-        configure: (proxy) => {
-          proxy.on('proxyRes', (proxyRes) => {
-            delete proxyRes.headers['content-disposition']
-            delete proxyRes.headers['cross-origin-resource-policy']
-            delete proxyRes.headers['x-frame-options']
-            delete proxyRes.headers['content-security-policy']
-            delete proxyRes.headers['content-security-policy-report-only']
-          })
-        },
-      },
       '/preview/marvelvillas': {
         target: 'https://www.marvelvillas.com',
         changeOrigin: true,

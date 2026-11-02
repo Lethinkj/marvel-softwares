@@ -188,7 +188,7 @@ export function Navbar() {
               style={{ gap: 10 }}
             >
               <img
-                src="/marvel-softwares-logo-removebg-preview.png"
+                src="/images/brand/logo.avif"
                 alt="MARVEL SOFTWARES"
                 className="brand-logo"
                 style={{ height: isScrolled ? 40 : 46, transition: 'height .3s ease' }}
@@ -242,7 +242,7 @@ export function Navbar() {
                 accentColor="#0057E7"
                 menuButtonColor="#0057E7"
                 openMenuButtonColor="#0F172A"
-                logoUrl="/marvel-softwares-logo-removebg-preview.png"
+                logoUrl="/images/brand/logo.avif"
                 headerHeight={isScrolled ? 58 : 66}
                 headerPadding="0"
                 closeOnClickAway={true}

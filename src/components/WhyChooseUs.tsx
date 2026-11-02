@@ -7,7 +7,7 @@ export const WhyChooseUs: React.FC = () => (
     <AnimatedSection direction="up" className="why-media w-full flex justify-center">
       <div className="w-full relative origin-center">
         <img
-          src="/Futuristic Developer Tech Ecosystem.png"
+          src="/images/technologies/developer-ecosystem.avif"
           alt="The Technology Behind Every Solution — Futuristic Developer Tech Ecosystem"
           className="w-full h-auto rounded-2xl drop-shadow-2xl object-cover"
           loading="lazy"
