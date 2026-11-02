@@ -617,30 +617,17 @@ export interface UpcomingProject {
 
 export const upcomingProjects: UpcomingProject[] = [
   {
-    id: 'marvel-pulse-erp',
-    title: 'Marvel Pulse ERP — Enterprise Resource Planning',
+    id: 'cloud-erp-platform',
+    title: 'Enterprise Cloud ERP — Business Management Suite',
     category: 'Enterprise Software',
     description:
-      'A multi-tenant cloud ERP platform integrating inventory tracking, real-time GST invoicing, smart procurement workflows, and interactive executive reporting.',
+      'A comprehensive cloud ERP platform engineered for streamlined operational workflows, automated billing, real-time inventory management, and centralized business intelligence.',
     status: 'In Active Development',
-    progress: 75,
+    progress: 82,
     targetRelease: 'Q2 2027',
-    tags: ['Cloud ERP', 'PostgreSQL', 'Microservices', 'Real-Time Telemetry'],
-    accentColor: '#0057E7',
-    image: '/Floating Task Management UI Showcase.png',
-  },
-  {
-    id: 'marvel-fleet-suite',
-    title: 'Marvel Fleet — Logistics & Smart Telematics',
-    category: 'IoT & Mobile Platform',
-    description:
-      'Intelligent fleet management solution with live GPS tracking, fuel monitoring, driver route optimization, and preventative maintenance alerts.',
-    status: 'Private Beta Testing',
-    progress: 88,
-    targetRelease: 'Q1 2027',
-    tags: ['Fleet Telematics', 'Flutter Mobile', 'Live Geo-Tracking', 'Node.js'],
+    tags: ['Cloud ERP', 'Enterprise Software', 'Inventory Management', 'Real-Time Analytics'],
     accentColor: '#FF5A00',
-    image: '/Connected SaaS Platform Ecosystem.png',
+    image: '/proj-imgs/shree-gold-erp.jpg',
   },
 ]
 
@@ -799,6 +786,7 @@ export interface Testimonial {
   isVerified: boolean
   initials: string
   accentColor: string
+  avatar?: string
 }
 
 export const testimonials: Testimonial[] = [
@@ -814,6 +802,7 @@ export const testimonials: Testimonial[] = [
     isVerified: true,
     initials: 'AP',
     accentColor: '#0057E7',
+    avatar: '/team/alex-chen.jpg',
   },
   {
     id: 't-lms',
@@ -827,6 +816,7 @@ export const testimonials: Testimonial[] = [
     isVerified: true,
     initials: 'DS',
     accentColor: '#FF5A00',
+    avatar: '/team/sarah-mitchell.jpg',
   },
   {
     id: 't-marvelvillas',
@@ -840,6 +830,7 @@ export const testimonials: Testimonial[] = [
     isVerified: true,
     initials: 'VR',
     accentColor: '#B8860B',
+    avatar: '/team/marcus-johnson.jpg',
   },
   {
     id: 't-apex',
@@ -853,6 +844,7 @@ export const testimonials: Testimonial[] = [
     isVerified: true,
     initials: 'KS',
     accentColor: '#0891B2',
+    avatar: '/team/alex-chen.jpg',
   },
   {
     id: 't-horizon',
@@ -866,5 +858,6 @@ export const testimonials: Testimonial[] = [
     isVerified: true,
     initials: 'MR',
     accentColor: '#7C3AED',
+    avatar: '/team/elena-rodriguez.jpg',
   },
 ]

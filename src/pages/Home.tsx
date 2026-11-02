@@ -6,6 +6,7 @@ import VisionBadge from '../components/VisionBadge'
 import { OurProcess } from '../components/OurProcess'
 import ServiceShowcase from '../components/ServiceShowcase'
 import WhyChooseUs from '../components/WhyChooseUs'
+import WhyChooseMarvel from '../components/WhyChooseMarvel'
 import OurTeam from '../components/OurTeam'
 import UpcomingProjects from '../components/UpcomingProjects'
 import OurClients from '../components/OurClients'
@@ -264,13 +265,18 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* ============ F. OUR TEAM ============ */}
-      <section id="team" aria-labelledby="team-heading" className="section section-warm">
+      {/* ============ F. WHY CHOOSE MARVEL SOFTWARES ============ */}
+      <section id="why-choose-us" aria-labelledby="why-choose-us-title" className="section section-warm">
+        <WhyChooseMarvel />
+      </section>
+
+      {/* ============ G. OUR TEAM ============ */}
+      <section id="team" aria-labelledby="team-heading" className="section">
         <OurTeam />
       </section>
 
-      {/* ============ G. SELECTED PROJECTS ============ */}
-      <section id="projects" aria-labelledby="work-title" className="section">
+      {/* ============ H. SELECTED PROJECTS ============ */}
+      <section id="projects" aria-labelledby="work-title" className="section section-warm">
         <div className="container">
           <div className="flex flex-col items-center text-center gap-4 max-w-2xl mx-auto">
             <h2 id="work-title" className="text-section-title">
@@ -468,23 +474,23 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* ============ H. UPCOMING PROJECTS ============ */}
-      <section id="upcoming-projects" aria-labelledby="upcoming-title" className="section section-warm">
+      {/* ============ I. UPCOMING PROJECTS ============ */}
+      <section id="upcoming-projects" aria-labelledby="upcoming-title" className="section">
         <UpcomingProjects />
       </section>
 
-      {/* ============ I. OUR CLIENTS ============ */}
-      <section id="clients" aria-labelledby="clients-heading" className="section">
+      {/* ============ J. OUR CLIENTS ============ */}
+      <section id="clients" aria-labelledby="clients-heading" className="section section-warm">
         <OurClients />
       </section>
 
-      {/* ============ J. TESTIMONIALS ============ */}
-      <section id="testimonials" aria-labelledby="testimonials-heading" className="section section-warm">
+      {/* ============ K. TESTIMONIALS ============ */}
+      <section id="testimonials" aria-labelledby="testimonials-heading" className="section">
         <Testimonials />
       </section>
 
-      {/* ============ K. CONTACT US ============ */}
-      <section id="contact" aria-labelledby="contact-heading" className="section">
+      {/* ============ L. CONTACT US ============ */}
+      <section id="contact" aria-labelledby="contact-heading" className="section section-warm">
         <ContactSection />
       </section>
 

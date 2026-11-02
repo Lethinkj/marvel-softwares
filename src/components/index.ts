@@ -27,3 +27,6 @@ export { default as TeamAvatar } from './avatars/TeamAvatar'
 
 export * from './Testimonials'
 export { default as Testimonials } from './Testimonials'
+
+export * from './WhyChooseMarvel'
+export { default as WhyChooseMarvel } from './WhyChooseMarvel'

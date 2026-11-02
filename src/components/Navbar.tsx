@@ -17,6 +17,7 @@ const SECTIONS_IN_ORDER = [
   { id: 'services', nav: 'services' },
   { id: 'process', nav: 'services' },
   { id: 'technologies', nav: 'services' },
+  { id: 'why-choose-us', nav: 'services' },
   { id: 'team', nav: 'team' },
   { id: 'projects', nav: 'projects' },
   { id: 'upcoming-projects', nav: 'projects' },
@@ -58,27 +59,49 @@ export function Navbar() {
       // Check if user reached absolute bottom of page
       const scrollBottom = window.innerHeight + scrollY
       const docHeight = document.documentElement.scrollHeight
-      if (docHeight - scrollBottom < 30) {
+      if (docHeight - scrollBottom < 40) {
         setActiveSection('contact')
         return
       }
 
-      // Focal line is right below the header (~25-35% of viewport height)
-      const focalLine = Math.min(260, Math.max(120, window.innerHeight * 0.32))
+      const headerHeight = 70
+      const viewportHeight = window.innerHeight
 
-      // Iterate in DOM order: the last section whose top is at or above focalLine is currently active
-      let currentNav = 'home'
+      // Measure visible pixel height for each nav category
+      const visibility: Record<string, number> = {
+        home: 0,
+        about: 0,
+        services: 0,
+        team: 0,
+        projects: 0,
+        contact: 0,
+      }
+
       for (const section of SECTIONS_IN_ORDER) {
         const el = document.getElementById(section.id)
         if (el) {
           const rect = el.getBoundingClientRect()
-          if (rect.top <= focalLine) {
-            currentNav = section.nav
+          const top = Math.max(rect.top, headerHeight)
+          const bottom = Math.min(rect.bottom, viewportHeight)
+          const visible = Math.max(0, bottom - top)
+          if (visible > 0) {
+            visibility[section.nav] = (visibility[section.nav] || 0) + visible
           }
         }
       }
 
-      setActiveSection(currentNav)
+      let maxNav = 'home'
+      let maxVisible = -1
+      for (const [nav, vis] of Object.entries(visibility)) {
+        if (vis > maxVisible) {
+          maxVisible = vis
+          maxNav = nav
+        }
+      }
+
+      if (maxVisible > 40) {
+        setActiveSection(maxNav)
+      }
     }
 
     handleScroll()

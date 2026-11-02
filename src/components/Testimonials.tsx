@@ -89,7 +89,7 @@ export const Testimonials: React.FC = () => {
     <div className="w-full">
       {/* Section Header */}
       <div className="container">
-        <AnimatedSection style={{ maxWidth: 760 }} className="text-center mx-auto mb-8 sm:mb-10">
+        <AnimatedSection style={{ maxWidth: 760 }} className="text-center mx-auto mb-8 sm:mb-12">
           <h2 id="testimonials-heading" className="text-section-title text-[#0033A0]">
             Testimonials
           </h2>
@@ -99,17 +99,17 @@ export const Testimonials: React.FC = () => {
         </AnimatedSection>
 
         {/* Carousel Container: Left Arrow, 3 Cards Viewport, Right Arrow */}
-        <div className="relative flex items-center gap-2.5 sm:gap-4 lg:gap-5 w-full">
+        <div className="relative flex items-center gap-3 sm:gap-4 lg:gap-5 w-full">
           {/* Left Arrow Button */}
           <button
             type="button"
             onClick={handlePrev}
             aria-label="Previous testimonial"
-            className="testimonial-arrow-btn shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-none bg-white border border-slate-200 text-slate-700 hover:text-white hover:bg-[#0033A0] hover:border-[#0033A0] shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-center cursor-pointer active:scale-95 select-none z-10"
+            className="shrink-0 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white border border-slate-200/90 text-slate-700 hover:text-[#FF5A00] hover:border-[#FF5A00] shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-center cursor-pointer active:scale-95 select-none z-10"
           >
             <svg
-              width="20"
-              height="20"
+              width="18"
+              height="18"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -124,7 +124,7 @@ export const Testimonials: React.FC = () => {
 
           {/* Carousel Viewport (Shows 3 at a time on desktop) */}
           <div
-            className="overflow-hidden flex-1 py-2 sm:py-3 focus:outline-hidden"
+            className="overflow-hidden flex-1 py-3 focus:outline-hidden"
             tabIndex={0}
             onKeyDown={handleKeyDown}
             onTouchStart={onTouchStart}
@@ -158,11 +158,11 @@ export const Testimonials: React.FC = () => {
             type="button"
             onClick={handleNext}
             aria-label="Next testimonial"
-            className="testimonial-arrow-btn shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-none bg-white border border-slate-200 text-slate-700 hover:text-white hover:bg-[#0033A0] hover:border-[#0033A0] shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-center cursor-pointer active:scale-95 select-none z-10"
+            className="shrink-0 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white border border-slate-200/90 text-slate-700 hover:text-[#FF5A00] hover:border-[#FF5A00] shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-center cursor-pointer active:scale-95 select-none z-10"
           >
             <svg
-              width="20"
-              height="20"
+              width="18"
+              height="18"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -176,17 +176,17 @@ export const Testimonials: React.FC = () => {
           </button>
         </div>
 
-        {/* Rectangular Pagination Indicator Dash Strip */}
-        <div className="flex items-center justify-center gap-2 mt-6 sm:mt-7">
+        {/* Pagination Indicator Dots */}
+        <div className="flex items-center justify-center gap-2 mt-7 sm:mt-8">
           {Array.from({ length: maxIndex + 1 }).map((_, i) => (
             <button
               key={i}
               type="button"
               onClick={() => setCurrentIndex(i)}
-              className={`h-1.5 transition-all duration-300 rounded-none cursor-pointer ${
+              className={`h-2 transition-all duration-300 rounded-full cursor-pointer ${
                 i === currentIndex
-                  ? 'w-8 bg-[#0033A0]'
-                  : 'w-2.5 bg-slate-300 hover:bg-slate-400'
+                  ? 'w-6 bg-[#FF5A00]'
+                  : 'w-2 bg-orange-200 hover:bg-orange-300'
               }`}
               aria-label={`Go to testimonial slide ${i + 1}`}
             />
@@ -200,34 +200,35 @@ export const Testimonials: React.FC = () => {
 const TestimonialCard: React.FC<{ item: Testimonial }> = ({ item }) => {
   return (
     <article
-      className="testimonial-card-rect flex flex-col justify-between h-full w-full bg-white rounded-none p-6 sm:p-7 border border-slate-200/90 shadow-xs hover:shadow-lg hover:border-[#0057E7]/80 transition-all duration-300 relative overflow-hidden group select-none"
+      className="flex flex-col justify-between h-full w-full bg-white rounded-2xl pt-5 pb-5 px-5 sm:pt-5.5 sm:pb-6 sm:px-6 border border-orange-200/90 shadow-[0_4px_20px_rgba(255,90,0,0.04)] hover:shadow-[0_12px_28px_rgba(255,90,0,0.09)] hover:border-[#FF5A00]/50 transition-all duration-300 relative select-none"
       aria-label={`Testimonial from ${item.clientName}`}
     >
-      {/* Top brand accent stripe */}
-      <div
-        className="absolute top-0 left-0 right-0 h-1 transition-all duration-300 group-hover:h-1.5"
-        style={{ backgroundColor: item.accentColor }}
-      />
+      <div>
+        {/* Top Row: Quote Badge on left, 5 Orange Stars + 5.0 on right */}
+        <div className="flex items-center justify-between gap-2 mb-3 sm:mb-3.5">
+          <div
+            className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center shrink-0 shadow-2xs"
+            aria-hidden="true"
+          >
+            <svg
+              className="w-5 h-5 text-[#FF5A00]"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+            </svg>
+          </div>
 
-      {/* Decorative backdrop quote watermark */}
-      <svg
-        className="absolute top-3.5 right-4 w-12 h-12 text-slate-100 group-hover:text-blue-50/80 transition-colors pointer-events-none select-none -z-0"
-        fill="currentColor"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-      >
-        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-      </svg>
-
-      <div className="relative z-10">
-        {/* Rating Row & Verified Badge */}
-        <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
-          <div className="flex items-center gap-1.5" aria-label={`Rating: ${item.rating} out of 5 stars`}>
-            <div className="flex items-center text-amber-400">
+          {/* 5 Orange Stars + 5.0 moved to top-right */}
+          <div
+            className="flex items-center gap-1.5 shrink-0"
+            aria-label={`Rating: ${item.rating} out of 5 stars`}
+          >
+            <div className="flex items-center text-[#FF5A00] gap-0.5">
               {[...Array(item.rating)].map((_, i) => (
                 <svg
                   key={i}
-                  className="w-4 h-4 fill-current drop-shadow-2xs"
+                  className="w-4 h-4 fill-current"
                   viewBox="0 0 20 20"
                   aria-hidden="true"
                 >
@@ -235,63 +236,71 @@ const TestimonialCard: React.FC<{ item: Testimonial }> = ({ item }) => {
                 </svg>
               ))}
             </div>
-            <span className="text-xs font-bold text-slate-800">{item.rating}.0</span>
-          </div>
-
-          {item.isVerified && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
-              <svg
-                className="w-3 h-3 text-emerald-600"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2.4}
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-              <span>Verified Customer</span>
+            <span className="text-xs font-bold text-slate-900">
+              {item.rating}.0
             </span>
-          )}
+          </div>
         </div>
 
-        {/* Project Completed Rectangular Tag */}
-        <div className="mb-3.5">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-none text-xs font-semibold bg-slate-50 border border-slate-200/90 text-slate-700 max-w-full">
-            <span
-              className="w-2 h-2 rounded-none shrink-0"
-              style={{ backgroundColor: item.accentColor }}
+        {/* Second Row: Project Completed Pill */}
+        <div className="mb-3 sm:mb-3.5">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-orange-50/90 border border-orange-100 text-xs text-slate-800 max-w-full">
+            <svg
+              className="w-3.5 h-3.5 text-[#FF5A00] shrink-0"
+              fill="currentColor"
+              viewBox="0 0 20 20"
               aria-hidden="true"
-            />
-            <span className="text-slate-400 font-normal shrink-0">Project:</span>
+            >
+              <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+            </svg>
+            <span className="text-slate-500 font-normal shrink-0">Project:</span>
             <span className="text-slate-900 font-bold truncate">
               {item.projectCompleted}
             </span>
           </div>
         </div>
 
-        {/* Customer Feedback Body */}
-        <p className="text-body text-[14px] sm:text-[14.5px] leading-relaxed text-slate-700 font-normal">
+        {/* Third Row: Customer Feedback */}
+        <p className="text-[14px] sm:text-[14.5px] leading-relaxed text-slate-800 font-normal">
           &ldquo;{item.feedback}&rdquo;
         </p>
       </div>
 
-      {/* Client Profile Footer */}
-      <div className="mt-5 pt-4 border-t border-slate-100 flex items-center gap-3 relative z-10">
-        <div
-          className="w-10 h-10 rounded-none flex items-center justify-center font-bold text-white text-xs shadow-xs shrink-0 select-none border border-white/20"
-          style={{ backgroundColor: item.accentColor }}
-          aria-hidden="true"
-        >
-          {item.initials}
-        </div>
-        <div className="min-w-0 flex-1">
-          <h3 className="text-sm font-bold text-slate-900 truncate">
-            {item.clientName}
-          </h3>
-          <p className="text-xs text-slate-500 font-medium truncate mt-0.5">
-            {item.role} &bull; {item.companyName}
-          </p>
+      {/* Profile Footer */}
+      <div>
+        <div className="border-t border-slate-100 my-3.5 sm:my-4" />
+        <div className="flex items-center gap-3.5">
+          {/* Avatar Image (Enlarged to 56px / w-14 h-14) */}
+          <div
+            className="w-14 h-14 rounded-2xl overflow-hidden shrink-0 select-none shadow-sm border border-orange-200/80 bg-[#FF5A00]"
+            aria-hidden="true"
+          >
+            {item.avatar ? (
+              <img
+                src={item.avatar}
+                alt={item.clientName}
+                className="w-full h-full object-cover object-top"
+                loading="lazy"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center font-bold text-white text-sm">
+                {item.initials}
+              </div>
+            )}
+          </div>
+
+          {/* Vertical Orange Accent Divider */}
+          <div className="w-0.5 h-10 sm:h-11 bg-orange-300/80 shrink-0" aria-hidden="true" />
+
+          {/* Client Name & Role */}
+          <div className="min-w-0 flex-1">
+            <h3 className="text-[14.5px] sm:text-[15.5px] font-bold text-slate-900 truncate">
+              {item.clientName}
+            </h3>
+            <p className="text-xs sm:text-[13px] text-slate-500 font-medium truncate mt-0.5">
+              {item.role} &bull; {item.companyName}
+            </p>
+          </div>
         </div>
       </div>
     </article>
