@@ -3,7 +3,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
-RUN npx vite build
+RUN npm run build
 
 FROM nginx:stable-alpine
 COPY deploy/nginx.conf /etc/nginx/conf.d/default.conf
