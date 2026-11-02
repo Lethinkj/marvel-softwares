@@ -10,14 +10,19 @@ import { StaggeredMenu, type StaggeredMenuItem, type StaggeredMenuSocialItem } f
  * scroll-progress hairline.
  * Mobile & Tablet (< 1024px): React Bits StaggeredMenu with GSAP staggered layers.
  */
-const SECTION_GROUPS = [
-  { nav: 'contact', ids: ['contact'] },
-  { nav: 'testimonials', ids: ['testimonials'] },
-  { nav: 'projects', ids: ['clients', 'upcoming-projects', 'projects'] },
-  { nav: 'team', ids: ['team'] },
-  { nav: 'services', ids: ['technologies', 'process', 'services'] },
-  { nav: 'about', ids: ['mission-vision', 'about'] },
-  { nav: 'home', ids: ['home'] },
+const SECTIONS_IN_ORDER = [
+  { id: 'home', nav: 'home' },
+  { id: 'about', nav: 'about' },
+  { id: 'mission-vision', nav: 'about' },
+  { id: 'services', nav: 'services' },
+  { id: 'process', nav: 'services' },
+  { id: 'technologies', nav: 'services' },
+  { id: 'team', nav: 'team' },
+  { id: 'projects', nav: 'projects' },
+  { id: 'upcoming-projects', nav: 'projects' },
+  { id: 'clients', nav: 'projects' },
+  { id: 'testimonials', nav: 'projects' },
+  { id: 'contact', nav: 'contact' },
 ]
 
 export function Navbar() {
@@ -39,37 +44,41 @@ export function Navbar() {
     { label: 'Contact', link: '#contact' },
   ]
 
-  // Track active section both when scrolling down and scrolling up
+  // Track active section reliably both when scrolling down and scrolling up
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY
       setIsScrolled(scrollY > 12)
 
-      if (scrollY < 180) {
+      if (scrollY < 120) {
         setActiveSection('home')
         return
       }
 
+      // Check if user reached absolute bottom of page
       const scrollBottom = window.innerHeight + scrollY
       const docHeight = document.documentElement.scrollHeight
-      if (docHeight - scrollBottom < 80) {
+      if (docHeight - scrollBottom < 30) {
         setActiveSection('contact')
         return
       }
 
-      const focalY = 160
-      for (const group of SECTION_GROUPS) {
-        for (const id of group.ids) {
-          const el = document.getElementById(id)
-          if (el) {
-            const rect = el.getBoundingClientRect()
-            if (rect.top <= focalY && rect.bottom >= focalY) {
-              setActiveSection(group.nav)
-              return
-            }
+      // Focal line is right below the header (~25-35% of viewport height)
+      const focalLine = Math.min(260, Math.max(120, window.innerHeight * 0.32))
+
+      // Iterate in DOM order: the last section whose top is at or above focalLine is currently active
+      let currentNav = 'home'
+      for (const section of SECTIONS_IN_ORDER) {
+        const el = document.getElementById(section.id)
+        if (el) {
+          const rect = el.getBoundingClientRect()
+          if (rect.top <= focalLine) {
+            currentNav = section.nav
           }
         }
       }
+
+      setActiveSection(currentNav)
     }
 
     handleScroll()

@@ -91,7 +91,7 @@ export const Testimonials: React.FC = () => {
       <div className="container">
         <AnimatedSection style={{ maxWidth: 760 }} className="text-center mx-auto mb-8 sm:mb-10">
           <h2 id="testimonials-heading" className="text-section-title text-[#0033A0]">
-            What Our Clients Say About Us
+            Testimonials
           </h2>
           <p className="section-subtitle">
             Build trust with genuine customer experiences.
