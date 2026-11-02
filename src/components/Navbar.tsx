@@ -164,8 +164,18 @@ export function Navbar() {
             borderLeft: 'none',
             borderRight: 'none',
             borderTop: 'none',
-            borderBottom: '1px solid rgba(0, 87, 231, 0.12)',
-            transition: 'height .3s ease',
+            borderBottom: isScrolled
+              ? '1px solid rgba(226, 232, 240, 0.85)'
+              : '1px solid rgba(0, 87, 231, 0.08)',
+            background: isScrolled
+              ? 'rgba(255, 255, 255, 0.8)'
+              : '#ffffff',
+            backdropFilter: isScrolled ? 'blur(16px) saturate(180%)' : 'none',
+            WebkitBackdropFilter: isScrolled ? 'blur(16px) saturate(180%)' : 'none',
+            boxShadow: isScrolled
+              ? '0 4px 24px -2px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04)'
+              : '0 1px 0 rgba(0, 31, 128, 0.06)',
+            transition: 'all .3s ease',
             pointerEvents: 'auto',
           }}
         >

@@ -1,4 +1,4 @@
-import React, { useState, useId } from 'react'
+import React, { useState, useId, useEffect, useCallback } from 'react'
 import AnimatedSection from './AnimatedSection'
 import { CheckIcon } from './Icons'
 import { siteConfig } from '../data/siteData'
@@ -24,7 +24,36 @@ export const ContactSection: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const [wasQueued, setWasQueued] = useState(false)
+
+  const handleReset = useCallback(() => {
+    setName('')
+    setEmail('')
+    setPhone('')
+    setAddress('')
+    setMessage('')
+    setErrors({})
+    setSubmitError(null)
+    setIsSubmitted(false)
+  }, [])
+
+  // Auto-close success message and scroll to Home section after 3 seconds
+  useEffect(() => {
+    if (!isSubmitted) return
+
+    const timer = setTimeout(() => {
+      handleReset()
+
+      const homeEl = document.getElementById('home')
+      if (homeEl) {
+        homeEl.scrollIntoView({ behavior: 'smooth' })
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+      window.history.replaceState(null, '', '#home')
+    }, 3000)
+
+    return () => clearTimeout(timer)
+  }, [isSubmitted, handleReset])
 
   const validate = (): { valid: boolean; firstError?: keyof FormErrors } => {
     const next: FormErrors = {}
@@ -55,7 +84,7 @@ export const ContactSection: React.FC = () => {
     }
     setIsSubmitting(true)
     try {
-      const result = await submitProjectInquiry({
+      await submitProjectInquiry({
         name: name.trim(),
         email: email.trim(),
         phone: phone.trim(),
@@ -63,7 +92,6 @@ export const ContactSection: React.FC = () => {
         solution: 'Other',
         requirements: message.trim(),
       })
-      setWasQueued(result.status === 'queued')
       setIsSubmitted(true)
     } catch {
       setSubmitError(
@@ -96,15 +124,15 @@ export const ContactSection: React.FC = () => {
 
       <AnimatedSection delay={0.1}>
         <div
-          className="rounded-3xl overflow-hidden bg-white grid grid-cols-1 lg:grid-cols-12 shadow-sm hover:shadow-md transition-shadow"
+          className="rounded-3xl overflow-hidden bg-white grid grid-cols-1 lg:grid-cols-[45%_55%] shadow-sm hover:shadow-md transition-shadow"
           style={{
             border: '1px solid var(--color-border)',
             boxShadow: 'var(--shadow-card)',
           }}
         >
-          {/* Image side: Hidden on mobile and small tablet (< 1024px / lg), shown on desktop */}
+          {/* Image side: 45% on desktop with full natural image size */}
           <div
-            className="hidden lg:flex lg:col-span-6 items-center justify-center p-6 sm:p-8 lg:p-10 relative overflow-hidden border-r border-slate-200"
+            className="hidden lg:flex items-center justify-center p-6 sm:p-8 lg:p-10 relative overflow-hidden border-r border-slate-200"
             style={{
               background: 'linear-gradient(160deg, #f8fafc 0%, #f1f5f9 55%, #e6edf5 100%)',
             }}
@@ -120,161 +148,173 @@ export const ContactSection: React.FC = () => {
             <img
               src="/Isometric Software Teamwork Workspace.png"
               alt="Isometric Software Teamwork Workspace"
-              className="relative z-10 w-full h-auto max-w-[620px] lg:scale-105 object-contain drop-shadow-2xl transition-transform duration-500 hover:scale-[1.04]"
+              className="relative z-10 w-full h-auto max-w-[560px] lg:scale-105 object-contain drop-shadow-2xl transition-transform duration-500 hover:scale-[1.04]"
               loading="lazy"
             />
           </div>
 
-          {/* Form side (full width on mobile/tab, 6 cols on desktop) - Clean White */}
-          <div className="col-span-1 lg:col-span-6 bg-white p-6 sm:p-10 lg:p-12 flex flex-col justify-center">
-            {isSubmitted ? (
-              <div role="status" aria-live="polite" className="text-center" style={{ paddingBlock: 32 }}>
-                <span
-                  className="mx-auto flex items-center justify-center w-16 h-16 rounded-full"
-                  style={{ background: '#F4F5FF', color: 'var(--color-primary)', marginBottom: 20 }}
-                  aria-hidden="true"
-                >
-                  <CheckIcon className="w-8 h-8" />
-                </span>
-                <h3 className="text-card-title" style={{ fontSize: '1.5rem' }}>
-                  Thank you for reaching out, {name.trim().split(' ')[0] || 'there'}.
-                </h3>
-                <p className="text-body" style={{ marginTop: 12, marginInline: 'auto', maxWidth: 520 }}>
-                  Your project inquiry has been submitted successfully. We&apos;ll review
-                  the information and follow up using your provided contact details.
-                </p>
-                {wasQueued && (
-                  <p className="text-body text-[14px]" style={{ marginTop: 10, marginInline: 'auto', maxWidth: 520 }}>
-                    Note: our direct delivery channel isn&apos;t configured on this site
-                    yet, so your inquiry is safely saved on this device. For the fastest
-                    response, please also email us at{' '}
-                    <a href={`mailto:${siteConfig.email}`} style={{ color: 'var(--color-primary)', fontWeight: 600 }}>
-                      {siteConfig.email}
-                    </a>
-                    .
+          {/* Form side: 55% on desktop - Clean White with blur effect on submit */}
+          <div className="col-span-1 bg-white p-6 sm:p-8 lg:p-10 xl:p-12 flex flex-col justify-center relative">
+            {/* The Form Content (blurred when submitted) */}
+            <div
+              className={`flex flex-col justify-center transition-all duration-500 ${
+                isSubmitted
+                  ? 'filter blur-[5px] opacity-30 pointer-events-none select-none'
+                  : ''
+              }`}
+              aria-hidden={isSubmitted}
+            >
+              <h3 className="text-card-title" style={{ fontSize: '1.4rem' }}>
+                Tell Us About Your Project
+              </h3>
+              <p className="text-body text-[15px]" style={{ marginTop: 6, marginBottom: 26 }}>
+                Share a few details so we can better understand your requirements.
+              </p>
+              <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 20 }}>
+                  <div>
+                    <label className="field-label" htmlFor={`${formId}-name`}>
+                      Full Name <span className="field-required" aria-hidden="true">*</span>
+                    </label>
+                    <input
+                      id={`${formId}-name`}
+                      className={`field-input${errors.name ? ' field-error' : ''}`}
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      autoComplete="name"
+                      aria-invalid={Boolean(errors.name)}
+                      aria-describedby={errors.name ? `${formId}-name-error` : undefined}
+                    />
+                    {errorFor('name')}
+                  </div>
+                  <div>
+                    <label className="field-label" htmlFor={`${formId}-phone`}>
+                      Phone Number <span className="field-required" aria-hidden="true">*</span>
+                    </label>
+                    <input
+                      id={`${formId}-phone`}
+                      type="tel"
+                      className={`field-input${errors.phone ? ' field-error' : ''}`}
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      autoComplete="tel"
+                      aria-invalid={Boolean(errors.phone)}
+                      aria-describedby={errors.phone ? `${formId}-phone-error` : undefined}
+                    />
+                    {errorFor('phone')}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 20 }}>
+                  <div>
+                    <label className="field-label" htmlFor={`${formId}-email`}>
+                      Email <span className="field-required" aria-hidden="true">*</span>
+                    </label>
+                    <input
+                      id={`${formId}-email`}
+                      type="email"
+                      className={`field-input${errors.email ? ' field-error' : ''}`}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      autoComplete="email"
+                      aria-invalid={Boolean(errors.email)}
+                      aria-describedby={errors.email ? `${formId}-email-error` : undefined}
+                    />
+                    {errorFor('email')}
+                  </div>
+                  <div>
+                    <label className="field-label" htmlFor={`${formId}-address`}>
+                      Address <span className="field-required" aria-hidden="true">*</span>
+                    </label>
+                    <input
+                      id={`${formId}-address`}
+                      className={`field-input${errors.address ? ' field-error' : ''}`}
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      autoComplete="street-address"
+                      placeholder="Street, city and state"
+                      aria-invalid={Boolean(errors.address)}
+                      aria-describedby={errors.address ? `${formId}-address-error` : undefined}
+                    />
+                    {errorFor('address')}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="field-label" htmlFor={`${formId}-message`}>
+                    Message <span className="field-required" aria-hidden="true">*</span>
+                  </label>
+                  <textarea
+                    id={`${formId}-message`}
+                    className={`field-textarea${errors.message ? ' field-error' : ''}`}
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="What problem should the software solve? Who will use it? Any features, systems or deadlines we should know about?"
+                    aria-invalid={Boolean(errors.message)}
+                    aria-describedby={errors.message ? `${formId}-message-error` : undefined}
+                  />
+                  {errorFor('message')}
+                </div>
+
+                {submitError && (
+                  <p role="alert" className="field-message error" style={{ fontSize: '0.9375rem' }}>
+                    {submitError}
                   </p>
                 )}
+
+                <div style={{ paddingTop: 4, display: 'flex', justifyContent: 'center' }}>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="inline-flex items-center justify-center min-h-[52px] px-10 py-3 text-base font-semibold transition-all whitespace-nowrap"
+                    style={{
+                      background: isSubmitting ? '#8aa9f2' : 'var(--color-primary)',
+                      color: '#fff',
+                      borderRadius: 999,
+                      boxShadow: 'var(--shadow-button)',
+                      cursor: isSubmitting ? 'wait' : 'pointer',
+                      opacity: isSubmitting ? 0.85 : 1,
+                      minWidth: 200,
+                    }}
+                  >
+                    {isSubmitting ? 'Sending…' : 'Submit'}
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            {/* Success Overlay with blur backdrop */}
+            {isSubmitted && (
+              <div
+                role="status"
+                aria-live="polite"
+                className="absolute inset-0 z-20 flex flex-col items-center justify-center p-6 sm:p-10 text-center bg-white/75 backdrop-blur-md rounded-2xl sm:rounded-3xl transition-all duration-500"
+              >
+                <div className="max-w-md mx-auto flex flex-col items-center">
+                  <span
+                    className="w-16 h-16 sm:w-18 sm:h-18 rounded-full flex items-center justify-center mb-5 shadow-sm text-emerald-600 bg-emerald-50 border border-emerald-200"
+                    aria-hidden="true"
+                  >
+                    <CheckIcon className="w-8 h-8 sm:w-9 sm:h-9" />
+                  </span>
+
+                  <h3 className="text-card-title text-slate-900 text-xl sm:text-2xl font-bold leading-tight">
+                    Thank you for contacting Marvel Softwares!
+                  </h3>
+
+                  <p className="text-body text-[15px] sm:text-[16px] text-slate-600 leading-relaxed mt-3 max-w-sm">
+                    Your enquiry has been received. Our team will get in touch with you.
+                  </p>
+
+                  <button
+                    type="button"
+                    onClick={handleReset}
+                    className="mt-6 inline-flex items-center justify-center px-6 py-2.5 rounded-full text-xs sm:text-sm font-semibold text-[#0057E7] bg-blue-50 hover:bg-blue-100 border border-blue-200/80 active:scale-95 transition-all cursor-pointer"
+                  >
+                    Send another enquiry
+                  </button>
+                </div>
               </div>
-            ) : (
-              <>
-                <h3 className="text-card-title" style={{ fontSize: '1.4rem' }}>
-                  Tell Us About Your Project
-                </h3>
-                <p className="text-body text-[15px]" style={{ marginTop: 6, marginBottom: 26 }}>
-                  Share a few details so we can better understand your requirements.
-                </p>
-                <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-                  <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 20 }}>
-                    <div>
-                      <label className="field-label" htmlFor={`${formId}-name`}>
-                        Full Name <span className="field-required" aria-hidden="true">*</span>
-                      </label>
-                      <input
-                        id={`${formId}-name`}
-                        className={`field-input${errors.name ? ' field-error' : ''}`}
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        autoComplete="name"
-                        aria-invalid={Boolean(errors.name)}
-                        aria-describedby={errors.name ? `${formId}-name-error` : undefined}
-                      />
-                      {errorFor('name')}
-                    </div>
-                    <div>
-                      <label className="field-label" htmlFor={`${formId}-phone`}>
-                        Phone Number <span className="field-required" aria-hidden="true">*</span>
-                      </label>
-                      <input
-                        id={`${formId}-phone`}
-                        type="tel"
-                        className={`field-input${errors.phone ? ' field-error' : ''}`}
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        autoComplete="tel"
-                        aria-invalid={Boolean(errors.phone)}
-                        aria-describedby={errors.phone ? `${formId}-phone-error` : undefined}
-                      />
-                      {errorFor('phone')}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 20 }}>
-                    <div>
-                      <label className="field-label" htmlFor={`${formId}-email`}>
-                        Email <span className="field-required" aria-hidden="true">*</span>
-                      </label>
-                      <input
-                        id={`${formId}-email`}
-                        type="email"
-                        className={`field-input${errors.email ? ' field-error' : ''}`}
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        autoComplete="email"
-                        aria-invalid={Boolean(errors.email)}
-                        aria-describedby={errors.email ? `${formId}-email-error` : undefined}
-                      />
-                      {errorFor('email')}
-                    </div>
-                    <div>
-                      <label className="field-label" htmlFor={`${formId}-address`}>
-                        Address <span className="field-required" aria-hidden="true">*</span>
-                      </label>
-                      <input
-                        id={`${formId}-address`}
-                        className={`field-input${errors.address ? ' field-error' : ''}`}
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                        autoComplete="street-address"
-                        placeholder="Street, city and state"
-                        aria-invalid={Boolean(errors.address)}
-                        aria-describedby={errors.address ? `${formId}-address-error` : undefined}
-                      />
-                      {errorFor('address')}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="field-label" htmlFor={`${formId}-message`}>
-                      Message <span className="field-required" aria-hidden="true">*</span>
-                    </label>
-                    <textarea
-                      id={`${formId}-message`}
-                      className={`field-textarea${errors.message ? ' field-error' : ''}`}
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      placeholder="What problem should the software solve? Who will use it? Any features, systems or deadlines we should know about?"
-                      aria-invalid={Boolean(errors.message)}
-                      aria-describedby={errors.message ? `${formId}-message-error` : undefined}
-                    />
-                    {errorFor('message')}
-                  </div>
-
-                  {submitError && (
-                    <p role="alert" className="field-message error" style={{ fontSize: '0.9375rem' }}>
-                      {submitError}
-                    </p>
-                  )}
-
-                  <div style={{ paddingTop: 4, display: 'flex', justifyContent: 'center' }}>
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="inline-flex items-center justify-center min-h-[52px] px-10 py-3 text-base font-semibold transition-all whitespace-nowrap"
-                      style={{
-                        background: isSubmitting ? '#8aa9f2' : 'var(--color-primary)',
-                        color: '#fff',
-                        borderRadius: 999,
-                        boxShadow: 'var(--shadow-button)',
-                        cursor: isSubmitting ? 'wait' : 'pointer',
-                        opacity: isSubmitting ? 0.85 : 1,
-                        minWidth: 200,
-                      }}
-                    >
-                      {isSubmitting ? 'Sending…' : 'Submit'}
-                    </button>
-                  </div>
-                </form>
-              </>
             )}
           </div>
         </div>

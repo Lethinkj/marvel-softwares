@@ -161,9 +161,9 @@ export const Home: React.FC = () => {
             </div>
 
             {/* Copy (Right on desktop - 60%) */}
-            <div className="order-1 lg:order-2 text-left w-full">
+            <div className="order-1 lg:order-2 w-full">
               <AnimatedSection>
-                <h2 id="about-us-title" className="text-section-title text-left">
+                <h2 id="about-us-title" className="text-section-title text-center">
                   About Us
                 </h2>
                 <div className="mt-6 space-y-4 text-justify text-slate-600 leading-relaxed text-base sm:text-lg">

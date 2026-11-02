@@ -516,6 +516,18 @@ body.nav-menu-open #root {
   text-wrap: balance;
 }
 
+/* Small uniform underline accent for all main section headings */
+.text-section-title::after {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 3.5px;
+  background: #FF5A00;
+  border-radius: 9999px;
+  margin-top: 0.75rem;
+  margin-inline: auto;
+}
+
 /* All section subheadings across the entire home page share this exact 1 size */
 .section-subtitle {
   font-family: var(--font-sans);
@@ -1621,13 +1633,22 @@ body.nav-menu-open #root {
 }
 
 /* ============================================
-   TOP BAR — solid white, no glass effects
+   TOP BAR — glass effect on scroll
    ============================================ */
 .glass-bar {
   position: relative;
   border-radius: 0;
   background: #ffffff;
-  box-shadow: 0 1px 0 rgba(0, 31, 128, 0.08);
+  box-shadow: 0 1px 0 rgba(0, 31, 128, 0.06);
+  transition: all 0.3s ease;
+}
+
+.glass-bar--scrolled {
+  background: rgba(255, 255, 255, 0.8) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  box-shadow: 0 4px 24px -2px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.85) !important;
 }
 
 /* ============================================

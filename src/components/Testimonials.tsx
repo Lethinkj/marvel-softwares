@@ -99,17 +99,16 @@ export const Testimonials: React.FC = () => {
         </AnimatedSection>
 
         {/* Carousel Container: Left Arrow, 3 Cards Viewport, Right Arrow */}
-        <div className="relative flex items-center gap-3 sm:gap-4 lg:gap-5 w-full">
+        <div className="relative flex items-center gap-1.5 sm:gap-4 lg:gap-5 -mx-2 sm:mx-0 w-[calc(100%+1rem)] sm:w-full">
           {/* Left Arrow Button */}
           <button
             type="button"
             onClick={handlePrev}
             aria-label="Previous testimonial"
-            className="shrink-0 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white border border-slate-200/90 text-slate-700 hover:text-[#FF5A00] hover:border-[#FF5A00] shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-center cursor-pointer active:scale-95 select-none z-10"
+            className="shrink-0 relative w-8 h-8 sm:w-10 sm:h-10 lg:w-11 lg:h-11 rounded-full bg-white border border-slate-200/90 text-slate-700 hover:text-[#FF5A00] hover:border-[#FF5A00] shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-center cursor-pointer active:scale-95 select-none z-10 after:absolute after:-inset-2 after:content-['']"
           >
             <svg
-              width="18"
-              height="18"
+              className="w-4 h-4 sm:w-[18px] sm:h-[18px]"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -122,9 +121,9 @@ export const Testimonials: React.FC = () => {
             </svg>
           </button>
 
-          {/* Carousel Viewport (Shows 3 at a time on desktop) */}
+          {/* Carousel Viewport (Shows 1 on mobile, 2 on tablet, 3 on desktop) */}
           <div
-            className="overflow-hidden flex-1 py-3 focus:outline-hidden"
+            className="overflow-hidden flex-1 py-2 sm:py-3 focus:outline-hidden"
             tabIndex={0}
             onKeyDown={handleKeyDown}
             onTouchStart={onTouchStart}
@@ -158,11 +157,10 @@ export const Testimonials: React.FC = () => {
             type="button"
             onClick={handleNext}
             aria-label="Next testimonial"
-            className="shrink-0 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white border border-slate-200/90 text-slate-700 hover:text-[#FF5A00] hover:border-[#FF5A00] shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-center cursor-pointer active:scale-95 select-none z-10"
+            className="shrink-0 relative w-8 h-8 sm:w-10 sm:h-10 lg:w-11 lg:h-11 rounded-full bg-white border border-slate-200/90 text-slate-700 hover:text-[#FF5A00] hover:border-[#FF5A00] shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-center cursor-pointer active:scale-95 select-none z-10 after:absolute after:-inset-2 after:content-['']"
           >
             <svg
-              width="18"
-              height="18"
+              className="w-4 h-4 sm:w-[18px] sm:h-[18px]"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -177,7 +175,7 @@ export const Testimonials: React.FC = () => {
         </div>
 
         {/* Pagination Indicator Dots */}
-        <div className="flex items-center justify-center gap-2 mt-7 sm:mt-8">
+        <div className="flex items-center justify-center gap-2 mt-6 sm:mt-8">
           {Array.from({ length: maxIndex + 1 }).map((_, i) => (
             <button
               key={i}
@@ -200,18 +198,18 @@ export const Testimonials: React.FC = () => {
 const TestimonialCard: React.FC<{ item: Testimonial }> = ({ item }) => {
   return (
     <article
-      className="flex flex-col justify-between h-full w-full bg-white rounded-2xl pt-5 pb-5 px-5 sm:pt-5.5 sm:pb-6 sm:px-6 border border-orange-200/90 shadow-[0_4px_20px_rgba(255,90,0,0.04)] hover:shadow-[0_12px_28px_rgba(255,90,0,0.09)] hover:border-[#FF5A00]/50 transition-all duration-300 relative select-none"
+      className="flex flex-col justify-between h-full w-full bg-white rounded-2xl p-4 sm:p-6 border border-orange-200/90 shadow-[0_4px_20px_rgba(255,90,0,0.04)] hover:shadow-[0_12px_28px_rgba(255,90,0,0.09)] hover:border-[#FF5A00]/50 transition-all duration-300 relative select-none"
       aria-label={`Testimonial from ${item.clientName}`}
     >
       <div>
         {/* Top Row: Quote Badge on left, 5 Orange Stars + 5.0 on right */}
-        <div className="flex items-center justify-between gap-2 mb-3 sm:mb-3.5">
+        <div className="flex items-center justify-between gap-2 mb-2.5 sm:mb-3.5">
           <div
-            className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center shrink-0 shadow-2xs"
+            className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center shrink-0 shadow-2xs"
             aria-hidden="true"
           >
             <svg
-              className="w-5 h-5 text-[#FF5A00]"
+              className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF5A00]"
               fill="currentColor"
               viewBox="0 0 24 24"
             >
@@ -221,14 +219,14 @@ const TestimonialCard: React.FC<{ item: Testimonial }> = ({ item }) => {
 
           {/* 5 Orange Stars + 5.0 moved to top-right */}
           <div
-            className="flex items-center gap-1.5 shrink-0"
+            className="flex items-center gap-1 sm:gap-1.5 shrink-0"
             aria-label={`Rating: ${item.rating} out of 5 stars`}
           >
             <div className="flex items-center text-[#FF5A00] gap-0.5">
               {[...Array(item.rating)].map((_, i) => (
                 <svg
                   key={i}
-                  className="w-4 h-4 fill-current"
+                  className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current"
                   viewBox="0 0 20 20"
                   aria-hidden="true"
                 >
@@ -243,8 +241,8 @@ const TestimonialCard: React.FC<{ item: Testimonial }> = ({ item }) => {
         </div>
 
         {/* Second Row: Project Completed Pill */}
-        <div className="mb-3 sm:mb-3.5">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-orange-50/90 border border-orange-100 text-xs text-slate-800 max-w-full">
+        <div className="mb-2.5 sm:mb-3.5">
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-full bg-orange-50/90 border border-orange-100 text-[11px] sm:text-xs text-slate-800 max-w-full">
             <svg
               className="w-3.5 h-3.5 text-[#FF5A00] shrink-0"
               fill="currentColor"
@@ -254,25 +252,25 @@ const TestimonialCard: React.FC<{ item: Testimonial }> = ({ item }) => {
               <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
             </svg>
             <span className="text-slate-500 font-normal shrink-0">Project:</span>
-            <span className="text-slate-900 font-bold truncate">
+            <span className="text-slate-900 font-bold line-clamp-1 sm:line-clamp-none">
               {item.projectCompleted}
             </span>
           </div>
         </div>
 
         {/* Third Row: Customer Feedback */}
-        <p className="text-[14px] sm:text-[14.5px] leading-relaxed text-slate-800 font-normal">
+        <p className="text-[13px] sm:text-[14.5px] leading-relaxed text-slate-800 font-normal">
           &ldquo;{item.feedback}&rdquo;
         </p>
       </div>
 
       {/* Profile Footer */}
       <div>
-        <div className="border-t border-slate-100 my-3.5 sm:my-4" />
-        <div className="flex items-center gap-3.5">
-          {/* Avatar Image (Enlarged to 56px / w-14 h-14) */}
+        <div className="border-t border-slate-100 my-2.5 sm:my-3.5" />
+        <div className="flex items-center gap-2.5 sm:gap-3.5">
+          {/* Avatar Image */}
           <div
-            className="w-14 h-14 rounded-2xl overflow-hidden shrink-0 select-none shadow-sm border border-orange-200/80 bg-[#FF5A00]"
+            className="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl overflow-hidden shrink-0 select-none shadow-sm border border-orange-200/80 bg-[#FF5A00]"
             aria-hidden="true"
           >
             {item.avatar ? (
@@ -290,14 +288,14 @@ const TestimonialCard: React.FC<{ item: Testimonial }> = ({ item }) => {
           </div>
 
           {/* Vertical Orange Accent Divider */}
-          <div className="w-0.5 h-10 sm:h-11 bg-orange-300/80 shrink-0" aria-hidden="true" />
+          <div className="w-0.5 h-8 sm:h-11 bg-orange-300/80 shrink-0" aria-hidden="true" />
 
           {/* Client Name & Role */}
           <div className="min-w-0 flex-1">
-            <h3 className="text-[14.5px] sm:text-[15.5px] font-bold text-slate-900 truncate">
+            <h3 className="text-sm sm:text-[15.5px] font-bold text-slate-900 leading-tight">
               {item.clientName}
             </h3>
-            <p className="text-xs sm:text-[13px] text-slate-500 font-medium truncate mt-0.5">
+            <p className="text-[11px] sm:text-[13px] text-slate-500 font-medium line-clamp-2 mt-0.5 leading-snug">
               {item.role} &bull; {item.companyName}
             </p>
           </div>
