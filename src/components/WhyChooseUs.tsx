@@ -22,7 +22,7 @@ export const WhyChooseUs: React.FC = () => (
         The Technology Behind Every Solution
       </h3>
       <p className="text-body text-slate-600 leading-relaxed text-justify max-w-[65ch]">
-        We combine modern technologies, proven frameworks and powerful development tools to bring ideas to life. From intuitive web applications to complex enterprise platforms, our technology choices focus on performance, security and scalability. By embracing continuous innovation, we build solutions that adapt to changing business needs and create lasting value.
+        We leverage modern technologies, proven frameworks, and powerful development tools to transform ideas into reliable digital products. From interactive web applications and mobile platforms to complex enterprise systems, we carefully select technologies that align with project requirements, focusing on performance, security, flexibility, and scalability. By combining established engineering practices with continuous technological innovation, we build adaptable software solutions that evolve with your business, support changing demands, and deliver lasting value.
       </p>
     </AnimatedSection>
   </div>

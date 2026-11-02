@@ -107,7 +107,7 @@ export const Home: React.FC = () => {
               </h1>
 
               <p className="hero-lead text-justify text-slate-600 mt-5 leading-relaxed indent-8 sm:indent-10" style={{ maxWidth: '64ch' }}>
-                From high-performing websites and intuitive mobile applications to connected enterprise ERP platforms and custom software architectures — we engineer scalable digital solutions tailored directly around the way your organization operates. Whether your goal is modernizing customer-facing digital touchpoints, automating complex operational workflows, or establishing a resilient and secure technological foundation from the ground up, our dedicated engineering team manages the complete product lifecycle from discovery and UX design through to deployment, ongoing optimization, and dependable long-term support.
+                From high-performing websites and intuitive mobile applications to integrated enterprise ERP systems and custom software architectures, we engineer scalable digital solutions tailored to your business operations. Whether your goal is to modernize customer-facing digital experiences, automate complex operational workflows, or establish a secure and resilient technological foundation from the ground up, our dedicated engineering team manages the entire product lifecycle &mdash; from initial discovery and UI/UX design to development, deployment, continuous optimization, and dependable long-term support.
               </p>
 
             </div>
@@ -168,10 +168,10 @@ export const Home: React.FC = () => {
                 </h2>
                 <div className="mt-6 space-y-4 text-justify text-slate-600 leading-relaxed text-base sm:text-lg">
                   <p className="indent-8 sm:indent-10">
-                    MARVEL SOFTWARES is a full-cycle technology and software engineering company committed to designing, developing, and deploying robust digital systems that drive tangible business results. We partner with ambitious enterprises and growing organizations to build intuitive web applications, high-performance mobile apps, interconnected ERP platforms, and custom software architectures tailored precisely to operational realities.
+                    MARVEL SOFTWARES is a technology and software engineering company focused on designing, developing, and delivering innovative digital solutions that help businesses operate smarter and grow faster. We work with startups, established businesses, and growing organizations to transform ideas into reliable digital products, including modern websites, high-performance web and mobile applications, integrated ERP and CRM systems, AI-powered solutions, and customized software platforms tailored to their unique business requirements.
                   </p>
                   <p className="indent-8 sm:indent-10">
-                    Our engineering philosophy balances modern technical innovation with dependable architecture — guiding projects from strategic discovery and user experience design through to agile implementation, comprehensive testing, secure cloud deployment, and proactive long-term maintenance. By aligning deep technical domain expertise with our clients' commercial objectives, we create digital solutions that reduce friction, automate workflows, and empower businesses to scale sustainably.
+                    Our approach combines modern technologies, thoughtful engineering, and a deep understanding of business needs. From initial consultation and requirement analysis to UI/UX design, development, testing, and secure deployment, we manage every stage of the software development lifecycle with a focus on quality and reliability. Through scalable architectures, intelligent automation, and continuous technical support, we help organizations streamline operations, improve efficiency, solve complex challenges, and build a strong foundation for sustainable digital growth.
                   </p>
                 </div>
               </AnimatedSection>
@@ -202,7 +202,7 @@ export const Home: React.FC = () => {
                   </h2>
                 </div>
                 <p className="text-body text-justify leading-relaxed text-slate-600 w-full text-base sm:text-lg">
-                  To engineer practical, scalable, and user-focused digital solutions that eliminate operational bottlenecks, automate repetitive processes, and solve complex business challenges with precision. We are committed to crafting resilient software using modern engineering best practices, transparent communication, and continuous delivery — empowering our partners with the technical clarity and efficiency required to thrive in a competitive, fast-moving digital economy.
+                  To design, develop, and deliver innovative, scalable, and user-focused software solutions that simplify business operations, eliminate inefficiencies, and solve real-world challenges. We strive to combine modern technologies, strong engineering practices, and continuous innovation to build reliable digital products that improve productivity, create business value, and help our clients achieve their goals.
                 </p>
               </div>
             </AnimatedSection>
@@ -217,7 +217,7 @@ export const Home: React.FC = () => {
                   </h2>
                 </div>
                 <p className="text-body text-justify leading-relaxed text-slate-600 w-full text-base sm:text-lg">
-                  To establish MARVEL SOFTWARES as a premier digital transformation partner, renowned for making enterprise-grade software accessible, scalable, and genuinely transformative for organizations worldwide. We envision a future where intelligently engineered software seamlessly bridges organizational gaps, elevates human potential, and accelerates business innovation across every industry we serve.
+                  To become a trusted technology and software engineering partner recognized for delivering innovative, reliable, and impactful digital solutions. We envision a future where businesses of all sizes can leverage intelligent technologies, scalable software, and digital innovation to overcome challenges, unlock new opportunities, and achieve sustainable growth in an evolving digital world.
                 </p>
               </div>
             </AnimatedSection>

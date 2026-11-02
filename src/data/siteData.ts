@@ -195,7 +195,7 @@ export const services: Service[] = [
     description:
       'Purpose-built software designed around your unique processes, requirements and long-term goals.',
     paragraphs: [
-      'When standard off-the-shelf software fails to address your operational challenges, we engineer purpose-built custom software solutions tailored specifically to your company\'s proprietary workflows and strategic goals. From bespoke internal workflow engines and automated data processing pipelines to modernizing legacy enterprise systems, our engineering team constructs maintainable, scalable, and secure architectures. We focus on seamless integration with your existing technology stack, minimal disruption to ongoing operations, and building flexible foundations that empower your team to innovate faster and maintain a lasting competitive edge.',
+      'When off-the-shelf software cannot meet your business requirements, we develop purpose-built software solutions designed around your unique workflows, operational needs, and long-term objectives. From custom business management systems and automated workflow platforms to data processing solutions and legacy system modernization, our engineering team builds reliable, scalable, and secure applications. We prioritize seamless integration with your existing systems, efficient implementation, and flexible architectures that adapt to changing business demands. Our goal is to simplify complex operations, improve productivity, and provide your organization with technology that supports continuous innovation and sustainable growth.',
     ],
     capabilities: [
       'Internal business tools',
@@ -279,7 +279,7 @@ export const services: Service[] = [
     description:
       'Practical AI and automation capabilities that help reduce repetitive work and make information more useful.',
     paragraphs: [
-      'We implement practical, high-impact artificial intelligence and intelligent workflow automation designed to eliminate repetitive operational tasks and unlock new efficiencies across your business. By integrating custom machine learning models, intelligent document processing, natural language assistants, and smart decision pipelines directly into your software environment, we help teams accelerate turnaround times and minimize human error. From automated customer inquiries to deep predictive analytics, our automation solutions transform unstructured company data into valuable business intelligence that drives faster, more confident decision-making.',
+      'We develop intelligent AI solutions and workflow automation systems that help businesses reduce repetitive tasks, improve operational efficiency, and make smarter decisions. By integrating machine learning models, intelligent document processing, AI-powered assistants, autonomous agents, and data-driven automation into your existing software environment, we transform complex business processes into streamlined digital workflows. From automating customer interactions and document handling to predictive analytics and intelligent decision support, our solutions help organizations process information faster, minimize manual effort, reduce errors, and unlock valuable insights from their business data.',
     ],
     capabilities: [
       'AI-enabled applications',

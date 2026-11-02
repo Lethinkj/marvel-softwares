@@ -173,18 +173,6 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, meta }) => {
         <p className="text-body text-sm leading-relaxed mt-3.5 flex-1 text-slate-600">
           {member.bio}
         </p>
-
-        {/* Expertise Tags */}
-        <div className="flex flex-wrap justify-center gap-1.5 mt-5 pt-4 border-t border-slate-100 w-full">
-          {member.expertise.map((tag) => (
-            <span
-              key={tag}
-              className="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-50 text-slate-700 border border-slate-200/80 tracking-tight"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
       </div>
 
       {/* Bottom Bar: Distinct Background Color with White Social Icons */}
