@@ -1,6 +1,5 @@
-import React, { type CSSProperties } from "react";
-import { ArrowRight, Phone } from "lucide-react";
-import { trackCtaClick } from "../utils/analytics";
+import { type CSSProperties } from "react";
+import { Phone } from "lucide-react";
 import { siteConfig } from "../data/siteData";
 import { useInView } from "../hooks/useInView";
 import { useReducedMotion } from "../hooks/useMediaQuery";
@@ -16,25 +15,6 @@ export default function CTASection() {
     once: true,
   });
   const shouldReduceMotion = useReducedMotion();
-
-  const handleScrollToContact = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    trackCtaClick("Share Your Idea CTA Banner", "#contact");
-
-    const el = document.getElementById("contact");
-    if (el) {
-      const headerOffset = 70;
-      const elementPosition = el.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-      window.history.pushState(null, "", "#contact");
-
-      setTimeout(() => {
-        const input = el.querySelector("input");
-        input?.focus();
-      }, 500);
-    }
-  };
 
   return (
     <section
@@ -73,21 +53,9 @@ export default function CTASection() {
           {/* Actions */}
           <div className="cta-panel">
             <a
-              href="#contact"
-              onClick={handleScrollToContact}
-              className="cta-primary cta-reveal"
-              style={reveal(160)}
-            >
-              <span>Start Your Project</span>
-              <span className="cta-primary-arrow" aria-hidden="true">
-                <ArrowRight size={18} />
-              </span>
-            </a>
-
-            <a
               href={siteConfig.phoneHref}
               className="cta-callback cta-reveal"
-              style={reveal(240)}
+              style={reveal(160)}
               aria-label={`Request a call back at ${siteConfig.phone}`}
             >
               <span className="cta-callback-copy">
