@@ -160,7 +160,13 @@ export function Footer() {
                 </li>
               ))}
               <li>
-                <Link to="/faq" className="footer-link">
+                <Link
+                  to="/faq"
+                  className="footer-link"
+                  onClick={() => {
+                    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+                  }}
+                >
                   FAQ
                 </Link>
               </li>

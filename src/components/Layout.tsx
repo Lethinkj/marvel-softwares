@@ -115,7 +115,7 @@ function ScrollToTop() {
       }, 80)
       return
     }
-    if (pathname === '/' && !hash) {
+    if (!hash) {
       window.scrollTo({
         top: 0,
         left: 0,
