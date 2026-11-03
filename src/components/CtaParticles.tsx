@@ -43,9 +43,9 @@ export default function CtaParticles({
     const spriteCtx = sprite.getContext("2d");
     if (spriteCtx) {
       const gradient = spriteCtx.createRadialGradient(32, 32, 0, 32, 32, 32);
-      gradient.addColorStop(0, "rgba(214, 236, 255, 1)");
-      gradient.addColorStop(0.18, "rgba(128, 192, 255, 0.95)");
-      gradient.addColorStop(0.46, "rgba(60, 140, 255, 0.32)");
+      gradient.addColorStop(0, "rgba(225, 244, 255, 1)");
+      gradient.addColorStop(0.18, "rgba(140, 200, 255, 1)");
+      gradient.addColorStop(0.46, "rgba(60, 145, 255, 0.4)");
       gradient.addColorStop(1, "rgba(40, 120, 240, 0)");
       spriteCtx.fillStyle = gradient;
       spriteCtx.fillRect(0, 0, 64, 64);
@@ -53,12 +53,12 @@ export default function CtaParticles({
 
     const seed = () => {
       const area = width * height;
-      const count = Math.round(Math.max(26, Math.min(90, area / 15000)));
+      const count = Math.round(Math.max(30, Math.min(140, area / 5200)));
       particles = Array.from({ length: count }, () => {
         /* Bias the constellation toward the right, like the reference. */
-        const bias = Math.pow(Math.random(), 0.62);
+        const bias = Math.pow(Math.random(), 0.55);
         return {
-          x: width * (0.06 + 0.94 * bias),
+          x: width * (0.12 + 0.88 * bias),
           y: Math.random() * height,
           vx: (Math.random() - 0.5) * 0.24,
           vy: (Math.random() - 0.5) * 0.24,
@@ -101,8 +101,8 @@ export default function CtaParticles({
           const distSq = dx * dx + dy * dy;
           if (distSq > maxDistSq) continue;
 
-          const alpha = (1 - Math.sqrt(distSq) / maxDist) * 0.3;
-          ctx.strokeStyle = `rgba(86, 156, 255, ${alpha.toFixed(3)})`;
+          const alpha = (1 - Math.sqrt(distSq) / maxDist) * 0.45;
+          ctx.strokeStyle = `rgba(104, 170, 255, ${alpha.toFixed(3)})`;
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
           ctx.lineTo(b.x, b.y);
@@ -113,10 +113,16 @@ export default function CtaParticles({
       /* Glowing nodes */
       for (const p of particles) {
         const twinkle = 0.55 + 0.45 * Math.sin(time * 0.0012 * p.twinkle + p.phase);
-        const size = 10 + p.r * 12;
+        const size = 7 + p.r * 8;
 
-        ctx.globalAlpha = 0.35 + 0.55 * twinkle;
+        ctx.globalAlpha = 0.5 + 0.5 * twinkle;
         ctx.drawImage(sprite, p.x - size / 2, p.y - size / 2, size, size);
+
+        ctx.globalAlpha = 0.7 + 0.3 * twinkle;
+        ctx.fillStyle = "rgba(214, 238, 255, 0.95)";
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r * 0.7, 0, Math.PI * 2);
+        ctx.fill();
       }
       ctx.globalAlpha = 1;
     };
