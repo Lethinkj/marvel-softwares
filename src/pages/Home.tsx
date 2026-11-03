@@ -165,29 +165,37 @@ export const Home: React.FC = () => {
         }}
       >
         <div className="container relative z-10">
+          {/* Mobile-only heading: First on mobile (< lg) */}
+          <div className="block lg:hidden text-center mb-6">
+            <h2 id="about-us-title-mobile" className="text-section-title text-center">
+              About Us
+            </h2>
+          </div>
+
           {/* About Us Visual (Left, 40%) + Content (Right, 60%) */}
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,4fr)_minmax(0,6fr)] gap-8 lg:gap-10 xl:gap-12 items-center">
-            {/* Visual column with about.png (Left on desktop - 40%) */}
-            <div className="order-2 lg:order-1 flex justify-center w-full">
+            {/* Visual column: 2nd on mobile, 1st on desktop */}
+            <div className="flex justify-center w-full">
               <AnimatedSection delay={0.15} className="w-full flex justify-center">
                 <img
                   src="/images/about/about-marvel.avif"
                   alt="About Marvel Softwares technology and engineering excellence"
                   width={1536}
                   height={1024}
-                  className="w-full h-auto max-w-[480px] lg:max-w-full rounded-2xl shadow-lg transition-transform hover:scale-[1.02] duration-300 mt-4 lg:mt-10"
+                  className="w-full h-auto max-w-[480px] lg:max-w-full rounded-2xl transition-transform hover:scale-[1.02] duration-300 mt-2 lg:mt-10"
                   decoding="async"
                 />
               </AnimatedSection>
             </div>
 
-            {/* Copy (Right on desktop - 60%) */}
-            <div className="order-1 lg:order-2 w-full">
+            {/* Copy: 3rd on mobile, 2nd on desktop */}
+            <div className="w-full">
               <AnimatedSection>
-                <h2 id="about-us-title" className="text-section-title text-center">
+                {/* Desktop-only heading */}
+                <h2 id="about-us-title" className="hidden lg:block text-section-title text-center">
                   About Us
                 </h2>
-                <div className="mt-6 space-y-4 text-justify text-slate-600 leading-relaxed text-base sm:text-lg">
+                <div className="mt-0 lg:mt-6 space-y-4 text-justify text-slate-600 leading-relaxed text-base sm:text-lg">
                   <p className="indent-8 sm:indent-10">
                     MARVEL SOFTWARES is a technology and software engineering company focused on designing, developing, and delivering innovative digital solutions that help businesses operate smarter and grow faster. We work with startups, established businesses, and growing organizations to transform ideas into reliable digital products, including modern websites, high-performance web and mobile applications, integrated ERP and CRM systems, AI-powered solutions, and customized software platforms tailored to their unique business requirements.
                   </p>

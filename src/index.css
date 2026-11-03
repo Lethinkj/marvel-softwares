@@ -1120,7 +1120,24 @@ body.nav-menu-open #root {
   box-shadow: 0 12px 26px -10px rgba(0, 87, 231, 0.7);
 }
 
+.svc-mobile-header {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.svc-copy-title--desktop {
+  display: none !important;
+}
+
 @media (min-width: 992px) {
+  .svc-mobile-header {
+    display: none !important;
+  }
+
+  .svc-copy-title--desktop {
+    display: block !important;
+  }
+
   .svc-showcase {
     gap: 16px;
   }

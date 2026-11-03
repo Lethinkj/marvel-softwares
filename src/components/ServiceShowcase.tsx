@@ -5,8 +5,9 @@ import { homeServices, services } from '../data/siteData'
 
 /**
  * ServiceShowcase
- * Alternating rows for the home-page services section:
- * image (35%) + content (65%), swapping sides row by row.
+ * Responsive service presentation:
+ * Mobile view (< 992px): First Heading, then Image (ServiceScene), then Contents.
+ * Desktop view (>= 992px): Alternating rows of Image (40%) and Content (60%).
  */
 export const ServiceShowcase: React.FC = () => {
   const overview = homeServices
@@ -24,13 +25,20 @@ export const ServiceShowcase: React.FC = () => {
             direction="up"
             className={`svc-showcase-row${flip ? ' is-flip' : ''}`}
           >
+            {/* 1. Mobile-only heading (First on mobile view) */}
+            <div className="svc-mobile-header">
+              <h3 className="svc-copy-title text-left">{service.title}</h3>
+            </div>
+
+            {/* 2. Media / Image (Second on mobile view) */}
             <div className="svc-media">
               <ServiceScene id={`svc${i}`} serviceId={service.id} />
             </div>
 
+            {/* 3. Narrative Copy / Contents (Third on mobile view) */}
             <div className="svc-copy text-left">
-              {/* Single h3 heading */}
-              <h3 className="svc-copy-title">{service.title}</h3>
+              {/* Desktop-only heading (shown only on >= 992px desktop) */}
+              <h3 className="svc-copy-title svc-copy-title--desktop">{service.title}</h3>
 
               {/* Main narrative content */}
               <p className="text-body text-slate-600 text-justify leading-relaxed text-base sm:text-lg">
