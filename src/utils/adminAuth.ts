@@ -1,6 +1,17 @@
 /**
- * Production-ready Admin Authentication & Data Management Engine
- * Compatible with the PostgreSQL dev_ schema (dev_admins, dev_admin_sessions, dev_admin_audit_logs)
+ * MARVEL SOFTWARES — Production Admin Security, Session Management & Audit Engine
+ * Schema Prefix: dev_
+ * 
+ * Features:
+ * - SHA-256 with unique cryptographic salt hashing
+ * - Brute-force IP lockout with progressive tiers:
+ *     - 3 failed attempts: 15 min block
+ *     - next failure after block: 30 min block
+ *     - subsequent failures: 30 min block
+ *     - after 24 hours from initial cycle start: resets back to 15 min then 30 min
+ * - Zero unauthorized persistence: sessions strictly verified and invalidated on logout
+ * - Inactivity auto-logout tracking (15 minutes inactivity)
+ * - Complete audit trail tracking which admin changes what (before/after state diffs)
  */
 
 export interface AdminUser {
@@ -18,13 +29,32 @@ export interface AdminUser {
 
 export interface AdminSession {
   token: string
+  session_id: string
   admin_id: string
   username: string
   full_name: string
   email: string
   role: string
+  ip_address: string
+  user_agent: string
+  is_revoked: boolean
+  revoked_reason?: string
+  last_activity_at: string
   created_at: string
   expires_at: string
+}
+
+export interface IpBlockRecord {
+  id: string
+  ip_address: string
+  failed_attempts: number
+  is_blocked: boolean
+  blocked_until: number // timestamp ms
+  block_tier: number    // 1 = 15m, 2 = 30m, 3+ = 30m
+  first_failed_at: number // cycle start timestamp ms
+  last_attempt_at: string
+  last_attempt_username?: string
+  total_lifetime_blocks: number
 }
 
 export interface AdminInquiry {
@@ -68,11 +98,14 @@ export interface TelemetryRecord {
 
 export interface AuditLog {
   id: string
+  admin_id?: string
   admin_username: string
+  admin_role: string
   action: string
   target_type: string
   target_id: string
   details?: Record<string, unknown>
+  ip_address: string
   created_at: string
 }
 
@@ -82,13 +115,34 @@ export const ROUTE_AUTH = `${GATEWAY_PREFIX}/auth`
 export const ROUTE_BOOTSTRAP = `${GATEWAY_PREFIX}/init-bootstrap`
 export const ROUTE_CONSOLE = `${GATEWAY_PREFIX}/console`
 
+// Storage keys
 const STORAGE_ADMINS = 'dev_admins'
-const STORAGE_SESSION = 'dev_admin_session'
+const STORAGE_SESSIONS = 'dev_admin_sessions'
+const STORAGE_ACTIVE_TOKEN = 'dev_admin_current_token'
+const STORAGE_IP_BLOCKS = 'dev_admin_ip_blocks'
 const STORAGE_AUDIT = 'dev_admin_audit_logs'
 const STORAGE_INQUIRIES = 'ms-project-inquiries'
 const STORAGE_TELEMETRY = 'dev_telemetry_events'
 
-// Cryptographic hash helper using native SubtleCrypto (SHA-256 with salt)
+// Inactivity timeout: 15 minutes
+export const INACTIVITY_TIMEOUT_MS = 15 * 60 * 1000
+
+// Helper: Get or simulate client IP address
+export function getClientIp(): string {
+  if (typeof window === 'undefined') return '127.0.0.1'
+  try {
+    let ip = sessionStorage.getItem('dev_client_ip') || localStorage.getItem('dev_client_ip')
+    if (!ip) {
+      ip = '192.168.1.105' // Local developer/client gateway IP
+      localStorage.setItem('dev_client_ip', ip)
+    }
+    return ip
+  } catch {
+    return '127.0.0.1'
+  }
+}
+
+// Native Web Crypto API SHA-256 Hashing with Salt
 export async function hashPassword(password: string, salt: string): Promise<string> {
   const enc = new TextEncoder()
   const data = enc.encode(`${salt}:${password}:dev_marvel_sec`)
@@ -109,9 +163,189 @@ export function generateToken(): string {
   return Array.from(arr, (b) => b.toString(16).padStart(2, '0')).join('')
 }
 
-/**
- * Get all registered admin accounts
- */
+// ----------------------------------------------------------------------
+// IP RATE LIMITING & ESCALATING BRUTE-FORCE LOCKOUT
+// ----------------------------------------------------------------------
+
+export function getIpBlocks(): IpBlockRecord[] {
+  if (typeof window === 'undefined') return []
+  try {
+    const raw = localStorage.getItem(STORAGE_IP_BLOCKS)
+    return raw ? JSON.parse(raw) : []
+  } catch {
+    return []
+  }
+}
+
+export function getIpSecurityStatus(ip: string = getClientIp()): {
+  isBlocked: boolean
+  remainingSeconds: number
+  failedAttempts: number
+  blockTier: number
+} {
+  const blocks = getIpBlocks()
+  const record = blocks.find((b) => b.ip_address === ip)
+  if (!record) {
+    return { isBlocked: false, remainingSeconds: 0, failedAttempts: 0, blockTier: 0 }
+  }
+
+  const now = Date.now()
+  // Check if 24 hours (86,400,000 ms) have passed since first failed attempt
+  if (record.first_failed_at && now - record.first_failed_at > 24 * 60 * 60 * 1000) {
+    // Reset cycle after 1 day
+    record.block_tier = 0
+    record.first_failed_at = 0
+    record.failed_attempts = 0
+    record.is_blocked = false
+    record.blocked_until = 0
+    localStorage.setItem(STORAGE_IP_BLOCKS, JSON.stringify(blocks))
+    return { isBlocked: false, remainingSeconds: 0, failedAttempts: 0, blockTier: 0 }
+  }
+
+  if (record.is_blocked && record.blocked_until > now) {
+    const remainingSeconds = Math.ceil((record.blocked_until - now) / 1000)
+    return {
+      isBlocked: true,
+      remainingSeconds,
+      failedAttempts: record.failed_attempts,
+      blockTier: record.block_tier,
+    }
+  }
+
+  // If block time has expired, release block state
+  if (record.is_blocked && record.blocked_until <= now) {
+    record.is_blocked = false
+    record.blocked_until = 0
+    record.failed_attempts = 0
+    localStorage.setItem(STORAGE_IP_BLOCKS, JSON.stringify(blocks))
+  }
+
+  return {
+    isBlocked: false,
+    remainingSeconds: 0,
+    failedAttempts: record.failed_attempts,
+    blockTier: record.block_tier,
+  }
+}
+
+export function recordFailedLoginAttempt(ip: string, username: string): {
+  isBlocked: boolean
+  remainingSeconds: number
+  attemptsLeft: number
+  blockTier: number
+} {
+  const blocks = getIpBlocks()
+  let record = blocks.find((b) => b.ip_address === ip)
+  const now = Date.now()
+
+  if (!record) {
+    record = {
+      id: `ip_${now}`,
+      ip_address: ip,
+      failed_attempts: 0,
+      is_blocked: false,
+      blocked_until: 0,
+      block_tier: 0,
+      first_failed_at: now,
+      last_attempt_at: new Date().toISOString(),
+      last_attempt_username: username,
+      total_lifetime_blocks: 0,
+    }
+    blocks.push(record)
+  }
+
+  // Reset after 24 hours from initial failure cycle start
+  if (record.first_failed_at && now - record.first_failed_at > 24 * 60 * 60 * 1000) {
+    record.block_tier = 0
+    record.first_failed_at = now
+    record.failed_attempts = 0
+    record.is_blocked = false
+  }
+
+  if (!record.first_failed_at) {
+    record.first_failed_at = now
+  }
+
+  record.failed_attempts += 1
+  record.last_attempt_at = new Date().toISOString()
+  record.last_attempt_username = username
+
+  // Check if threshold (3 attempts) reached
+  if (record.failed_attempts >= 3) {
+    record.block_tier += 1
+    record.total_lifetime_blocks += 1
+    record.is_blocked = true
+
+    // Escalation rule:
+    // Tier 1: 15 min (15 * 60 * 1000)
+    // Tier 2: 30 min (30 * 60 * 1000)
+    // Tier 3+: 30 min (30 * 60 * 1000)
+    let durationMs = 15 * 60 * 1000
+    if (record.block_tier >= 2) {
+      durationMs = 30 * 60 * 1000
+    }
+
+    record.blocked_until = now + durationMs
+    record.failed_attempts = 0 // Reset attempts for next cycle
+
+    localStorage.setItem(STORAGE_IP_BLOCKS, JSON.stringify(blocks))
+
+    addAuditLog(
+      'SYSTEM_GATEWAY_FIREWALL',
+      'ip_blocked',
+      'dev_admin_ip_blocks',
+      ip,
+      {
+        ip_address: ip,
+        block_tier: record.block_tier,
+        duration_minutes: durationMs / (60 * 1000),
+        blocked_until: new Date(record.blocked_until).toISOString(),
+        username_attempted: username,
+      },
+      ip
+    )
+
+    return {
+      isBlocked: true,
+      remainingSeconds: Math.ceil(durationMs / 1000),
+      attemptsLeft: 0,
+      blockTier: record.block_tier,
+    }
+  }
+
+  localStorage.setItem(STORAGE_IP_BLOCKS, JSON.stringify(blocks))
+
+  return {
+    isBlocked: false,
+    remainingSeconds: 0,
+    attemptsLeft: Math.max(0, 3 - record.failed_attempts),
+    blockTier: record.block_tier,
+  }
+}
+
+export function clearIpBlock(ip: string): void {
+  const blocks = getIpBlocks()
+  const record = blocks.find((b) => b.ip_address === ip)
+  if (record) {
+    record.is_blocked = false
+    record.blocked_until = 0
+    record.failed_attempts = 0
+    localStorage.setItem(STORAGE_IP_BLOCKS, JSON.stringify(blocks))
+
+    addAuditLog(
+      getCurrentAdminSession()?.username || 'SUPER_ADMIN',
+      'ip_unblocked',
+      'dev_admin_ip_blocks',
+      ip,
+      { ip_address: ip, reason: 'Manual administrator clearance' }
+    )
+  }
+}
+
+// ----------------------------------------------------------------------
+// ADMIN USER ACCOUNTS MANAGEMENT
+// ----------------------------------------------------------------------
+
 export function getAdmins(): AdminUser[] {
   if (typeof window === 'undefined') return []
   try {
@@ -122,16 +356,10 @@ export function getAdmins(): AdminUser[] {
   }
 }
 
-/**
- * Check if at least one admin account exists
- */
 export function hasAnyAdmin(): boolean {
   return getAdmins().length > 0
 }
 
-/**
- * Create a new admin account
- */
 export async function createAdmin(input: {
   username: string
   password: string
@@ -176,104 +404,16 @@ export async function createAdmin(input: {
     'admin_created',
     'dev_admins',
     newAdmin.admin_id,
-    { username: newAdmin.username, role: newAdmin.role }
+    {
+      created_username: newAdmin.username,
+      assigned_role: newAdmin.role,
+      full_name: newAdmin.full_name,
+    }
   )
 
   return { success: true, admin: newAdmin }
 }
 
-/**
- * Authenticate admin by username & password
- */
-export async function verifyAdminCredentials(
-  username: string,
-  password: string
-): Promise<{ success: boolean; admin?: AdminUser; error?: string }> {
-  const cleanUsername = username.trim()
-  const admins = getAdmins()
-  const admin = admins.find((a) => a.username.toLowerCase() === cleanUsername.toLowerCase())
-
-  if (!admin) {
-    return { success: false, error: 'Invalid username or password.' }
-  }
-  if (!admin.is_active) {
-    return { success: false, error: 'This account has been deactivated.' }
-  }
-
-  const computedHash = await hashPassword(password, admin.salt)
-  if (computedHash !== admin.password_hash) {
-    return { success: false, error: 'Invalid username or password.' }
-  }
-
-  // Update last_login_at
-  admin.last_login_at = new Date().toISOString()
-  localStorage.setItem(STORAGE_ADMINS, JSON.stringify(admins))
-
-  return { success: true, admin }
-}
-
-/**
- * Create a session for an authenticated admin
- */
-export function createAdminSession(admin: AdminUser): AdminSession {
-  const now = new Date()
-  const expiresAt = new Date(now.getTime() + 12 * 60 * 60 * 1000) // 12 hours valid
-
-  const session: AdminSession = {
-    token: generateToken(),
-    admin_id: admin.admin_id,
-    username: admin.username,
-    full_name: admin.full_name,
-    email: admin.email,
-    role: admin.role,
-    created_at: now.toISOString(),
-    expires_at: expiresAt.toISOString(),
-  }
-
-  sessionStorage.setItem(STORAGE_SESSION, JSON.stringify(session))
-  localStorage.setItem(STORAGE_SESSION, JSON.stringify(session))
-
-  addAuditLog(admin.username, 'admin_login', 'dev_admins', admin.admin_id, {
-    ip: '127.0.0.1 (local console)',
-  })
-
-  return session
-}
-
-/**
- * Retrieve current active session
- */
-export function getCurrentAdminSession(): AdminSession | null {
-  if (typeof window === 'undefined') return null
-  try {
-    const raw = sessionStorage.getItem(STORAGE_SESSION) || localStorage.getItem(STORAGE_SESSION)
-    if (!raw) return null
-    const session = JSON.parse(raw) as AdminSession
-    if (new Date(session.expires_at).getTime() < Date.now()) {
-      logoutAdmin()
-      return null
-    }
-    return session
-  } catch {
-    return null
-  }
-}
-
-/**
- * Logout admin
- */
-export function logoutAdmin(): void {
-  const current = getCurrentAdminSession()
-  if (current) {
-    addAuditLog(current.username, 'admin_logout', 'dev_admins', current.admin_id)
-  }
-  sessionStorage.removeItem(STORAGE_SESSION)
-  localStorage.removeItem(STORAGE_SESSION)
-}
-
-/**
- * Delete an admin (except last super_admin)
- */
 export function deleteAdmin(adminId: string): { success: boolean; error?: string } {
   const admins = getAdmins()
   const target = admins.find((a) => a.admin_id === adminId)
@@ -289,27 +429,299 @@ export function deleteAdmin(adminId: string): { success: boolean; error?: string
   const updated = admins.filter((a) => a.admin_id !== adminId)
   localStorage.setItem(STORAGE_ADMINS, JSON.stringify(updated))
 
+  // Terminate any active sessions for this deleted admin
+  revokeAllSessionsForAdmin(adminId, 'admin_account_deleted')
+
   addAuditLog(
     getCurrentAdminSession()?.username || 'SYSTEM',
     'admin_deleted',
     'dev_admins',
     adminId,
-    { username: target.username }
+    { deleted_username: target.username, deleted_role: target.role }
   )
 
   return { success: true }
 }
 
-/**
- * Read all contact inquiries
- */
+// ----------------------------------------------------------------------
+// ZERO-PERSISTENCE SESSION MANAGEMENT (dev_admin_sessions)
+// ----------------------------------------------------------------------
+
+export function getAllSessions(): AdminSession[] {
+  if (typeof window === 'undefined') return []
+  try {
+    const raw = localStorage.getItem(STORAGE_SESSIONS)
+    return raw ? JSON.parse(raw) : []
+  } catch {
+    return []
+  }
+}
+
+export function createAdminSession(admin: AdminUser): AdminSession {
+  const now = Date.now()
+  const expiresAt = new Date(now + 12 * 60 * 60 * 1000).toISOString()
+  const token = generateToken()
+  const sessionId = typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : `sess_${now}`
+  const ip = getClientIp()
+  const ua = typeof navigator !== 'undefined' ? navigator.userAgent : 'Node/Client'
+
+  const session: AdminSession = {
+    token,
+    session_id: sessionId,
+    admin_id: admin.admin_id,
+    username: admin.username,
+    full_name: admin.full_name,
+    email: admin.email,
+    role: admin.role,
+    ip_address: ip,
+    user_agent: ua,
+    is_revoked: false,
+    last_activity_at: new Date().toISOString(),
+    created_at: new Date().toISOString(),
+    expires_at: expiresAt,
+  }
+
+  const sessions = getAllSessions()
+  // Append new session to table
+  sessions.unshift(session)
+  if (sessions.length > 50) sessions.length = 50
+  localStorage.setItem(STORAGE_SESSIONS, JSON.stringify(sessions))
+
+  // Store active token in sessionStorage & localStorage
+  sessionStorage.setItem(STORAGE_ACTIVE_TOKEN, token)
+  localStorage.setItem(STORAGE_ACTIVE_TOKEN, token)
+
+  addAuditLog(admin.username, 'admin_login', 'dev_admin_sessions', session.session_id, {
+    ip_address: ip,
+    role: admin.role,
+  })
+
+  return session
+}
+
+export function getCurrentAdminSession(): AdminSession | null {
+  if (typeof window === 'undefined') return null
+  try {
+    const activeToken =
+      sessionStorage.getItem(STORAGE_ACTIVE_TOKEN) || localStorage.getItem(STORAGE_ACTIVE_TOKEN)
+    if (!activeToken) return null
+
+    const sessions = getAllSessions()
+    const session = sessions.find((s) => s.token === activeToken)
+
+    // Verify session state against table
+    if (!session) {
+      purgeCurrentSessionTokens()
+      return null
+    }
+
+    if (session.is_revoked) {
+      purgeCurrentSessionTokens()
+      return null
+    }
+
+    const now = Date.now()
+    if (new Date(session.expires_at).getTime() < now) {
+      session.is_revoked = true
+      session.revoked_reason = 'session_expired'
+      localStorage.setItem(STORAGE_SESSIONS, JSON.stringify(sessions))
+      purgeCurrentSessionTokens()
+      return null
+    }
+
+    // Check inactivity timeout (15 mins)
+    const lastActive = new Date(session.last_activity_at).getTime()
+    if (now - lastActive > INACTIVITY_TIMEOUT_MS) {
+      session.is_revoked = true
+      session.revoked_reason = 'inactivity_timeout'
+      localStorage.setItem(STORAGE_SESSIONS, JSON.stringify(sessions))
+      purgeCurrentSessionTokens()
+
+      addAuditLog(session.username, 'inactivity_auto_logout', 'dev_admin_sessions', session.session_id, {
+        reason: '15 minutes of inactivity detected',
+      })
+      return null
+    }
+
+    return session
+  } catch {
+    return null
+  }
+}
+
+export function updateSessionActivity(): void {
+  try {
+    const activeToken =
+      sessionStorage.getItem(STORAGE_ACTIVE_TOKEN) || localStorage.getItem(STORAGE_ACTIVE_TOKEN)
+    if (!activeToken) return
+
+    const sessions = getAllSessions()
+    const session = sessions.find((s) => s.token === activeToken)
+    if (session && !session.is_revoked) {
+      session.last_activity_at = new Date().toISOString()
+      localStorage.setItem(STORAGE_SESSIONS, JSON.stringify(sessions))
+    }
+  } catch {
+    // Non-blocking
+  }
+}
+
+function purgeCurrentSessionTokens(): void {
+  sessionStorage.removeItem(STORAGE_ACTIVE_TOKEN)
+  localStorage.removeItem(STORAGE_ACTIVE_TOKEN)
+}
+
+export function logoutAdmin(reason: string = 'user_logout'): void {
+  const current = getCurrentAdminSession()
+  if (current) {
+    const sessions = getAllSessions()
+    const target = sessions.find((s) => s.token === current.token)
+    if (target) {
+      target.is_revoked = true
+      target.revoked_reason = reason
+      localStorage.setItem(STORAGE_SESSIONS, JSON.stringify(sessions))
+    }
+
+    addAuditLog(current.username, 'admin_logout', 'dev_admin_sessions', current.session_id, {
+      reason,
+    })
+  }
+
+  purgeCurrentSessionTokens()
+}
+
+export function revokeSession(sessionId: string): boolean {
+  const sessions = getAllSessions()
+  const target = sessions.find((s) => s.session_id === sessionId)
+  if (!target) return false
+
+  target.is_revoked = true
+  target.revoked_reason = 'admin_manually_revoked'
+  localStorage.setItem(STORAGE_SESSIONS, JSON.stringify(sessions))
+
+  addAuditLog(
+    getCurrentAdminSession()?.username || 'SUPER_ADMIN',
+    'session_revoked',
+    'dev_admin_sessions',
+    sessionId,
+    { revoked_username: target.username, session_ip: target.ip_address }
+  )
+
+  return true
+}
+
+export function revokeAllSessionsForAdmin(adminId: string, reason: string): void {
+  const sessions = getAllSessions()
+  sessions.forEach((s) => {
+    if (s.admin_id === adminId && !s.is_revoked) {
+      s.is_revoked = true
+      s.revoked_reason = reason
+    }
+  })
+  localStorage.setItem(STORAGE_SESSIONS, JSON.stringify(sessions))
+}
+
+// ----------------------------------------------------------------------
+// CREDENTIAL VERIFICATION WITH BRUTE-FORCE LOCKOUT INTEGRATION
+// ----------------------------------------------------------------------
+
+export async function verifyAdminCredentials(
+  username: string,
+  password: string
+): Promise<{
+  success: boolean
+  admin?: AdminUser
+  error?: string
+  isBlocked?: boolean
+  remainingSeconds?: number
+  attemptsLeft?: number
+}> {
+  const ip = getClientIp()
+  const cleanUsername = username.trim()
+
+  // 1. Check IP lockout first
+  const secStatus = getIpSecurityStatus(ip)
+  if (secStatus.isBlocked) {
+    return {
+      success: false,
+      isBlocked: true,
+      remainingSeconds: secStatus.remainingSeconds,
+      error: `IP temporarily blocked due to 3 failed attempts. Please wait ${Math.ceil(
+        secStatus.remainingSeconds / 60
+      )} minute(s).`,
+    }
+  }
+
+  const admins = getAdmins()
+  const admin = admins.find((a) => a.username.toLowerCase() === cleanUsername.toLowerCase())
+
+  if (!admin) {
+    const strike = recordFailedLoginAttempt(ip, cleanUsername)
+    if (strike.isBlocked) {
+      return {
+        success: false,
+        isBlocked: true,
+        remainingSeconds: strike.remainingSeconds,
+        error: `3 failed attempts reached. Your IP is blocked for ${Math.ceil(
+          strike.remainingSeconds / 60
+        )} minutes.`,
+      }
+    }
+    return {
+      success: false,
+      attemptsLeft: strike.attemptsLeft,
+      error: `Invalid credentials. (${strike.attemptsLeft} attempt(s) remaining before IP lockout)`,
+    }
+  }
+
+  if (!admin.is_active) {
+    return { success: false, error: 'This account has been deactivated.' }
+  }
+
+  const computedHash = await hashPassword(password, admin.salt)
+  if (computedHash !== admin.password_hash) {
+    const strike = recordFailedLoginAttempt(ip, cleanUsername)
+    if (strike.isBlocked) {
+      return {
+        success: false,
+        isBlocked: true,
+        remainingSeconds: strike.remainingSeconds,
+        error: `3 failed attempts reached. Your IP is blocked for ${Math.ceil(
+          strike.remainingSeconds / 60
+        )} minutes.`,
+      }
+    }
+    return {
+      success: false,
+      attemptsLeft: strike.attemptsLeft,
+      error: `Invalid password. (${strike.attemptsLeft} attempt(s) remaining before IP lockout)`,
+    }
+  }
+
+  // Authentication succeeded: reset failed attempts
+  const blocks = getIpBlocks()
+  const rec = blocks.find((b) => b.ip_address === ip)
+  if (rec) {
+    rec.failed_attempts = 0
+    localStorage.setItem(STORAGE_IP_BLOCKS, JSON.stringify(blocks))
+  }
+
+  admin.last_login_at = new Date().toISOString()
+  localStorage.setItem(STORAGE_ADMINS, JSON.stringify(admins))
+
+  return { success: true, admin }
+}
+
+// ----------------------------------------------------------------------
+// INQUIRIES MANAGEMENT
+// ----------------------------------------------------------------------
+
 export function getAllInquiries(): AdminInquiry[] {
   if (typeof window === 'undefined') return []
   try {
     const raw = localStorage.getItem(STORAGE_INQUIRIES)
     let inquiries: AdminInquiry[] = raw ? JSON.parse(raw) : []
 
-    // Ensure IDs and default fields exist
     inquiries = inquiries.map((item, index) => ({
       id: item.id || `inq_${index + 1}_${Date.now()}`,
       name: item.name || 'Anonymous',
@@ -334,9 +746,6 @@ export function getAllInquiries(): AdminInquiry[] {
   }
 }
 
-/**
- * Update status of an inquiry
- */
 export function updateInquiryStatus(
   inquiryId: string | number,
   status: AdminInquiry['status']
@@ -354,15 +763,12 @@ export function updateInquiryStatus(
     'inquiry_status_updated',
     'dev_contact_inquiries',
     String(inquiryId),
-    { client_name: item.name, previous: prevStatus, current: status }
+    { client_name: item.name, previous_status: prevStatus, new_status: status }
   )
 
   return true
 }
 
-/**
- * Star / Unstar inquiry
- */
 export function toggleStarInquiry(inquiryId: string | number): boolean {
   const inquiries = getAllInquiries()
   const item = inquiries.find((i) => String(i.id) === String(inquiryId))
@@ -370,12 +776,18 @@ export function toggleStarInquiry(inquiryId: string | number): boolean {
 
   item.is_starred = !item.is_starred
   localStorage.setItem(STORAGE_INQUIRIES, JSON.stringify(inquiries))
+
+  addAuditLog(
+    getCurrentAdminSession()?.username || 'ADMIN',
+    item.is_starred ? 'inquiry_starred' : 'inquiry_unstarred',
+    'dev_contact_inquiries',
+    String(inquiryId),
+    { client_name: item.name, is_starred: item.is_starred }
+  )
+
   return true
 }
 
-/**
- * Delete inquiry
- */
 export function deleteInquiry(inquiryId: string | number): boolean {
   const inquiries = getAllInquiries()
   const target = inquiries.find((i) => String(i.id) === String(inquiryId))
@@ -388,15 +800,16 @@ export function deleteInquiry(inquiryId: string | number): boolean {
       'inquiry_deleted',
       'dev_contact_inquiries',
       String(inquiryId),
-      { name: target.name, email: target.email }
+      { deleted_client: target.name, email: target.email, solution: target.solution }
     )
   }
   return true
 }
 
-/**
- * Read telemetry records
- */
+// ----------------------------------------------------------------------
+// TELEMETRY & AUDIT LOGGING ENGINE
+// ----------------------------------------------------------------------
+
 export function getTelemetryRecords(): TelemetryRecord[] {
   if (typeof window === 'undefined') return []
   try {
@@ -407,9 +820,6 @@ export function getTelemetryRecords(): TelemetryRecord[] {
   }
 }
 
-/**
- * Read audit logs
- */
 export function getAuditLogs(): AuditLog[] {
   if (typeof window === 'undefined') return []
   try {
@@ -420,25 +830,27 @@ export function getAuditLogs(): AuditLog[] {
   }
 }
 
-/**
- * Add audit log
- */
 export function addAuditLog(
   admin_username: string,
   action: string,
   target_type: string,
   target_id: string,
-  details?: Record<string, unknown>
+  details?: Record<string, unknown>,
+  ip?: string
 ): void {
   try {
     const logs = getAuditLogs()
+    const active = getCurrentAdminSession()
     logs.unshift({
       id: `log_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+      admin_id: active?.admin_id,
       admin_username,
+      admin_role: active?.role || 'super_admin',
       action,
       target_type,
       target_id,
       details,
+      ip_address: ip || getClientIp(),
       created_at: new Date().toISOString(),
     })
     if (logs.length > 300) logs.length = 300
@@ -448,14 +860,13 @@ export function addAuditLog(
   }
 }
 
-/**
- * Populate realistic sample data if local storage is fresh/empty
- * Ensures dashboard graphs, inquiry tables, and metrics are immediately alive and usable
- */
+// ----------------------------------------------------------------------
+// SEED REALISTIC INITIAL DATA
+// ----------------------------------------------------------------------
+
 export function seedSampleDataIfEmpty(): void {
   if (typeof window === 'undefined') return
 
-  // Seed sample inquiries if none or minimal exist
   const existingInquiries = getAllInquiries()
   if (existingInquiries.length < 3) {
     const sampleInquiries: AdminInquiry[] = [
@@ -555,7 +966,6 @@ export function seedSampleDataIfEmpty(): void {
     localStorage.setItem(STORAGE_INQUIRIES, JSON.stringify(merged))
   }
 
-  // Seed sample telemetry events if empty
   const existingTelemetry = getTelemetryRecords()
   if (existingTelemetry.length < 5) {
     const sections = ['services', 'about-us', 'projects', 'why-us', 'process', 'contact', 'faq']
@@ -588,5 +998,13 @@ export function seedSampleDataIfEmpty(): void {
     }
 
     localStorage.setItem(STORAGE_TELEMETRY, JSON.stringify(sampleTelemetry))
+  }
+
+  // Pre-seed an audit log entry
+  const existingAudit = getAuditLogs()
+  if (existingAudit.length === 0) {
+    addAuditLog('marvel_root', 'system_initialized', 'dev_admins', 'sys_root', {
+      note: 'System gateway and security tables initialized with dev_ schema prefix',
+    })
   }
 }

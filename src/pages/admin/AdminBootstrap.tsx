@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import {
   ShieldAlert,
@@ -14,7 +14,14 @@ import {
   EyeOff,
   Terminal,
 } from 'lucide-react'
-import { createAdmin, ROUTE_AUTH, seedSampleDataIfEmpty } from '../../utils/adminAuth'
+import {
+  createAdmin,
+  createAdminSession,
+  getCurrentAdminSession,
+  ROUTE_AUTH,
+  ROUTE_CONSOLE,
+  seedSampleDataIfEmpty,
+} from '../../utils/adminAuth'
 
 export default function AdminBootstrap() {
   const navigate = useNavigate()
@@ -28,6 +35,14 @@ export default function AdminBootstrap() {
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
   const [copiedSql, setCopiedSql] = useState(false)
+
+  // Auto-route to dashboard if already authenticated
+  useEffect(() => {
+    const active = getCurrentAdminSession()
+    if (active) {
+      navigate(ROUTE_CONSOLE, { replace: true })
+    }
+  }, [navigate])
 
   const sqlSnippet = `-- Direct PostgreSQL Bootstrap Query (Prefix: dev_)
 INSERT INTO dev_admins (username, password_hash, full_name, email, role)
@@ -79,13 +94,16 @@ ON CONFLICT (username) DO NOTHING;`
         return
       }
 
-      // Seed realistic sample data so graphs and tables render immediately
+      // Seed realistic sample data and auto-route to dashboard
       seedSampleDataIfEmpty()
+      if (result.admin) {
+        createAdminSession(result.admin)
+      }
       setSuccess(true)
 
       setTimeout(() => {
-        navigate(ROUTE_AUTH)
-      }, 1800)
+        navigate(ROUTE_CONSOLE, { replace: true })
+      }, 1200)
     } catch {
       setError('An unexpected error occurred during bootstrap initialization.')
     } finally {
