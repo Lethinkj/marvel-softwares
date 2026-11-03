@@ -42,6 +42,7 @@
   --color-offwhite: #fcf9fa;
   --color-warm: #fcf9fa;
   --color-border: #e8e5e1;
+  --color-slate-200: #e2e8f0;
   --color-text: #172033;
   --color-text-muted: #5f6472;
 
@@ -69,9 +70,10 @@
   --font-hero: clamp(2.1rem, 3.8vw + 0.8rem, 3.6rem);
   --font-page-title: clamp(1.8rem, 3vw + 0.75rem, 3.1rem);
   --font-section-title: clamp(1.65rem, 1.8vw + 0.9rem, 2.35rem);
-  --font-section-subtitle: clamp(1rem, 0.35vw + 0.88rem, 1.15rem);
-  --font-card-title: clamp(1.1rem, 0.4vw + 0.95rem, 1.25rem);
-  --font-body-size: clamp(0.9375rem, 0.2vw + 0.875rem, 1.025rem);
+  --font-section-subtitle: clamp(1rem, 0.25vw + 0.95rem, 1.125rem);
+  --font-card-title: clamp(1.15rem, 0.4vw + 1rem, 1.35rem);
+  --font-card-desc: clamp(1rem, 0.25vw + 0.95rem, 1.125rem);
+  --font-body-size: clamp(1rem, 0.25vw + 0.95rem, 1.125rem);
   --font-small: clamp(0.8125rem, 0.15vw + 0.75rem, 0.875rem);
   --font-label: 0.75rem;
 
@@ -563,11 +565,19 @@ body.nav-menu-open #root {
   color: var(--color-text);
 }
 
+/* All card descriptions / paragraphs across the home page share this exact 1 size */
+.text-card-desc {
+  font-family: var(--font-sans);
+  font-size: var(--font-card-desc) !important;
+  line-height: 1.625;
+  color: var(--color-text-muted);
+}
+
 /* All body paragraphs across the home page share this exact 1 size */
 .text-body {
   font-family: var(--font-sans);
   font-size: var(--font-body-size);
-  line-height: 2;
+  line-height: 1.625;
   color: var(--color-text-muted);
 }
 
@@ -1122,6 +1132,7 @@ body.nav-menu-open #root {
 
 .svc-mobile-header {
   display: block;
+  text-align: center;
   margin-bottom: 4px;
 }
 
@@ -1181,6 +1192,18 @@ body.nav-menu-open #root {
   }
 }
 
+/* About image: constrained on all single-column viewports up to 1023px (including 991px - 1020px) */
+@media (max-width: 1023px) {
+  .about-image {
+    max-height: 240px !important;
+    width: auto !important;
+    max-width: 100% !important;
+    object-fit: contain !important;
+    margin-inline: auto !important;
+    display: block !important;
+  }
+}
+
 @media (max-width: 991px) {
   .svc-showcase {
     gap: 28px;
@@ -1194,10 +1217,22 @@ body.nav-menu-open #root {
     margin-inline: -8px;
   }
 
-  .svc-media img {
+  .svc-media img,
+  .why-media img {
     max-height: 240px;
     width: auto;
+    max-width: 100%;
+    object-fit: contain;
     margin-inline: auto;
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .svc-media img,
+  .about-image,
+  .why-media img {
+    max-height: 200px !important;
   }
 }
 

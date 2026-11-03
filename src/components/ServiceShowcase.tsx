@@ -26,8 +26,8 @@ export const ServiceShowcase: React.FC = () => {
             className={`svc-showcase-row${flip ? ' is-flip' : ''}`}
           >
             {/* 1. Mobile-only heading (First on mobile view) */}
-            <div className="svc-mobile-header">
-              <h3 className="svc-copy-title text-left">{service.title}</h3>
+            <div className="svc-mobile-header text-center">
+              <h3 className="svc-copy-title text-center">{service.title}</h3>
             </div>
 
             {/* 2. Media / Image (Second on mobile view) */}

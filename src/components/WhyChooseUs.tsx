@@ -30,7 +30,7 @@ export const WhyChooseUs: React.FC = () => (
         <h3 className="why-desktop-title text-card-title leading-snug mb-4 sm:mb-5" style={{ color: '#fa5603' }}>
           The Technology Behind Every Solution
         </h3>
-        <p className="text-body text-slate-600 leading-relaxed text-justify max-w-[65ch]">
+        <p className="text-body text-slate-600 leading-relaxed text-justify max-w-[65ch] text-base sm:text-lg">
           We leverage modern technologies, proven frameworks, and powerful development tools to transform ideas into reliable digital products. From interactive web applications and mobile platforms to complex enterprise systems, we carefully select technologies that align with project requirements, focusing on performance, security, flexibility, and scalability. By combining established engineering practices with continuous technological innovation, we build adaptable software solutions that evolve with your business, support changing demands, and deliver lasting value.
         </p>
       </AnimatedSection>

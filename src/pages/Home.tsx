@@ -165,12 +165,12 @@ export const Home: React.FC = () => {
         }}
       >
         <div className="container relative z-10">
-          {/* Mobile-only heading: First on mobile (< lg) */}
-          <div className="block lg:hidden text-center mb-6">
-            <h2 id="about-us-title-mobile" className="text-section-title text-center">
+          {/* Centered Section Heading across the whole section */}
+          <AnimatedSection className="text-center max-w-3xl mx-auto mb-8 sm:mb-10 lg:mb-12">
+            <h2 id="about-us-title" className="text-section-title text-center">
               About Us
             </h2>
-          </div>
+          </AnimatedSection>
 
           {/* About Us Visual (Left, 40%) + Content (Right, 60%) */}
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,4fr)_minmax(0,6fr)] gap-8 lg:gap-10 xl:gap-12 items-center">
@@ -182,7 +182,7 @@ export const Home: React.FC = () => {
                   alt="About Marvel Softwares technology and engineering excellence"
                   width={1536}
                   height={1024}
-                  className="w-full h-auto max-w-[480px] lg:max-w-full rounded-2xl transition-transform hover:scale-[1.02] duration-300 mt-2 lg:mt-10"
+                  className="about-image h-auto max-w-full lg:w-full rounded-2xl transition-transform hover:scale-[1.02] duration-300"
                   decoding="async"
                 />
               </AnimatedSection>
@@ -191,11 +191,7 @@ export const Home: React.FC = () => {
             {/* Copy: 3rd on mobile, 2nd on desktop */}
             <div className="w-full">
               <AnimatedSection>
-                {/* Desktop-only heading */}
-                <h2 id="about-us-title" className="hidden lg:block text-section-title text-center">
-                  About Us
-                </h2>
-                <div className="mt-0 lg:mt-6 space-y-4 text-justify text-slate-600 leading-relaxed text-base sm:text-lg">
+                <div className="space-y-4 text-justify text-slate-600 leading-relaxed text-base sm:text-lg">
                   <p className="indent-8 sm:indent-10">
                     MARVEL SOFTWARES is a technology and software engineering company focused on designing, developing, and delivering innovative digital solutions that help businesses operate smarter and grow faster. We work with startups, established businesses, and growing organizations to transform ideas into reliable digital products, including modern websites, high-performance web and mobile applications, integrated ERP and CRM systems, AI-powered solutions, and customized software platforms tailored to their unique business requirements.
                   </p>
@@ -257,11 +253,11 @@ export const Home: React.FC = () => {
       {/* ============ C. SERVICES OVERVIEW ============ */}
       <section id="services" aria-labelledby="services-title" className="section">
         <div className="container">
-          <AnimatedSection style={{ maxWidth: 720 }} className="text-center mx-auto">
+          <AnimatedSection className="text-center mx-auto w-full">
             <h2 id="services-title" className="text-section-title">
               Our Services
             </h2>
-            <p className="section-subtitle">
+            <p className="section-subtitle w-full max-w-full text-balance" style={{ maxWidth: '100%' }}>
               From your first digital product to complex enterprise systems, we build
               technology around the way your business works.
             </p>
@@ -284,11 +280,11 @@ export const Home: React.FC = () => {
       {/* ============ E. TECHNOLOGIES ============ */}
       <section id="technologies" aria-labelledby="technologies-title" className="section">
         <div className="container">
-          <AnimatedSection style={{ maxWidth: 880, paddingInline: '1.25rem' }} className="text-center mx-auto">
+          <AnimatedSection className="text-center mx-auto w-full">
             <h2 id="technologies-title" className="text-section-title">
               Technologies
             </h2>
-            <p className="section-subtitle">
+            <p className="section-subtitle w-full max-w-full text-balance" style={{ maxWidth: '100%' }}>
               We leverage modern frameworks, scalable cloud architectures, and proven
               engineering practices to build powerful digital solutions. Every technology
               we choose is carefully selected to ensure exceptional performance, enhanced
@@ -313,11 +309,11 @@ export const Home: React.FC = () => {
       {/* ============ H. SELECTED PROJECTS ============ */}
       <section id="projects" aria-labelledby="work-title" className="section section-warm">
         <div className="container">
-          <div className="flex flex-col items-center text-center gap-4 max-w-2xl mx-auto">
+          <div className="flex flex-col items-center text-center gap-4 w-full mx-auto">
             <h2 id="work-title" className="text-section-title">
               Our Projects
             </h2>
-            <p className="section-subtitle">
+            <p className="section-subtitle w-full max-w-full text-balance" style={{ maxWidth: '100%' }}>
               Explore our portfolio of scalable web applications, digital platforms, and custom software solutions engineered for performance and reliability.
             </p>
           </div>
@@ -443,7 +439,7 @@ export const Home: React.FC = () => {
                     </span>
                   </div>
 
-                  <p className="text-body text-[15px] leading-relaxed" style={{ marginTop: 12, flex: 1 }}>
+                  <p className="text-card-desc leading-relaxed" style={{ marginTop: 12, flex: 1 }}>
                     {project.description}
                   </p>
 
