@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { homeServices, navLinks, services, siteConfig } from '../data/siteData'
 import { MailIcon, PhoneIcon, MapPinIcon } from './Icons'
 import { trackSectionNavigation, trackContactClick, trackCtaClick } from '../utils/analytics'
+import { openConsentBanner } from '../utils/consent'
 
 const CURRENT_YEAR = new Date().getFullYear()
 
@@ -264,10 +265,27 @@ export function Footer() {
 
       {/* --- Legal Bar --- */}
       <div className="footer-bottom-wrap">
-        <div className="container footer-bottom">
+        <div className="container footer-bottom flex flex-col sm:flex-row items-center justify-between gap-3 text-[13px]">
           <p className="footer-copyright">
             © {CURRENT_YEAR} MARVEL SOFTWARES. All rights reserved.
           </p>
+          <div className="flex items-center gap-4 text-xs text-slate-400">
+            <button
+              type="button"
+              onClick={openConsentBanner}
+              className="hover:text-white transition-colors underline underline-offset-2 cursor-pointer bg-transparent border-0 p-0 text-slate-400"
+            >
+              Cookie Preferences
+            </button>
+            <span aria-hidden="true" className="text-slate-600">|</span>
+            <a
+              href="/#contact"
+              onClick={(e) => scrollToSection(e, '#contact')}
+              className="hover:text-white transition-colors"
+            >
+              Privacy & Inquiries
+            </a>
+          </div>
         </div>
       </div>
     </footer>

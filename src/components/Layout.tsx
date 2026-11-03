@@ -4,6 +4,7 @@ import Navbar from './Navbar'
 import Footer from './Footer'
 import BackToTop from './BackToTop'
 import EntryReveal from './EntryReveal'
+import CookieBanner from './CookieBanner'
 import { initGA, trackPageView, trackSectionView } from '../utils/analytics'
 
 /**
@@ -225,6 +226,9 @@ export function Layout() {
 
       {/* Floating back-to-top button (all pages) */}
       <BackToTop />
+
+      {/* Legal Cookie and Privacy Consent Banner */}
+      <CookieBanner />
     </div>
   )
 }

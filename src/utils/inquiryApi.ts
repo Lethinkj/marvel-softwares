@@ -13,6 +13,8 @@
 // and the UI reports the pending state honestly.
 // ============================================
 
+import { getVisitorId, getSessionId } from './telemetry'
+
 export interface ProjectInquiry {
   name: string
   email: string
@@ -23,6 +25,8 @@ export interface ProjectInquiry {
   budget?: string
   timeline?: string
   requirements: string
+  visitor_id?: string
+  session_id?: string
 }
 
 export type InquiryResult =
@@ -46,12 +50,18 @@ export function getQueuedInquiries(): ProjectInquiry[] {
 
 export async function submitProjectInquiry(inquiry: ProjectInquiry): Promise<InquiryResult> {
   const endpoint = import.meta.env.VITE_INQUIRY_ENDPOINT as string | undefined
+  const payload = {
+    ...inquiry,
+    visitor_id: inquiry.visitor_id || getVisitorId(),
+    session_id: inquiry.session_id || getSessionId(),
+    submittedAt: new Date().toISOString(),
+  }
 
   if (endpoint) {
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...inquiry, submittedAt: new Date().toISOString() }),
+      body: JSON.stringify(payload),
     })
     if (!response.ok) {
       throw new Error(`Inquiry submission failed with status ${response.status}`)
@@ -63,9 +73,7 @@ export async function submitProjectInquiry(inquiry: ProjectInquiry): Promise<Inq
   await new Promise((resolve) => setTimeout(resolve, 600))
   try {
     const queue = readQueue()
-    queue.push({ ...inquiry, submittedAt: new Date().toISOString() } as ProjectInquiry & {
-      submittedAt: string
-    })
+    queue.push(payload as ProjectInquiry & { submittedAt: string })
     localStorage.setItem(QUEUE_KEY, JSON.stringify(queue))
   } catch {
     // Storage unavailable — still resolve so the UI can show its fallback note.

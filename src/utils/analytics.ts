@@ -1,4 +1,6 @@
 import { siteConfig } from '../data/siteData'
+import { hasConsented } from './consent'
+import { sendTelemetry } from './telemetry'
 
 /**
  * Standard human-readable titles for single-page sections.
@@ -52,8 +54,7 @@ export function isValidGaId(id: string): boolean {
 /**
  * Initializes Google Analytics 4 (gtag.js).
  * - If a valid GA4 ID is present, it injects the official gtag.js script and initializes window.dataLayer.
- * - If not yet configured or placeholder, it sets up a safe no-op mock that logs in development,
- *   guaranteeing the app never breaks and is 100% prepared to capture data the moment an ID is provided.
+ * - If not yet configured or placeholder, it sets up a safe no-op mock that logs in development.
  */
 export function initGA(): void {
   if (typeof window === 'undefined') return
@@ -68,6 +69,14 @@ export function initGA(): void {
     window.dataLayer?.push(arguments)
   }
 
+  // Set default Consent Mode to denied until user consents
+  window.gtag('consent', 'default', {
+    analytics_storage: hasConsented() ? 'granted' : 'denied',
+    ad_storage: hasConsented() ? 'granted' : 'denied',
+    ad_user_data: hasConsented() ? 'granted' : 'denied',
+    ad_personalization: hasConsented() ? 'granted' : 'denied',
+  })
+
   if (valid) {
     // Inject official Google Tag Manager script
     const script = document.createElement('script')
@@ -76,7 +85,6 @@ export function initGA(): void {
     document.head.appendChild(script)
 
     window.gtag('js', new Date())
-    // Disable automatic pageviews to allow React Router SPA to track virtual pageviews accurately
     window.gtag('config', gaId, {
       send_page_view: false,
     })
@@ -94,7 +102,7 @@ export function initGA(): void {
 }
 
 /**
- * Safe wrapper to dispatch gtag events.
+ * Dispatches an event to BOTH Google Analytics (gtag) AND First-Party Database Telemetry.
  */
 export function trackEvent(
   eventName: string,
@@ -106,10 +114,21 @@ export function trackEvent(
     initGA()
   }
 
-  // Always record event to window.dataLayer via window.gtag
+  // Record to window.dataLayer
   if (window.gtag) {
     window.gtag('event', eventName, params)
   }
+
+  // Send to First-Party DB Telemetry (respects cookie consent)
+  sendTelemetry({
+    event_name: eventName,
+    page_path: (params.page_path as string) || window.location.pathname,
+    section_id: params.section_id as string | undefined,
+    section_name: params.section_name as string | undefined,
+    dwell_time_seconds: (params.dwell_time_seconds as number) || 0,
+    element_label: (params.element_label as string) || (params.cta_label as string),
+    metadata: params,
+  })
 
   if (import.meta.env.DEV) {
     console.log(`📊 [Analytics Event] ${eventName}:`, params)
@@ -131,11 +150,16 @@ export function trackPageView(path: string, title?: string): void {
 /**
  * Tracks when a user scrolls into a specific section of the page.
  */
-export function trackSectionView(sectionId: string, sectionTitle?: string): void {
+export function trackSectionView(
+  sectionId: string,
+  sectionTitle?: string,
+  dwellTimeSeconds: number = 0,
+): void {
   const name = sectionTitle || SECTION_TITLES[sectionId] || sectionId
   trackEvent('section_view', {
     section_id: sectionId,
     section_name: name,
+    dwell_time_seconds: dwellTimeSeconds,
     page_path: window.location.pathname,
   })
 }
@@ -157,7 +181,7 @@ export function trackSectionNavigation(
 
 /**
  * Tracks contact and consultation form submissions.
- * Fires standard GA4 'generate_lead' event as well as 'form_submit'.
+ * Fires standard GA4 'generate_lead' event as well as 'form_submit' and DB lead record.
  */
 export function trackFormSubmit(
   formName: string,
