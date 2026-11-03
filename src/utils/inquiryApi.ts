@@ -1,19 +1,13 @@
 // ============================================
-// Project inquiry submission — integration point.
-// Connect this to the real backend/email service.
+// Project inquiry submission — Supabase integration.
+// Inserts directly into dev_contact_inquiries table via Supabase client.
 //
-// To go live, EITHER:
-//  1. Set VITE_INQUIRY_ENDPOINT to a POST endpoint that
-//     accepts the inquiry JSON, OR
-//  2. Replace the body of submitProjectInquiry with a
-//     direct API / email-service call.
-//
-// Until a backend is configured, inquiries are queued in
-// localStorage (key below) so no message is silently lost
-// and the UI reports the pending state honestly.
+// Falls back to localStorage queue if Supabase is not configured,
+// so no message is ever silently lost and the UI reports the pending state honestly.
 // ============================================
 
 import { getVisitorId, getSessionId } from './telemetry'
+import { supabase } from '../lib/supabase'
 
 export interface ProjectInquiry {
   name: string
@@ -49,27 +43,43 @@ export function getQueuedInquiries(): ProjectInquiry[] {
 }
 
 export async function submitProjectInquiry(inquiry: ProjectInquiry): Promise<InquiryResult> {
-  const endpoint = import.meta.env.VITE_INQUIRY_ENDPOINT as string | undefined
   const payload = {
     ...inquiry,
     visitor_id: inquiry.visitor_id || getVisitorId(),
     session_id: inquiry.session_id || getSessionId(),
-    submittedAt: new Date().toISOString(),
   }
 
-  if (endpoint) {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    })
-    if (!response.ok) {
-      throw new Error(`Inquiry submission failed with status ${response.status}`)
+  // Try inserting directly into Supabase dev_contact_inquiries table
+  try {
+    const { data, error } = await supabase
+      .from('dev_contact_inquiries')
+      .insert({
+        visitor_id: payload.visitor_id || null,
+        session_id: payload.session_id || null,
+        name: payload.name,
+        email: payload.email,
+        phone: payload.phone || '',
+        address: payload.address || '',
+        solution: payload.solution || 'Other',
+        requirements: payload.requirements,
+        status: 'new',
+      })
+      .select('id')
+      .single()
+
+    if (!error && data) {
+      return { status: 'sent' }
     }
-    return { status: 'sent' }
+
+    // Log error in dev for debugging
+    if (import.meta.env.DEV && error) {
+      console.warn('[inquiryApi] Supabase insert error:', error.message)
+    }
+  } catch {
+    // Fall through to localStorage queue
   }
 
-  // No backend configured — persist locally and report honestly.
+  // Supabase not configured or unavailable — persist locally and report honestly.
   await new Promise((resolve) => setTimeout(resolve, 600))
   try {
     const queue = readQueue()

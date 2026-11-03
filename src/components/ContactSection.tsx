@@ -120,7 +120,7 @@ export const ContactSection: React.FC = () => {
 
   return (
     <div className="container">
-      <AnimatedSection style={{ maxWidth: 720 }} className="text-center mx-auto mb-4">
+      <AnimatedSection style={{ maxWidth: 720 }} className="text-center mx-auto mb-3">
         <h2 id="contact-heading" className="text-section-title">
           Contact Us
         </h2>
@@ -151,7 +151,7 @@ export const ContactSection: React.FC = () => {
           />
 
           {/* Form side: 55% on desktop - Clean White with blur effect on submit */}
-          <div className="col-span-1 bg-white p-6 sm:p-8 lg:p-10 xl:p-12 flex flex-col justify-center relative">
+          <div className="col-span-1 bg-white p-5 sm:p-6 lg:p-7 xl:p-8 flex flex-col justify-center relative">
             {/* The Form Content (blurred when submitted) */}
             <div
               className={`flex flex-col justify-center transition-all duration-500 ${
@@ -161,8 +161,8 @@ export const ContactSection: React.FC = () => {
               }`}
               aria-hidden={isSubmitted}
             >
-              <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-                <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 20 }}>
+              <form onSubmit={handleSubmit} noValidate className="contact-form" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 14 }}>
                   <div>
                     <label className="field-label" htmlFor={`${formId}-name`}>
                       Full Name <span className="field-required" aria-hidden="true">*</span>
@@ -196,7 +196,7 @@ export const ContactSection: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 20 }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 14 }}>
                   <div>
                     <label className="field-label" htmlFor={`${formId}-email`}>
                       Email <span className="field-required" aria-hidden="true">*</span>
@@ -257,7 +257,7 @@ export const ContactSection: React.FC = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="inline-flex items-center justify-center min-h-[52px] px-10 py-3 text-base font-semibold transition-all whitespace-nowrap"
+                    className="inline-flex items-center justify-center min-h-[48px] px-10 py-2.5 text-base font-semibold transition-all whitespace-nowrap"
                     style={{
                       background: isSubmitting ? '#8aa9f2' : 'var(--color-primary)',
                       color: '#fff',

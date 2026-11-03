@@ -1,30 +1,36 @@
 /**
  * ====================================================================
- * MARVEL SOFTWARES — Example Telemetry & Inquiries Ingestion Server
+ * MARVEL SOFTWARES — Telemetry & Inquiries Ingestion Server (Supabase)
  * (All tables use prefix: dev_)
  * ====================================================================
- * Connects to PostgreSQL and ingests telemetry packets and contact forms.
+ * Connects to Supabase and ingests telemetry packets and contact forms.
  *
  * Dependencies required to run:
- *   npm install express pg cors
+ *   npm install express @supabase/supabase-js cors
  *
  * Environment variables:
- *   DATABASE_URL=postgres://postgres:password@localhost:5432/marvel_telemetry
+ *   SUPABASE_URL=https://your-project-id.supabase.co
+ *   SUPABASE_SERVICE_KEY=your-service-role-key   (use service key for server-side)
  *   PORT=4000
  * ====================================================================
  */
 
 import express from 'express'
 import cors from 'cors'
-import pkg from 'pg'
-const { Pool } = pkg
+import { createClient } from '@supabase/supabase-js'
 
 const app = express()
 const port = process.env.PORT || 4000
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || 'postgres://postgres:password@localhost:5432/marvel_telemetry',
-})
+const supabaseUrl = process.env.SUPABASE_URL
+const supabaseKey = process.env.SUPABASE_SERVICE_KEY
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error('❌ Missing SUPABASE_URL or SUPABASE_SERVICE_KEY environment variables.')
+  process.exit(1)
+}
+
+const supabase = createClient(supabaseUrl, supabaseKey)
 
 app.use(cors())
 app.use(express.json())
@@ -37,6 +43,14 @@ function getClientIp(req) {
   }
   return req.socket.remoteAddress || '127.0.0.1'
 }
+
+/**
+ * GET /health
+ * Simple health check endpoint
+ */
+app.get('/health', (_req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() })
+})
 
 /**
  * POST /api/telemetry
@@ -56,48 +70,44 @@ app.post('/api/telemetry', async (req, res) => {
     const region = req.headers['cf-region'] || null
 
     // 1. Upsert visitor profile in dev_visitors
-    await pool.query(
-      `INSERT INTO dev_visitors (
-        visitor_id, ip_address, country, region, city,
-        device_type, browser, os, screen_resolution, language, referrer, last_seen
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW())
-      ON CONFLICT (visitor_id) DO UPDATE SET
-        last_seen = NOW(),
-        ip_address = COALESCE(EXCLUDED.ip_address, dev_visitors.ip_address),
-        country = COALESCE(EXCLUDED.country, dev_visitors.country),
-        city = COALESCE(EXCLUDED.city, dev_visitors.city);`,
-      [
+    const { error: visitorError } = await supabase.from('dev_visitors').upsert(
+      {
         visitor_id,
-        ip,
+        ip_address: ip,
         country,
         region,
         city,
-        client_meta?.device_type || 'desktop',
-        client_meta?.browser || 'Unknown',
-        client_meta?.os || 'Unknown',
-        client_meta?.screen_resolution || '',
-        client_meta?.language || '',
-        client_meta?.referrer || '',
-      ],
+        device_type: client_meta?.device_type || 'desktop',
+        browser: client_meta?.browser || 'Unknown',
+        os: client_meta?.os || 'Unknown',
+        screen_resolution: client_meta?.screen_resolution || '',
+        language: client_meta?.language || '',
+        referrer: client_meta?.referrer || '',
+        last_seen: new Date().toISOString(),
+      },
+      { onConflict: 'visitor_id' }
     )
 
+    if (visitorError) {
+      console.error('Visitor upsert error:', visitorError.message)
+    }
+
     // 2. Insert event in dev_telemetry_events
-    await pool.query(
-      `INSERT INTO dev_telemetry_events (
-        visitor_id, session_id, event_name, page_path,
-        section_id, section_name, dwell_time_seconds, metadata
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`,
-      [
-        visitor_id,
-        session_id || null,
-        event_name,
-        page_path || '/',
-        section_id || null,
-        section_name || null,
-        dwell_time_seconds || 0,
-        metadata ? JSON.stringify(metadata) : null,
-      ],
-    )
+    const { error: eventError } = await supabase.from('dev_telemetry_events').insert({
+      visitor_id,
+      session_id: session_id || null,
+      event_name,
+      page_path: page_path || '/',
+      section_id: section_id || null,
+      section_name: section_name || null,
+      dwell_time_seconds: dwell_time_seconds || 0,
+      metadata: metadata || null,
+    })
+
+    if (eventError) {
+      console.error('Telemetry insert error:', eventError.message)
+      return res.status(500).json({ error: 'Failed to record telemetry event' })
+    }
 
     return res.status(200).json({ status: 'ok' })
   } catch (error) {
@@ -125,44 +135,47 @@ app.post('/api/inquiry', async (req, res) => {
     const userAgent = req.headers['user-agent'] || null
 
     // 1. Insert into dev_contact_inquiries table
-    const result = await pool.query(
-      `INSERT INTO dev_contact_inquiries (
-        visitor_id, session_id, name, email, phone, address,
-        solution, requirements, ip_address, city, region, country, user_agent
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
-      RETURNING id, created_at;`,
-      [
-        visitor_id || null,
-        session_id || null,
+    const { data, error: inquiryError } = await supabase
+      .from('dev_contact_inquiries')
+      .insert({
+        visitor_id: visitor_id || null,
+        session_id: session_id || null,
         name,
         email,
-        phone || '',
-        address || '',
-        solution || 'Other',
+        phone: phone || '',
+        address: address || '',
+        solution: solution || 'Other',
         requirements,
-        ip,
+        ip_address: ip,
         city,
         region,
         country,
-        userAgent,
-      ],
-    )
+        user_agent: userAgent,
+        status: 'new',
+      })
+      .select('id, created_at')
+      .single()
+
+    if (inquiryError) {
+      console.error('Inquiry insert error:', inquiryError.message)
+      return res.status(500).json({ error: 'Failed to process inquiry' })
+    }
 
     // 2. Link visitor profile in dev_visitors if visitor_id is provided
     if (visitor_id) {
-      await pool.query(
-        `UPDATE dev_visitors SET
-          lead_name = $1,
-          lead_email = $2,
-          lead_phone = $3,
-          lead_address = $4,
-          converted_at = NOW()
-        WHERE visitor_id = $5;`,
-        [name, email, phone || null, address || null, visitor_id],
-      )
+      await supabase
+        .from('dev_visitors')
+        .update({
+          lead_name: name,
+          lead_email: email,
+          lead_phone: phone || null,
+          lead_address: address || null,
+          converted_at: new Date().toISOString(),
+        })
+        .eq('visitor_id', visitor_id)
     }
 
-    return res.status(201).json({ status: 'sent', inquiryId: result.rows[0].id })
+    return res.status(201).json({ status: 'sent', inquiryId: data.id })
   } catch (error) {
     console.error('Error submitting inquiry:', error)
     return res.status(500).json({ error: 'Failed to process inquiry' })
@@ -170,5 +183,5 @@ app.post('/api/inquiry', async (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log(`🚀 Marvel Softwares Telemetry API running on port ${port} (Tables: dev_*)`)
+  console.log(`🚀 Marvel Softwares Telemetry API running on port ${port} (Supabase backend, Tables: dev_*)`)
 })

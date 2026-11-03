@@ -1841,6 +1841,23 @@ body.nav-menu-open #root {
   border-color: #d92d20 !important;
 }
 
+/* --- Compact contact form --- */
+.contact-form .field-input,
+.contact-form .field-select,
+.contact-form .field-textarea {
+  min-height: 44px;
+  padding: 9px 14px;
+}
+
+.contact-form .field-textarea {
+  min-height: 108px;
+  resize: vertical;
+}
+
+.contact-form .field-label {
+  margin-bottom: 4px;
+}
+
 .field-error:focus {
   box-shadow: 0 0 0 3px rgba(217, 45, 32, 0.12) !important;
 }

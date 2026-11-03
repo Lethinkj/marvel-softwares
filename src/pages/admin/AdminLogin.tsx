@@ -51,8 +51,9 @@ export default function AdminLogin() {
       return
     }
 
-    const adminExists = hasAnyAdmin()
-    setHasAdmins(adminExists)
+    hasAnyAdmin().then((adminExists) => {
+      setHasAdmins(adminExists)
+    })
     seedSampleDataIfEmpty()
     checkIpSecurity()
   }, [navigate])

@@ -1,5 +1,6 @@
 import { hasConsented } from './consent'
 import { SECTION_TITLES } from './analytics'
+import { supabase } from '../lib/supabase'
 
 const VISITOR_ID_KEY = 'marvel_visitor_id'
 const SESSION_ID_KEY = 'marvel_session_id'
@@ -109,7 +110,8 @@ export function getClientMeta(): ClientMeta {
 }
 
 /**
- * Sends a telemetry event to the first-party PostgreSQL backend.
+ * Sends a telemetry event directly to Supabase (dev_telemetry_events table).
+ * Also upserts the visitor profile in dev_visitors.
  * Respects user cookie/privacy consent.
  */
 export function sendTelemetry(event: TelemetryEventPayload): void {
@@ -120,10 +122,14 @@ export function sendTelemetry(event: TelemetryEventPayload): void {
     return
   }
 
+  const visitor_id = getVisitorId()
+  const session_id = getSessionId()
+  const client_meta = getClientMeta()
+
   const payload = {
-    visitor_id: getVisitorId(),
-    session_id: getSessionId(),
-    client_meta: getClientMeta(),
+    visitor_id,
+    session_id,
+    client_meta,
     event_name: event.event_name,
     page_path: event.page_path || window.location.pathname,
     section_id: event.section_id,
@@ -133,42 +139,53 @@ export function sendTelemetry(event: TelemetryEventPayload): void {
     metadata: event.metadata,
   }
 
-  const endpoint = import.meta.env.VITE_TELEMETRY_ENDPOINT || '/api/telemetry'
-
   if (import.meta.env.DEV) {
-    console.log('🛰️ [First-Party Telemetry -> DB]', payload)
+    console.log('🛰️ [Supabase Telemetry]', payload)
   }
 
+  // Mirror to localStorage for offline/admin dashboard fallback (max 200 events)
   try {
     const rawLocal = localStorage.getItem('dev_telemetry_events')
     const localEvents = rawLocal ? JSON.parse(rawLocal) : []
-    localEvents.unshift({
-      id: Date.now(),
-      ...payload,
-      created_at: new Date().toISOString(),
-    })
+    localEvents.unshift({ id: Date.now(), ...payload, created_at: new Date().toISOString() })
     if (localEvents.length > 200) localEvents.length = 200
     localStorage.setItem('dev_telemetry_events', JSON.stringify(localEvents))
   } catch {
     // Non-blocking
   }
 
-  try {
-    const data = JSON.stringify(payload)
-    if (navigator.sendBeacon) {
-      const blob = new Blob([data], { type: 'application/json' })
-      navigator.sendBeacon(endpoint, blob)
-    } else {
-      fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: data,
-        keepalive: true,
-      }).catch(() => {
-        // Silently catch until backend is live
+  // Fire-and-forget upsert visitor + insert telemetry event into Supabase
+  ;(async () => {
+    try {
+      // 1. Upsert visitor profile
+      await supabase.from('dev_visitors').upsert(
+        {
+          visitor_id,
+          device_type: client_meta.device_type,
+          browser: client_meta.browser,
+          os: client_meta.os,
+          screen_resolution: client_meta.screen_resolution,
+          language: client_meta.language,
+          referrer: client_meta.referrer,
+          last_seen: new Date().toISOString(),
+        },
+        { onConflict: 'visitor_id', ignoreDuplicates: false }
+      )
+
+      // 2. Insert telemetry event
+      await supabase.from('dev_telemetry_events').insert({
+        visitor_id,
+        session_id: session_id || null,
+        event_name: payload.event_name,
+        page_path: payload.page_path,
+        section_id: payload.section_id || null,
+        section_name: payload.section_name || null,
+        dwell_time_seconds: payload.dwell_time_seconds,
+        element_label: payload.element_label || null,
+        metadata: payload.metadata || null,
       })
+    } catch {
+      // Silently fail — telemetry must never break the UI
     }
-  } catch {
-    // Graceful fallback
-  }
+  })()
 }
