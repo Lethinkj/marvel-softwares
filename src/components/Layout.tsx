@@ -129,56 +129,132 @@ function ScrollToTop() {
 
 function ScrollSceneObserver() {
   useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    // If user prefers reduced motion, reveal all sections immediately without animations
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (prefersReducedMotion) {
+      document.querySelectorAll<HTMLElement>('#main-content section').forEach((sec) => {
+        sec.classList.add('scroll-scene', 'scroll-scene--visible')
+      })
+      return
+    }
+
     let lastScrollY = window.scrollY
-    let direction: 'up' | 'down' = 'down'
-    const observedSections = new Set<HTMLElement>()
+    let globalScrollDir: 'down' | 'up' = 'down'
 
     const updateDirection = () => {
       const currentScrollY = window.scrollY
-      if (Math.abs(currentScrollY - lastScrollY) > 4) {
-        direction = currentScrollY > lastScrollY ? 'down' : 'up'
+      const diff = currentScrollY - lastScrollY
+      if (Math.abs(diff) >= 6) {
+        globalScrollDir = diff > 0 ? 'down' : 'up'
         lastScrollY = currentScrollY
       }
     }
 
-    const observer = new IntersectionObserver(
+    window.addEventListener('scroll', updateDirection, { passive: true })
+
+    // Observer 1: Reveal Observer (detects when a section enters the viewport)
+    const revealObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           const section = entry.target as HTMLElement
-          section.classList.add('scroll-scene')
-          section.dataset.scrollDirection = direction
-          section.classList.toggle('scroll-scene--visible', entry.isIntersecting)
+          if (entry.isIntersecting) {
+            if (!section.classList.contains('scroll-scene--visible')) {
+              section.dataset.scrollDirection = globalScrollDir
+              section.classList.remove('scroll-scene--resetting')
+              requestAnimationFrame(() => {
+                section.classList.add('scroll-scene--visible')
+              })
+            }
+          }
         })
       },
       {
-        threshold: 0.08,
-        rootMargin: '-8% 0px -8% 0px',
-      },
+        threshold: 0.05,
+        rootMargin: '0px 0px -40px 0px',
+      }
     )
 
-    const observeSections = () => {
-      document.querySelectorAll<HTMLElement>('#main-content section[id]').forEach((section) => {
-        if (observedSections.has(section)) return
-        observedSections.add(section)
-        observer.observe(section)
+    // Observer 2: Reset Observer (only resets when a section is SAFELY OFFSCREEN by >180px)
+    // This generous buffer prevents elements from disappearing while visible or near the viewport edges.
+    const resetObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const section = entry.target as HTMLElement
+          // Hero section stays permanently visible
+          if (section.id === 'home') return
+
+          if (!entry.isIntersecting) {
+            const rect = entry.boundingClientRect
+            const isFarAbove = rect.bottom < 0
+            const isFarBelow = rect.top > window.innerHeight
+
+            if (isFarAbove) {
+              // Scrolled far above viewport: quietly prime to glide down when scrolling up
+              section.classList.add('scroll-scene--resetting')
+              section.classList.remove('scroll-scene--visible')
+              section.dataset.scrollDirection = 'up'
+            } else if (isFarBelow) {
+              // Scrolled far below viewport: quietly prime to glide up when scrolling down
+              section.classList.add('scroll-scene--resetting')
+              section.classList.remove('scroll-scene--visible')
+              section.dataset.scrollDirection = 'down'
+            }
+          }
+        })
+      },
+      {
+        threshold: 0,
+        rootMargin: '180px 0px 180px 0px',
+      }
+    )
+
+    const observed = new Set<HTMLElement>()
+    const initSections = () => {
+      const sections = document.querySelectorAll<HTMLElement>(
+        '#main-content section[id], #main-content section.faq-page'
+      )
+      const vh = window.innerHeight
+
+      sections.forEach((section) => {
+        if (observed.has(section)) return
+        observed.add(section)
+
+        section.classList.add('scroll-scene')
+
+        const rect = section.getBoundingClientRect()
+        // If already in or touching initial viewport (above the fold):
+        if (rect.top < vh && rect.bottom > 0) {
+          section.classList.add('scroll-scene--visible')
+          section.dataset.scrollDirection = 'down'
+        } else if (rect.bottom <= 0) {
+          section.dataset.scrollDirection = 'up'
+        } else {
+          section.dataset.scrollDirection = 'down'
+        }
+
+        revealObserver.observe(section)
+        resetObserver.observe(section)
       })
     }
 
-    const mutationObserver = new MutationObserver(observeSections)
+    initSections()
+
+    const mutationObserver = new MutationObserver(initSections)
     const mainContent = document.getElementById('main-content')
     if (mainContent) {
       mutationObserver.observe(mainContent, { childList: true, subtree: true })
     }
-    observeSections()
-    window.addEventListener('scroll', updateDirection, { passive: true })
 
     return () => {
-      observer.disconnect()
-      mutationObserver.disconnect()
       window.removeEventListener('scroll', updateDirection)
-      observedSections.forEach((section) => {
-        section.classList.remove('scroll-scene', 'scroll-scene--visible')
-        delete section.dataset.scrollDirection
+      revealObserver.disconnect()
+      resetObserver.disconnect()
+      mutationObserver.disconnect()
+      observed.forEach((sec) => {
+        sec.classList.remove('scroll-scene', 'scroll-scene--visible', 'scroll-scene--resetting')
+        delete sec.dataset.scrollDirection
       })
     }
   }, [])

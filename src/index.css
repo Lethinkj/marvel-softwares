@@ -184,24 +184,84 @@ h2[id] {
   scroll-margin-top: var(--anchor-offset);
 }
 
-/* --- Consistent page-level scroll reveals --- */
+/* ========================================================
+   SMOOTH SCROLL SCENE (Layout-based, direction-aware, glitch-free)
+   - Smooth 20px translation for a luxury, fluid feel
+   - Direction-aware: glides in upward when scrolling down,
+     glides in downward when scrolling up
+   - Zero-glitch hysteresis: elements NEVER disappear while visible
+   ======================================================== */
 .scroll-scene {
-  --scroll-scene-offset: 30px;
+  --scene-offset: 20px;
   opacity: 0;
-  transform: translate3d(0, var(--scroll-scene-offset), 0);
+  transform: translate3d(0, var(--scene-offset), 0);
   transition:
-    opacity 650ms cubic-bezier(0.21, 0.47, 0.32, 0.98),
-    transform 700ms cubic-bezier(0.21, 0.47, 0.32, 0.98);
+    opacity 560ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 
 .scroll-scene[data-scroll-direction='up'] {
-  --scroll-scene-offset: -30px;
+  --scene-offset: -20px;
 }
 
-.scroll-scene--visible {
+.scroll-scene[data-scroll-direction='down'] {
+  --scene-offset: 20px;
+}
+
+.scroll-scene.scroll-scene--visible {
   opacity: 1;
   transform: translate3d(0, 0, 0);
+}
+
+/* Off-screen reset: silent without transition animation */
+.scroll-scene.scroll-scene--resetting,
+.scroll-scene.scroll-scene--resetting .mild-reveal {
+  transition: none !important;
+}
+
+/* Staggered cards and elements inside an animated layout section */
+.scroll-scene .mild-reveal {
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+  transition:
+    opacity 480ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.scroll-scene[data-scroll-direction='up'] .mild-reveal {
+  transform: translate3d(0, -12px, 0);
+}
+
+.scroll-scene.scroll-scene--visible .mild-reveal {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Elements outside of .scroll-scene stay naturally visible */
+.mild-reveal:not(.scroll-scene *) {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hero section is always fully visible */
+.scroll-scene#home,
+.scroll-scene#home .mild-reveal,
+.scroll-scene:first-of-type,
+.scroll-scene:first-of-type .mild-reveal {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-scene,
+  .scroll-scene .mild-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 /* --- Blur and dim all background page contents when mobile/tablet navigation menu is open --- */
