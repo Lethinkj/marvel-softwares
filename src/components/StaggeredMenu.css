@@ -171,7 +171,7 @@
   height: 100dvh;
   max-height: 100dvh;
   background: #0033A0;
-  box-shadow: -14px 0 44px rgba(0, 31, 128, 0.35);
+  box-shadow: none;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -185,6 +185,13 @@
 [data-position='left'] .staggered-menu-panel {
   right: auto;
   left: 0;
+}
+
+.staggered-menu-wrapper[data-open] .staggered-menu-panel {
+  box-shadow: -14px 0 44px rgba(0, 31, 128, 0.35);
+}
+
+.staggered-menu-wrapper[data-position='left'][data-open] .staggered-menu-panel {
   box-shadow: 14px 0 44px rgba(0, 31, 128, 0.35);
 }
 
