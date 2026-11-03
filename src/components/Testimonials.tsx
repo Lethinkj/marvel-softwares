@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import AnimatedSection from './AnimatedSection'
 import { testimonials, type Testimonial } from '../data/siteData'
+import './Testimonials.css'
 
 export const Testimonials: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -10,7 +11,7 @@ export const Testimonials: React.FC = () => {
   const touchStartX = useRef<number | null>(null)
 
   const maxIndex = Math.max(0, testimonials.length - itemsPerPage)
-  const gapPx = itemsPerPage === 1 ? 16 : 24
+  const gapPx = itemsPerPage === 1 ? 16 : 20
 
   const updatePosition = useCallback((targetIndex: number) => {
     if (!trackRef.current) return
@@ -21,12 +22,10 @@ export const Testimonials: React.FC = () => {
     }
   }, [])
 
-  // Sync translation whenever index or itemsPerPage changes
   useEffect(() => {
     updatePosition(currentIndex)
   }, [currentIndex, updatePosition, itemsPerPage])
 
-  // Handle responsive items per page: 3 on desktop, 2 on tablet, 1 on mobile
   useEffect(() => {
     const handleResize = () => {
       let count = 3
@@ -87,108 +86,83 @@ export const Testimonials: React.FC = () => {
 
   return (
     <div className="w-full">
-      {/* Section Header */}
       <div className="container">
-        <AnimatedSection style={{ maxWidth: 760 }} className="text-center mx-auto mb-8 sm:mb-12">
-          <h2 id="testimonials-heading" className="text-section-title text-[#0033A0]">
-            Testimonials
+        <AnimatedSection className="ts-head">
+          <h2 id="testimonials-heading" className="text-section-title ts-title">
+            Testimonial
           </h2>
-          <p className="section-subtitle">
-            Build trust with genuine customer experiences.
-          </p>
         </AnimatedSection>
 
-        {/* Carousel Container: Left Arrow, 3 Cards Viewport, Right Arrow */}
-        <div className="relative flex items-center gap-1.5 sm:gap-4 lg:gap-5 -mx-2 sm:mx-0 w-[calc(100%+1rem)] sm:w-full">
-          {/* Left Arrow Button */}
-          <button
-            type="button"
-            onClick={handlePrev}
-            aria-label="Previous testimonial"
-            className="shrink-0 relative w-8 h-8 sm:w-10 sm:h-10 lg:w-11 lg:h-11 rounded-full bg-white border border-slate-200/90 text-slate-700 hover:text-[#FF5A00] hover:border-[#FF5A00] shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-center cursor-pointer active:scale-95 select-none z-10 after:absolute after:-inset-2 after:content-['']"
-          >
-            <svg
-              className="w-4 h-4 sm:w-[18px] sm:h-[18px]"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
+        <div className="ts-carousel">
+          <div className="ts-rail">
+            <button
+              type="button"
+              onClick={handlePrev}
+              aria-label="Previous testimonial"
+              className="ts-arrow"
             >
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
-          </button>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
 
-          {/* Carousel Viewport (Shows 1 on mobile, 2 on tablet, 3 on desktop) */}
-          <div
-            className="overflow-hidden flex-1 py-2 sm:py-3 focus:outline-hidden"
-            tabIndex={0}
-            onKeyDown={handleKeyDown}
-            onTouchStart={onTouchStart}
-            onTouchEnd={onTouchEnd}
-            aria-roledescription="carousel"
-            aria-label="Customer Testimonials Carousel"
-          >
             <div
-              ref={trackRef}
-              className={`flex items-stretch ${itemsPerPage === 1 ? 'gap-4' : 'gap-6'} transition-transform duration-500 ease-out`}
-              style={{
-                transform: `translateX(-${translateX}px)`,
-              }}
+              className="ts-viewport"
+              tabIndex={0}
+              onKeyDown={handleKeyDown}
+              onTouchStart={onTouchStart}
+              onTouchEnd={onTouchEnd}
+              aria-roledescription="carousel"
+              aria-label="Customer Testimonials"
             >
-              {testimonials.map((item) => (
-                <div
-                  key={item.id}
-                  className="shrink-0 flex flex-col"
-                  style={{
-                    width: `calc((100% - ${(itemsPerPage - 1) * gapPx}px) / ${itemsPerPage})`,
-                  }}
-                >
-                  <TestimonialCard item={item} />
-                </div>
-              ))}
+              <div
+                ref={trackRef}
+                className="ts-track"
+                style={{
+                  gap: `${gapPx}px`,
+                  transform: `translateX(-${translateX}px)`,
+                }}
+              >
+                {testimonials.map((item) => (
+                  <div
+                    key={item.id}
+                    className="shrink-0 flex"
+                    style={{
+                      width: `calc((100% - ${(itemsPerPage - 1) * gapPx}px) / ${itemsPerPage})`,
+                    }}
+                  >
+                    <TestimonialCard item={item} />
+                  </div>
+                ))}
+              </div>
             </div>
+
+            <button
+              type="button"
+              onClick={handleNext}
+              aria-label="Next testimonial"
+              className="ts-arrow"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
           </div>
 
-          {/* Right Arrow Button */}
-          <button
-            type="button"
-            onClick={handleNext}
-            aria-label="Next testimonial"
-            className="shrink-0 relative w-8 h-8 sm:w-10 sm:h-10 lg:w-11 lg:h-11 rounded-full bg-white border border-slate-200/90 text-slate-700 hover:text-[#FF5A00] hover:border-[#FF5A00] shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-center cursor-pointer active:scale-95 select-none z-10 after:absolute after:-inset-2 after:content-['']"
-          >
-            <svg
-              className="w-4 h-4 sm:w-[18px] sm:h-[18px]"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M9 18l6-6-6-6" />
-            </svg>
-          </button>
-        </div>
-
-        {/* Pagination Indicator Dots */}
-        <div className="flex items-center justify-center gap-2 mt-6 sm:mt-8">
-          {Array.from({ length: maxIndex + 1 }).map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => setCurrentIndex(i)}
-              className={`h-2 transition-all duration-300 rounded-full cursor-pointer ${
-                i === currentIndex
-                  ? 'w-6 bg-[#FF5A00]'
-                  : 'w-2 bg-orange-200 hover:bg-orange-300'
-              }`}
-              aria-label={`Go to testimonial slide ${i + 1}`}
-            />
-          ))}
+          {maxIndex > 0 && (
+            <div className="ts-dots">
+              {Array.from({ length: maxIndex + 1 }).map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setCurrentIndex(i)}
+                  className={`ts-dot${i === currentIndex ? ' is-active' : ''}`}
+                  aria-label={`Go to testimonial slide ${i + 1}`}
+                  aria-current={i === currentIndex ? 'true' : undefined}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -197,108 +171,57 @@ export const Testimonials: React.FC = () => {
 
 const TestimonialCard: React.FC<{ item: Testimonial }> = ({ item }) => {
   return (
-    <article
-      className="flex flex-col justify-between h-full w-full bg-white rounded-2xl p-4 sm:p-6 border border-orange-200/90 shadow-[0_4px_20px_rgba(255,90,0,0.04)] hover:shadow-[0_12px_28px_rgba(255,90,0,0.09)] hover:border-[#FF5A00]/50 transition-all duration-300 relative select-none"
-      aria-label={`Testimonial from ${item.clientName}`}
-    >
+    <article className="ts-card" aria-label={`Testimonial from ${item.clientName}`}>
       <div>
-        {/* Top Row: Quote Badge on left, 5 Orange Stars + 5.0 on right */}
-        <div className="flex items-center justify-between gap-2 mb-2.5 sm:mb-3.5">
-          <div
-            className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center shrink-0 shadow-2xs"
-            aria-hidden="true"
-          >
-            <svg
-              className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF5A00]"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-            </svg>
-          </div>
+        <svg
+          className="ts-quote"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+        </svg>
 
-          {/* 5 Orange Stars + 5.0 moved to top-right */}
-          <div
-            className="flex items-center gap-1 sm:gap-1.5 shrink-0"
-            aria-label={`Rating: ${item.rating} out of 5 stars`}
-          >
-            <div className="flex items-center text-[#FF5A00] gap-0.5">
-              {[...Array(item.rating)].map((_, i) => (
-                <svg
-                  key={i}
-                  className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current"
-                  viewBox="0 0 20 20"
-                  aria-hidden="true"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              ))}
-            </div>
-            <span className="text-xs font-bold text-slate-900">
-              {item.rating}.0
-            </span>
-          </div>
-        </div>
-
-        {/* Second Row: Project Completed Pill */}
-        <div className="mb-2.5 sm:mb-3.5">
-          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-full bg-orange-50/90 border border-orange-100 text-[11px] sm:text-xs text-slate-800 max-w-full">
-            <svg
-              className="w-3.5 h-3.5 text-[#FF5A00] shrink-0"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              aria-hidden="true"
-            >
-              <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-            </svg>
-            <span className="text-slate-500 font-normal shrink-0">Project:</span>
-            <span className="text-slate-900 font-bold line-clamp-1 sm:line-clamp-none">
-              {item.projectCompleted}
-            </span>
-          </div>
-        </div>
-
-        {/* Third Row: Customer Feedback */}
-        <p className="text-[13px] sm:text-[14.5px] leading-relaxed text-slate-800 font-normal">
-          &ldquo;{item.feedback}&rdquo;
-        </p>
+        <h3 className="ts-card-title">{item.projectCompleted}</h3>
+        <p className="ts-card-body">{item.feedback}</p>
       </div>
 
-      {/* Profile Footer */}
-      <div>
-        <div className="border-t border-slate-100 my-2.5 sm:my-3.5" />
-        <div className="flex items-center gap-2.5 sm:gap-3.5">
-          {/* Avatar Image */}
-          <div
-            className="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl overflow-hidden shrink-0 select-none shadow-sm border border-orange-200/80 bg-[#FF5A00]"
-            aria-hidden="true"
-          >
+      <div className="ts-card-footer">
+        <div className="ts-person">
+          <div className="ts-avatar" aria-hidden="true">
             {item.avatar ? (
               <img
                 src={item.avatar}
-                alt={item.clientName}
+                alt=""
                 className="w-full h-full object-cover object-top"
                 loading="lazy"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center font-bold text-white text-sm">
-                {item.initials}
-              </div>
+              <span>{item.initials}</span>
             )}
           </div>
 
-          {/* Vertical Orange Accent Divider */}
-          <div className="w-0.5 h-8 sm:h-11 bg-orange-300/80 shrink-0" aria-hidden="true" />
-
-          {/* Client Name & Role */}
-          <div className="min-w-0 flex-1">
-            <h3 className="text-sm sm:text-[15.5px] font-bold text-slate-900 leading-tight">
-              {item.clientName}
-            </h3>
-            <p className="text-[11px] sm:text-[13px] text-slate-500 font-medium line-clamp-2 mt-0.5 leading-snug">
-              {item.role} &bull; {item.companyName}
-            </p>
+          <div className="ts-person-copy">
+            <p className="ts-name">{item.clientName}</p>
+            <p className="ts-role">{item.role}</p>
           </div>
+        </div>
+
+        <div
+          className="ts-stars"
+          aria-label={`Rating: ${item.rating} out of 5 stars`}
+        >
+          {Array.from({ length: 5 }).map((_, i) => (
+            <svg
+              key={i}
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              className={i < item.rating ? 'is-filled' : 'is-muted'}
+              aria-hidden="true"
+            >
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+          ))}
         </div>
       </div>
     </article>

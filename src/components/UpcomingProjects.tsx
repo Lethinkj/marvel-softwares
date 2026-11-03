@@ -24,7 +24,7 @@ export const UpcomingProjects: React.FC = () => {
 
       {/* Cards aligned with the exact dimensions and grid of the project card section */}
       <div
-        className="flex flex-wrap justify-center gap-6 w-full"
+        className="flex flex-wrap justify-start gap-6 w-full"
         style={{ marginTop: 28 }}
       >
         {upcomingProjects.map((project: UpcomingProject, index: number) => (

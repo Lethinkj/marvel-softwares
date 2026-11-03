@@ -137,28 +137,18 @@ export const ContactSection: React.FC = () => {
             boxShadow: 'var(--shadow-card)',
           }}
         >
-          {/* Image side: 45% on desktop with full natural image size */}
+          {/* Image side: full-bleed contact background on desktop */}
           <div
-            className="hidden lg:flex items-center justify-center p-6 sm:p-8 lg:p-10 relative overflow-hidden border-r border-slate-200"
+            className="hidden lg:block relative overflow-hidden border-r border-slate-200 bg-slate-100"
             style={{
-              background: 'linear-gradient(160deg, #f8fafc 0%, #f1f5f9 55%, #e6edf5 100%)',
+              backgroundImage: "url('/images/contact/contact-us-section-background.avif')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
             }}
-          >
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: 'radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.75) 0%, transparent 70%)',
-              }}
-              aria-hidden="true"
-            />
-
-            <img
-              src="/images/contact/software-teamwork.avif"
-              alt="Isometric Software Teamwork Workspace"
-              className="relative z-10 w-full h-auto max-w-[560px] lg:scale-105 object-contain drop-shadow-2xl transition-transform duration-500 hover:scale-[1.04]"
-              loading="lazy"
-            />
-          </div>
+            role="img"
+            aria-label="Contact Marvel Softwares"
+          />
 
           {/* Form side: 55% on desktop - Clean White with blur effect on submit */}
           <div className="col-span-1 bg-white p-6 sm:p-8 lg:p-10 xl:p-12 flex flex-col justify-center relative">
@@ -171,12 +161,6 @@ export const ContactSection: React.FC = () => {
               }`}
               aria-hidden={isSubmitted}
             >
-              <h3 className="text-card-title" style={{ fontSize: '1.4rem' }}>
-                Tell Us About Your Project
-              </h3>
-              <p className="text-body text-[15px]" style={{ marginTop: 6, marginBottom: 26 }}>
-                Share a few details so we can better understand your requirements.
-              </p>
               <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                 <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 20 }}>
                   <div>

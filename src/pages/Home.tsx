@@ -509,7 +509,7 @@ export const Home: React.FC = () => {
       </section>
 
       {/* ============ K. TESTIMONIALS ============ */}
-      <section id="testimonials" aria-labelledby="testimonials-heading" className="section">
+      <section id="testimonials" aria-labelledby="testimonials-heading" className="section testimonials-v2">
         <Testimonials />
       </section>
 

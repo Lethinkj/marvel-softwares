@@ -27,38 +27,51 @@ const clientLogos: ClientLogo[] = [
 ]
 
 export const OurClients: React.FC = () => {
-  // Repeat sequence so infinite loop belt flows smoothly across ultra-wide viewports
+  // Repeat sequence so the infinite loop flows smoothly across ultra-wide viewports
   const repeatedLogos = Array.from({ length: 6 }, () => clientLogos).flat()
   const marqueeList = [...repeatedLogos, ...repeatedLogos]
   const beltRef = useRef<HTMLDivElement>(null)
+  const trackRef = useRef<HTMLDivElement>(null)
+  const offsetRef = useRef(0)
   const isDraggingRef = useRef(false)
   const dragStartXRef = useRef(0)
-  const dragStartScrollLeftRef = useRef(0)
+  const dragStartOffsetRef = useRef(0)
 
   useEffect(() => {
-    const belt = beltRef.current
-    if (!belt) return
+    const track = trackRef.current
+    if (!track) return
 
-    let animationFrame = 0
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const getHalfWidth = () => track.scrollWidth / 2 || 1
+
+    const normalize = () => {
+      const half = getHalfWidth()
+      offsetRef.current = ((offsetRef.current % half) + half) % half
+    }
+
+    const render = () => {
+      track.style.transform = `translate3d(${-offsetRef.current}px, 0, 0)`
+    }
+
+    let frame = 0
     let previousTime = performance.now()
 
     const advance = (time: number) => {
-      const elapsed = time - previousTime
+      const elapsed = Math.min(64, time - previousTime)
       previousTime = time
 
-      if (!isDraggingRef.current) {
-        belt.scrollLeft += elapsed * 0.06
-        const loopWidth = belt.scrollWidth / 2
-        if (loopWidth > 0 && belt.scrollLeft >= loopWidth) {
-          belt.scrollLeft -= loopWidth
-        }
+      if (!reduceMotion && !isDraggingRef.current) {
+        offsetRef.current -= elapsed * 0.075
+        normalize()
+        render()
       }
 
-      animationFrame = requestAnimationFrame(advance)
+      frame = requestAnimationFrame(advance)
     }
 
-    animationFrame = requestAnimationFrame(advance)
-    return () => cancelAnimationFrame(animationFrame)
+    render()
+    frame = requestAnimationFrame(advance)
+    return () => cancelAnimationFrame(frame)
   }, [])
 
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -67,22 +80,19 @@ export const OurClients: React.FC = () => {
 
     isDraggingRef.current = true
     dragStartXRef.current = event.clientX
-    dragStartScrollLeftRef.current = belt.scrollLeft
+    dragStartOffsetRef.current = offsetRef.current
     belt.setPointerCapture(event.pointerId)
     belt.classList.add('is-dragging')
   }
 
   const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
-    const belt = beltRef.current
-    if (!belt || !isDraggingRef.current) return
+    const track = trackRef.current
+    if (!track || !isDraggingRef.current) return
 
-    event.preventDefault()
-    belt.scrollLeft = dragStartScrollLeftRef.current - (event.clientX - dragStartXRef.current)
-    const loopWidth = belt.scrollWidth / 2
-    if (loopWidth > 0) {
-      if (belt.scrollLeft >= loopWidth) belt.scrollLeft -= loopWidth
-      if (belt.scrollLeft < 0) belt.scrollLeft += loopWidth
-    }
+    const half = track.scrollWidth / 2 || 1
+    offsetRef.current = dragStartOffsetRef.current - (event.clientX - dragStartXRef.current)
+    offsetRef.current = ((offsetRef.current % half) + half) % half
+    track.style.transform = `translate3d(${-offsetRef.current}px, 0, 0)`
   }
 
   const handlePointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -98,20 +108,12 @@ export const OurClients: React.FC = () => {
 
   useEffect(() => {
     const releaseDrag = () => {
-      const belt = beltRef.current
       isDraggingRef.current = false
-      belt?.classList.remove('is-dragging')
+      beltRef.current?.classList.remove('is-dragging')
     }
 
-    window.addEventListener('pointerup', releaseDrag)
-    window.addEventListener('pointercancel', releaseDrag)
     window.addEventListener('blur', releaseDrag)
-
-    return () => {
-      window.removeEventListener('pointerup', releaseDrag)
-      window.removeEventListener('pointercancel', releaseDrag)
-      window.removeEventListener('blur', releaseDrag)
-    }
+    return () => window.removeEventListener('blur', releaseDrag)
   }, [])
 
   return (
@@ -128,10 +130,10 @@ export const OurClients: React.FC = () => {
         </AnimatedSection>
       </div>
 
-      {/* Marquee Logo Belt (Moving Left to Right) */}
+      {/* Marquee Logo Belt (auto-moving and draggable) */}
       <div
         ref={beltRef}
-        className="client-logo-belt w-full overflow-x-auto relative py-6 sm:py-8"
+        className="client-logo-belt w-full overflow-hidden relative py-6 sm:py-8"
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
@@ -142,7 +144,7 @@ export const OurClients: React.FC = () => {
           WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)',
         }}
       >
-        <div className="animate-marquee-ltr flex items-center">
+        <div ref={trackRef} className="animate-marquee-ltr flex items-center">
           {marqueeList.map((client, index) => (
             <div
               key={`${client.name}-${index}`}

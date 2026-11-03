@@ -66,7 +66,7 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
 
       <motion.h2
         variants={itemVariants}
-        className="text-section-title text-[#0033A0] font-bold tracking-tight"
+        className="text-section-title text-[#0033A0] font-semibold tracking-tight"
       >
         {title}
       </motion.h2>

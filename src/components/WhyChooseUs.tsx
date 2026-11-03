@@ -18,7 +18,7 @@ export const WhyChooseUs: React.FC = () => (
 
     {/* 2. Vertically centered content — 60% width */}
     <AnimatedSection direction="up" delay={0.12} className="flex flex-col justify-center self-center py-2 lg:py-4">
-      <h3 className="text-card-title text-slate-900 leading-snug mb-4 sm:mb-5">
+      <h3 className="text-card-title leading-snug mb-4 sm:mb-5" style={{ color: '#fa5603' }}>
         The Technology Behind Every Solution
       </h3>
       <p className="text-body text-slate-600 leading-relaxed text-justify max-w-[65ch]">

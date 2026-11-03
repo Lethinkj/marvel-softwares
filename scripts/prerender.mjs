@@ -32,7 +32,7 @@ const routes = [
       'Find answers to frequently asked questions about Marvel Softwares — our custom software development, websites, ERP systems, mobile applications, AI solutions, project process, and technical support.',
     keywords:
       'Marvel Softwares FAQ, software development questions, custom software FAQ, ERP development cost, mobile app development India, software development process, software company in India FAQ',
-    h1: 'Frequently Asked Questions (FAQ)',
+    h1: 'Frequently Asked Questions',
     lead: 'Quick answers to common questions about Marvel Softwares, our engineering processes, technologies, pricing models, and project lifecycle across India and international markets.',
     isFaq: true,
   },

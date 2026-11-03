@@ -177,7 +177,7 @@ void [
 ]
 
 interface ProcessStep {
-  title: string[]
+  title: string
   desc: string
   icon: React.ReactNode
 }
@@ -210,15 +210,51 @@ const ProcessIcon = ({ name, x, y }: { name: string; x?: number; y?: number }) =
 )
 
 const PROCESS_STEPS: ProcessStep[] = [
-  { title: ['Meet with Client'], desc: 'Align on your vision', icon: <ProcessIcon name="users" /> },
-  { title: ['Requirement', 'Gathering'], desc: 'Capture every detail', icon: <ProcessIcon name="clipboard" /> },
-  { title: ['Project Planning'], desc: 'Map scope & timeline', icon: <ProcessIcon name="planning" /> },
-  { title: ['Homepage', 'Confirmation'], desc: 'Approve the structure', icon: <ProcessIcon name="dashboard" /> },
-  { title: ['UI/UX Design'], desc: 'Craft the experience', icon: <ProcessIcon name="design" /> },
-  { title: ['Development &', 'Progress Updates'], desc: 'Build in weekly sprints', icon: <ProcessIcon name="code" /> },
-  { title: ['Testing &', 'Quality Assurance'], desc: 'Verify every detail', icon: <ProcessIcon name="checkcircle" /> },
-  { title: ['Launch'], desc: 'Go live with confidence', icon: <ProcessIcon name="rocket" /> },
-  { title: ['Maintenance &', 'Support'], desc: 'Keep it running strong', icon: <ProcessIcon name="cloud" /> },
+  {
+    title: 'Client Discovery & Consultation',
+    desc: 'Understand your business goals, vision, challenges, and expectations.',
+    icon: <ProcessIcon name="users" />,
+  },
+  {
+    title: 'Requirement Analysis',
+    desc: 'Define functional requirements, technical specifications, and project objectives.',
+    icon: <ProcessIcon name="clipboard" />,
+  },
+  {
+    title: 'Project Planning & Strategy',
+    desc: 'Establish project scope, milestones, resource allocation, and delivery timelines.',
+    icon: <ProcessIcon name="planning" />,
+  },
+  {
+    title: 'Structure & Design Approval',
+    desc: 'Present the proposed website structure, layouts, and project direction for your approval.',
+    icon: <ProcessIcon name="dashboard" />,
+  },
+  {
+    title: 'UI/UX Design',
+    desc: 'Create intuitive, responsive, and user-focused interfaces aligned with your brand.',
+    icon: <ProcessIcon name="design" />,
+  },
+  {
+    title: 'Development & Implementation',
+    desc: 'Transform approved designs into functional solutions with regular progress updates.',
+    icon: <ProcessIcon name="code" />,
+  },
+  {
+    title: 'Testing & Quality Assurance',
+    desc: 'Validate functionality, performance, security, responsiveness, and compatibility.',
+    icon: <ProcessIcon name="checkcircle" />,
+  },
+  {
+    title: 'Deployment & Launch',
+    desc: 'Deploy the completed solution and ensure a smooth, reliable launch.',
+    icon: <ProcessIcon name="rocket" />,
+  },
+  {
+    title: 'Maintenance & Ongoing Support',
+    desc: 'Provide continuous monitoring, updates, optimization, and technical assistance.',
+    icon: <ProcessIcon name="cloud" />,
+  },
 ]
 
 const POS: Array<[number, number]> = [
@@ -341,11 +377,8 @@ export const OurProcessSvg: React.FC<{ className?: string; active?: boolean }> =
         const y = ROW_Y[row]
         const cy = y + CARD_H / 2
         const delay = 0.3 + i * 0.11
-        const twoLines = step.title.length > 1
-        const titleY = twoLines ? cy - 24 : cy - 6
-        const descY = (twoLines ? titleY + 26 : titleY) + 27
         return (
-          <g key={step.title.join()} className="op-card" style={{ animationDelay: `${delay}s` }}>
+          <g key={step.title} className="op-card" style={{ animationDelay: `${delay}s` }}>
             <rect
               x={x}
               y={y}
@@ -393,21 +426,54 @@ export const OurProcessSvg: React.FC<{ className?: string; active?: boolean }> =
               strokeLinecap="round"
             />
 
-            {step.title.map((line, li) => (
-              <text
-                key={line}
-                x={x + 142}
-                y={li === 0 ? titleY : titleY + 26}
-                fontSize="21"
-                fontWeight="700"
-                fill={NAVY}
+            <foreignObject x={x + 138} y={y + 14} width={226} height={152}>
+              <div
+                style={{
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  textAlign: 'left',
+                  boxSizing: 'border-box',
+                }}
               >
-                {line}
-              </text>
-            ))}
-            <text x={x + 142} y={descY} fontSize="14.5" fontWeight="500" fill={GRAY}>
-              {step.desc}
-            </text>
+                <span
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    color: '#0866F5',
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase',
+                    marginBottom: '3px',
+                  }}
+                >
+                  Step 0{i + 1}
+                </span>
+                <h3
+                  style={{
+                    margin: 0,
+                    fontSize: '16.5px',
+                    fontWeight: 700,
+                    color: '#102653',
+                    lineHeight: 1.25,
+                    letterSpacing: '-0.015em',
+                  }}
+                >
+                  {step.title}
+                </h3>
+                <p
+                  style={{
+                    margin: '6px 0 0',
+                    fontSize: '12.5px',
+                    fontWeight: 500,
+                    color: '#526B8B',
+                    lineHeight: 1.45,
+                  }}
+                >
+                  {step.desc}
+                </p>
+              </div>
+            </foreignObject>
           </g>
         )
       })}
@@ -439,12 +505,15 @@ export const OurProcess: React.FC = () => {
 
   return (
     <div ref={ref}>
-      <div className={`op-heading text-center max-w-3xl mx-auto mb-4 sm:mb-6 ${inView ? 'is-visible' : ''}`}>
+      <div className={`op-heading text-center max-w-3xl mx-auto mb-6 sm:mb-8 ${inView ? 'is-visible' : ''}`}>
         <h2 id="process-title" className="text-section-title text-center">
           Our Process
         </h2>
         <p className="section-subtitle text-center mx-auto">
-          From your idea to a reliable digital solution
+          From Initial Concept to Successful Digital Delivery
+        </p>
+        <p className="text-slate-600 text-sm sm:text-base leading-relaxed text-center max-w-2xl mx-auto mt-3 sm:mt-4">
+          Our structured development process ensures transparency, quality, and seamless collaboration at every stage. From understanding your requirements to launching and maintaining your solution, we turn your vision into reliable digital experiences.
         </p>
       </div>
 
@@ -457,7 +526,7 @@ export const OurProcess: React.FC = () => {
         style={{ marginTop: 14, listStyle: 'none', padding: 0 }}
       >
         {PROCESS_STEPS.map((step, i) => (
-          <li key={step.title.join()} className="op-list-item" style={{ animationDelay: `${0.12 + i * 0.09}s` }}>
+          <li key={step.title} className="op-list-item" style={{ animationDelay: `${0.12 + i * 0.09}s` }}>
             <div className="flex" style={{ gap: 14 }}>
               <div className="flex flex-col items-center" style={{ width: 52, flexShrink: 0 }}>
                 <span
@@ -493,10 +562,13 @@ export const OurProcess: React.FC = () => {
                   marginBottom: i < PROCESS_STEPS.length - 1 ? 14 : 0,
                 }}
               >
-                <h3 className="text-card-title" style={{ color: NAVY, fontSize: '1.05rem', lineHeight: 1.25 }}>
-                  {step.title.join(' ')}
+                <span className="text-[11px] font-bold text-[#0866F5] tracking-wider uppercase mb-1 block">
+                  Step 0{i + 1}
+                </span>
+                <h3 className="text-card-title font-bold" style={{ color: NAVY, fontSize: '1.05rem', lineHeight: 1.25 }}>
+                  {step.title}
                 </h3>
-                <p style={{ color: GRAY, fontSize: '0.9rem', marginTop: 4 }}>{step.desc}</p>
+                <p style={{ color: GRAY, fontSize: '0.88rem', marginTop: 4, lineHeight: 1.55 }}>{step.desc}</p>
               </div>
             </div>
           </li>

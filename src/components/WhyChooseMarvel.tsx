@@ -171,9 +171,9 @@ export const WhyChooseMarvel: React.FC = () => {
             delay={index * 0.04}
             className="h-full"
           >
-            <div className="relative flex flex-col justify-start h-full p-4.5 sm:p-5 lg:p-5.5 bg-white rounded-2xl border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.035)] hover:shadow-[0_10px_28px_rgba(0,0,0,0.07)] transition-all duration-300 hover:-translate-y-1 overflow-hidden select-none">
+            <div className="relative flex flex-col items-center text-center justify-start h-full p-4.5 sm:p-5 lg:p-5.5 bg-white rounded-2xl border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.035)] hover:shadow-[0_10px_28px_rgba(0,0,0,0.07)] transition-all duration-300 hover:-translate-y-1 overflow-hidden select-none">
               
-              {/* Top-Left: Rounded-Square Gradient Icon */}
+              {/* Center: Rounded-Square Gradient Icon */}
               <div
                 className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br ${item.iconGradient} flex items-center justify-center text-white shadow-xs transition-transform duration-300 hover:scale-105 shrink-0 mb-3 sm:mb-3.5`}
               >
@@ -181,12 +181,12 @@ export const WhyChooseMarvel: React.FC = () => {
               </div>
 
               {/* Title */}
-              <h3 className="font-bold text-slate-900 text-[15.5px] sm:text-[16.5px] tracking-tight leading-snug mb-1.5 sm:mb-2">
+              <h3 className="font-bold text-slate-900 text-[15.5px] sm:text-[16.5px] tracking-tight leading-snug mb-1.5 sm:mb-2 text-center">
                 {item.title}
               </h3>
 
               {/* Description */}
-              <p className="text-slate-600 text-[12px] sm:text-[12.5px] lg:text-[13px] leading-relaxed">
+              <p className="text-slate-600 text-[12px] sm:text-[12.5px] lg:text-[13px] leading-relaxed text-center">
                 {item.description}
               </p>
 

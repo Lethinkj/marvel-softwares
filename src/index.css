@@ -357,11 +357,6 @@ body.nav-menu-open #root {
   cursor: grab;
   touch-action: pan-y;
   user-select: none;
-  scrollbar-width: none;
-}
-
-.client-logo-belt::-webkit-scrollbar {
-  display: none;
 }
 
 .client-logo-belt.is-dragging {
@@ -492,7 +487,7 @@ body.nav-menu-open #root {
 .text-page-title {
   font-family: var(--font-sans);
   font-size: var(--font-page-title);
-  font-weight: 800;
+  font-weight: 600 !important;
   line-height: 1.12;
   letter-spacing: -0.02em;
   color: var(--color-primary);
@@ -528,7 +523,7 @@ body.nav-menu-open #root {
 .text-section-title {
   font-family: var(--font-sans);
   font-size: var(--font-section-title) !important;
-  font-weight: 800;
+  font-weight: 600 !important;
   line-height: 1.2;
   letter-spacing: -0.025em;
   color: #155dfc;
@@ -1047,7 +1042,7 @@ body.nav-menu-open #root {
   font-weight: 700;
   line-height: 1.3;
   letter-spacing: -0.015em;
-  color: #0033A0;
+  color: #fa5603;
 }
 
 .svc-copy-headline {
@@ -1055,7 +1050,7 @@ body.nav-menu-open #root {
   font-size: clamp(1rem, 1.2vw, 1.1rem);
   font-weight: 700;
   line-height: 1.35;
-  color: var(--color-primary-dark);
+  color: #fa5603;
 }
 
 .svc-copy-paragraphs {
@@ -3298,7 +3293,7 @@ a.page-hero-card-item:hover .page-hero-card-arrow {
 .svc-cta-title {
   margin: 20px 0 0;
   font-size: clamp(1.7rem, 3.2vw, 2.6rem);
-  font-weight: 800;
+  font-weight: 600;
   line-height: 1.12;
   letter-spacing: -0.02em;
   color: #fff;
@@ -3501,7 +3496,7 @@ a.page-hero-card-item:hover .page-hero-card-arrow {
 .proj-cta-title {
   margin: 20px 0 0;
   font-size: clamp(1.7rem, 3.2vw, 2.6rem);
-  font-weight: 800;
+  font-weight: 600;
   line-height: 1.12;
   letter-spacing: -0.02em;
   color: #fff;

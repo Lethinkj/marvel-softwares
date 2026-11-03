@@ -255,7 +255,10 @@ export function Footer() {
                     <circle cx="12" cy="12" r="10" />
                     <polyline points="12 6 12 12 16 14" />
                   </svg>
-                  <span>{siteConfig.hours}</span>
+                  <div className="flex flex-col text-left">
+                    <span>Monday – Friday</span>
+                    <span className="whitespace-nowrap">9:00 AM – 6:00 PM</span>
+                  </div>
                 </div>
               </li>
               <li>
