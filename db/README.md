@@ -1,86 +1,97 @@
-# Marvel Softwares — PostgreSQL Telemetry & Database Setup
+# Marvel Softwares — PostgreSQL Schema & Ingestion Setup
 
-This directory contains the production-ready PostgreSQL database schema and ingestion server sample for Marvel Softwares.
-
----
-
-## 📁 Files Included
-
-* **`schema.sql`**: Full DDL schema for PostgreSQL, including tables (`visitors`, `sessions`, `telemetry_events`, `leads`), analytical indexes, and views (`view_daily_traffic`, `view_section_engagement`, `view_lead_attribution_journey`).
-* **`server-sample.mjs`**: Standalone Node.js/Express server demonstrating how to receive telemetry packets, resolve client IP + GeoIP (City, Region, Country), and insert directly into PostgreSQL.
+All database tables, indexes, and views are prefixed with **`dev_`** (`dev_visitors`, `dev_sessions`, `dev_telemetry_events`, `dev_contact_inquiries`) so they can be safely loaded into your existing or shared database without any naming collisions!
 
 ---
 
-## 🚀 Step 1: Connecting to PostgreSQL
+## 📁 Files in This Directory
 
-You can connect to any PostgreSQL instance:
-* **Local / Linux Server**: `sudo apt install postgresql`
-* **Docker**: `docker run -d --name marvel-postgres -e POSTGRES_PASSWORD=secret -e POSTGRES_DB=marvel_db -p 5432:5432 postgres:16-alpine`
-* **Cloud Managed Postgres**: Supabase, Neon.tech, AWS RDS, GCP Cloud SQL, or DigitalOcean Managed Databases.
+* **[`schema.sql`](file:///home/lethin/projects/backup/marvel-dev/db/schema.sql)**: Production DDL schema with `dev_` prefix, indexes, and analytical views.
+* **[`server-sample.mjs`](file:///home/lethin/projects/backup/marvel-dev/db/server-sample.mjs)**: Standalone Express + `pg` Node.js server that ingests telemetry and contact form submissions into `dev_*` tables.
 
-### Create the Database & Apply Schema
+---
 
+## 📋 Tables Overview (Prefix: `dev_`)
+
+### 1. `dev_contact_inquiries` (Contact Form Submissions)
+Matches the Marvel Softwares consultation form:
+* `id`: Serial Primary Key
+* `visitor_id`: UUID (foreign key to `dev_visitors`)
+* `session_id`: UUID (foreign key to `dev_sessions`)
+* `name`: Client Full Name
+* `email`: Client Email Address
+* `phone`: Client Phone Number
+* `address`: Street, city, state
+* `solution`: Service requested (`Web Development`, `ERP`, `Mobile App`, `AI & Automation`, `Other`)
+* `requirements`: Message / project details
+* `ip_address`: Visitor IP address
+* `city`, `region`, `country`: Resolved GeoIP location
+* `status`: Lead workflow status (`new`, `contacted`, `in_discussion`, `proposal_sent`, `won`, `lost`, `spam`)
+* `admin_notes`: Internal follow-up notes
+* `created_at`, `updated_at`: Timestamps
+
+### 2. `dev_visitors` (Visitor Profiles)
+* `visitor_id`: Persistent UUID stored in client `localStorage`
+* `ip_address`: Visitor connection IP
+* `country`, `region`, `city`, `latitude`, `longitude`
+* `device_type`: `desktop`, `mobile`, `tablet`
+* `browser`, `os`, `screen_resolution`, `language`, `referrer`
+* `lead_name`, `lead_email`, `lead_phone`: Automatically linked once inquiry is submitted!
+
+### 3. `dev_sessions` (Visit Sessions)
+* `session_id`: Session UUID rotating after 30 minutes of inactivity
+* `started_at`, `ended_at`, `page_views_count`, `landing_page`
+
+### 4. `dev_telemetry_events` (Page & Section Journey)
+* `event_name`: `page_view`, `section_view`, `cta_click`, `contact_click`, `form_submit`, `project_view`, `faq_toggle`
+* `section_id`: `home`, `about`, `services`, `projects`, `contact`, etc.
+* `dwell_time_seconds`: Reading time in seconds
+* `metadata`: JSON payload
+
+---
+
+## 🚀 How to Execute Schema in PostgreSQL
+
+Run in terminal:
 ```bash
-# 1. Connect via psql
-psql -U postgres -h localhost
+# Connect to your existing database and load the schema
+psql "postgres://username:password@your-db-host:5432/your_database_name" -f db/schema.sql
+```
 
-# 2. Create database
-CREATE DATABASE marvel_telemetry;
-\c marvel_telemetry
-
-# 3. Apply the schema
+Or from inside `psql`:
+```sql
+\c your_existing_db
 \i db/schema.sql
 ```
 
-Or run directly from your shell:
-```bash
-psql "postgres://username:password@localhost:5432/marvel_telemetry" -f db/schema.sql
-```
-
 ---
 
-## 📊 Step 2: What Gets Stored
+## 🔍 Useful SQL Analytics Queries
 
-### 1. `visitors` Table
-* **Visitor ID**: Persistent UUID stored in client `localStorage`.
-* **Client IP & Location**: Client IP address, City, Region, Country, Latitude, Longitude.
-* **Device**: Mobile/Desktop/Tablet, Browser, OS, Screen Resolution, Language.
-* **Lead Correlation**: Once a visitor submits a contact inquiry, their name, email, phone number, and address are automatically tied to this visitor profile!
-
-### 2. `telemetry_events` Table
-* **Event Types**: `page_view`, `section_view`, `cta_click`, `contact_click`, `form_submit`, `project_view`, `faq_toggle`.
-* **Section ID & Name**: Identifies which section was viewed (e.g. `services` - *Core Engineering Services*).
-* **Dwell Time**: Seconds spent reading each section.
-
-### 3. `leads` Table
-* Name, Email, Phone, Address, Solution, Project Requirements.
-* Connected via `visitor_id` so you can view their prior browsing journey.
-
----
-
-## 🔍 Useful SQL Queries
-
-### 1. View Most Popular Website Sections by Visitor Interest
+### 1. View Inquiries along with their prior Section Browsing History
 ```sql
-SELECT * FROM view_section_engagement;
-```
-
-### 2. View Lead Attribution Journey
-```sql
--- Shows the exact sequence of sections each customer read before filling out the form!
 SELECT
   client_name,
   client_email,
+  client_phone,
   client_city,
-  lead_submitted_at,
+  requested_solution,
+  inquiry_submitted_at,
   sections_explored_journey
-FROM view_lead_attribution_journey;
+FROM dev_view_lead_attribution_journey;
 ```
 
-### 3. List Inquiries from a Specific City (e.g. Coimbatore or Bangalore)
+### 2. View Most Engaged Website Sections
 ```sql
-SELECT name, email, phone, city, requirements, created_at
-FROM leads
-WHERE city ILIKE '%Coimbatore%' OR city ILIKE '%Bangalore%'
-ORDER BY created_at DESC;
+SELECT
+  section_name,
+  total_views,
+  unique_visitors_viewed,
+  avg_dwell_seconds
+FROM dev_view_section_engagement;
+```
+
+### 3. View Daily Traffic Summary
+```sql
+SELECT * FROM dev_view_daily_traffic;
 ```
