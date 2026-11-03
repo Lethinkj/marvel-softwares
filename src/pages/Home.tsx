@@ -12,6 +12,7 @@ import UpcomingProjects from '../components/UpcomingProjects'
 import OurClients from '../components/OurClients'
 import Testimonials from '../components/Testimonials'
 import ContactSection from '../components/ContactSection'
+import CTASection from '../components/CTASection'
 import { projects } from '../data/siteData'
 import { trackCtaClick, trackProjectPreview } from '../utils/analytics'
 
@@ -261,6 +262,9 @@ export const Home: React.FC = () => {
           <ServiceShowcase />
         </div>
       </section>
+
+      {/* ============ FULL-WIDTH DESIGNED CTA BANNER ============ */}
+      <CTASection />
 
       {/* ============ D. OUR PROCESS ============ */}
       <section id="process" aria-labelledby="process-title" className="section section-warm">
