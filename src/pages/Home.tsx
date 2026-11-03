@@ -481,20 +481,22 @@ export const Home: React.FC = () => {
                       onClick={(event) => {
                         event.stopPropagation()
                       }}
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-[#0057E7] text-white text-xs font-semibold shadow-xs hover:bg-[#0046b8] active:scale-95 transition-all text-center no-underline"
+                      className="project-mobile-visit-btn flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-[#0057E7] text-white text-xs font-semibold shadow-xs hover:bg-[#0046b8] active:scale-95 transition-all text-center no-underline"
+                      style={{ color: '#ffffff', backgroundColor: '#0057E7' }}
                       aria-label={`Visit live site for ${project.title}`}
                     >
-                      <span>Visit Live</span>
+                      <span style={{ color: '#ffffff' }}>Visit Live</span>
                       <svg
                         width="13"
                         height="13"
                         viewBox="0 0 24 24"
                         fill="none"
-                        stroke="currentColor"
+                        stroke="#ffffff"
                         strokeWidth="2.2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         className="shrink-0"
+                        style={{ color: '#ffffff', stroke: '#ffffff' }}
                       >
                         <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                         <polyline points="15 3 21 3 21 9" />

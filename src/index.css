@@ -1305,11 +1305,43 @@ body.nav-menu-open #root {
   color: var(--color-text-muted);
 }
 
+.why-mobile-header {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.why-desktop-title {
+  display: none !important;
+}
+
 @media (min-width: 992px) {
+  .why-mobile-header {
+    display: none !important;
+  }
+
+  .why-desktop-title {
+    display: block !important;
+  }
+
   .why-grid {
     grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
     gap: clamp(36px, 5vw, 68px);
   }
+}
+
+.project-mobile-visit-btn {
+  background-color: #0057E7 !important;
+  color: #ffffff !important;
+  border-color: #0057E7 !important;
+}
+
+.project-mobile-visit-btn span {
+  color: #ffffff !important;
+}
+
+.project-mobile-visit-btn svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
 }
 
 /* ============================================
