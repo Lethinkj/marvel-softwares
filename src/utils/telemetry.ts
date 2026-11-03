@@ -140,6 +140,20 @@ export function sendTelemetry(event: TelemetryEventPayload): void {
   }
 
   try {
+    const rawLocal = localStorage.getItem('dev_telemetry_events')
+    const localEvents = rawLocal ? JSON.parse(rawLocal) : []
+    localEvents.unshift({
+      id: Date.now(),
+      ...payload,
+      created_at: new Date().toISOString(),
+    })
+    if (localEvents.length > 200) localEvents.length = 200
+    localStorage.setItem('dev_telemetry_events', JSON.stringify(localEvents))
+  } catch {
+    // Non-blocking
+  }
+
+  try {
     const data = JSON.stringify(payload)
     if (navigator.sendBeacon) {
       const blob = new Blob([data], { type: 'application/json' })
