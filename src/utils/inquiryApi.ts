@@ -43,19 +43,66 @@ export function getQueuedInquiries(): ProjectInquiry[] {
 }
 
 export async function submitProjectInquiry(inquiry: ProjectInquiry): Promise<InquiryResult> {
+  const visitorId = inquiry.visitor_id || getVisitorId()
+  const sessionId = inquiry.session_id || getSessionId()
+
   const payload = {
     ...inquiry,
-    visitor_id: inquiry.visitor_id || getVisitorId(),
-    session_id: inquiry.session_id || getSessionId(),
+    visitor_id: visitorId,
+    session_id: sessionId,
   }
 
   // Try inserting directly into Supabase dev_contact_inquiries table
   try {
-    const { data, error } = await supabase
+    // 1. Ensure visitor profile exists in dev_visitors and link lead details
+    if (visitorId) {
+      try {
+        await supabase
+          .from('dev_visitors')
+          .upsert(
+            {
+              visitor_id: visitorId,
+              lead_name: payload.name,
+              lead_email: payload.email,
+              lead_phone: payload.phone || '',
+              lead_address: payload.address || '',
+              converted_at: new Date().toISOString(),
+              last_seen: new Date().toISOString(),
+            },
+            { onConflict: 'visitor_id' }
+          )
+      } catch (visitorErr) {
+        if (import.meta.env.DEV) {
+          console.warn('[inquiryApi] dev_visitors update warning:', visitorErr)
+        }
+      }
+    }
+
+    // 2. Ensure session exists in dev_sessions if session_id is provided
+    if (sessionId && visitorId) {
+      try {
+        await supabase
+          .from('dev_sessions')
+          .upsert(
+            {
+              session_id: sessionId,
+              visitor_id: visitorId,
+              landing_page: typeof window !== 'undefined' ? window.location.pathname : '/',
+              started_at: new Date().toISOString(),
+            },
+            { onConflict: 'session_id' }
+          )
+      } catch {
+        // Dev_sessions upsert failure is non-blocking
+      }
+    }
+
+    // 3. Insert into dev_contact_inquiries
+    let insertRes = await supabase
       .from('dev_contact_inquiries')
       .insert({
-        visitor_id: payload.visitor_id || null,
-        session_id: payload.session_id || null,
+        visitor_id: visitorId || null,
+        session_id: sessionId || null,
         name: payload.name,
         email: payload.email,
         phone: payload.phone || '',
@@ -67,13 +114,32 @@ export async function submitProjectInquiry(inquiry: ProjectInquiry): Promise<Inq
       .select('id')
       .single()
 
-    if (!error && data) {
+    // If foreign key constraint failed on session_id, retry without session_id
+    if (insertRes.error && sessionId) {
+      insertRes = await supabase
+        .from('dev_contact_inquiries')
+        .insert({
+          visitor_id: visitorId || null,
+          session_id: null,
+          name: payload.name,
+          email: payload.email,
+          phone: payload.phone || '',
+          address: payload.address || '',
+          solution: payload.solution || 'Other',
+          requirements: payload.requirements,
+          status: 'new',
+        })
+        .select('id')
+        .single()
+    }
+
+    if (!insertRes.error && insertRes.data) {
       return { status: 'sent' }
     }
 
     // Log error in dev for debugging
-    if (import.meta.env.DEV && error) {
-      console.warn('[inquiryApi] Supabase insert error:', error.message)
+    if (import.meta.env.DEV && insertRes.error) {
+      console.warn('[inquiryApi] Supabase insert error:', insertRes.error.message)
     }
   } catch {
     // Fall through to localStorage queue

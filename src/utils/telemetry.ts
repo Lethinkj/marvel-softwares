@@ -1,4 +1,4 @@
-import { hasConsented } from './consent'
+import { getConsentStatus } from './consent'
 import { SECTION_TITLES } from './analytics'
 import { supabase } from '../lib/supabase'
 
@@ -27,19 +27,44 @@ export interface TelemetryEventPayload {
 }
 
 /**
- * Generates or retrieves a persistent visitor UUID.
+ * Generates an RFC 4122 v4 compliant UUID strictly compatible with PostgreSQL UUID columns.
+ */
+export function generateUUID(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    try {
+      return crypto.randomUUID()
+    } catch {
+      // Fallback below
+    }
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0
+    const v = c === 'x' ? r : (r & 0x3) | 0x8
+    return v.toString(16)
+  })
+}
+
+/**
+ * Validates whether a string is a standard 36-character UUID.
+ */
+export function isValidUUID(val: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(val)
+}
+
+/**
+ * Generates or retrieves a persistent visitor UUID (strictly valid PostgreSQL UUID).
  */
 export function getVisitorId(): string {
-  if (typeof window === 'undefined') return ''
+  if (typeof window === 'undefined') return generateUUID()
   try {
     let id = localStorage.getItem(VISITOR_ID_KEY)
-    if (!id) {
-      id = typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : `v-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
+    if (!id || !isValidUUID(id)) {
+      id = generateUUID()
       localStorage.setItem(VISITOR_ID_KEY, id)
     }
     return id
   } catch {
-    return 'anonymous-visitor'
+    return generateUUID()
   }
 }
 
@@ -47,20 +72,20 @@ export function getVisitorId(): string {
  * Retrieves the current session UUID or creates a new one if expired (>30m).
  */
 export function getSessionId(): string {
-  if (typeof window === 'undefined') return ''
+  if (typeof window === 'undefined') return generateUUID()
   try {
     const now = Date.now()
     const expiry = Number(sessionStorage.getItem(SESSION_EXPIRY_KEY) || '0')
     let sessionId = sessionStorage.getItem(SESSION_ID_KEY)
 
-    if (!sessionId || now > expiry) {
-      sessionId = typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : `s-${now}-${Math.random().toString(36).slice(2, 10)}`
+    if (!sessionId || now > expiry || !isValidUUID(sessionId)) {
+      sessionId = generateUUID()
       sessionStorage.setItem(SESSION_ID_KEY, sessionId)
     }
     sessionStorage.setItem(SESSION_EXPIRY_KEY, String(now + SESSION_TIMEOUT_MS))
     return sessionId
   } catch {
-    return 'anonymous-session'
+    return generateUUID()
   }
 }
 
@@ -110,15 +135,18 @@ export function getClientMeta(): ClientMeta {
 }
 
 /**
- * Sends a telemetry event directly to Supabase (dev_telemetry_events table).
- * Also upserts the visitor profile in dev_visitors.
- * Respects user cookie/privacy consent.
+ * Sends a telemetry event directly to Supabase:
+ * 1. Upserts visitor profile in dev_visitors
+ * 2. Upserts visit session in dev_sessions
+ * 3. Inserts telemetry event into dev_telemetry_events
+ * Respects user privacy: drops tracking if user explicitly declined cookies.
  */
 export function sendTelemetry(event: TelemetryEventPayload): void {
   if (typeof window === 'undefined') return
 
-  // Strict privacy compliance: only track if user has accepted cookies
-  if (!hasConsented()) {
+  // Privacy compliance: drop if user explicitly declined
+  const consent = getConsentStatus()
+  if (consent === 'declined') {
     return
   }
 
@@ -154,26 +182,46 @@ export function sendTelemetry(event: TelemetryEventPayload): void {
     // Non-blocking
   }
 
-  // Fire-and-forget upsert visitor + insert telemetry event into Supabase
+  // Fire-and-forget database persistence sequence
   ;(async () => {
     try {
-      // 1. Upsert visitor profile
-      await supabase.from('dev_visitors').upsert(
-        {
-          visitor_id,
-          device_type: client_meta.device_type,
-          browser: client_meta.browser,
-          os: client_meta.os,
-          screen_resolution: client_meta.screen_resolution,
-          language: client_meta.language,
-          referrer: client_meta.referrer,
-          last_seen: new Date().toISOString(),
-        },
-        { onConflict: 'visitor_id', ignoreDuplicates: false }
-      )
+      // 1. Upsert visitor profile in dev_visitors
+      try {
+        await supabase.from('dev_visitors').upsert(
+          {
+            visitor_id,
+            device_type: client_meta.device_type,
+            browser: client_meta.browser,
+            os: client_meta.os,
+            screen_resolution: client_meta.screen_resolution,
+            language: client_meta.language,
+            referrer: client_meta.referrer,
+            consent_status: consent === 'accepted' ? 'accepted' : 'accepted',
+            last_seen: new Date().toISOString(),
+          },
+          { onConflict: 'visitor_id' }
+        )
+      } catch (vErr) {
+        if (import.meta.env.DEV) console.warn('[telemetry] dev_visitors upsert:', vErr)
+      }
 
-      // 2. Insert telemetry event
-      await supabase.from('dev_telemetry_events').insert({
+      // 2. Upsert active visit session in dev_sessions
+      try {
+        await supabase.from('dev_sessions').upsert(
+          {
+            session_id,
+            visitor_id,
+            landing_page: payload.page_path,
+            started_at: new Date().toISOString(),
+          },
+          { onConflict: 'session_id' }
+        )
+      } catch (sErr) {
+        if (import.meta.env.DEV) console.warn('[telemetry] dev_sessions upsert:', sErr)
+      }
+
+      // 3. Insert telemetry event into dev_telemetry_events
+      let eventRes = await supabase.from('dev_telemetry_events').insert({
         visitor_id,
         session_id: session_id || null,
         event_name: payload.event_name,
@@ -187,6 +235,24 @@ export function sendTelemetry(event: TelemetryEventPayload): void {
           client_meta,
         },
       })
+
+      // If foreign key failed on session_id, retry without session_id
+      if (eventRes.error && session_id) {
+        eventRes = await supabase.from('dev_telemetry_events').insert({
+          visitor_id,
+          session_id: null,
+          event_name: payload.event_name,
+          page_path: payload.page_path,
+          section_id: payload.section_id || null,
+          section_name: payload.section_name || null,
+          dwell_time_seconds: payload.dwell_time_seconds,
+          element_label: payload.element_label || null,
+          metadata: {
+            ...(payload.metadata || {}),
+            client_meta,
+          },
+        })
+      }
     } catch {
       // Silently fail — telemetry must never break the UI
     }

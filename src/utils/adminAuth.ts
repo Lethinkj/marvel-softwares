@@ -112,6 +112,25 @@ export interface AuditLog {
   created_at: string
 }
 
+export interface VisitorRecord {
+  visitor_id: string
+  first_seen: string
+  last_seen: string
+  session_count?: number
+  device_type?: 'mobile' | 'tablet' | 'desktop'
+  browser?: string
+  os?: string
+  screen_resolution?: string
+  language?: string
+  referrer?: string
+  consent_status?: string
+  lead_name?: string
+  lead_email?: string
+  lead_phone?: string
+  lead_address?: string
+  converted_at?: string
+}
+
 // Obfuscated Gateway Route Constants
 export const GATEWAY_PREFIX = '/_k9x_gateway_92a7'
 export const ROUTE_AUTH = `${GATEWAY_PREFIX}/auth`
@@ -451,6 +470,56 @@ export async function clearIpBlock(ip: string): Promise<void> {
     ip,
     { ip_address: ip, reason: 'Manual administrator clearance' }
   )
+}
+
+export async function manualBlockIp(ip: string, reason: string = 'admin_manual_block'): Promise<boolean> {
+  const cleanIp = ip.trim()
+  if (!cleanIp) return false
+
+  const blockedUntil = Date.now() + 24 * 60 * 60 * 1000 // 24 hours
+  const blocks = getIpBlocks()
+  const idx = blocks.findIndex((b) => b.ip_address === cleanIp)
+  const newRec: IpBlockRecord = {
+    id: `blk_${Date.now()}`,
+    ip_address: cleanIp,
+    failed_attempts: 3,
+    is_blocked: true,
+    blocked_until: blockedUntil,
+    block_tier: 2,
+    first_failed_at: Date.now(),
+    last_attempt_at: new Date().toISOString(),
+    last_attempt_username: reason,
+    total_lifetime_blocks: (idx >= 0 ? blocks[idx].total_lifetime_blocks : 0) + 1,
+  }
+
+  if (idx >= 0) blocks[idx] = newRec
+  else blocks.unshift(newRec)
+  localStorage.setItem(STORAGE_IP_BLOCKS, JSON.stringify(blocks))
+
+  try {
+    await supabase.from('dev_admin_ip_blocks').upsert({
+      ip_address: cleanIp,
+      failed_attempts: 3,
+      is_blocked: true,
+      blocked_until: new Date(blockedUntil).toISOString(),
+      block_tier: 2,
+      last_attempt_at: new Date().toISOString(),
+      last_attempt_username: reason,
+      total_lifetime_blocks: newRec.total_lifetime_blocks,
+    }, { onConflict: 'ip_address' })
+  } catch (err) {
+    console.error('Failed to block IP in Supabase:', err)
+  }
+
+  addAuditLog(
+    getCurrentAdminSession()?.username || 'ADMIN',
+    'ip_manually_blocked',
+    'dev_admin_ip_blocks',
+    cleanIp,
+    { reason }
+  )
+
+  return true
 }
 
 // ----------------------------------------------------------------------
@@ -1191,9 +1260,55 @@ export async function deleteInquiry(inquiryId: string | number): Promise<boolean
   return true
 }
 
+export async function updateInquiryNotes(
+  inquiryId: string | number,
+  notes: string
+): Promise<boolean> {
+  const inquiries = getAllInquiries()
+  const item = inquiries.find((i) => String(i.id) === String(inquiryId))
+  if (item) {
+    item.admin_notes = notes
+    localStorage.setItem(STORAGE_INQUIRIES, JSON.stringify(inquiries))
+  }
+
+  try {
+    await supabase
+      .from('dev_contact_inquiries')
+      .update({ admin_notes: notes, updated_at: new Date().toISOString() })
+      .eq('id', inquiryId)
+  } catch (err) {
+    console.error('Failed to update inquiry notes in Supabase:', err)
+  }
+
+  addAuditLog(
+    getCurrentAdminSession()?.username || 'ADMIN',
+    'inquiry_notes_updated',
+    'dev_contact_inquiries',
+    String(inquiryId),
+    { client_name: item?.name || 'Inquiry' }
+  )
+
+  return true
+}
+
 // ----------------------------------------------------------------------
-// TELEMETRY & AUDIT LOGGING ENGINE (Supabase-backed)
+// TELEMETRY, VISITORS & AUDIT LOGGING ENGINE (Supabase-backed)
 // ----------------------------------------------------------------------
+
+export async function getVisitorsFromDB(): Promise<VisitorRecord[]> {
+  try {
+    const { data, error } = await supabase
+      .from('dev_visitors')
+      .select('*')
+      .order('last_seen', { ascending: false })
+      .limit(200)
+
+    if (error || !data) return []
+    return data as VisitorRecord[]
+  } catch {
+    return []
+  }
+}
 
 export function getTelemetryRecords(): TelemetryRecord[] {
   if (typeof window === 'undefined') return []

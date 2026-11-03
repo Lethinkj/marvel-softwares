@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   ShieldCheck,
@@ -30,28 +30,21 @@ export default function AdminLogin() {
   const [loading, setLoading] = useState(false)
 
   // IP Block & Rate limit state
-  const [isIpBlocked, setIsIpBlocked] = useState(false)
-  const [blockSecondsRemaining, setBlockSecondsRemaining] = useState(0)
-  const [blockTier, setBlockTier] = useState(0)
-  const [attemptsRemaining, setAttemptsRemaining] = useState<number | null>(null)
-  const clientIp = getClientIp()
+  const clientIp = useMemo(() => getClientIp(), [])
+  const initialSec = useMemo(() => getIpSecurityStatus(clientIp), [clientIp])
 
-  const checkIpSecurity = useCallback(() => {
-    const sec = getIpSecurityStatus(clientIp)
-    setIsIpBlocked(sec.isBlocked)
-    setBlockSecondsRemaining(sec.remainingSeconds)
-    setBlockTier(sec.blockTier)
-  }, [clientIp])
+  const [isIpBlocked, setIsIpBlocked] = useState(() => initialSec.isBlocked)
+  const [blockSecondsRemaining, setBlockSecondsRemaining] = useState(() => initialSec.remainingSeconds)
+  const [blockTier, setBlockTier] = useState(() => initialSec.blockTier)
+  const [attemptsRemaining, setAttemptsRemaining] = useState<number | null>(null)
 
   // Auto-route to dashboard if already authenticated
   useEffect(() => {
     const active = getCurrentAdminSession()
     if (active) {
       navigate(ROUTE_CONSOLE, { replace: true })
-      return
     }
-    checkIpSecurity()
-  }, [navigate, checkIpSecurity])
+  }, [navigate])
 
   // Live countdown timer for IP block
   useEffect(() => {
