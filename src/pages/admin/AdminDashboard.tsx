@@ -2,50 +2,49 @@ import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard,
-  Users,
   MessageSquareText,
-  Activity,
+  Eye,
+  ShieldAlert,
+  History,
+  Users,
   Database,
   LogOut,
-  Search,
-  Download,
+  RefreshCw,
+  ExternalLink,
+  Menu,
+  X,
+  ChevronRight,
+  TrendingUp,
+  Globe,
+  Activity,
   Star,
   CheckCircle2,
-  Clock,
   Shield,
+  Clock,
   Smartphone,
   Monitor,
   Tablet,
-  RefreshCw,
-  Plus,
-  Trash2,
-  ExternalLink,
-  X,
-  Menu,
-  Copy,
-  Check,
-  History,
-  ShieldAlert,
-  Unlock,
-  KeyRound,
-  Eye,
-  FileText,
-  Save,
-  Globe,
-  ChevronRight,
-  TrendingUp,
-  UserCheck,
-  Lock,
   Compass,
+  Download,
+  Search,
+  Trash2,
+  FileText,
+  Check,
+  Save,
+  Plus,
+  Copy,
+  Lock,
+  Filter,
+  Laptop,
 } from 'lucide-react'
 import {
   getCurrentAdminSession,
   logoutAdmin,
   getAllInquiriesFromDB,
   updateInquiryStatus,
+  updateInquiryNotes,
   toggleStarInquiry,
   deleteInquiry,
-  updateInquiryNotes,
   getTelemetryRecordsFromDB,
   getVisitorsFromDB,
   getAdminsFromDB,
@@ -232,8 +231,8 @@ export default function AdminDashboard() {
     const uniqueVisitorCount = visitors.length > 0 ? visitors.length : new Set(telemetry.map((t) => t.visitor_id).filter(Boolean)).size
     const totalPageviews = telemetry.filter((t) => t.event_name === 'page_view').length
 
-    const activeSessionsCount = sessionsList.filter((s) => !s.is_revoked && new Date(s.expires_at).getTime() > Date.now()).length
-    const activeBlocksCount = ipBlocks.filter((b) => b.is_blocked && b.blocked_until > Date.now()).length
+    const activeSessionsCount = sessionsList.filter((s) => !s.is_revoked && new Date(s.expires_at).getTime() > nowMs).length
+    const activeBlocksCount = ipBlocks.filter((b) => b.is_blocked && b.blocked_until > nowMs).length
 
     // Device breakdown
     let desktop = 0
@@ -300,12 +299,12 @@ export default function AdminDashboard() {
       deviceBreakdown,
       topSections,
     }
-  }, [inquiries, telemetry, visitors, sessionsList, ipBlocks])
+  }, [inquiries, telemetry, visitors, sessionsList, ipBlocks, nowMs])
 
   // 7-day activity timeline computation
   const sevenDayChartData = useMemo(() => {
     const days: { dateStr: string; label: string; inquiries: number; pageviews: number }[] = []
-    const now = new Date()
+    const now = new Date(nowMs)
 
     for (let i = 6; i >= 0; i--) {
       const d = new Date(now)
@@ -324,7 +323,7 @@ export default function AdminDashboard() {
       })
     }
     return days
-  }, [inquiries, telemetry])
+  }, [inquiries, telemetry, nowMs])
 
   // Inquiries Filtered List
   const filteredInquiries = useMemo(() => {
@@ -538,35 +537,37 @@ export default function AdminDashboard() {
   const idleSecs = idleSecondsRemaining % 60
 
   return (
-    <div className="min-h-screen bg-[#07090E] text-slate-100 flex font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
+    <div className="min-h-screen bg-[#F5F7FB] text-[#111827] flex font-sans selection:bg-blue-100 selection:text-blue-900">
       {/* Mobile Sidebar Backdrop */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/80 backdrop-blur-md z-40 lg:hidden"
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
       {/* ========================================================================= */}
-      {/* SIDEBAR NAVIGATION */}
+      {/* SIDEBAR NAVIGATION (Modern White & Blue Sidebar) */}
       {/* ========================================================================= */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 w-72 bg-[#0A0E17]/95 border-r border-slate-800/80 backdrop-blur-xl flex flex-col justify-between transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed top-0 bottom-0 left-0 z-50 w-72 bg-white border-r border-[#E5E7EB] shadow-sm flex flex-col justify-between transition-transform duration-300 lg:translate-x-0 ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div>
           {/* Brand Header */}
-          <div className="p-5 border-b border-slate-800/80 flex items-center justify-between">
+          <div className="p-5 border-b border-[#E5E7EB] flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-600/25 ring-1 ring-white/20">
-                <Shield className="w-5 h-5 text-white" />
+              <div className="w-10 h-10 rounded-xl bg-[#2563EB] flex items-center justify-center shadow-md shadow-blue-500/20 text-white">
+                <Shield className="w-5 h-5" />
               </div>
               <div>
-                <span className="font-bold text-sm tracking-tight text-white block">MARVEL CONSOLE</span>
+                <span className="font-bold text-sm tracking-tight text-[#172554] block">
+                  MARVEL CONSOLE
+                </span>
                 <div className="flex items-center gap-1.5 mt-0.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="text-[10px] font-mono text-emerald-400 tracking-wider uppercase font-semibold">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-[10px] font-mono text-emerald-700 tracking-wider uppercase font-semibold">
                     Supabase Live (dev_)
                   </span>
                 </div>
@@ -574,45 +575,51 @@ export default function AdminDashboard() {
             </div>
             <button
               onClick={() => setIsSidebarOpen(false)}
-              className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60"
+              className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
-          {/* Nav List */}
-          <div className="p-3 space-y-1">
-            <div className="px-3 pt-3 pb-2 text-[10px] font-mono uppercase tracking-widest text-slate-400 font-semibold">
+          {/* Navigation Links Group */}
+          <div className="p-3.5 space-y-1">
+            <div className="px-3 pt-2 pb-2 text-[10px] font-mono uppercase tracking-widest text-[#64748B] font-semibold">
               Platform Modules
             </div>
 
+            {/* Tab: Overview */}
             <button
               onClick={() => {
                 setActiveTab('overview')
                 setIsSidebarOpen(false)
               }}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
                 activeTab === 'overview'
-                  ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-lg shadow-indigo-600/30'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                  ? 'bg-[#2563EB] text-white shadow-md shadow-blue-500/20 font-semibold'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
               }`}
             >
               <div className="flex items-center gap-3">
                 <LayoutDashboard className="w-4 h-4" />
                 <span>Executive Overview</span>
               </div>
-              <ChevronRight className={`w-3.5 h-3.5 transition-transform ${activeTab === 'overview' ? 'rotate-90 text-white' : 'text-slate-600'}`} />
+              <ChevronRight
+                className={`w-3.5 h-3.5 transition-transform ${
+                  activeTab === 'overview' ? 'rotate-90 text-white' : 'text-slate-400'
+                }`}
+              />
             </button>
 
+            {/* Tab: Inquiries CRM */}
             <button
               onClick={() => {
                 setActiveTab('inquiries')
                 setIsSidebarOpen(false)
               }}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
                 activeTab === 'inquiries'
-                  ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-lg shadow-indigo-600/30'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                  ? 'bg-[#2563EB] text-white shadow-md shadow-blue-500/20 font-semibold'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
               }`}
             >
               <div className="flex items-center gap-3">
@@ -620,45 +627,47 @@ export default function AdminDashboard() {
                 <span>Inquiries & Leads CRM</span>
               </div>
               {stats.newCount > 0 && (
-                <span className="px-2 py-0.5 text-[10px] font-mono font-bold rounded-full bg-emerald-500 text-slate-950 shadow-sm">
+                <span className="px-2 py-0.5 text-[10px] font-mono font-bold rounded-full bg-[#F97316] text-white shadow-sm">
                   {stats.newCount} NEW
                 </span>
               )}
             </button>
 
+            {/* Tab: Telemetry Stream */}
             <button
               onClick={() => {
                 setActiveTab('telemetry')
                 setIsSidebarOpen(false)
               }}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
                 activeTab === 'telemetry'
-                  ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-lg shadow-indigo-600/30'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                  ? 'bg-[#2563EB] text-white shadow-md shadow-blue-500/20 font-semibold'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
               }`}
             >
               <div className="flex items-center gap-3">
                 <Eye className="w-4 h-4" />
                 <span>Website Viewers Stream</span>
               </div>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700/50">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200">
                 {stats.uniqueVisitorCount}
               </span>
             </button>
 
-            <div className="px-3 pt-5 pb-2 text-[10px] font-mono uppercase tracking-widest text-slate-400 font-semibold">
+            <div className="px-3 pt-5 pb-2 text-[10px] font-mono uppercase tracking-widest text-[#64748B] font-semibold">
               Security & Administration
             </div>
 
+            {/* Tab: Security */}
             <button
               onClick={() => {
                 setActiveTab('security')
                 setIsSidebarOpen(false)
               }}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
                 activeTab === 'security'
-                  ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-lg shadow-indigo-600/30'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                  ? 'bg-[#2563EB] text-white shadow-md shadow-blue-500/20 font-semibold'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
               }`}
             >
               <div className="flex items-center gap-3">
@@ -666,87 +675,96 @@ export default function AdminDashboard() {
                 <span>Security & IP Lockouts</span>
               </div>
               {stats.activeBlocksCount > 0 ? (
-                <span className="px-2 py-0.5 text-[10px] font-mono font-bold rounded-full bg-rose-500 text-white shadow-sm">
+                <span className="px-2 py-0.5 text-[10px] font-mono font-bold rounded-full bg-[#F97316] text-white shadow-sm">
                   {stats.activeBlocksCount} BLOCKED
                 </span>
               ) : (
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
                   SAFE
                 </span>
               )}
             </button>
 
+            {/* Tab: Audit Logs */}
             <button
               onClick={() => {
                 setActiveTab('audit')
                 setIsSidebarOpen(false)
               }}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
                 activeTab === 'audit'
-                  ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-lg shadow-indigo-600/30'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                  ? 'bg-[#2563EB] text-white shadow-md shadow-blue-500/20 font-semibold'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
               }`}
             >
               <div className="flex items-center gap-3">
                 <History className="w-4 h-4" />
                 <span>Audit Trail Logs</span>
               </div>
-              <span className="text-[10px] font-mono text-slate-400">{auditLogs.length}</span>
+              <span className="text-[10px] font-mono text-[#64748B]">{auditLogs.length}</span>
             </button>
 
+            {/* Tab: Admins */}
             <button
               onClick={() => {
                 setActiveTab('admins')
                 setIsSidebarOpen(false)
               }}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
                 activeTab === 'admins'
-                  ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-lg shadow-indigo-600/30'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                  ? 'bg-[#2563EB] text-white shadow-md shadow-blue-500/20 font-semibold'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
               }`}
             >
               <div className="flex items-center gap-3">
                 <Users className="w-4 h-4" />
                 <span>Admin Accounts</span>
               </div>
-              <span className="text-[10px] font-mono text-slate-400">{admins.length}</span>
+              <span className="text-[10px] font-mono text-[#64748B]">{admins.length}</span>
             </button>
 
+            {/* Tab: Database */}
             <button
               onClick={() => {
                 setActiveTab('database')
                 setIsSidebarOpen(false)
               }}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
                 activeTab === 'database'
-                  ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-lg shadow-indigo-600/30'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                  ? 'bg-[#2563EB] text-white shadow-md shadow-blue-500/20 font-semibold'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
               }`}
             >
               <div className="flex items-center gap-3">
                 <Database className="w-4 h-4" />
                 <span>Postgres Schema & SQL</span>
               </div>
-              <span className="text-[10px] font-mono text-indigo-400">dev_*</span>
+              <span className="text-[10px] font-mono text-[#2563EB] bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200">
+                dev_*
+              </span>
             </button>
           </div>
         </div>
 
         {/* Footer: User Profile & Logout */}
-        <div className="p-4 border-t border-slate-800/80 bg-slate-900/40">
+        <div className="p-4 border-t border-[#E5E7EB] bg-[#F8FAFC]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-lg bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 flex items-center justify-center font-bold text-xs shrink-0">
+              <div className="w-9 h-9 rounded-xl bg-blue-100 border border-blue-200 text-[#2563EB] flex items-center justify-center font-bold text-xs shrink-0">
                 {session.username.slice(0, 2).toUpperCase()}
               </div>
               <div className="min-w-0">
-                <div className="text-xs font-semibold text-white truncate">{session.full_name || session.username}</div>
-                <div className="text-[10px] font-mono text-indigo-400 truncate">{session.role.replace('_', ' ')}</div>
+                <div className="text-xs font-semibold text-[#111827] truncate">
+                  {session.full_name || session.username}
+                </div>
+                <div className="text-[10px] font-mono text-[#64748B] truncate">
+                  {session.role.replace('_', ' ')}
+                </div>
               </div>
             </div>
             <button
               onClick={() => handleAutoLogout('user_logout')}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800/60 transition-colors"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
               title="Sign Out"
             >
               <LogOut className="w-4 h-4" />
@@ -759,48 +777,53 @@ export default function AdminDashboard() {
       {/* MAIN CONTENT AREA */}
       {/* ========================================================================= */}
       <div className="flex-1 lg:pl-72 flex flex-col min-w-0">
-        {/* Top Executive Header */}
-        <header className="sticky top-0 z-30 bg-[#07090E]/90 backdrop-blur-xl border-b border-slate-800/80 px-4 sm:px-8 py-3.5 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        {/* Top Navigation Bar */}
+        <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-[#E5E7EB] px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-xs">
+          <div className="flex items-center gap-3 min-w-0">
             <button
               onClick={() => setIsSidebarOpen(true)}
-              className="lg:hidden p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors"
+              className="lg:hidden p-2 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors cursor-pointer"
             >
               <Menu className="w-5 h-5" />
             </button>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400">
+
+            {/* Breadcrumb Navigation */}
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 text-xs">
+                <span className="font-mono uppercase tracking-wider text-[#64748B] text-[11px]">
                   Marvel Softwares
                 </span>
-                <span className="text-slate-600">/</span>
-                <span className="text-xs font-semibold text-white capitalize">
+                <span className="text-slate-300">/</span>
+                <span className="font-semibold text-[#172554] capitalize truncate">
                   {activeTab === 'telemetry' ? 'Website Viewers Stream' : activeTab.replace('_', ' ')}
                 </span>
               </div>
               <div className="flex items-center gap-2 mt-0.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                <span className="text-xs text-slate-300 font-medium">Supabase Production DB</span>
-                <span className="text-[10px] font-mono text-indigo-400 bg-indigo-500/10 px-1.5 py-0.2 rounded border border-indigo-500/20">
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                <span className="text-xs text-[#64748B] font-medium hidden sm:inline">
+                  Supabase Production DB
+                </span>
+                <span className="text-[10px] font-mono text-[#2563EB] bg-blue-50 px-1.5 py-0.2 rounded border border-blue-200">
                   dev_*
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3">
-            {/* Inactivity Security Badge */}
+          {/* Right Header Action Items */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            {/* Auto Logout Countdown Badge */}
             <div
               className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-mono transition-colors ${
                 idleMins < 2
-                  ? 'bg-rose-500/10 border-rose-500/30 text-rose-300 animate-pulse'
-                  : 'bg-slate-900/60 border-slate-800 text-slate-300'
+                  ? 'bg-rose-50 border-rose-200 text-rose-700 animate-pulse'
+                  : 'bg-[#F8FAFC] border-[#E5E7EB] text-slate-700'
               }`}
               title="Zero-persistence auto logout triggers after 15m of inactivity"
             >
-              <Clock className="w-3.5 h-3.5 text-indigo-400" />
+              <Clock className="w-3.5 h-3.5 text-[#2563EB]" />
               <span>
-                Auto-Logout: <strong className="text-white">{idleMins}:{idleSecs < 10 ? `0${idleSecs}` : idleSecs}</strong>
+                Auto-Logout: <strong className="text-[#111827]">{idleMins}:{idleSecs < 10 ? `0${idleSecs}` : idleSecs}</strong>
               </span>
             </div>
 
@@ -810,10 +833,10 @@ export default function AdminDashboard() {
                 setRefreshKey((k) => k + 1)
               }}
               disabled={isLoadingData}
-              className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700 flex items-center gap-2 text-xs font-medium transition-all shadow-sm"
+              className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-white border border-[#E5E7EB] hover:bg-slate-50 text-[#1E293B] flex items-center gap-2 text-xs font-medium transition-all shadow-xs cursor-pointer disabled:opacity-50"
               title="Refresh all data from Supabase"
             >
-              <RefreshCw className={`w-3.5 h-3.5 text-indigo-400 ${isLoadingData ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-3.5 h-3.5 text-[#2563EB] ${isLoadingData ? 'animate-spin' : ''}`} />
               <span className="hidden sm:inline">Refresh DB</span>
             </button>
 
@@ -822,7 +845,7 @@ export default function AdminDashboard() {
               href="/"
               target="_blank"
               rel="noreferrer"
-              className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-indigo-600/15 border border-indigo-500/30 text-indigo-300 hover:bg-indigo-600/25 flex items-center gap-1.5 text-xs font-medium transition-all"
+              className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-blue-50 border border-blue-200 text-[#2563EB] hover:bg-blue-100 flex items-center gap-1.5 text-xs font-medium transition-all"
             >
               <ExternalLink className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Live Site</span>
@@ -837,132 +860,164 @@ export default function AdminDashboard() {
           {/* ========================================================================= */}
           {activeTab === 'overview' && (
             <div className="space-y-8">
+              {/* Welcome Section */}
+              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 sm:p-7 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                  <div className="flex items-center gap-2 text-xs font-mono text-[#64748B] mb-1">
+                    <span>ADMINISTRATIVE OVERVIEW</span>
+                    <span>•</span>
+                    <span className="text-[#2563EB] font-bold">
+                      {new Date(nowMs).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                    </span>
+                  </div>
+                  <h1 className="text-xl sm:text-2xl font-bold text-[#172554] tracking-tight">
+                    Welcome back, {session.full_name || session.username}
+                  </h1>
+                  <p className="text-xs text-[#64748B] mt-1 max-w-2xl leading-relaxed">
+                    Here is what's happening across Marvel Softwares today. All metrics and CRM inquiries are synchronized live with PostgreSQL dev_ tables.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2.5 shrink-0">
+                  <button
+                    onClick={() => setActiveTab('inquiries')}
+                    className="px-4 py-2 bg-[#2563EB] hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-sm transition-all flex items-center gap-2 cursor-pointer"
+                  >
+                    <MessageSquareText className="w-4 h-4" />
+                    <span>View Inquiries</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('telemetry')}
+                    className="px-4 py-2 bg-white border border-[#E5E7EB] hover:bg-slate-50 text-[#111827] rounded-xl text-xs font-semibold shadow-xs transition-all flex items-center gap-2 cursor-pointer"
+                  >
+                    <Eye className="w-4 h-4 text-[#2563EB]" />
+                    <span>View Stream</span>
+                  </button>
+                </div>
+              </div>
+
               {/* Top 4 KPI Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
                 {/* Total Leads / Inquiries */}
-                <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5 backdrop-blur-sm relative overflow-hidden group hover:border-indigo-500/50 transition-all shadow-lg shadow-black/20">
+                <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5 shadow-xs hover:shadow-md transition-shadow relative overflow-hidden group">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono uppercase tracking-wider text-slate-400">
+                    <span className="text-xs font-mono uppercase tracking-wider text-[#64748B] font-semibold">
                       Total Inquiries
                     </span>
-                    <div className="w-9 h-9 rounded-xl bg-indigo-500/15 text-indigo-400 flex items-center justify-center">
-                      <MessageSquareText className="w-4 h-4" />
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#2563EB] flex items-center justify-center border border-blue-100">
+                      <MessageSquareText className="w-5 h-5" />
                     </div>
                   </div>
                   <div className="mt-4 flex items-baseline gap-2">
-                    <span className="text-3xl font-bold font-mono text-white tracking-tight">
+                    <span className="text-3xl font-bold font-mono text-[#111827] tracking-tight">
                       {stats.totalInquiries}
                     </span>
                     {stats.newCount > 0 && (
-                      <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                      <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-full bg-orange-50 text-[#F97316] border border-orange-200">
                         +{stats.newCount} New
                       </span>
                     )}
                   </div>
-                  <div className="mt-2 text-xs text-slate-400 flex items-center gap-1.5">
-                    <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>Conversion Rate: <strong className="text-white font-mono">{stats.conversionRate}%</strong> won</span>
+                  <div className="mt-2.5 text-xs text-[#64748B] flex items-center gap-1.5">
+                    <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Conversion Rate: <strong className="text-[#111827] font-mono">{stats.conversionRate}%</strong> won</span>
                   </div>
-                  <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-indigo-500/5 rounded-full blur-2xl group-hover:bg-indigo-500/10 transition-colors pointer-events-none" />
                 </div>
 
                 {/* Unique Viewers */}
-                <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5 backdrop-blur-sm relative overflow-hidden group hover:border-cyan-500/50 transition-all shadow-lg shadow-black/20">
+                <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5 shadow-xs hover:shadow-md transition-shadow relative overflow-hidden group">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono uppercase tracking-wider text-slate-400">
+                    <span className="text-xs font-mono uppercase tracking-wider text-[#64748B] font-semibold">
                       Website Viewers
                     </span>
-                    <div className="w-9 h-9 rounded-xl bg-cyan-500/15 text-cyan-400 flex items-center justify-center">
-                      <Globe className="w-4 h-4" />
+                    <div className="w-10 h-10 rounded-xl bg-sky-50 text-[#0284C7] flex items-center justify-center border border-sky-100">
+                      <Globe className="w-5 h-5" />
                     </div>
                   </div>
                   <div className="mt-4 flex items-baseline gap-2">
-                    <span className="text-3xl font-bold font-mono text-white tracking-tight">
+                    <span className="text-3xl font-bold font-mono text-[#111827] tracking-tight">
                       {stats.uniqueVisitorCount}
                     </span>
-                    <span className="text-xs font-mono text-slate-400">
-                      {stats.totalPageviews} Pageviews
+                    <span className="text-xs font-mono text-[#64748B]">
+                      {stats.totalPageviews} Views
                     </span>
                   </div>
-                  <div className="mt-2 text-xs text-slate-400 flex items-center gap-1.5">
-                    <Activity className="w-3.5 h-3.5 text-cyan-400" />
-                    <span>Live First-Party Telemetry</span>
+                  <div className="mt-2.5 text-xs text-[#64748B] flex items-center gap-1.5">
+                    <Activity className="w-3.5 h-3.5 text-sky-600" />
+                    <span>First-Party Live Telemetry</span>
                   </div>
-                  <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-cyan-500/5 rounded-full blur-2xl group-hover:bg-cyan-500/10 transition-colors pointer-events-none" />
                 </div>
 
                 {/* Starred / Priority Leads */}
-                <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5 backdrop-blur-sm relative overflow-hidden group hover:border-amber-500/50 transition-all shadow-lg shadow-black/20">
+                <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5 shadow-xs hover:shadow-md transition-shadow relative overflow-hidden group">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono uppercase tracking-wider text-slate-400">
+                    <span className="text-xs font-mono uppercase tracking-wider text-[#64748B] font-semibold">
                       Starred Inquiries
                     </span>
-                    <div className="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center">
-                      <Star className="w-4 h-4 fill-amber-400/20" />
+                    <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-100">
+                      <Star className="w-5 h-5 fill-amber-500/20" />
                     </div>
                   </div>
                   <div className="mt-4 flex items-baseline gap-2">
-                    <span className="text-3xl font-bold font-mono text-white tracking-tight">
+                    <span className="text-3xl font-bold font-mono text-[#111827] tracking-tight">
                       {stats.starredCount}
                     </span>
-                    <span className="text-xs font-mono text-slate-400">Priority Follow-ups</span>
+                    <span className="text-xs font-mono text-[#64748B]">Priority Leads</span>
                   </div>
-                  <div className="mt-2 text-xs text-slate-400 flex items-center gap-1.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Direct CRM synchronization</span>
+                  <div className="mt-2.5 text-xs text-[#64748B] flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-amber-600" />
+                    <span>High Priority Follow-ups</span>
                   </div>
-                  <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl group-hover:bg-amber-500/10 transition-colors pointer-events-none" />
                 </div>
 
                 {/* Security Threat Status */}
-                <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5 backdrop-blur-sm relative overflow-hidden group hover:border-rose-500/50 transition-all shadow-lg shadow-black/20">
+                <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5 shadow-xs hover:shadow-md transition-shadow relative overflow-hidden group">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono uppercase tracking-wider text-slate-400">
+                    <span className="text-xs font-mono uppercase tracking-wider text-[#64748B] font-semibold">
                       Security Status
                     </span>
-                    <div className="w-9 h-9 rounded-xl bg-rose-500/15 text-rose-400 flex items-center justify-center">
-                      <Shield className="w-4 h-4" />
+                    <div className="w-10 h-10 rounded-xl bg-orange-50 text-[#F97316] flex items-center justify-center border border-orange-100">
+                      <ShieldAlert className="w-5 h-5" />
                     </div>
                   </div>
                   <div className="mt-4 flex items-baseline gap-2">
-                    <span className="text-3xl font-bold font-mono text-white tracking-tight">
+                    <span className="text-3xl font-bold font-mono text-[#111827] tracking-tight">
                       {stats.activeBlocksCount}
                     </span>
-                    <span className="text-xs font-mono text-rose-300">
+                    <span className="text-xs font-mono text-[#F97316] font-semibold">
                       {stats.activeBlocksCount === 1 ? 'Blocked IP' : 'Blocked IPs'}
                     </span>
                   </div>
-                  <div className="mt-2 text-xs text-slate-400 flex items-center gap-1.5">
+                  <div className="mt-2.5 text-xs text-[#64748B] flex items-center gap-1.5">
                     {stats.activeBlocksCount > 0 ? (
-                      <span className="text-rose-400 font-medium">Brute-Force Lockout Active</span>
+                      <span className="text-[#F97316] font-semibold">Brute-Force Lockout Active</span>
                     ) : (
-                      <span className="text-emerald-400 font-medium">Zero Hostile Lockouts</span>
+                      <span className="text-emerald-700 font-medium">Zero Hostile Lockouts</span>
                     )}
                   </div>
-                  <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-rose-500/5 rounded-full blur-2xl group-hover:bg-rose-500/10 transition-colors pointer-events-none" />
                 </div>
               </div>
 
               {/* 7-Day Performance & Traffic Curve */}
-              <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 backdrop-blur-sm">
+              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 sm:p-7 shadow-xs">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                   <div>
-                    <h2 className="text-base font-semibold text-white tracking-tight flex items-center gap-2">
-                      <TrendingUp className="w-4 h-4 text-indigo-400" />
+                    <h2 className="text-base font-bold text-[#172554] tracking-tight flex items-center gap-2">
+                      <TrendingUp className="w-4 h-4 text-[#2563EB]" />
                       7-Day Activity & Lead Generation Trend
                     </h2>
-                    <p className="text-xs text-slate-400 mt-0.5">
+                    <p className="text-xs text-[#64748B] mt-0.5">
                       Daily incoming inquiries and pageviews from Supabase dev_contact_inquiries & dev_telemetry_events
                     </p>
                   </div>
                   <div className="flex items-center gap-4 text-xs font-mono">
                     <div className="flex items-center gap-2">
-                      <span className="w-3 h-3 rounded-full bg-cyan-400" />
-                      <span className="text-slate-300">Pageviews</span>
+                      <span className="w-3 h-3 rounded-full bg-[#0284C7]" />
+                      <span className="text-slate-700 font-medium">Pageviews</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="w-3 h-3 rounded-full bg-indigo-500" />
-                      <span className="text-slate-300">Inquiries</span>
+                      <span className="w-3 h-3 rounded-full bg-[#2563EB]" />
+                      <span className="text-slate-700 font-medium">Inquiries</span>
                     </div>
                   </div>
                 </div>
@@ -972,19 +1027,19 @@ export default function AdminDashboard() {
                   <svg className="w-full h-full overflow-visible" viewBox="0 0 700 200" preserveAspectRatio="none">
                     <defs>
                       <linearGradient id="pvGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#00e5ff" stopOpacity="0.25" />
-                        <stop offset="100%" stopColor="#00e5ff" stopOpacity="0.0" />
+                        <stop offset="0%" stopColor="#0284C7" stopOpacity="0.20" />
+                        <stop offset="100%" stopColor="#0284C7" stopOpacity="0.0" />
                       </linearGradient>
                       <linearGradient id="inqGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#6366f1" stopOpacity="0.35" />
-                        <stop offset="100%" stopColor="#6366f1" stopOpacity="0.0" />
+                        <stop offset="0%" stopColor="#2563EB" stopOpacity="0.25" />
+                        <stop offset="100%" stopColor="#2563EB" stopOpacity="0.0" />
                       </linearGradient>
                     </defs>
 
                     {/* Horizontal Grid lines */}
-                    <line x1="0" y1="50" x2="700" y2="50" stroke="#1e293b" strokeDasharray="4 4" strokeWidth="1" />
-                    <line x1="0" y1="100" x2="700" y2="100" stroke="#1e293b" strokeDasharray="4 4" strokeWidth="1" />
-                    <line x1="0" y1="150" x2="700" y2="150" stroke="#1e293b" strokeDasharray="4 4" strokeWidth="1" />
+                    <line x1="0" y1="50" x2="700" y2="50" stroke="#F1F5F9" strokeDasharray="4 4" strokeWidth="1" />
+                    <line x1="0" y1="100" x2="700" y2="100" stroke="#F1F5F9" strokeDasharray="4 4" strokeWidth="1" />
+                    <line x1="0" y1="150" x2="700" y2="150" stroke="#F1F5F9" strokeDasharray="4 4" strokeWidth="1" />
 
                     {/* Generate SVG points for 7 days */}
                     {(() => {
@@ -1012,10 +1067,10 @@ export default function AdminDashboard() {
                       return (
                         <>
                           <path d={pvArea} fill="url(#pvGrad)" />
-                          <path d={pvPath} fill="none" stroke="#00e5ff" strokeWidth="2.5" strokeLinecap="round" />
+                          <path d={pvPath} fill="none" stroke="#0284C7" strokeWidth="2.5" strokeLinecap="round" />
 
                           <path d={inqArea} fill="url(#inqGrad)" />
-                          <path d={inqPath} fill="none" stroke="#6366f1" strokeWidth="2.5" strokeLinecap="round" />
+                          <path d={inqPath} fill="none" stroke="#2563EB" strokeWidth="2.5" strokeLinecap="round" />
 
                           {sevenDayChartData.map((d, i) => {
                             const x = (i / 6) * 700
@@ -1023,8 +1078,8 @@ export default function AdminDashboard() {
                             const yInq = 170 - (d.inquiries / maxVal) * 140
                             return (
                               <g key={i}>
-                                <circle cx={x} cy={yPv} r="4" fill="#00e5ff" stroke="#07090E" strokeWidth="2" />
-                                <circle cx={x} cy={yInq} r="4" fill="#6366f1" stroke="#07090E" strokeWidth="2" />
+                                <circle cx={x} cy={yPv} r="4" fill="#0284C7" stroke="#FFFFFF" strokeWidth="2" />
+                                <circle cx={x} cy={yInq} r="4" fill="#2563EB" stroke="#FFFFFF" strokeWidth="2" />
                               </g>
                             )
                           })}
@@ -1034,7 +1089,7 @@ export default function AdminDashboard() {
                   </svg>
 
                   {/* Date labels under chart */}
-                  <div className="flex justify-between mt-3 text-[11px] font-mono text-slate-400">
+                  <div className="flex justify-between mt-3 text-[11px] font-mono text-[#64748B]">
                     {sevenDayChartData.map((d, idx) => (
                       <span key={idx} className="text-center">{d.label}</span>
                     ))}
@@ -1045,26 +1100,26 @@ export default function AdminDashboard() {
               {/* Bottom Row: Recent Inquiries + Device & Section Breakdown */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Recent Inquiries Quick Table */}
-                <div className="lg:col-span-2 bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 backdrop-blur-sm">
+                <div className="lg:col-span-2 bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-xs">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-indigo-400" />
+                    <h3 className="text-sm font-bold text-[#172554] flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-[#2563EB]" />
                       Recent Inquiries
                     </h3>
                     <button
                       onClick={() => setActiveTab('inquiries')}
-                      className="text-xs text-indigo-400 hover:text-indigo-300 font-medium"
+                      className="text-xs text-[#2563EB] hover:text-blue-800 font-semibold cursor-pointer"
                     >
                       View All Leads &rarr;
                     </button>
                   </div>
 
                   {inquiries.length === 0 ? (
-                    <div className="text-center py-12 text-slate-500 text-xs">
+                    <div className="text-center py-12 text-[#64748B] text-xs">
                       No customer inquiries recorded in Supabase yet.
                     </div>
                   ) : (
-                    <div className="divide-y divide-slate-800/60 overflow-x-auto">
+                    <div className="divide-y divide-[#E5E7EB] overflow-x-auto">
                       {inquiries.slice(0, 5).map((inq) => (
                         <div
                           key={inq.id}
@@ -1072,18 +1127,18 @@ export default function AdminDashboard() {
                             handleSelectInquiry(inq)
                             setActiveTab('inquiries')
                           }}
-                          className="py-3 px-2 flex items-center justify-between hover:bg-slate-800/30 rounded-xl cursor-pointer transition-colors"
+                          className="py-3 px-2 flex items-center justify-between hover:bg-slate-50 rounded-xl cursor-pointer transition-colors"
                         >
                           <div className="flex items-center gap-3 min-w-0">
-                            <div className="w-8 h-8 rounded-lg bg-indigo-500/15 text-indigo-300 flex items-center justify-center font-bold text-xs shrink-0">
+                            <div className="w-8 h-8 rounded-lg bg-blue-50 text-[#2563EB] border border-blue-100 flex items-center justify-center font-bold text-xs shrink-0">
                               {inq.name.slice(0, 2).toUpperCase()}
                             </div>
                             <div className="min-w-0">
-                              <div className="text-xs font-semibold text-white truncate flex items-center gap-2">
+                              <div className="text-xs font-semibold text-[#111827] truncate flex items-center gap-2">
                                 <span>{inq.name}</span>
-                                {inq.is_starred && <Star className="w-3 h-3 text-amber-400 fill-amber-400" />}
+                                {inq.is_starred && <Star className="w-3 h-3 text-amber-500 fill-amber-500" />}
                               </div>
-                              <div className="text-[11px] text-slate-400 truncate">
+                              <div className="text-[11px] text-[#64748B] truncate">
                                 {inq.solution} • {inq.email}
                               </div>
                             </div>
@@ -1092,17 +1147,19 @@ export default function AdminDashboard() {
                             <span
                               className={`px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider font-semibold border ${
                                 inq.status === 'won'
-                                  ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+                                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                                   : inq.status === 'new'
-                                  ? 'bg-indigo-500/15 text-indigo-400 border-indigo-500/30'
+                                  ? 'bg-orange-50 text-orange-700 border-orange-200'
                                   : inq.status === 'in_discussion'
-                                  ? 'bg-cyan-500/15 text-cyan-400 border-cyan-500/30'
-                                  : 'bg-slate-800 text-slate-400 border-slate-700'
+                                  ? 'bg-amber-50 text-amber-700 border-amber-200'
+                                  : inq.status === 'contacted'
+                                  ? 'bg-blue-50 text-blue-700 border-blue-200'
+                                  : 'bg-slate-100 text-slate-700 border-slate-200'
                               }`}
                             >
                               {inq.status.replace('_', ' ')}
                             </span>
-                            <span className="text-[11px] font-mono text-slate-400 hidden sm:inline">
+                            <span className="text-[11px] font-mono text-[#64748B] hidden sm:inline">
                               {new Date(inq.submittedAt).toLocaleDateString()}
                             </span>
                           </div>
@@ -1113,62 +1170,62 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Device & Section Engagement Breakdown */}
-                <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 backdrop-blur-sm space-y-6">
+                <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-xs space-y-6">
                   {/* Device breakdown */}
                   <div>
-                    <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-                      <Smartphone className="w-4 h-4 text-cyan-400" />
+                    <h3 className="text-sm font-bold text-[#172554] mb-3 flex items-center gap-2">
+                      <Smartphone className="w-4 h-4 text-[#2563EB]" />
                       Audience Device Split
                     </h3>
                     <div className="space-y-3">
                       <div>
-                        <div className="flex justify-between text-xs text-slate-300 mb-1">
-                          <span className="flex items-center gap-1.5"><Monitor className="w-3.5 h-3.5 text-indigo-400" /> Desktop</span>
-                          <span className="font-mono">{stats.deviceBreakdown.desktop}%</span>
+                        <div className="flex justify-between text-xs text-slate-700 mb-1 font-medium">
+                          <span className="flex items-center gap-1.5"><Monitor className="w-3.5 h-3.5 text-[#2563EB]" /> Desktop</span>
+                          <span className="font-mono text-[#111827] font-bold">{stats.deviceBreakdown.desktop}%</span>
                         </div>
-                        <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
-                          <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${stats.deviceBreakdown.desktop}%` }} />
-                        </div>
-                      </div>
-
-                      <div>
-                        <div className="flex justify-between text-xs text-slate-300 mb-1">
-                          <span className="flex items-center gap-1.5"><Smartphone className="w-3.5 h-3.5 text-cyan-400" /> Mobile</span>
-                          <span className="font-mono">{stats.deviceBreakdown.mobile}%</span>
-                        </div>
-                        <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
-                          <div className="h-full bg-cyan-400 rounded-full" style={{ width: `${stats.deviceBreakdown.mobile}%` }} />
+                        <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+                          <div className="h-full bg-[#2563EB] rounded-full" style={{ width: `${stats.deviceBreakdown.desktop}%` }} />
                         </div>
                       </div>
 
                       <div>
-                        <div className="flex justify-between text-xs text-slate-300 mb-1">
-                          <span className="flex items-center gap-1.5"><Tablet className="w-3.5 h-3.5 text-amber-400" /> Tablet</span>
-                          <span className="font-mono">{stats.deviceBreakdown.tablet}%</span>
+                        <div className="flex justify-between text-xs text-slate-700 mb-1 font-medium">
+                          <span className="flex items-center gap-1.5"><Smartphone className="w-3.5 h-3.5 text-sky-600" /> Mobile</span>
+                          <span className="font-mono text-[#111827] font-bold">{stats.deviceBreakdown.mobile}%</span>
                         </div>
-                        <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
-                          <div className="h-full bg-amber-400 rounded-full" style={{ width: `${stats.deviceBreakdown.tablet}%` }} />
+                        <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+                          <div className="h-full bg-sky-500 rounded-full" style={{ width: `${stats.deviceBreakdown.mobile}%` }} />
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="flex justify-between text-xs text-slate-700 mb-1 font-medium">
+                          <span className="flex items-center gap-1.5"><Tablet className="w-3.5 h-3.5 text-amber-600" /> Tablet</span>
+                          <span className="font-mono text-[#111827] font-bold">{stats.deviceBreakdown.tablet}%</span>
+                        </div>
+                        <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+                          <div className="h-full bg-amber-500 rounded-full" style={{ width: `${stats.deviceBreakdown.tablet}%` }} />
                         </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Top Sections */}
-                  <div className="pt-4 border-t border-slate-800/80">
-                    <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-                      <Compass className="w-4 h-4 text-emerald-400" />
+                  <div className="pt-4 border-t border-[#E5E7EB]">
+                    <h3 className="text-sm font-bold text-[#172554] mb-3 flex items-center gap-2">
+                      <Compass className="w-4 h-4 text-emerald-600" />
                       Top Engaged Sections
                     </h3>
                     {stats.topSections.length === 0 ? (
-                      <div className="text-xs text-slate-500 py-2">Waiting for first telemetry events...</div>
+                      <div className="text-xs text-[#64748B] py-2">Waiting for first telemetry events...</div>
                     ) : (
                       <div className="space-y-2.5">
                         {stats.topSections.map((sec) => (
                           <div key={sec.id} className="flex items-center justify-between text-xs">
-                            <span className="text-slate-300 truncate max-w-[150px]">{sec.name}</span>
+                            <span className="text-[#334155] font-medium truncate max-w-[150px]">{sec.name}</span>
                             <div className="flex items-center gap-3 font-mono text-[11px]">
-                              <span className="text-cyan-400">{sec.views} views</span>
-                              <span className="text-slate-400">{sec.avgDwell}s avg</span>
+                              <span className="text-[#2563EB] font-bold">{sec.views} views</span>
+                              <span className="text-[#64748B]">{sec.avgDwell}s avg</span>
                             </div>
                           </div>
                         ))}
@@ -1188,9 +1245,9 @@ export default function AdminDashboard() {
               {/* Header Action Bar */}
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                  <h1 className="text-lg font-bold text-white tracking-tight">Project Inquiries & Leads CRM</h1>
-                  <p className="text-xs text-slate-400">
-                    Live customer requests synced with Supabase table <code className="text-indigo-400 font-mono">dev_contact_inquiries</code>
+                  <h1 className="text-lg font-bold text-[#172554] tracking-tight">Project Inquiries & Leads CRM</h1>
+                  <p className="text-xs text-[#64748B] mt-0.5">
+                    Live customer requests synced with Supabase table <code className="text-[#2563EB] font-mono font-semibold">dev_contact_inquiries</code>
                   </p>
                 </div>
 
@@ -1198,29 +1255,29 @@ export default function AdminDashboard() {
                   <button
                     onClick={handleExportCSV}
                     disabled={filteredInquiries.length === 0}
-                    className="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white flex items-center gap-2 text-xs font-medium transition-all shadow-sm"
+                    className="px-3.5 py-2 rounded-xl bg-white border border-[#E5E7EB] hover:bg-slate-50 text-[#111827] flex items-center gap-2 text-xs font-semibold transition-all shadow-xs cursor-pointer disabled:opacity-50"
                   >
-                    <Download className="w-3.5 h-3.5 text-indigo-400" />
+                    <Download className="w-3.5 h-3.5 text-[#2563EB]" />
                     <span>Export CSV</span>
                   </button>
                 </div>
               </div>
 
               {/* Search & Filters */}
-              <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 backdrop-blur-sm flex flex-col md:flex-row items-center gap-3">
+              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 shadow-xs flex flex-col md:flex-row items-center gap-3">
                 <div className="relative flex-1 w-full">
-                  <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search client by name, email, phone, city, or requirements..."
-                    className="w-full pl-9 pr-4 py-2 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"
+                    className="w-full pl-9 pr-8 py-2 bg-[#F8FAFC] border border-[#E5E7EB] rounded-xl text-xs text-[#111827] placeholder:text-[#94A3B8] focus:bg-white focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 transition-colors"
                   />
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery('')}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 cursor-pointer"
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
@@ -1233,10 +1290,10 @@ export default function AdminDashboard() {
                     <button
                       key={s}
                       onClick={() => setStatusFilter(s)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium whitespace-nowrap transition-all ${
+                      className={`px-3 py-1.5 rounded-xl text-xs font-mono font-semibold whitespace-nowrap transition-all cursor-pointer ${
                         statusFilter === s
-                          ? 'bg-indigo-600 text-white shadow-sm'
-                          : 'bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800'
+                          ? 'bg-[#2563EB] text-white shadow-xs'
+                          : 'bg-[#F8FAFC] text-[#64748B] hover:text-[#111827] border border-[#E5E7EB]'
                       }`}
                     >
                       {s === 'starred' ? '⭐ Starred' : s.replace('_', ' ').toUpperCase()}
@@ -1245,11 +1302,11 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Solution filter dropdown */}
-                <div className="w-full md:w-48">
+                <div className="w-full md:w-52">
                   <select
                     value={solutionFilter}
                     onChange={(e) => setSolutionFilter(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-slate-300 focus:outline-none focus:border-indigo-500 transition-colors"
+                    className="w-full px-3 py-2 bg-white border border-[#E5E7EB] rounded-xl text-xs text-[#111827] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 transition-colors"
                   >
                     <option value="all">All Solutions</option>
                     <option value="Enterprise Architecture & Web Platforms">Web Platforms</option>
@@ -1263,10 +1320,10 @@ export default function AdminDashboard() {
               </div>
 
               {/* Inquiries Table */}
-              <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl overflow-hidden backdrop-blur-sm shadow-xl shadow-black/20">
+              <div className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-xs">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
-                    <thead className="bg-slate-950/80 border-b border-slate-800/80 text-slate-400 font-mono uppercase tracking-wider text-[11px]">
+                    <thead className="bg-[#F8FAFC] border-b border-[#E5E7EB] text-[#64748B] font-mono uppercase tracking-wider text-[11px]">
                       <tr>
                         <th className="py-3.5 px-4 w-12 text-center">⭐</th>
                         <th className="py-3.5 px-4">Client / Prospect</th>
@@ -1277,10 +1334,10 @@ export default function AdminDashboard() {
                         <th className="py-3.5 px-4 text-right">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-800/60">
+                    <tbody className="divide-y divide-[#E5E7EB]">
                       {filteredInquiries.length === 0 ? (
                         <tr>
-                          <td colSpan={7} className="py-12 text-center text-slate-500">
+                          <td colSpan={7} className="py-12 text-center text-[#64748B]">
                             No inquiries match the current search or filters.
                           </td>
                         </tr>
@@ -1288,7 +1345,7 @@ export default function AdminDashboard() {
                         filteredInquiries.map((inq) => (
                           <tr
                             key={inq.id}
-                            className="hover:bg-slate-800/30 transition-colors group cursor-pointer"
+                            className="hover:bg-slate-50 transition-colors group cursor-pointer"
                             onClick={() => handleSelectInquiry(inq)}
                           >
                             {/* Star Toggle */}
@@ -1299,10 +1356,10 @@ export default function AdminDashboard() {
                                 handleToggleStar(inq.id)
                               }}
                             >
-                              <button className="text-slate-600 hover:text-amber-400 transition-colors">
+                              <button className="text-slate-300 hover:text-amber-500 transition-colors cursor-pointer">
                                 <Star
                                   className={`w-4 h-4 ${
-                                    inq.is_starred ? 'text-amber-400 fill-amber-400' : ''
+                                    inq.is_starred ? 'text-amber-500 fill-amber-500' : ''
                                   }`}
                                 />
                               </button>
@@ -1311,14 +1368,14 @@ export default function AdminDashboard() {
                             {/* Client / Prospect */}
                             <td className="py-3.5 px-4">
                               <div className="flex items-center gap-2.5">
-                                <div className="w-8 h-8 rounded-lg bg-indigo-500/15 text-indigo-300 flex items-center justify-center font-bold text-xs shrink-0">
+                                <div className="w-8 h-8 rounded-lg bg-blue-50 text-[#2563EB] border border-blue-100 flex items-center justify-center font-bold text-xs shrink-0">
                                   {inq.name.slice(0, 2).toUpperCase()}
                                 </div>
                                 <div>
-                                  <div className="font-semibold text-white">{inq.name}</div>
-                                  <div className="text-[11px] font-mono text-slate-400">{inq.email}</div>
+                                  <div className="font-semibold text-[#111827]">{inq.name}</div>
+                                  <div className="text-[11px] font-mono text-[#64748B]">{inq.email}</div>
                                   {inq.phone && (
-                                    <div className="text-[10px] font-mono text-slate-400">{inq.phone}</div>
+                                    <div className="text-[10px] font-mono text-[#64748B]">{inq.phone}</div>
                                   )}
                                 </div>
                               </div>
@@ -1326,23 +1383,23 @@ export default function AdminDashboard() {
 
                             {/* Requested Solution */}
                             <td className="py-3.5 px-4">
-                              <span className="inline-block px-2.5 py-1 rounded-lg text-[11px] font-medium bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+                              <span className="inline-block px-2.5 py-1 rounded-lg text-[11px] font-medium bg-blue-50 text-[#2563EB] border border-blue-100">
                                 {inq.solution}
                               </span>
                               {inq.city && (
-                                <div className="text-[10px] text-slate-400 mt-0.5">{inq.city}</div>
+                                <div className="text-[10px] text-[#64748B] mt-0.5">{inq.city}</div>
                               )}
                             </td>
 
                             {/* Requirements Preview */}
-                            <td className="py-3.5 px-4 max-w-xs truncate text-slate-300">
+                            <td className="py-3.5 px-4 max-w-xs truncate text-[#334155]">
                               {inq.requirements}
                             </td>
 
                             {/* Submitted Date */}
-                            <td className="py-3.5 px-4 font-mono text-[11px] text-slate-400 whitespace-nowrap">
+                            <td className="py-3.5 px-4 font-mono text-[11px] text-[#64748B] whitespace-nowrap">
                               {new Date(inq.submittedAt).toLocaleDateString()}
-                              <span className="block text-[10px] text-slate-400">
+                              <span className="block text-[10px] text-[#94A3B8]">
                                 {new Date(inq.submittedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                               </span>
                             </td>
@@ -1352,27 +1409,27 @@ export default function AdminDashboard() {
                               <select
                                 value={inq.status}
                                 onChange={(e) => handleStatusChange(inq.id, e.target.value as AdminInquiry['status'])}
-                                className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-semibold uppercase tracking-wider border focus:outline-none ${
+                                className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-semibold uppercase tracking-wider border focus:outline-none cursor-pointer ${
                                   inq.status === 'won'
-                                    ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/40'
+                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                                     : inq.status === 'new'
-                                    ? 'bg-indigo-500/15 text-indigo-300 border-indigo-500/40'
+                                    ? 'bg-orange-50 text-orange-700 border-orange-200'
                                     : inq.status === 'in_discussion'
-                                    ? 'bg-cyan-500/15 text-cyan-300 border-cyan-500/40'
+                                    ? 'bg-amber-50 text-amber-700 border-amber-200'
                                     : inq.status === 'contacted'
-                                    ? 'bg-amber-500/15 text-amber-300 border-amber-500/40'
+                                    ? 'bg-blue-50 text-blue-700 border-blue-200'
                                     : inq.status === 'proposal_sent'
-                                    ? 'bg-purple-500/15 text-purple-300 border-purple-500/40'
+                                    ? 'bg-purple-50 text-purple-700 border-purple-200'
                                     : inq.status === 'lost'
-                                    ? 'bg-rose-500/15 text-rose-300 border-rose-500/40'
-                                    : 'bg-slate-800 text-slate-400 border-slate-700'
+                                    ? 'bg-rose-50 text-rose-700 border-rose-200'
+                                    : 'bg-slate-100 text-slate-700 border-slate-200'
                                 }`}
                               >
                                 <option value="new">New</option>
                                 <option value="contacted">Contacted</option>
                                 <option value="in_discussion">In Discussion</option>
                                 <option value="proposal_sent">Proposal Sent</option>
-                                <option value="won">Won (Deal Closed)</option>
+                                <option value="won">Won (Closed)</option>
                                 <option value="lost">Lost</option>
                                 <option value="spam">Spam</option>
                               </select>
@@ -1383,14 +1440,14 @@ export default function AdminDashboard() {
                               <div className="flex items-center justify-end gap-1.5">
                                 <button
                                   onClick={() => handleSelectInquiry(inq)}
-                                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                                  className="p-1.5 rounded-lg text-slate-400 hover:text-[#2563EB] hover:bg-blue-50 transition-colors cursor-pointer"
                                   title="View full details"
                                 >
                                   <Eye className="w-4 h-4" />
                                 </button>
                                 <button
                                   onClick={() => handleDeleteInquiry(inq.id)}
-                                  className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors"
+                                  className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
                                   title="Delete inquiry"
                                 >
                                   <Trash2 className="w-4 h-4" />
@@ -1407,88 +1464,88 @@ export default function AdminDashboard() {
 
               {/* Inquiry Detail Slide-Over / Modal */}
               {selectedInquiry && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-                  <div className="bg-[#0B0F19] border border-slate-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-6 shadow-2xl">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+                  <div className="bg-white border border-[#E5E7EB] rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-7 space-y-6 shadow-2xl text-[#111827]">
                     {/* Header */}
-                    <div className="flex items-start justify-between border-b border-slate-800/80 pb-4">
+                    <div className="flex items-start justify-between border-b border-[#E5E7EB] pb-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-indigo-600/20 text-indigo-300 flex items-center justify-center font-bold text-sm">
+                        <div className="w-10 h-10 rounded-xl bg-blue-100 text-[#2563EB] flex items-center justify-center font-bold text-sm">
                           {selectedInquiry.name.slice(0, 2).toUpperCase()}
                         </div>
                         <div>
-                          <h2 className="text-base font-bold text-white flex items-center gap-2">
+                          <h2 className="text-base font-bold text-[#172554] flex items-center gap-2">
                             <span>{selectedInquiry.name}</span>
-                            {selectedInquiry.is_starred && <Star className="w-4 h-4 text-amber-400 fill-amber-400" />}
+                            {selectedInquiry.is_starred && <Star className="w-4 h-4 text-amber-500 fill-amber-500" />}
                           </h2>
-                          <div className="text-xs text-slate-400">{selectedInquiry.email}</div>
+                          <div className="text-xs text-[#64748B]">{selectedInquiry.email}</div>
                         </div>
                       </div>
                       <button
                         onClick={() => setSelectedInquiry(null)}
-                        className="p-1 text-slate-400 hover:text-white"
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer"
                       >
                         <X className="w-5 h-5" />
                       </button>
                     </div>
 
                     {/* Metadata Grid */}
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
-                      <div className="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
-                        <span className="text-[10px] font-mono uppercase text-slate-400 block">Phone</span>
-                        <a href={`tel:${selectedInquiry.phone}`} className="text-slate-200 hover:text-indigo-400 font-mono mt-0.5 block truncate">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                      <div className="bg-[#F8FAFC] p-3 rounded-xl border border-[#E5E7EB]">
+                        <span className="text-[10px] font-mono uppercase text-[#64748B] block font-semibold">Phone</span>
+                        <a href={`tel:${selectedInquiry.phone}`} className="text-[#2563EB] font-bold font-mono mt-0.5 block truncate hover:underline">
                           {selectedInquiry.phone || '—'}
                         </a>
                       </div>
 
-                      <div className="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
-                        <span className="text-[10px] font-mono uppercase text-slate-400 block">City / Address</span>
-                        <span className="text-slate-200 mt-0.5 block truncate">
+                      <div className="bg-[#F8FAFC] p-3 rounded-xl border border-[#E5E7EB]">
+                        <span className="text-[10px] font-mono uppercase text-[#64748B] block font-semibold">City / Address</span>
+                        <span className="text-[#111827] mt-0.5 block truncate font-medium">
                           {selectedInquiry.address || selectedInquiry.city || '—'}
                         </span>
                       </div>
 
-                      <div className="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
-                        <span className="text-[10px] font-mono uppercase text-slate-400 block">Submitted At</span>
-                        <span className="text-slate-200 font-mono mt-0.5 block">
+                      <div className="bg-[#F8FAFC] p-3 rounded-xl border border-[#E5E7EB]">
+                        <span className="text-[10px] font-mono uppercase text-[#64748B] block font-semibold">Submitted At</span>
+                        <span className="text-[#111827] font-mono mt-0.5 block">
                           {new Date(selectedInquiry.submittedAt).toLocaleString()}
                         </span>
                       </div>
                     </div>
 
                     {/* Solution Tag */}
-                    <div className="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
-                      <span className="text-[10px] font-mono uppercase text-slate-400 block mb-1">
+                    <div className="bg-[#F8FAFC] p-4 rounded-xl border border-[#E5E7EB]">
+                      <span className="text-[10px] font-mono uppercase text-[#64748B] block mb-1 font-semibold">
                         Requested Solution & Domain
                       </span>
-                      <span className="inline-block px-3 py-1 rounded-lg text-xs font-semibold bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">
+                      <span className="inline-block px-3 py-1 rounded-lg text-xs font-semibold bg-blue-50 text-[#2563EB] border border-blue-200">
                         {selectedInquiry.solution}
                       </span>
                     </div>
 
                     {/* Project Requirements Full Text */}
-                    <div className="bg-slate-900/80 p-4 rounded-xl border border-slate-800 space-y-2">
-                      <span className="text-[10px] font-mono uppercase text-slate-400 block">
+                    <div className="bg-[#F8FAFC] p-4 rounded-xl border border-[#E5E7EB] space-y-2">
+                      <span className="text-[10px] font-mono uppercase text-[#64748B] block font-semibold">
                         Full Project Requirements & Message
                       </span>
-                      <p className="text-xs text-slate-200 whitespace-pre-wrap leading-relaxed">
+                      <p className="text-xs text-[#334155] whitespace-pre-wrap leading-relaxed">
                         {selectedInquiry.requirements}
                       </p>
                     </div>
 
                     {/* Attribution & Viewer Linkage */}
                     {(selectedInquiry.visitor_id || selectedInquiry.session_id) && (
-                      <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 text-xs font-mono">
-                        <span className="text-[10px] text-indigo-400 uppercase tracking-wider block font-semibold">
+                      <div className="bg-[#F8FAFC] p-4 rounded-xl border border-[#E5E7EB] space-y-2 text-xs font-mono">
+                        <span className="text-[10px] text-[#2563EB] uppercase tracking-wider block font-semibold">
                           First-Party Visitor Attribution Link
                         </span>
                         {selectedInquiry.visitor_id && (
-                          <div className="text-slate-400 truncate">
-                            Visitor UUID: <span className="text-slate-300">{selectedInquiry.visitor_id}</span>
+                          <div className="text-[#64748B] truncate">
+                            Visitor UUID: <span className="text-[#111827] font-semibold">{selectedInquiry.visitor_id}</span>
                           </div>
                         )}
                         {selectedInquiry.session_id && (
-                          <div className="text-slate-400 truncate">
-                            Session UUID: <span className="text-slate-300">{selectedInquiry.session_id}</span>
+                          <div className="text-[#64748B] truncate">
+                            Session UUID: <span className="text-[#111827] font-semibold">{selectedInquiry.session_id}</span>
                           </div>
                         )}
                       </div>
@@ -1497,13 +1554,13 @@ export default function AdminDashboard() {
                     {/* Admin Consultation Notes Editor */}
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <label className="text-xs font-semibold text-white flex items-center gap-1.5">
-                          <FileText className="w-3.5 h-3.5 text-indigo-400" />
+                        <label className="text-xs font-bold text-[#172554] flex items-center gap-1.5">
+                          <FileText className="w-3.5 h-3.5 text-[#2563EB]" />
                           Internal Admin Consultation Notes
                         </label>
                         {saveNotesSuccess && (
-                          <span className="text-[11px] font-mono text-emerald-400 flex items-center gap-1">
-                            <Check className="w-3.5 h-3.5" /> Saved to Supabase
+                          <span className="text-[11px] font-mono text-emerald-700 flex items-center gap-1 font-semibold">
+                            <Check className="w-3.5 h-3.5 text-emerald-600" /> Saved to Supabase
                           </span>
                         )}
                       </div>
@@ -1512,13 +1569,13 @@ export default function AdminDashboard() {
                         onChange={(e) => setInquiryNotesInput(e.target.value)}
                         placeholder="Add internal notes about client meeting, pricing quotes, or tech stack requirements..."
                         rows={3}
-                        className="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-indigo-500"
+                        className="w-full p-3 bg-white border border-[#E5E7EB] rounded-xl text-xs text-[#111827] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100"
                       />
                       <div className="flex justify-end">
                         <button
                           onClick={handleSaveNotes}
                           disabled={isSavingNotes}
-                          className="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium flex items-center gap-1.5 transition-colors shadow-sm"
+                          className="px-3.5 py-1.5 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
                         >
                           <Save className="w-3.5 h-3.5" />
                           <span>{isSavingNotes ? 'Saving...' : 'Save Notes'}</span>
@@ -1527,34 +1584,34 @@ export default function AdminDashboard() {
                     </div>
 
                     {/* Modal Footer */}
-                    <div className="flex items-center justify-between pt-4 border-t border-slate-800">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-slate-400">Current Status:</span>
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-[#E5E7EB]">
+                      <div className="flex items-center gap-2 w-full sm:w-auto">
+                        <span className="text-xs text-[#64748B] font-medium">Status:</span>
                         <select
                           value={selectedInquiry.status}
                           onChange={(e) => handleStatusChange(selectedInquiry.id, e.target.value as AdminInquiry['status'])}
-                          className="px-2.5 py-1 bg-slate-900 border border-slate-700 rounded-lg text-xs font-semibold text-white"
+                          className="px-2.5 py-1 bg-white border border-[#E5E7EB] rounded-lg text-xs font-semibold text-[#111827] focus:border-[#2563EB]"
                         >
                           <option value="new">New</option>
                           <option value="contacted">Contacted</option>
                           <option value="in_discussion">In Discussion</option>
                           <option value="proposal_sent">Proposal Sent</option>
-                          <option value="won">Won (Deal Closed)</option>
+                          <option value="won">Won (Closed)</option>
                           <option value="lost">Lost</option>
                           <option value="spam">Spam</option>
                         </select>
                       </div>
 
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                         <button
                           onClick={() => handleToggleStar(selectedInquiry.id)}
-                          className="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white text-xs font-medium"
+                          className="px-3.5 py-1.5 rounded-xl bg-white border border-[#E5E7EB] hover:bg-slate-50 text-slate-700 text-xs font-semibold cursor-pointer"
                         >
                           {selectedInquiry.is_starred ? 'Unstar Lead' : 'Star Lead'}
                         </button>
                         <button
                           onClick={() => setSelectedInquiry(null)}
-                          className="px-4 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-medium"
+                          className="px-4 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold cursor-pointer"
                         >
                           Close
                         </button>
@@ -1574,33 +1631,33 @@ export default function AdminDashboard() {
               {/* Header */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h1 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
-                    <Eye className="w-5 h-5 text-cyan-400" />
+                  <h1 className="text-lg font-bold text-[#172554] tracking-tight flex items-center gap-2">
+                    <Eye className="w-5 h-5 text-[#2563EB]" />
                     Website Viewers & Telemetry Stream
                   </h1>
-                  <p className="text-xs text-slate-400">
-                    Real-time audience data collection populated in Supabase tables <code className="text-indigo-400 font-mono">dev_visitors</code>, <code className="text-indigo-400 font-mono">dev_sessions</code> & <code className="text-indigo-400 font-mono">dev_telemetry_events</code>
+                  <p className="text-xs text-[#64748B] mt-0.5">
+                    Real-time audience data collection populated in Supabase tables <code className="text-[#2563EB] font-mono font-semibold">dev_visitors</code>, <code className="text-[#2563EB] font-mono font-semibold">dev_sessions</code> & <code className="text-[#2563EB] font-mono font-semibold">dev_telemetry_events</code>
                   </p>
                 </div>
 
                 {/* Sub-tab switcher */}
-                <div className="flex items-center gap-1 bg-slate-900/80 p-1 rounded-xl border border-slate-800 self-start sm:self-auto">
+                <div className="flex items-center gap-1 bg-white p-1 rounded-xl border border-[#E5E7EB] self-start sm:self-auto shadow-xs">
                   <button
                     onClick={() => setTelemetrySubTab('visitors')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                       telemetrySubTab === 'visitors'
-                        ? 'bg-indigo-600 text-white shadow-sm'
-                        : 'text-slate-400 hover:text-slate-200'
+                        ? 'bg-[#2563EB] text-white shadow-xs'
+                        : 'text-[#64748B] hover:text-[#111827]'
                     }`}
                   >
                     Unique Visitors ({visitors.length})
                   </button>
                   <button
                     onClick={() => setTelemetrySubTab('events')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                       telemetrySubTab === 'events'
-                        ? 'bg-indigo-600 text-white shadow-sm'
-                        : 'text-slate-400 hover:text-slate-200'
+                        ? 'bg-[#2563EB] text-white shadow-xs'
+                        : 'text-[#64748B] hover:text-[#111827]'
                     }`}
                   >
                     Raw Events ({telemetry.length})
@@ -1611,10 +1668,10 @@ export default function AdminDashboard() {
               {/* Sub-tab 1: Unique Visitors Table (dev_visitors) */}
               {telemetrySubTab === 'visitors' && (
                 <div className="space-y-4">
-                  <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl overflow-hidden backdrop-blur-sm">
+                  <div className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-xs">
                     <div className="overflow-x-auto">
                       <table className="w-full text-left text-xs">
-                        <thead className="bg-slate-950/80 border-b border-slate-800/80 text-slate-400 font-mono uppercase tracking-wider text-[11px]">
+                        <thead className="bg-[#F8FAFC] border-b border-[#E5E7EB] text-[#64748B] font-mono uppercase tracking-wider text-[11px]">
                           <tr>
                             <th className="py-3.5 px-4">Visitor Profile (UUID)</th>
                             <th className="py-3.5 px-4">Device & OS</th>
@@ -1624,65 +1681,65 @@ export default function AdminDashboard() {
                             <th className="py-3.5 px-4">Converted Lead</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-800/60">
+                        <tbody className="divide-y divide-[#E5E7EB]">
                           {visitors.length === 0 ? (
                             <tr>
-                              <td colSpan={6} className="py-12 text-center text-slate-500">
+                              <td colSpan={6} className="py-12 text-center text-[#64748B]">
                                 No visitor records in dev_visitors table yet.
                               </td>
                             </tr>
                           ) : (
                             visitors.map((v) => (
-                              <tr key={v.visitor_id} className="hover:bg-slate-800/30 transition-colors">
+                              <tr key={v.visitor_id} className="hover:bg-slate-50 transition-colors">
                                 <td className="py-3.5 px-4 font-mono">
                                   <div className="flex items-center gap-2">
-                                    <span className="w-2 h-2 rounded-full bg-cyan-400" />
-                                    <span className="text-white font-semibold truncate max-w-[140px] sm:max-w-[200px]" title={v.visitor_id}>
+                                    <span className="w-2 h-2 rounded-full bg-[#0284C7]" />
+                                    <span className="text-[#111827] font-semibold truncate max-w-[140px] sm:max-w-[200px]" title={v.visitor_id}>
                                       {v.visitor_id}
                                     </span>
                                   </div>
                                 </td>
 
                                 <td className="py-3.5 px-4">
-                                  <div className="flex items-center gap-2">
+                                  <div className="flex items-center gap-1.5 text-slate-700 font-medium capitalize">
                                     {v.device_type === 'mobile' ? (
-                                      <Smartphone className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                                      <Smartphone className="w-3.5 h-3.5 text-sky-600" />
                                     ) : v.device_type === 'tablet' ? (
-                                      <Tablet className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                                      <Tablet className="w-3.5 h-3.5 text-amber-600" />
                                     ) : (
-                                      <Monitor className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                                      <Monitor className="w-3.5 h-3.5 text-[#2563EB]" />
                                     )}
-                                    <span className="text-slate-200 capitalize">{v.device_type || 'Desktop'}</span>
-                                    {v.os && <span className="text-[10px] font-mono text-slate-400">({v.os})</span>}
+                                    <span>{v.device_type || 'desktop'}</span>
                                   </div>
+                                  <span className="text-[10px] text-[#64748B] block mt-0.5">{v.os || 'Unknown OS'}</span>
                                 </td>
 
-                                <td className="py-3.5 px-4">
-                                  <div className="text-slate-200">{v.browser || 'Unknown'}</div>
-                                  {v.screen_resolution && (
-                                    <div className="text-[10px] font-mono text-slate-400">{v.screen_resolution}</div>
-                                  )}
+                                <td className="py-3.5 px-4 text-[#334155]">
+                                  <div className="font-medium">{v.browser || '—'}</div>
+                                  <div className="text-[10px] font-mono text-[#64748B]">{v.screen_resolution || '—'}</div>
                                 </td>
 
-                                <td className="py-3.5 px-4 font-mono text-[11px] text-slate-400 whitespace-nowrap">
+                                <td className="py-3.5 px-4 font-mono text-[11px] text-[#64748B] whitespace-nowrap">
                                   {new Date(v.first_seen).toLocaleDateString()}
+                                  <span className="block text-[10px] text-[#94A3B8]">
+                                    {new Date(v.first_seen).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                  </span>
                                 </td>
 
-                                <td className="py-3.5 px-4 font-mono text-[11px] text-slate-300 whitespace-nowrap">
-                                  {new Date(v.last_seen).toLocaleDateString()}{' '}
-                                  <span className="text-[10px] text-slate-400">
+                                <td className="py-3.5 px-4 font-mono text-[11px] text-[#64748B] whitespace-nowrap">
+                                  {new Date(v.last_seen).toLocaleDateString()}
+                                  <span className="block text-[10px] text-[#94A3B8]">
                                     {new Date(v.last_seen).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                   </span>
                                 </td>
 
                                 <td className="py-3.5 px-4">
-                                  {v.lead_name ? (
-                                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-semibold text-[11px]">
-                                      <CheckCircle2 className="w-3 h-3" />
-                                      <span>{v.lead_name}</span>
-                                    </div>
+                                  {v.converted_at ? (
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                      <Check className="w-3 h-3" /> Converted
+                                    </span>
                                   ) : (
-                                    <span className="text-slate-600 text-[11px] font-mono">Unconverted</span>
+                                    <span className="text-[11px] text-[#94A3B8] font-mono">Exploring</span>
                                   )}
                                 </td>
                               </tr>
@@ -1695,32 +1752,34 @@ export default function AdminDashboard() {
                 </div>
               )}
 
-              {/* Sub-tab 2: Raw Events Stream (dev_telemetry_events) */}
+              {/* Sub-tab 2: Raw Telemetry Events Table (dev_telemetry_events) */}
               {telemetrySubTab === 'events' && (
                 <div className="space-y-4">
-                  {/* Event type filter */}
-                  <div className="flex items-center gap-2 overflow-x-auto pb-1">
-                    {(['all', 'page_view', 'section_view', 'cta_click', 'contact_click', 'form_submit'] as const).map((ev) => (
-                      <button
-                        key={ev}
-                        onClick={() => setTelemetryFilter(ev)}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium whitespace-nowrap transition-all ${
-                          telemetryFilter === ev
-                            ? 'bg-indigo-600 text-white shadow-sm'
-                            : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
-                        }`}
-                      >
-                        {ev.replace('_', ' ').toUpperCase()}
-                      </button>
-                    ))}
+                  {/* Event Filter */}
+                  <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 shadow-xs flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-2">
+                      <Filter className="w-4 h-4 text-[#64748B]" />
+                      <span className="text-xs font-bold text-[#172554]">Filter Event Type:</span>
+                    </div>
+                    <select
+                      value={telemetryFilter}
+                      onChange={(e) => setTelemetryFilter(e.target.value)}
+                      className="px-3 py-1.5 bg-[#F8FAFC] border border-[#E5E7EB] rounded-xl text-xs text-[#111827] focus:outline-none focus:border-[#2563EB]"
+                    >
+                      <option value="all">All Events ({telemetry.length})</option>
+                      <option value="page_view">page_view</option>
+                      <option value="section_dwell">section_dwell</option>
+                      <option value="cta_click">cta_click</option>
+                      <option value="form_submit">form_submit</option>
+                    </select>
                   </div>
 
-                  <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl overflow-hidden backdrop-blur-sm">
+                  <div className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-xs">
                     <div className="overflow-x-auto">
                       <table className="w-full text-left text-xs">
-                        <thead className="bg-slate-950/80 border-b border-slate-800/80 text-slate-400 font-mono uppercase tracking-wider text-[11px]">
+                        <thead className="bg-[#F8FAFC] border-b border-[#E5E7EB] text-[#64748B] font-mono uppercase tracking-wider text-[11px]">
                           <tr>
-                            <th className="py-3.5 px-4">Event Type</th>
+                            <th className="py-3.5 px-4">Event Name</th>
                             <th className="py-3.5 px-4">Page Path</th>
                             <th className="py-3.5 px-4">Section / Target</th>
                             <th className="py-3.5 px-4">Dwell Time</th>
@@ -1728,59 +1787,65 @@ export default function AdminDashboard() {
                             <th className="py-3.5 px-4 text-right">Payload</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-800/60">
+                        <tbody className="divide-y divide-[#E5E7EB]">
                           {filteredTelemetry.length === 0 ? (
                             <tr>
-                              <td colSpan={6} className="py-12 text-center text-slate-500">
-                                No telemetry events recorded.
+                              <td colSpan={6} className="py-12 text-center text-[#64748B]">
+                                No telemetry events match the selected filter.
                               </td>
                             </tr>
                           ) : (
-                            filteredTelemetry.map((rec) => (
-                              <tr key={rec.id} className="hover:bg-slate-800/30 transition-colors">
+                            filteredTelemetry.slice(0, 100).map((t) => (
+                              <tr key={t.id} className="hover:bg-slate-50 transition-colors">
                                 <td className="py-3.5 px-4">
                                   <span
-                                    className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider font-semibold border ${
-                                      rec.event_name === 'form_submit'
-                                        ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
-                                        : rec.event_name === 'cta_click' || rec.event_name === 'contact_click'
-                                        ? 'bg-amber-500/15 text-amber-400 border-amber-500/30'
-                                        : rec.event_name === 'section_view'
-                                        ? 'bg-indigo-500/15 text-indigo-400 border-indigo-500/30'
-                                        : 'bg-cyan-500/15 text-cyan-400 border-cyan-500/30'
+                                    className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider border ${
+                                      t.event_name === 'form_submit'
+                                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                        : t.event_name === 'page_view'
+                                        ? 'bg-blue-50 text-blue-700 border-blue-200'
+                                        : t.event_name === 'section_dwell'
+                                        ? 'bg-purple-50 text-purple-700 border-purple-200'
+                                        : 'bg-slate-100 text-slate-700 border-slate-200'
                                     }`}
                                   >
-                                    {rec.event_name}
+                                    {t.event_name}
                                   </span>
                                 </td>
 
-                                <td className="py-3.5 px-4 font-mono text-slate-300">
-                                  {rec.page_path}
+                                <td className="py-3.5 px-4 font-mono text-[#111827] font-medium">
+                                  {t.page_path}
                                 </td>
 
-                                <td className="py-3.5 px-4">
-                                  <div className="text-slate-200">{rec.section_name || rec.section_id || '—'}</div>
-                                  {rec.element_label && (
-                                    <div className="text-[10px] font-mono text-slate-400">CTA: {rec.element_label}</div>
+                                <td className="py-3.5 px-4 text-slate-700">
+                                  <div className="font-medium text-[#111827]">{t.section_name || t.section_id || '—'}</div>
+                                  {t.element_label && (
+                                    <div className="text-[10px] text-[#64748B]">{t.element_label}</div>
                                   )}
                                 </td>
 
-                                <td className="py-3.5 px-4 font-mono text-slate-300">
-                                  {rec.dwell_time_seconds ? `${rec.dwell_time_seconds}s` : '—'}
+                                <td className="py-3.5 px-4 font-mono text-[#111827]">
+                                  {t.dwell_time_seconds ? `${t.dwell_time_seconds}s` : '—'}
                                 </td>
 
-                                <td className="py-3.5 px-4 font-mono text-[11px] text-slate-400 whitespace-nowrap">
-                                  {new Date(rec.created_at).toLocaleTimeString()}
+                                <td className="py-3.5 px-4 font-mono text-[11px] text-[#64748B] whitespace-nowrap">
+                                  {new Date(t.created_at).toLocaleDateString()}
+                                  <span className="block text-[10px] text-[#94A3B8]">
+                                    {new Date(t.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                  </span>
                                 </td>
 
                                 <td className="py-3.5 px-4 text-right">
-                                  <button
-                                    onClick={() => setSelectedEventPayload(rec)}
-                                    className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-400 hover:bg-slate-800 transition-colors"
-                                    title="View JSON metadata"
-                                  >
-                                    <Eye className="w-4 h-4" />
-                                  </button>
+                                  {t.client_meta ? (
+                                    <button
+                                      onClick={() => setSelectedEventPayload(t)}
+                                      className="text-xs font-mono text-[#2563EB] hover:underline cursor-pointer"
+                                    >
+                                      Inspect Client Meta
+                                    </button>
+                                  ) : (
+                                    <span className="text-[#94A3B8]">—</span>
+                                  )}
                                 </td>
                               </tr>
                             ))
@@ -1792,28 +1857,30 @@ export default function AdminDashboard() {
                 </div>
               )}
 
-              {/* JSON Event Payload Modal */}
+              {/* JSON Payload Inspector Modal */}
               {selectedEventPayload && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-                  <div className="bg-[#0B0F19] border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
-                    <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                      <h3 className="text-sm font-bold text-white font-mono flex items-center gap-2">
-                        <span>Event Payload #{selectedEventPayload.id}</span>
-                        <span className="text-[10px] px-2 py-0.5 rounded bg-indigo-500/15 text-indigo-400">
-                          {selectedEventPayload.event_name}
-                        </span>
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+                  <div className="bg-white border border-[#E5E7EB] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl text-[#111827]">
+                    <div className="flex items-center justify-between border-b border-[#E5E7EB] pb-3">
+                      <h3 className="text-sm font-bold text-[#172554] font-mono">
+                        Event Metadata ({selectedEventPayload.event_name})
                       </h3>
-                      <button onClick={() => setSelectedEventPayload(null)} className="text-slate-400 hover:text-white">
+                      <button
+                        onClick={() => setSelectedEventPayload(null)}
+                        className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer"
+                      >
                         <X className="w-4 h-4" />
                       </button>
                     </div>
-                    <pre className="p-4 bg-slate-950 rounded-xl border border-slate-800 font-mono text-xs text-slate-300 overflow-x-auto max-h-96">
-                      {JSON.stringify(selectedEventPayload, null, 2)}
-                    </pre>
-                    <div className="flex justify-end">
+
+                    <div className="bg-[#F8FAFC] p-3.5 rounded-xl border border-[#E5E7EB] font-mono text-xs overflow-x-auto max-h-80 leading-relaxed text-[#334155]">
+                      <pre>{JSON.stringify(selectedEventPayload.client_meta, null, 2)}</pre>
+                    </div>
+
+                    <div className="flex justify-end pt-2">
                       <button
                         onClick={() => setSelectedEventPayload(null)}
-                        className="px-4 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-medium"
+                        className="px-4 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold cursor-pointer"
                       >
                         Close
                       </button>
@@ -1830,47 +1897,49 @@ export default function AdminDashboard() {
           {activeTab === 'security' && (
             <div className="space-y-8">
               {/* Top Banner */}
-              <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 backdrop-blur-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-rose-500/15 text-rose-400 flex items-center justify-center shrink-0">
-                    <ShieldAlert className="w-5 h-5" />
+              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex items-start gap-3.5">
+                  <div className="w-11 h-11 rounded-xl bg-orange-50 text-[#F97316] border border-orange-100 flex items-center justify-center shrink-0">
+                    <ShieldAlert className="w-6 h-6" />
                   </div>
                   <div>
-                    <h1 className="text-base font-bold text-white tracking-tight">Security Gateway & IP Lockout Registry</h1>
-                    <p className="text-xs text-slate-400 mt-0.5 leading-relaxed">
+                    <h1 className="text-base font-bold text-[#172554] tracking-tight">
+                      Security Gateway & IP Lockout Registry
+                    </h1>
+                    <p className="text-xs text-[#64748B] mt-0.5 leading-relaxed max-w-3xl">
                       Zero persistent session policy with brute-force IP rate limiting: 3 failed password attempts blocks client IP for 15 minutes (Tier 1), escalating to 30 minutes (Tier 2+).
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 shrink-0">
                   <button
                     onClick={() => setShowManualBlockModal(true)}
-                    className="px-3.5 py-2 rounded-xl bg-rose-600/20 border border-rose-500/30 hover:bg-rose-600/30 text-rose-300 flex items-center gap-2 text-xs font-medium transition-all"
+                    className="px-4 py-2 rounded-xl bg-rose-50 border border-rose-200 hover:bg-rose-100 text-rose-700 flex items-center gap-2 text-xs font-semibold transition-all cursor-pointer"
                   >
-                    <ShieldAlert className="w-3.5 h-3.5" />
+                    <ShieldAlert className="w-4 h-4" />
                     <span>Manual IP Block</span>
                   </button>
                 </div>
               </div>
 
               {/* IP Lockout Table (dev_admin_ip_blocks) */}
-              <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 backdrop-blur-sm space-y-4">
+              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-xs space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-sm font-semibold text-white flex items-center gap-2">
-                      <Lock className="w-4 h-4 text-rose-400" />
+                    <h2 className="text-sm font-bold text-[#172554] flex items-center gap-2">
+                      <Lock className="w-4 h-4 text-[#F97316]" />
                       IP Block & Lockout Registry (dev_admin_ip_blocks)
                     </h2>
-                    <p className="text-xs text-slate-400 mt-0.5">
-                      IPs currently restricted or tracked for failed administrative authorization
+                    <p className="text-xs text-[#64748B] mt-0.5">
+                      IP addresses currently restricted or tracked for failed administrative authorization
                     </p>
                   </div>
                 </div>
 
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
-                    <thead className="bg-slate-950/80 border-b border-slate-800/80 text-slate-400 font-mono uppercase tracking-wider text-[11px]">
+                    <thead className="bg-[#F8FAFC] border-b border-[#E5E7EB] text-[#64748B] font-mono uppercase tracking-wider text-[11px]">
                       <tr>
                         <th className="py-3.5 px-4">Client IP Address</th>
                         <th className="py-3.5 px-4">Failed Attempts</th>
@@ -1880,10 +1949,10 @@ export default function AdminDashboard() {
                         <th className="py-3.5 px-4 text-right">Admin Action</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-800/60">
+                    <tbody className="divide-y divide-[#E5E7EB]">
                       {ipBlocks.length === 0 ? (
                         <tr>
-                          <td colSpan={6} className="py-8 text-center text-slate-500">
+                          <td colSpan={6} className="py-8 text-center text-[#64748B]">
                             No failed attempts or IP lockouts registered. System operating normally.
                           </td>
                         </tr>
@@ -1893,48 +1962,44 @@ export default function AdminDashboard() {
                           const remainingMin = isBlockedNow ? Math.ceil((blk.blocked_until - nowMs) / (60 * 1000)) : 0
 
                           return (
-                            <tr key={blk.id} className="hover:bg-slate-800/30 transition-colors">
-                              <td className="py-3.5 px-4 font-mono font-semibold text-white">
+                            <tr key={blk.id} className="hover:bg-slate-50 transition-colors">
+                              <td className="py-3.5 px-4 font-mono font-bold text-[#111827]">
                                 {blk.ip_address}
                               </td>
 
-                              <td className="py-3.5 px-4 font-mono text-slate-300">
+                              <td className="py-3.5 px-4 font-mono text-slate-700">
                                 {blk.failed_attempts} strikes
                               </td>
 
                               <td className="py-3.5 px-4">
                                 {isBlockedNow ? (
-                                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-ping" />
+                                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase font-bold bg-orange-50 text-[#F97316] border border-orange-200">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#F97316] animate-ping" />
                                     Blocked ({remainingMin}m left)
                                   </span>
                                 ) : (
-                                  <span className="inline-flex items-center gap-1.5 text-xs text-slate-400">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-slate-600" />
-                                    Cleared
+                                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    <Check className="w-3 h-3" /> Clean
                                   </span>
                                 )}
                               </td>
 
-                              <td className="py-3.5 px-4 font-mono text-slate-300">
-                                Tier {blk.block_tier || 1}
+                              <td className="py-3.5 px-4 font-mono text-[#64748B]">
+                                Tier {blk.block_tier} ({blk.block_tier === 1 ? '15m' : '30m'})
                               </td>
 
-                              <td className="py-3.5 px-4 font-mono text-[11px] text-slate-400">
-                                {new Date(blk.last_attempt_at).toLocaleString()}
+                              <td className="py-3.5 px-4 font-mono text-[11px] text-[#64748B]">
+                                {blk.last_attempt_at ? new Date(blk.last_attempt_at).toLocaleString() : '—'}
                               </td>
 
                               <td className="py-3.5 px-4 text-right">
-                                {isBlockedNow ? (
+                                {isBlockedNow && (
                                   <button
                                     onClick={() => handleClearIpBlock(blk.ip_address)}
-                                    className="px-3 py-1 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/25 text-xs font-medium flex items-center gap-1.5 ml-auto transition-colors"
+                                    className="px-3 py-1 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 text-xs font-semibold cursor-pointer"
                                   >
-                                    <Unlock className="w-3.5 h-3.5" />
-                                    <span>Unlock IP</span>
+                                    Unblock IP
                                   </button>
-                                ) : (
-                                  <span className="text-slate-600 text-xs">—</span>
                                 )}
                               </td>
                             </tr>
@@ -1947,83 +2012,85 @@ export default function AdminDashboard() {
               </div>
 
               {/* Active Admin Sessions Table (dev_admin_sessions) */}
-              <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 backdrop-blur-sm space-y-4">
+              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-xs space-y-4">
                 <div>
-                  <h2 className="text-sm font-semibold text-white flex items-center gap-2">
-                    <KeyRound className="w-4 h-4 text-indigo-400" />
+                  <h2 className="text-sm font-bold text-[#172554] flex items-center gap-2">
+                    <Laptop className="w-4 h-4 text-[#2563EB]" />
                     Active Admin Sessions (dev_admin_sessions)
                   </h2>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    Zero persistent sessions policy: tokens are verified against Supabase and automatically expire
+                  <p className="text-xs text-[#64748B] mt-0.5">
+                    Currently authorized tokens in PostgreSQL database with auto-revocation on logout
                   </p>
                 </div>
 
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
-                    <thead className="bg-slate-950/80 border-b border-slate-800/80 text-slate-400 font-mono uppercase tracking-wider text-[11px]">
+                    <thead className="bg-[#F8FAFC] border-b border-[#E5E7EB] text-[#64748B] font-mono uppercase tracking-wider text-[11px]">
                       <tr>
-                        <th className="py-3.5 px-4">Admin</th>
-                        <th className="py-3.5 px-4">Token Preview</th>
-                        <th className="py-3.5 px-4">Client IP</th>
-                        <th className="py-3.5 px-4">Last Activity</th>
+                        <th className="py-3.5 px-4">Admin User</th>
+                        <th className="py-3.5 px-4">IP Address</th>
+                        <th className="py-3.5 px-4">Device / User Agent</th>
+                        <th className="py-3.5 px-4">Logged In</th>
                         <th className="py-3.5 px-4">Status</th>
                         <th className="py-3.5 px-4 text-right">Action</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-800/60">
+                    <tbody className="divide-y divide-[#E5E7EB]">
                       {sessionsList.length === 0 ? (
                         <tr>
-                          <td colSpan={6} className="py-8 text-center text-slate-500">
-                            No active sessions found.
+                          <td colSpan={6} className="py-8 text-center text-[#64748B]">
+                            No active administrative sessions registered.
                           </td>
                         </tr>
                       ) : (
-                        sessionsList.map((sess) => {
-                          const isActive = !sess.is_revoked && new Date(sess.expires_at).getTime() > nowMs
+                        sessionsList.map((s) => {
+                          const isExpired = new Date(s.expires_at).getTime() <= nowMs
+                          const isActive = !s.is_revoked && !isExpired
 
                           return (
-                            <tr key={sess.session_id} className="hover:bg-slate-800/30 transition-colors">
-                              <td className="py-3.5 px-4 font-semibold text-white">
-                                {sess.username}
-                                <span className="block text-[10px] font-mono text-slate-400">{sess.role}</span>
+                            <tr key={s.session_id} className="hover:bg-slate-50 transition-colors">
+                              <td className="py-3.5 px-4 font-semibold text-[#111827]">
+                                <div className="flex items-center gap-2">
+                                  <div className="w-6 h-6 rounded-md bg-blue-100 text-[#2563EB] flex items-center justify-center font-bold text-[10px]">
+                                    {s.username.slice(0, 2).toUpperCase()}
+                                  </div>
+                                  <span>{s.username}</span>
+                                </div>
                               </td>
 
-                              <td className="py-3.5 px-4 font-mono text-slate-400">
-                                {sess.token ? `${sess.token.slice(0, 10)}...` : '—'}
+                              <td className="py-3.5 px-4 font-mono text-[#2563EB] font-bold">
+                                {s.ip_address}
                               </td>
 
-                              <td className="py-3.5 px-4 font-mono text-slate-300">
-                                {sess.ip_address || '—'}
+                              <td className="py-3.5 px-4 max-w-xs truncate text-[#64748B]" title={s.user_agent}>
+                                {s.user_agent}
                               </td>
 
-                              <td className="py-3.5 px-4 font-mono text-[11px] text-slate-400">
-                                {new Date(sess.last_activity_at).toLocaleTimeString()}
+                              <td className="py-3.5 px-4 font-mono text-[11px] text-[#64748B]">
+                                {new Date(s.created_at).toLocaleString()}
                               </td>
 
                               <td className="py-3.5 px-4">
                                 {isActive ? (
-                                  <span className="inline-flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                                     Active
                                   </span>
                                 ) : (
-                                  <span className="inline-flex items-center gap-1.5 text-xs text-slate-500">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-slate-600" />
-                                    {sess.revoked_reason || 'Revoked'}
+                                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+                                    {s.revoked_reason || 'Expired'}
                                   </span>
                                 )}
                               </td>
 
                               <td className="py-3.5 px-4 text-right">
-                                {isActive ? (
+                                {isActive && (
                                   <button
-                                    onClick={() => handleRevokeSession(sess.session_id)}
-                                    className="px-2.5 py-1 rounded-lg bg-rose-500/15 text-rose-300 hover:bg-rose-500/25 border border-rose-500/30 text-xs font-medium transition-colors"
+                                    onClick={() => handleRevokeSession(s.session_id)}
+                                    className="px-3 py-1 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 text-xs font-semibold cursor-pointer"
                                   >
                                     Revoke
                                   </button>
-                                ) : (
-                                  <span className="text-slate-600 text-xs">—</span>
                                 )}
                               </td>
                             </tr>
@@ -2035,58 +2102,65 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {/* Manual IP Block Modal */}
+              {/* Manual IP Ban Modal */}
               {showManualBlockModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-                  <div className="bg-[#0B0F19] border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
-                    <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                      <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                        <ShieldAlert className="w-4 h-4 text-rose-400" />
-                        Manual IP Blacklist
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+                  <div className="bg-white border border-[#E5E7EB] rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl text-[#111827]">
+                    <div className="flex items-center justify-between border-b border-[#E5E7EB] pb-3">
+                      <h3 className="text-sm font-bold text-[#172554] flex items-center gap-2">
+                        <ShieldAlert className="w-4 h-4 text-[#F97316]" />
+                        Manual IP Lockout Enforcement
                       </h3>
-                      <button onClick={() => setShowManualBlockModal(false)} className="text-slate-400 hover:text-white">
+                      <button
+                        onClick={() => setShowManualBlockModal(false)}
+                        className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer"
+                      >
                         <X className="w-4 h-4" />
                       </button>
                     </div>
 
                     <form onSubmit={handleManualBlockIp} className="space-y-4">
                       <div>
-                        <label className="text-xs font-mono text-slate-300 block mb-1">IP Address to Lock Out</label>
+                        <label className="block text-xs font-semibold text-[#172554] mb-1">
+                          IP Address to Lockout
+                        </label>
                         <input
                           type="text"
                           required
                           value={manualBlockIpInput}
                           onChange={(e) => setManualBlockIpInput(e.target.value)}
                           placeholder="e.g. 192.168.1.100"
-                          className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white font-mono focus:outline-none focus:border-rose-500"
+                          className="w-full px-3.5 py-2 bg-white border border-[#E5E7EB] rounded-xl text-xs font-mono text-[#111827] focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100"
                         />
                       </div>
 
                       <div>
-                        <label className="text-xs font-mono text-slate-300 block mb-1">Reason / Notes</label>
+                        <label className="block text-xs font-semibold text-[#172554] mb-1">
+                          Reason / Threat Vector
+                        </label>
                         <input
                           type="text"
+                          required
                           value={manualBlockReasonInput}
                           onChange={(e) => setManualBlockReasonInput(e.target.value)}
-                          placeholder="Reason for block..."
-                          className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-rose-500"
+                          className="w-full px-3.5 py-2 bg-white border border-[#E5E7EB] rounded-xl text-xs text-[#111827] focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100"
                         />
                       </div>
 
-                      <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
+                      <div className="flex justify-end gap-2 pt-2">
                         <button
                           type="button"
                           onClick={() => setShowManualBlockModal(false)}
-                          className="px-4 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-medium"
+                          className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold cursor-pointer"
                         >
                           Cancel
                         </button>
                         <button
                           type="submit"
                           disabled={manualBlockLoading}
-                          className="px-4 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-medium"
+                          className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold cursor-pointer disabled:opacity-50"
                         >
-                          {manualBlockLoading ? 'Locking...' : 'Lock IP'}
+                          {manualBlockLoading ? 'Enforcing...' : 'Enforce Lockout'}
                         </button>
                       </div>
                     </form>
@@ -2103,34 +2177,34 @@ export default function AdminDashboard() {
             <div className="space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h1 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
-                    <History className="w-5 h-5 text-indigo-400" />
+                  <h1 className="text-lg font-bold text-[#172554] tracking-tight flex items-center gap-2">
+                    <History className="w-5 h-5 text-[#2563EB]" />
                     Immutable Audit Trail Logs
                   </h1>
-                  <p className="text-xs text-slate-400">
-                    Full historical log of administrative actions recorded in Supabase table <code className="text-indigo-400 font-mono">dev_admin_audit_logs</code>
+                  <p className="text-xs text-[#64748B] mt-0.5">
+                    Full historical log of administrative actions recorded in Supabase table <code className="text-[#2563EB] font-mono font-semibold">dev_admin_audit_logs</code>
                   </p>
                 </div>
               </div>
 
               {/* Search & Filter */}
-              <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 backdrop-blur-sm flex flex-col sm:flex-row items-center gap-3">
+              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 shadow-xs flex flex-col sm:flex-row items-center gap-3">
                 <div className="relative flex-1 w-full">
-                  <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     value={auditSearch}
                     onChange={(e) => setAuditSearch(e.target.value)}
                     placeholder="Search audit trail by user, action, target, or IP..."
-                    className="w-full pl-9 pr-4 py-2 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-500"
+                    className="w-full pl-9 pr-4 py-2 bg-[#F8FAFC] border border-[#E5E7EB] rounded-xl text-xs text-[#111827] placeholder:text-[#94A3B8] focus:bg-white focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100"
                   />
                 </div>
 
-                <div className="w-full sm:w-48">
+                <div className="w-full sm:w-52">
                   <select
                     value={auditAdminFilter}
                     onChange={(e) => setAuditAdminFilter(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-slate-300 focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3 py-2 bg-white border border-[#E5E7EB] rounded-xl text-xs text-[#111827] focus:outline-none focus:border-[#2563EB]"
                   >
                     <option value="all">All Administrators</option>
                     {admins.map((a) => (
@@ -2143,76 +2217,75 @@ export default function AdminDashboard() {
               </div>
 
               {/* Audit Table */}
-              <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl overflow-hidden backdrop-blur-sm">
+              <div className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-xs">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
-                    <thead className="bg-slate-950/80 border-b border-slate-800/80 text-slate-400 font-mono uppercase tracking-wider text-[11px]">
+                    <thead className="bg-[#F8FAFC] border-b border-[#E5E7EB] text-[#64748B] font-mono uppercase tracking-wider text-[11px]">
                       <tr>
-                        <th className="py-3.5 px-4">Action</th>
-                        <th className="py-3.5 px-4">Administrator</th>
-                        <th className="py-3.5 px-4">Target Entity</th>
-                        <th className="py-3.5 px-4">IP Address</th>
                         <th className="py-3.5 px-4">Timestamp</th>
+                        <th className="py-3.5 px-4">Admin Operator</th>
+                        <th className="py-3.5 px-4">Action</th>
+                        <th className="py-3.5 px-4">Target Entity</th>
+                        <th className="py-3.5 px-4">Client IP</th>
                         <th className="py-3.5 px-4 text-right">Details</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-800/60">
+                    <tbody className="divide-y divide-[#E5E7EB]">
                       {filteredAuditLogs.length === 0 ? (
                         <tr>
-                          <td colSpan={6} className="py-12 text-center text-slate-500">
-                            No audit trail logs found matching query.
+                          <td colSpan={6} className="py-12 text-center text-[#64748B]">
+                            No audit trail entries recorded yet.
                           </td>
                         </tr>
                       ) : (
                         filteredAuditLogs.map((log) => (
-                          <tr key={log.id} className="hover:bg-slate-800/30 transition-colors">
-                            <td className="py-3.5 px-4 font-mono font-semibold text-white">
-                              <span
-                                className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] uppercase tracking-wider border ${
-                                  log.action.includes('delete') || log.action.includes('revoke')
-                                    ? 'bg-rose-500/15 text-rose-300 border-rose-500/30'
-                                    : log.action.includes('create') || log.action.includes('won')
-                                    ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
-                                    : 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30'
-                                }`}
-                              >
-                                {log.action.replace(/_/g, ' ')}
+                          <tr key={log.id} className="hover:bg-slate-50 transition-colors">
+                            <td className="py-3.5 px-4 font-mono text-[11px] text-[#64748B] whitespace-nowrap">
+                              {new Date(log.created_at).toLocaleDateString()}
+                              <span className="block text-[10px] text-[#94A3B8]">
+                                {new Date(log.created_at).toLocaleTimeString()}
                               </span>
                             </td>
 
-                            <td className="py-3.5 px-4">
-                              <div className="font-semibold text-white">{log.admin_username}</div>
-                              <div className="text-[10px] font-mono text-slate-400">{log.admin_role}</div>
+                            <td className="py-3.5 px-4 font-semibold text-[#111827]">
+                              {log.admin_username}
                             </td>
 
-                            <td className="py-3.5 px-4 font-mono text-slate-300">
+                            <td className="py-3.5 px-4">
+                              <span
+                                className={`px-2 py-0.5 rounded-full text-[10px] font-mono uppercase font-bold border ${
+                                  log.action.includes('delete') || log.action.includes('block')
+                                    ? 'bg-rose-50 text-rose-700 border-rose-200'
+                                    : log.action.includes('create')
+                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                    : 'bg-blue-50 text-blue-700 border-blue-200'
+                                }`}
+                              >
+                                {log.action}
+                              </span>
+                            </td>
+
+                            <td className="py-3.5 px-4 font-mono text-[#334155]">
                               {log.target_type}
                               {log.target_id && (
-                                <span className="text-[10px] text-slate-500 block truncate max-w-[120px]">
-                                  #{log.target_id}
-                                </span>
+                                <span className="block text-[10px] text-[#94A3B8]">ID: {log.target_id}</span>
                               )}
                             </td>
 
-                            <td className="py-3.5 px-4 font-mono text-slate-300">
+                            <td className="py-3.5 px-4 font-mono text-[#2563EB]">
                               {log.ip_address || '—'}
-                            </td>
-
-                            <td className="py-3.5 px-4 font-mono text-[11px] text-slate-400 whitespace-nowrap">
-                              {new Date(log.created_at).toLocaleString()}
                             </td>
 
                             <td className="py-3.5 px-4 text-right">
                               {log.details ? (
                                 <button
                                   onClick={() => setSelectedAuditLog(log)}
-                                  className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-400 hover:bg-slate-800 transition-colors"
-                                  title="View before/after payload diff"
+                                  className="text-xs font-mono text-[#2563EB] hover:underline cursor-pointer"
                                 >
-                                  <Eye className="w-4 h-4" />
+                                  Inspect State
                                 </button>
                               ) : (
-                                <span className="text-slate-600 text-xs">—</span>
+                                <span className="text-[#94A3B8]">—</span>
                               )}
                             </td>
                           </tr>
@@ -2223,34 +2296,30 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {/* JSON Audit Diff Modal */}
+              {/* Audit Log Details Modal */}
               {selectedAuditLog && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-                  <div className="bg-[#0B0F19] border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
-                    <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                      <h3 className="text-sm font-bold text-white font-mono flex items-center gap-2">
-                        <span>Audit Log Diff #{selectedAuditLog.id}</span>
-                        <span className="text-[10px] px-2 py-0.5 rounded bg-indigo-500/15 text-indigo-400">
-                          {selectedAuditLog.action}
-                        </span>
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+                  <div className="bg-white border border-[#E5E7EB] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl text-[#111827]">
+                    <div className="flex items-center justify-between border-b border-[#E5E7EB] pb-3">
+                      <h3 className="text-sm font-bold text-[#172554] font-mono">
+                        Audit Log Details ({selectedAuditLog.action})
                       </h3>
-                      <button onClick={() => setSelectedAuditLog(null)} className="text-slate-400 hover:text-white">
+                      <button
+                        onClick={() => setSelectedAuditLog(null)}
+                        className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer"
+                      >
                         <X className="w-4 h-4" />
                       </button>
                     </div>
 
-                    <div className="text-xs text-slate-400">
-                      Modified by <strong className="text-white font-mono">{selectedAuditLog.admin_username}</strong> on target table <code className="text-indigo-300 font-mono">{selectedAuditLog.target_type}</code>
+                    <div className="bg-[#F8FAFC] p-3.5 rounded-xl border border-[#E5E7EB] font-mono text-xs overflow-x-auto max-h-80 leading-relaxed text-[#334155]">
+                      <pre>{JSON.stringify(selectedAuditLog.details, null, 2)}</pre>
                     </div>
 
-                    <pre className="p-4 bg-slate-950 rounded-xl border border-slate-800 font-mono text-xs text-slate-300 overflow-x-auto max-h-96">
-                      {JSON.stringify(selectedAuditLog.details, null, 2)}
-                    </pre>
-
-                    <div className="flex justify-end">
+                    <div className="flex justify-end pt-2">
                       <button
                         onClick={() => setSelectedAuditLog(null)}
-                        className="px-4 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-medium"
+                        className="px-4 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold cursor-pointer"
                       >
                         Close
                       </button>
@@ -2262,24 +2331,24 @@ export default function AdminDashboard() {
           )}
 
           {/* ========================================================================= */}
-          {/* TAB 6: TEAM & ADMINISTRATORS */}
+          {/* TAB 6: ADMIN ACCOUNTS */}
           {/* ========================================================================= */}
           {activeTab === 'admins' && (
             <div className="space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h1 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
-                    <Users className="w-5 h-5 text-indigo-400" />
+                  <h1 className="text-lg font-bold text-[#172554] tracking-tight flex items-center gap-2">
+                    <Users className="w-5 h-5 text-[#2563EB]" />
                     Administrative Accounts
                   </h1>
-                  <p className="text-xs text-slate-400">
-                    Platform operators managed in Supabase table <code className="text-indigo-400 font-mono">dev_admins</code>
+                  <p className="text-xs text-[#64748B] mt-0.5">
+                    Platform operators managed in Supabase table <code className="text-[#2563EB] font-mono font-semibold">dev_admins</code>
                   </p>
                 </div>
 
                 <button
                   onClick={() => setShowNewAdminModal(true)}
-                  className="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white flex items-center gap-2 text-xs font-medium transition-all shadow-lg shadow-indigo-600/25"
+                  className="px-4 py-2 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white flex items-center gap-2 text-xs font-semibold transition-all shadow-xs cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Create Administrator</span>
@@ -2287,10 +2356,10 @@ export default function AdminDashboard() {
               </div>
 
               {/* Admins Table */}
-              <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl overflow-hidden backdrop-blur-sm">
+              <div className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-xs">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
-                    <thead className="bg-slate-950/80 border-b border-slate-800/80 text-slate-400 font-mono uppercase tracking-wider text-[11px]">
+                    <thead className="bg-[#F8FAFC] border-b border-[#E5E7EB] text-[#64748B] font-mono uppercase tracking-wider text-[11px]">
                       <tr>
                         <th className="py-3.5 px-4">Username</th>
                         <th className="py-3.5 px-4">Full Name & Email</th>
@@ -2300,12 +2369,12 @@ export default function AdminDashboard() {
                         <th className="py-3.5 px-4 text-right">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-800/60">
+                    <tbody className="divide-y divide-[#E5E7EB]">
                       {admins.map((adm) => (
-                        <tr key={adm.admin_id} className="hover:bg-slate-800/30 transition-colors">
-                          <td className="py-3.5 px-4 font-mono font-semibold text-white">
+                        <tr key={adm.admin_id} className="hover:bg-slate-50 transition-colors">
+                          <td className="py-3.5 px-4 font-mono font-bold text-[#111827]">
                             <div className="flex items-center gap-2.5">
-                              <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-300 flex items-center justify-center font-bold text-xs">
+                              <div className="w-8 h-8 rounded-lg bg-blue-100 text-[#2563EB] flex items-center justify-center font-bold text-xs">
                                 {adm.username.slice(0, 2).toUpperCase()}
                               </div>
                               <span>{adm.username}</span>
@@ -2313,37 +2382,39 @@ export default function AdminDashboard() {
                           </td>
 
                           <td className="py-3.5 px-4">
-                            <div className="font-medium text-white">{adm.full_name || '—'}</div>
-                            <div className="text-[11px] font-mono text-slate-400">{adm.email || '—'}</div>
+                            <div className="font-semibold text-[#111827]">{adm.full_name || '—'}</div>
+                            <div className="text-[11px] font-mono text-[#64748B]">{adm.email || '—'}</div>
                           </td>
 
                           <td className="py-3.5 px-4">
-                            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider font-semibold bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">
+                            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase font-bold bg-blue-50 text-[#2563EB] border border-blue-200">
                               {adm.role.replace('_', ' ')}
                             </span>
                           </td>
 
                           <td className="py-3.5 px-4">
-                            <span className="inline-flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
-                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                              Active
-                            </span>
+                            {adm.is_active ? (
+                              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                                Active
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+                                Suspended
+                              </span>
+                            )}
                           </td>
 
-                          <td className="py-3.5 px-4 font-mono text-[11px] text-slate-400">
+                          <td className="py-3.5 px-4 font-mono text-[11px] text-[#64748B]">
                             {new Date(adm.created_at).toLocaleDateString()}
                           </td>
 
                           <td className="py-3.5 px-4 text-right">
-                            {adm.admin_id === session.admin_id ? (
-                              <span className="text-[10px] font-mono text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded">
-                                (Current Session)
-                              </span>
-                            ) : (
+                            {session.role === 'super_admin' && adm.admin_id !== session.admin_id && (
                               <button
                                 onClick={() => handleDeleteAdmin(adm.admin_id)}
-                                className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors"
-                                title="Delete admin"
+                                className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                                title="Delete Administrator"
                               >
                                 <Trash2 className="w-4 h-4" />
                               </button>
@@ -2358,105 +2429,111 @@ export default function AdminDashboard() {
 
               {/* Create Admin Modal */}
               {showNewAdminModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-                  <div className="bg-[#0B0F19] border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
-                    <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                      <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                        <UserCheck className="w-4 h-4 text-indigo-400" />
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+                  <div className="bg-white border border-[#E5E7EB] rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl text-[#111827]">
+                    <div className="flex items-center justify-between border-b border-[#E5E7EB] pb-3">
+                      <h3 className="text-sm font-bold text-[#172554] flex items-center gap-2">
+                        <Users className="w-4 h-4 text-[#2563EB]" />
                         Create New Administrator
                       </h3>
-                      <button onClick={() => setShowNewAdminModal(false)} className="text-slate-400 hover:text-white">
+                      <button
+                        onClick={() => setShowNewAdminModal(false)}
+                        className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer"
+                      >
                         <X className="w-4 h-4" />
                       </button>
                     </div>
 
                     {newAdminError && (
-                      <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-300 text-xs">
+                      <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs">
                         {newAdminError}
                       </div>
                     )}
 
                     {newAdminSuccess && (
-                      <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-300 text-xs flex items-center gap-2">
-                        <Check className="w-4 h-4" /> Administrator created and synced with Supabase!
+                      <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2 font-semibold">
+                        <Check className="w-4 h-4 text-emerald-600" />
+                        Administrator created successfully in Supabase!
                       </div>
                     )}
 
-                    <form onSubmit={handleCreateAdminSubmit} className="space-y-3">
+                    <form onSubmit={handleCreateAdminSubmit} className="space-y-3.5">
                       <div>
-                        <label className="text-xs font-mono text-slate-300 block mb-1">Username (Login ID)</label>
+                        <label className="block text-xs font-semibold text-[#172554] mb-1">Username</label>
                         <input
                           type="text"
                           required
                           value={newAdminUsername}
                           onChange={(e) => setNewAdminUsername(e.target.value)}
-                          placeholder="e.g. marvel_alex"
-                          className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500 font-mono"
+                          placeholder="e.g. dev_analyst"
+                          className="w-full px-3.5 py-2 bg-white border border-[#E5E7EB] rounded-xl text-xs font-mono text-[#111827] focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100"
                         />
                       </div>
 
                       <div>
-                        <label className="text-xs font-mono text-slate-300 block mb-1">Password</label>
+                        <label className="block text-xs font-semibold text-[#172554] mb-1">Full Name</label>
+                        <input
+                          type="text"
+                          required
+                          value={newAdminFullName}
+                          onChange={(e) => setNewAdminFullName(e.target.value)}
+                          placeholder="e.g. Alex Henderson"
+                          className="w-full px-3.5 py-2 bg-white border border-[#E5E7EB] rounded-xl text-xs text-[#111827] focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold text-[#172554] mb-1">Email</label>
+                        <input
+                          type="email"
+                          required
+                          value={newAdminEmail}
+                          onChange={(e) => setNewAdminEmail(e.target.value)}
+                          placeholder="alex@marvelsoftwares.in"
+                          className="w-full px-3.5 py-2 bg-white border border-[#E5E7EB] rounded-xl text-xs text-[#111827] focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold text-[#172554] mb-1">Initial Password</label>
                         <input
                           type="password"
                           required
                           value={newAdminPassword}
                           onChange={(e) => setNewAdminPassword(e.target.value)}
-                          placeholder="Min 6 characters"
-                          className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500"
+                          placeholder="••••••••••••"
+                          className="w-full px-3.5 py-2 bg-white border border-[#E5E7EB] rounded-xl text-xs font-mono text-[#111827] focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100"
                         />
                       </div>
 
                       <div>
-                        <label className="text-xs font-mono text-slate-300 block mb-1">Full Name</label>
-                        <input
-                          type="text"
-                          value={newAdminFullName}
-                          onChange={(e) => setNewAdminFullName(e.target.value)}
-                          placeholder="e.g. Alex Henderson"
-                          className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="text-xs font-mono text-slate-300 block mb-1">Work Email</label>
-                        <input
-                          type="email"
-                          value={newAdminEmail}
-                          onChange={(e) => setNewAdminEmail(e.target.value)}
-                          placeholder="alex@marvelsoftwares.in"
-                          className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500 font-mono"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="text-xs font-mono text-slate-300 block mb-1">Role & Permissions</label>
+                        <label className="block text-xs font-semibold text-[#172554] mb-1">Role & Permissions</label>
                         <select
                           value={newAdminRole}
-                          onChange={(e) => setNewAdminRole(e.target.value as AdminUser['role'])}
-                          className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-indigo-500 font-mono"
+                          onChange={(e) => setNewAdminRole(e.target.value as any)}
+                          className="w-full px-3.5 py-2 bg-white border border-[#E5E7EB] rounded-xl text-xs text-[#111827] focus:border-[#2563EB]"
                         >
-                          <option value="super_admin">Super Admin (Full Root Permissions)</option>
-                          <option value="operations">Operations (Leads CRM & Inquiries)</option>
-                          <option value="analyst">Analyst (Telemetry & Reporting)</option>
-                          <option value="editor">Editor (Read-only)</option>
+                          <option value="super_admin">Super Admin (Full Access)</option>
+                          <option value="operations">Operations (CRM & Leads)</option>
+                          <option value="analyst">Analyst (Telemetry & Reports)</option>
+                          <option value="editor">Editor (Read & Notes)</option>
                         </select>
                       </div>
 
-                      <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+                      <div className="flex justify-end gap-2 pt-3 border-t border-[#E5E7EB]">
                         <button
                           type="button"
                           onClick={() => setShowNewAdminModal(false)}
-                          className="px-4 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-medium"
+                          className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold cursor-pointer"
                         >
                           Cancel
                         </button>
                         <button
                           type="submit"
                           disabled={newAdminLoading}
-                          className="px-4 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium"
+                          className="px-4 py-2 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white text-xs font-semibold cursor-pointer disabled:opacity-50"
                         >
-                          {newAdminLoading ? 'Creating...' : 'Create Admin'}
+                          {newAdminLoading ? 'Creating...' : 'Create Account'}
                         </button>
                       </div>
                     </form>
@@ -2467,26 +2544,26 @@ export default function AdminDashboard() {
           )}
 
           {/* ========================================================================= */}
-          {/* TAB 7: POSTGRESQL SCHEMA & SQL DEFINITIONS */}
+          {/* TAB 7: POSTGRES SCHEMA & SQL */}
           {/* ========================================================================= */}
           {activeTab === 'database' && (
             <div className="space-y-6">
-              <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5 backdrop-blur-sm flex items-start gap-3">
-                <Database className="w-5 h-5 text-indigo-400 shrink-0 mt-0.5" />
+              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-xs flex items-start gap-3.5">
+                <Database className="w-6 h-6 text-[#2563EB] shrink-0 mt-0.5" />
                 <div className="text-xs space-y-1">
-                  <p className="font-semibold text-white">PostgreSQL dev_ Schema Definitions</p>
-                  <p className="text-slate-400 leading-relaxed">
-                    Use these production queries to verify or bootstrap PostgreSQL tables, triggers, and views in Supabase, Neon, AWS RDS, or Docker. All objects use the required <code className="text-indigo-300 font-mono">dev_</code> prefix to prevent collisions.
+                  <p className="font-bold text-sm text-[#172554]">PostgreSQL dev_ Schema Definitions</p>
+                  <p className="text-[#64748B] leading-relaxed">
+                    Use these production queries to verify or bootstrap PostgreSQL tables, triggers, and views in Supabase, Neon, AWS RDS, or Docker. All objects use the required <code className="text-[#2563EB] font-mono font-semibold">dev_</code> prefix to prevent collisions.
                   </p>
                 </div>
               </div>
 
               {/* SQL Query 1: dev_admins & dev_admin_sessions */}
-              <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5 backdrop-blur-sm space-y-3">
+              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-xs space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-white font-mono">1. dev_admins & dev_admin_sessions</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/15 text-indigo-300">
+                    <span className="text-xs font-bold text-[#111827] font-mono">1. dev_admins & dev_admin_sessions</span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-50 text-[#2563EB] border border-blue-200 font-semibold">
                       Security & Zero Persistence
                     </span>
                   </div>
@@ -2520,12 +2597,12 @@ CREATE TABLE IF NOT EXISTS dev_admin_sessions (
                         'sql_admin'
                       )
                     }
-                    className="flex items-center gap-1 text-[11px] font-mono px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
+                    className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors cursor-pointer font-semibold"
                   >
                     {copiedSection === 'sql_admin' ? (
                       <>
-                        <Check className="w-3.5 h-3.5 text-emerald-400" />
-                        <span className="text-emerald-400">Copied</span>
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        <span className="text-emerald-700">Copied</span>
                       </>
                     ) : (
                       <>
@@ -2535,7 +2612,7 @@ CREATE TABLE IF NOT EXISTS dev_admin_sessions (
                     )}
                   </button>
                 </div>
-                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-[11px] text-slate-300 overflow-x-auto leading-relaxed">
+                <div className="bg-[#F8FAFC] p-4 rounded-xl border border-[#E5E7EB] font-mono text-[11px] text-[#334155] overflow-x-auto leading-relaxed">
                   <pre>{`CREATE TABLE IF NOT EXISTS dev_admins (
     admin_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     username VARCHAR(60) NOT NULL UNIQUE,
@@ -2564,12 +2641,12 @@ CREATE TABLE IF NOT EXISTS dev_admin_sessions (
               </div>
 
               {/* SQL Query 2: dev_admin_ip_blocks */}
-              <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5 backdrop-blur-sm space-y-3">
+              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-xs space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-white font-mono">2. dev_admin_ip_blocks</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-500/15 text-rose-300">
-                      Brute-Force Lockout
+                    <span className="text-xs font-bold text-[#111827] font-mono">2. dev_admin_ip_blocks</span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-50 text-[#F97316] border border-orange-200 font-semibold">
+                      Brute-Force Rate Limiting
                     </span>
                   </div>
                   <button
@@ -2592,12 +2669,12 @@ CREATE TABLE IF NOT EXISTS dev_admin_sessions (
                         'sql_ip'
                       )
                     }
-                    className="flex items-center gap-1 text-[11px] font-mono px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
+                    className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors cursor-pointer font-semibold"
                   >
                     {copiedSection === 'sql_ip' ? (
                       <>
-                        <Check className="w-3.5 h-3.5 text-emerald-400" />
-                        <span className="text-emerald-400">Copied</span>
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        <span className="text-emerald-700">Copied</span>
                       </>
                     ) : (
                       <>
@@ -2607,7 +2684,7 @@ CREATE TABLE IF NOT EXISTS dev_admin_sessions (
                     )}
                   </button>
                 </div>
-                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-[11px] text-slate-300 overflow-x-auto leading-relaxed">
+                <div className="bg-[#F8FAFC] p-4 rounded-xl border border-[#E5E7EB] font-mono text-[11px] text-[#334155] overflow-x-auto leading-relaxed">
                   <pre>{`CREATE TABLE IF NOT EXISTS dev_admin_ip_blocks (
     id BIGSERIAL PRIMARY KEY,
     ip_address INET NOT NULL UNIQUE,
@@ -2626,11 +2703,11 @@ CREATE TABLE IF NOT EXISTS dev_admin_sessions (
               </div>
 
               {/* SQL Query 3: dev_admin_audit_logs */}
-              <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5 backdrop-blur-sm space-y-3">
+              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-xs space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-white font-mono">3. dev_admin_audit_logs</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-300">
+                    <span className="text-xs font-bold text-[#111827] font-mono">3. dev_admin_audit_logs</span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 font-semibold">
                       Immutable Audit Trail
                     </span>
                   </div>
@@ -2652,12 +2729,12 @@ CREATE TABLE IF NOT EXISTS dev_admin_sessions (
                         'sql_audit'
                       )
                     }
-                    className="flex items-center gap-1 text-[11px] font-mono px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
+                    className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors cursor-pointer font-semibold"
                   >
                     {copiedSection === 'sql_audit' ? (
                       <>
-                        <Check className="w-3.5 h-3.5 text-emerald-400" />
-                        <span className="text-emerald-400">Copied</span>
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        <span className="text-emerald-700">Copied</span>
                       </>
                     ) : (
                       <>
@@ -2667,7 +2744,7 @@ CREATE TABLE IF NOT EXISTS dev_admin_sessions (
                     )}
                   </button>
                 </div>
-                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-[11px] text-slate-300 overflow-x-auto leading-relaxed">
+                <div className="bg-[#F8FAFC] p-4 rounded-xl border border-[#E5E7EB] font-mono text-[11px] text-[#334155] overflow-x-auto leading-relaxed">
                   <pre>{`CREATE TABLE IF NOT EXISTS dev_admin_audit_logs (
     id BIGSERIAL PRIMARY KEY,
     admin_id UUID REFERENCES dev_admins(admin_id) ON DELETE SET NULL,
@@ -2684,11 +2761,11 @@ CREATE TABLE IF NOT EXISTS dev_admin_sessions (
               </div>
 
               {/* SQL Query 4: dev_contact_inquiries, dev_visitors, dev_sessions, dev_telemetry_events */}
-              <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5 backdrop-blur-sm space-y-3">
+              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-xs space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-white font-mono">4. dev_visitors, dev_sessions, dev_telemetry_events & dev_contact_inquiries</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300">
+                    <span className="text-xs font-bold text-[#111827] font-mono">4. dev_visitors, dev_sessions, dev_telemetry_events & dev_contact_inquiries</span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold">
                       CRM & Viewers Tracking
                     </span>
                   </div>
@@ -2753,12 +2830,12 @@ CREATE TABLE IF NOT EXISTS dev_contact_inquiries (
                         'sql_telemetry_crm'
                       )
                     }
-                    className="flex items-center gap-1 text-[11px] font-mono px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
+                    className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors cursor-pointer font-semibold"
                   >
                     {copiedSection === 'sql_telemetry_crm' ? (
                       <>
-                        <Check className="w-3.5 h-3.5 text-emerald-400" />
-                        <span className="text-emerald-400">Copied</span>
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        <span className="text-emerald-700">Copied</span>
                       </>
                     ) : (
                       <>
@@ -2768,7 +2845,7 @@ CREATE TABLE IF NOT EXISTS dev_contact_inquiries (
                     )}
                   </button>
                 </div>
-                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-[11px] text-slate-300 overflow-x-auto leading-relaxed">
+                <div className="bg-[#F8FAFC] p-4 rounded-xl border border-[#E5E7EB] font-mono text-[11px] text-[#334155] overflow-x-auto leading-relaxed">
                   <pre>{`CREATE TABLE IF NOT EXISTS dev_visitors (
     visitor_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     first_seen TIMESTAMPTZ NOT NULL DEFAULT NOW(),

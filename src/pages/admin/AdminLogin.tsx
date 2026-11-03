@@ -11,6 +11,7 @@ import {
   Layers,
   Clock,
   ShieldAlert,
+  CheckCircle2,
 } from 'lucide-react'
 import {
   verifyAdminCredentials,
@@ -111,85 +112,104 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-[#080B11] text-slate-100 flex flex-col justify-between selection:bg-indigo-500/30 selection:text-indigo-200 font-sans">
-      {/* Background ambient gradient spheres */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[500px] bg-indigo-600/15 blur-[140px] rounded-full" />
-        <div className="absolute bottom-10 left-10 w-[450px] h-[350px] bg-cyan-600/10 blur-[130px] rounded-full" />
+    <div className="min-h-screen w-full bg-[#F5F7FB] text-[#111827] flex flex-col justify-between font-sans relative overflow-hidden">
+      {/* Subtle modern geometric background accents */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-100/60 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 -left-40 w-96 h-96 bg-blue-50/80 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 right-1/3 w-96 h-96 bg-orange-50/60 rounded-full blur-3xl" />
       </div>
 
-      {/* Top micro bar */}
-      <header className="relative z-10 px-6 py-4 flex items-center justify-between border-b border-slate-900 bg-slate-950/40 backdrop-blur-md">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-600/30">
-            <Layers className="w-4 h-4 text-white" />
+      {/* Top Header Bar */}
+      <header className="relative z-10 px-6 py-4 flex items-center justify-between border-b border-[#E5E7EB] bg-white/90 backdrop-blur-md">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-[#2563EB] flex items-center justify-center shadow-md shadow-blue-500/20 text-white">
+            <Layers className="w-4 h-4" />
           </div>
-          <span className="text-xs font-bold font-mono tracking-wider text-slate-200">
-            MARVEL SOFTWARES // INTERNAL OPS GATEWAY
-          </span>
+          <div>
+            <span className="text-xs font-bold font-mono tracking-wider text-[#172554] block">
+              MARVEL SOFTWARES
+            </span>
+            <span className="text-[10px] text-[#64748B] font-mono tracking-wide">
+              ADMINISTRATIVE OPS CONSOLE
+            </span>
+          </div>
         </div>
-        <div className="text-[11px] font-mono text-slate-400 flex items-center gap-2">
-          <span>IP: <code className="text-indigo-300 font-mono">{clientIp}</code></span>
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+
+        <div className="flex items-center gap-2.5">
+          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#F8FAFC] border border-[#E5E7EB] text-[11px] font-mono text-[#64748B]">
+            <span>IP: <code className="text-[#2563EB] font-bold">{clientIp}</code></span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-[11px] font-medium text-emerald-700">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="hidden sm:inline">Gateway Active</span>
+          </div>
         </div>
       </header>
 
-      {/* Login Card Container */}
-      <main className="relative z-10 max-w-md mx-auto w-full px-4 py-8 flex-1 flex flex-col justify-center">
-        <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-8 shadow-2xl backdrop-blur-2xl">
-          {/* Card Header */}
-          <div className="text-center mb-6">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 mb-4 shadow-inner">
+      {/* Main Login Card Container */}
+      <main className="relative z-10 max-w-md mx-auto w-full px-4 py-10 flex-1 flex flex-col justify-center">
+        <div className="bg-white border border-[#E5E7EB] rounded-2xl p-7 sm:p-9 shadow-xl shadow-slate-200/60">
+          {/* Card Branding & Header */}
+          <div className="text-center mb-7">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 text-[#2563EB] mb-4 shadow-sm">
               <ShieldCheck className="w-7 h-7" />
             </div>
-            <h1 className="text-xl font-bold text-white tracking-tight">Admin Console Access</h1>
-            <p className="text-xs text-slate-400 mt-1">Authenticate using your admin username or email address</p>
+            <h1 className="text-xl font-bold text-[#172554] tracking-tight">Admin Console Access</h1>
+            <p className="text-xs text-[#64748B] mt-1.5">
+              Authenticate using your authorized administrator credentials
+            </p>
           </div>
 
           {/* IP Blockout Warning Banner */}
           {isIpBlocked && (
-            <div className="mb-6 p-4 rounded-2xl bg-rose-950/60 border border-rose-500/60 text-rose-200 text-xs shadow-xl shadow-rose-950/30 space-y-2 animate-pulse">
-              <div className="flex items-center gap-2 font-bold text-rose-300">
-                <ShieldAlert className="w-5 h-5 text-rose-400 shrink-0" />
-                <span>BRUTE-FORCE PROTECTION: IP BLOCKED</span>
+            <div className="mb-6 p-4 rounded-xl bg-orange-50 border border-[#F97316]/40 text-orange-950 text-xs shadow-sm space-y-2.5 animate-pulse">
+              <div className="flex items-center gap-2 font-bold text-[#F97316]">
+                <ShieldAlert className="w-5 h-5 shrink-0" />
+                <span>BRUTE-FORCE LOCKOUT: IP BLOCKED</span>
               </div>
-              <p className="text-[11px] text-slate-300 leading-relaxed">
-                Your IP address (<code className="text-rose-300 font-mono">{clientIp}</code>) has been temporarily locked out due to 3 consecutive failed login attempts.
+              <p className="text-[11px] text-slate-700 leading-relaxed">
+                Your IP address (<code className="text-[#F97316] font-mono font-semibold">{clientIp}</code>) has been temporarily locked out after 3 failed login attempts.
               </p>
-              <div className="p-2.5 rounded-xl bg-slate-950/80 border border-rose-500/30 flex items-center justify-between font-mono text-xs">
-                <span className="text-slate-400 flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-rose-400" />
-                  Lockout Penalty:
+              <div className="p-2.5 rounded-lg bg-white border border-orange-200 flex items-center justify-between font-mono text-xs">
+                <span className="text-[#64748B] flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5 text-[#F97316]" />
+                  Remaining Lockout:
                 </span>
-                <span className="text-rose-400 font-bold text-sm">
+                <span className="text-[#F97316] font-bold text-sm">
                   {formatCountdown(blockSecondsRemaining)}
                 </span>
               </div>
-              <p className="text-[10px] text-slate-400 font-mono">
-                Security rule: Tier {blockTier} lockout ({blockTier === 1 ? '15 min' : '30 min'}). Resets after 24h.
+              <p className="text-[10px] text-[#64748B] font-mono">
+                Security Policy: Tier {blockTier} lockout ({blockTier === 1 ? '15 minutes' : '30 minutes'}).
               </p>
             </div>
           )}
 
+          {/* Standard Error Banner */}
           {error && !isIpBlocked && (
-            <div className="mb-5 p-3 rounded-xl bg-rose-950/50 border border-rose-500/40 text-rose-300 text-xs flex items-center gap-2.5">
-              <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
-              <div className="flex-1">
-                <span>{error}</span>
+            <div className="mb-5 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2.5">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
+              <div className="flex-1 min-w-0">
+                <p className="font-medium">{error}</p>
                 {attemptsRemaining !== null && attemptsRemaining > 0 && (
-                  <p className="text-[10px] font-mono text-amber-400 mt-0.5">
-                    {attemptsRemaining} more wrong try will block your IP for 15 minutes!
+                  <p className="text-[11px] font-mono text-amber-700 font-semibold mt-1 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                    {attemptsRemaining} more wrong attempt will lock your IP for 15 minutes!
                   </p>
                 )}
               </div>
             </div>
           )}
 
+          {/* Login Form */}
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">Admin Username or Email</label>
+              <label className="block text-xs font-semibold text-[#172554] mb-1.5">
+                Admin Username or Email
+              </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                   <User className="w-4 h-4" />
                 </div>
                 <input
@@ -200,15 +220,22 @@ export default function AdminLogin() {
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
                   placeholder="e.g. admin or admin@marvelsoftwares.in"
-                  className="w-full bg-slate-950/80 border border-slate-700/80 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-mono disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-[#F8FAFC] border border-[#E5E7EB] rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-[#111827] placeholder-[#94A3B8] focus:bg-white focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 transition-all font-mono disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">Password</label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-semibold text-[#172554]">
+                  Password
+                </label>
+                <span className="text-[11px] text-[#64748B] font-mono">
+                  Encrypted SHA-256
+                </span>
+              </div>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                   <Lock className="w-4 h-4" />
                 </div>
                 <input
@@ -219,23 +246,25 @@ export default function AdminLogin() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="w-full bg-slate-950/80 border border-slate-700/80 rounded-xl pl-10 pr-10 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-mono disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-[#F8FAFC] border border-[#E5E7EB] rounded-xl pl-10 pr-10 py-2.5 text-xs text-[#111827] placeholder-[#94A3B8] focus:bg-white focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 transition-all font-mono disabled:opacity-50 disabled:cursor-not-allowed"
                 />
                 <button
                   type="button"
                   disabled={isIpBlocked}
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-200 transition-colors disabled:opacity-50"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-700 transition-colors disabled:opacity-50 cursor-pointer"
+                  title={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading || isIpBlocked}
-              className="w-full bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-semibold text-xs py-3 px-4 rounded-xl shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+              className="w-full bg-[#2563EB] hover:bg-blue-700 text-white font-semibold text-xs py-3 px-4 rounded-xl shadow-md shadow-blue-500/25 flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2 cursor-pointer active:scale-[0.99]"
             >
               {loading ? (
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -243,18 +272,30 @@ export default function AdminLogin() {
                 <span>IP Locked ({formatCountdown(blockSecondsRemaining)})</span>
               ) : (
                 <>
-                  <span>Sign In & Route to Dashboard</span>
+                  <span>Sign In & Open Dashboard</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
             </button>
           </form>
+
+          {/* Security Features Checkpoints */}
+          <div className="mt-6 pt-5 border-t border-[#E5E7EB] space-y-1.5 text-[11px] text-[#64748B]">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <span>Strict 15-minute inactivity auto-logout protection</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <span>Zero client credential persistence & SHA-256 salted hashes</span>
+            </div>
+          </div>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="relative z-10 px-6 py-4 text-center text-[11px] font-mono text-slate-500 border-t border-slate-900">
-        MARVEL SOFTWARES INTERNAL NETWORK • SESSION TOKENS STRICTLY ENCRYPTED • BRUTE FORCE SHIELD ACTIVE
+      <footer className="relative z-10 px-6 py-4 text-center text-[11px] font-mono text-[#64748B] border-t border-[#E5E7EB] bg-white/80">
+        MARVEL SOFTWARES • PRODUCTION SECURITY GATEWAY • BRUTE-FORCE SHIELD ACTIVE
       </footer>
     </div>
   )
