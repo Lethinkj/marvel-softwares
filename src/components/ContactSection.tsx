@@ -3,6 +3,7 @@ import AnimatedSection from './AnimatedSection'
 import { CheckIcon } from './Icons'
 import { siteConfig } from '../data/siteData'
 import { submitProjectInquiry } from '../utils/inquiryApi'
+import { trackFormSubmit } from '../utils/analytics'
 
 interface FormErrors {
   name?: string
@@ -80,6 +81,7 @@ export const ContactSection: React.FC = () => {
     const { valid, firstError } = validate()
     if (!valid) {
       document.getElementById(`${formId}-${firstError ?? 'name'}`)?.focus()
+      trackFormSubmit('contact_consultation', 'failure', { error: 'validation_error', field: firstError })
       return
     }
     setIsSubmitting(true)
@@ -93,12 +95,17 @@ export const ContactSection: React.FC = () => {
         requirements: message.trim(),
       })
       setIsSubmitted(true)
+      trackFormSubmit('contact_consultation', 'success', {
+        name: name.trim(),
+        email: email.trim(),
+      })
     } catch {
       setSubmitError(
         'We couldn\u2019t submit your inquiry right now. Please try again or contact us directly at ' +
           siteConfig.email +
           '.',
       )
+      trackFormSubmit('contact_consultation', 'failure', { error: 'submission_error' })
     } finally {
       setIsSubmitting(false)
     }

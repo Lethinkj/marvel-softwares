@@ -1,5 +1,6 @@
 import Seo from '../components/Seo'
 import { faqPageFaqs } from '../data/siteData'
+import { trackFaqToggle } from '../utils/analytics'
 
 export const Faq = () => {
   return (
@@ -29,7 +30,11 @@ export const Faq = () => {
 
           <div className="faq-list">
             {faqPageFaqs.map((faq) => (
-              <details key={faq.question} className="faq-item">
+              <details
+                key={faq.question}
+                className="faq-item"
+                onToggle={(e) => trackFaqToggle(faq.question, (e.currentTarget as HTMLDetailsElement).open)}
+              >
                 <summary>{faq.question}</summary>
                 <p>{faq.answer}</p>
               </details>

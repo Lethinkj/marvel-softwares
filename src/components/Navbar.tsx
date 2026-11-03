@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { navLinks, siteConfig } from '../data/siteData'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { StaggeredMenu, type StaggeredMenuItem, type StaggeredMenuSocialItem } from './StaggeredMenu'
+import { trackSectionNavigation } from '../utils/analytics'
 
 /**
  * Sticky site header — modern glass treatment.
@@ -112,6 +113,7 @@ export function Navbar() {
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault()
     const targetId = href.replace(/^#/, '')
+    trackSectionNavigation(targetId, 'navbar')
     const el = document.getElementById(targetId)
     if (el) {
       const headerOffset = 70
@@ -131,6 +133,7 @@ export function Navbar() {
 
   const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
+    trackSectionNavigation('home', 'navbar')
     navigate('/')
     window.scrollTo({ top: 0, behavior: 'smooth' })
     setActiveSection('home')
@@ -246,6 +249,10 @@ export function Navbar() {
                 headerHeight={isScrolled ? 58 : 66}
                 headerPadding="0"
                 closeOnClickAway={true}
+                onItemClick={(item) => {
+                  const targetId = item.link.replace(/^(\/)?#/, '')
+                  trackSectionNavigation(targetId, 'mobile-drawer')
+                }}
               />
             )}
           </div>

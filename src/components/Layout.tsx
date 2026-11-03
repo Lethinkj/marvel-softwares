@@ -4,6 +4,91 @@ import Navbar from './Navbar'
 import Footer from './Footer'
 import BackToTop from './BackToTop'
 import EntryReveal from './EntryReveal'
+import { initGA, trackPageView, trackSectionView } from '../utils/analytics'
+
+/**
+ * PageTracker records virtual pageviews across all routes (/ and /faq) for Google Analytics.
+ */
+function PageTracker() {
+  const { pathname, search } = useLocation()
+
+  useEffect(() => {
+    initGA()
+    // Small delay ensures <Seo /> component has applied document.title
+    const timer = setTimeout(() => {
+      trackPageView(pathname + search, document.title)
+    }, 60)
+    return () => clearTimeout(timer)
+  }, [pathname, search])
+
+  return null
+}
+
+/**
+ * SectionAnalyticsObserver tracks when users scroll into each section of the page.
+ * Fires a custom 'section_view' event once per section when viewed for >= 500ms.
+ */
+function SectionAnalyticsObserver() {
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    const loggedSections = new Set<string>()
+    const dwellTimers = new Map<string, number>()
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const id = entry.target.id
+          if (!id) return
+
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.2) {
+            if (!loggedSections.has(id) && !dwellTimers.has(id)) {
+              // User spent at least 500ms viewing this section
+              const timer = window.setTimeout(() => {
+                loggedSections.add(id)
+                trackSectionView(id)
+                dwellTimers.delete(id)
+              }, 500)
+              dwellTimers.set(id, timer)
+            }
+          } else {
+            const timer = dwellTimers.get(id)
+            if (timer) {
+              window.clearTimeout(timer)
+              dwellTimers.delete(id)
+            }
+          }
+        })
+      },
+      {
+        threshold: [0.2, 0.4],
+        rootMargin: '-40px 0px -40px 0px',
+      },
+    )
+
+    const observeSections = () => {
+      document.querySelectorAll<HTMLElement>('#main-content section[id]').forEach((section) => {
+        observer.observe(section)
+      })
+    }
+
+    const mutationObserver = new MutationObserver(observeSections)
+    const mainContent = document.getElementById('main-content')
+    if (mainContent) {
+      mutationObserver.observe(mainContent, { childList: true, subtree: true })
+    }
+    observeSections()
+
+    return () => {
+      observer.disconnect()
+      mutationObserver.disconnect()
+      dwellTimers.forEach((t) => window.clearTimeout(t))
+      dwellTimers.clear()
+    }
+  }, [pathname])
+
+  return null
+}
 
 /**
  * ScrollToTop component restores viewport scroll position to (0, 0)
@@ -122,6 +207,10 @@ export function Layout() {
       {/* Automatically reset scroll position on route change */}
       <ScrollToTop />
       <ScrollSceneObserver />
+
+      {/* Google Analytics: Automatic Virtual Pageviews & In-View Section Tracking */}
+      <PageTracker />
+      <SectionAnalyticsObserver />
 
       {/* Responsive Navigation */}
       <Navbar />

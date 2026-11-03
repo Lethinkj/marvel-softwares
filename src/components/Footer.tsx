@@ -2,6 +2,7 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { homeServices, navLinks, services, siteConfig } from '../data/siteData'
 import { MailIcon, PhoneIcon, MapPinIcon } from './Icons'
+import { trackSectionNavigation, trackContactClick, trackCtaClick } from '../utils/analytics'
 
 const CURRENT_YEAR = new Date().getFullYear()
 
@@ -51,6 +52,7 @@ export function Footer() {
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault()
     const targetId = href.replace(/^#/, '')
+    trackSectionNavigation(targetId, 'footer')
     const el = document.getElementById(targetId)
     if (el) {
       const headerOffset = 70
@@ -109,6 +111,7 @@ export function Footer() {
                   aria-label={`Marvel Softwares on ${social.label}`}
                   title={social.label}
                   style={{ color: social.color }}
+                  onClick={() => trackContactClick('social', social.label)}
                 >
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <SocialIcon type={social.icon} />
@@ -173,6 +176,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="footer-link"
+                  onClick={() => trackCtaClick('Marvel Slice', 'https://marvelslice.com/')}
                 >
                   Marvel Slice
                 </a>
@@ -183,6 +187,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="footer-link"
+                  onClick={() => trackCtaClick('MarvelSlice LMS', 'https://lms.marvelslice.com/login')}
                 >
                   MarvelSlice LMS
                 </a>
@@ -193,6 +198,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="footer-link"
+                  onClick={() => trackCtaClick('Marvel Villas', 'https://www.marvelvillas.com/')}
                 >
                   Marvel Villas
                 </a>
@@ -208,6 +214,7 @@ export function Footer() {
                 <a
                   href={`mailto:${siteConfig.email}`}
                   className="footer-contact-item"
+                  onClick={() => trackContactClick('email', siteConfig.email)}
                 >
                   <MailIcon className="w-4 h-4 shrink-0 text-blue-400 mt-1" />
                   <span className="break-all">{siteConfig.email}</span>
@@ -217,11 +224,19 @@ export function Footer() {
                 <div className="footer-contact-item">
                   <PhoneIcon className="w-4 h-4 shrink-0 text-blue-400 mt-1" />
                   <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-2 text-[0.88rem]">
-                    <a href={siteConfig.phoneHref} className="hover:text-blue-400 transition-colors whitespace-nowrap">
+                    <a
+                      href={siteConfig.phoneHref}
+                      className="hover:text-blue-400 transition-colors whitespace-nowrap"
+                      onClick={() => trackContactClick('phone', siteConfig.phone)}
+                    >
                       {siteConfig.phone}
                     </a>
                     <span aria-hidden="true" className="text-slate-500">|</span>
-                    <a href={siteConfig.phone2Href} className="hover:text-blue-400 transition-colors whitespace-nowrap">
+                    <a
+                      href={siteConfig.phone2Href}
+                      className="hover:text-blue-400 transition-colors whitespace-nowrap"
+                      onClick={() => trackContactClick('phone', siteConfig.phone2)}
+                    >
                       {siteConfig.phone2}
                     </a>
                   </div>

@@ -13,6 +13,7 @@ import OurClients from '../components/OurClients'
 import Testimonials from '../components/Testimonials'
 import ContactSection from '../components/ContactSection'
 import { projects } from '../data/siteData'
+import { trackCtaClick, trackProjectPreview } from '../utils/analytics'
 
 const cardStyle: React.CSSProperties = {
   background: 'linear-gradient(180deg, #ffffff 0%, #f9faff 100%)',
@@ -39,6 +40,11 @@ export const Home: React.FC = () => {
   const [previewFailed, setPreviewFailed] = useState(false)
   const [iframeLoading, setIframeLoading] = useState(true)
   const previewTimeoutRef = useRef<number | null>(null)
+
+  const openProjectPreview = (project: (typeof projects)[number]) => {
+    trackProjectPreview(project.title, project.category)
+    setPreviewProject(project)
+  }
 
   useEffect(() => {
     if (!previewProject) return
@@ -128,10 +134,18 @@ export const Home: React.FC = () => {
 
             {/* CTAs */}
             <div className="hero-actions order-3 lg:order-none">
-              <a href="#contact" className="hero-btn hero-btn--primary">
+              <a
+                href="#contact"
+                className="hero-btn hero-btn--primary"
+                onClick={() => trackCtaClick('Start a Project (Hero)', '#contact')}
+              >
                 Start a Project
               </a>
-              <a href="#services" className="hero-btn hero-btn--ghost">
+              <a
+                href="#services"
+                className="hero-btn hero-btn--ghost"
+                onClick={() => trackCtaClick('Explore Our Services (Hero)', '#services')}
+              >
                 Explore Our Services
               </a>
             </div>
@@ -302,11 +316,11 @@ export const Home: React.FC = () => {
                 role="button"
                 tabIndex={0}
                 aria-label={`Preview ${project.title}`}
-                onClick={() => setPreviewProject(project)}
+                onClick={() => openProjectPreview(project)}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter' || event.key === ' ') {
                     event.preventDefault()
-                    setPreviewProject(project)
+                    openProjectPreview(project)
                   }
                 }}
               >
@@ -348,7 +362,7 @@ export const Home: React.FC = () => {
                       type="button"
                       onClick={(event) => {
                         event.stopPropagation()
-                        setPreviewProject(project)
+                        openProjectPreview(project)
                       }}
                       className="project-preview-btn transform translate-y-2 group-hover:translate-y-0"
                       aria-label={`Preview ${project.title}`}
@@ -424,7 +438,7 @@ export const Home: React.FC = () => {
                       type="button"
                       onClick={(event) => {
                         event.stopPropagation()
-                        setPreviewProject(project)
+                        openProjectPreview(project)
                       }}
                       className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-blue-50 text-[#0057E7] border border-blue-200/80 text-xs font-semibold hover:bg-blue-100 active:scale-95 transition-all"
                       aria-label={`Preview ${project.title}`}

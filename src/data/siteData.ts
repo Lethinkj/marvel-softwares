@@ -88,6 +88,8 @@ export const siteConfig = {
   hours: 'Monday – Friday, 9:00 AM – 6:00 PM',
   // Canonical domain for SEO metadata — the live site.
   siteUrl: 'https://marvelsoftwares.in',
+  // Google Analytics 4 Measurement ID (can also be set via VITE_GA_MEASUREMENT_ID env variable)
+  gaMeasurementId: import.meta.env.VITE_GA_MEASUREMENT_ID || '',
 }
 
 // --- Navigation (Single-page sections) ---
