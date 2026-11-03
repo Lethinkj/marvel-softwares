@@ -154,11 +154,11 @@ export const WhyChooseMarvel: React.FC = () => {
   return (
     <div className="container">
       {/* Section Header */}
-      <AnimatedSection style={{ maxWidth: 760 }} className="text-center mx-auto mb-8 sm:mb-12">
+      <AnimatedSection className="text-center mx-auto w-full mb-8 sm:mb-12">
         <h2 id="why-choose-us-title" className="text-section-title text-[#0033A0]">
           Why Choose Marvel Softwares?
         </h2>
-        <p className="section-subtitle">
+        <p className="section-subtitle w-full max-w-full text-balance" style={{ maxWidth: '100%' }}>
           Your Trusted Partner for Digital Transformation
         </p>
       </AnimatedSection>
@@ -171,7 +171,10 @@ export const WhyChooseMarvel: React.FC = () => {
             delay={index * 0.04}
             className="h-full"
           >
-            <div className="relative flex flex-col items-center text-center justify-start h-full p-4.5 sm:p-5 lg:p-5.5 bg-white rounded-2xl border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.035)] hover:shadow-[0_10px_28px_rgba(0,0,0,0.07)] transition-all duration-300 hover:-translate-y-1 overflow-hidden select-none">
+            <div
+              className="relative flex flex-col items-center text-center justify-start h-full p-4.5 sm:p-5 lg:p-5.5 bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.035)] hover:shadow-[0_10px_28px_rgba(0,0,0,0.07)] transition-all duration-300 hover:-translate-y-1 overflow-hidden select-none border border-slate-200"
+              style={{ border: '1px solid var(--color-slate-200)' }}
+            >
               
               {/* Center: Rounded-Square Gradient Icon */}
               <div
@@ -181,12 +184,12 @@ export const WhyChooseMarvel: React.FC = () => {
               </div>
 
               {/* Title */}
-              <h3 className="font-bold text-slate-900 text-[15.5px] sm:text-[16.5px] tracking-tight leading-snug mb-1.5 sm:mb-2 text-center">
+              <h3 className="text-card-title text-[16px] sm:text-[17px] tracking-tight leading-snug mb-1.5 sm:mb-2 text-center text-slate-900">
                 {item.title}
               </h3>
 
               {/* Description */}
-              <p className="text-slate-600 text-[12px] sm:text-[12.5px] lg:text-[13px] leading-relaxed text-center">
+              <p className="text-card-desc text-slate-600 leading-relaxed text-center">
                 {item.description}
               </p>
 

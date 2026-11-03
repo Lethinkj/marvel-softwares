@@ -120,11 +120,11 @@ export const ContactSection: React.FC = () => {
 
   return (
     <div className="container">
-      <AnimatedSection style={{ maxWidth: 720 }} className="text-center mx-auto mb-3">
+      <AnimatedSection className="text-center mx-auto w-full mb-3">
         <h2 id="contact-heading" className="text-section-title">
           Contact Us
         </h2>
-        <p className="section-subtitle">
+        <p className="section-subtitle w-full max-w-full text-balance" style={{ maxWidth: '100%' }}>
           Share your requirements, business goals, and challenges. We&apos;ll review your requirements and engineer the right software solution.
         </p>
       </AnimatedSection>
@@ -293,7 +293,7 @@ export const ContactSection: React.FC = () => {
                     Thank you for contacting Marvel Softwares!
                   </h3>
 
-                  <p className="text-body text-[15px] sm:text-[16px] text-slate-600 leading-relaxed mt-3 max-w-sm">
+                  <p className="text-body text-base sm:text-lg text-slate-600 leading-relaxed mt-3 max-w-sm">
                     Your enquiry has been received. Our team will get in touch with you.
                   </p>
 

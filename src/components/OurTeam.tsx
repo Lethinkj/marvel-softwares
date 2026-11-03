@@ -170,7 +170,7 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, meta }) => {
         </div>
 
         {/* Bio */}
-        <p className="text-body text-sm leading-relaxed mt-3.5 flex-1 text-slate-600">
+        <p className="text-card-desc leading-relaxed mt-3.5 flex-1 text-slate-600">
           {member.bio}
         </p>
       </div>
@@ -231,12 +231,12 @@ export const OurTeam: React.FC = () => {
   return (
     <div className="container">
       {/* Section Header */}
-      <AnimatedSection style={{ maxWidth: 720 }} className="text-center mx-auto">
+      <AnimatedSection className="text-center mx-auto w-full">
         <h2 id="team-heading" className="text-section-title">
           Our Team
         </h2>
-        <p className="section-subtitle">
-          A dedicated group of experienced engineers, designers, and system architects passionate about building reliable software.
+        <p className="section-subtitle w-full max-w-full text-balance" style={{ maxWidth: '100%' }}>
+          A dedicated group of experienced engineers, designers, and system architects passionate about building reliable software. Together, we combine deep domain expertise, modern development methodologies, and a collaborative mindset to engineer high-impact digital products for your business.
         </p>
       </AnimatedSection>
 

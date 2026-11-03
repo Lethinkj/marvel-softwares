@@ -13,11 +13,11 @@ export const UpcomingProjects: React.FC = () => {
   return (
     <div className="container">
       {/* Section Header matching Our Projects alignment */}
-      <div className="flex flex-col items-center text-center gap-4 max-w-2xl mx-auto">
+      <div className="flex flex-col items-center text-center gap-4 w-full mx-auto">
         <h2 id="upcoming-title" className="text-section-title">
           Upcoming Projects
         </h2>
-        <p className="section-subtitle">
+        <p className="section-subtitle w-full max-w-full text-balance" style={{ maxWidth: '100%' }}>
           Next-generation software platforms and digital solutions currently in active development by Marvel Softwares.
         </p>
       </div>
@@ -69,7 +69,7 @@ export const UpcomingProjects: React.FC = () => {
                     </h3>
                   </div>
 
-                  <p className="text-body text-[15px] leading-relaxed mt-3 flex-1">
+                  <p className="text-card-desc leading-relaxed mt-3 flex-1">
                     {project.description}
                   </p>
 

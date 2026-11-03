@@ -426,7 +426,7 @@ export const OurProcessSvg: React.FC<{ className?: string; active?: boolean }> =
               strokeLinecap="round"
             />
 
-            <foreignObject x={x + 138} y={y + 14} width={226} height={152}>
+            <foreignObject x={x + 138} y={y + 8} width={226} height={165}>
               <div
                 style={{
                   height: '100%',
@@ -437,18 +437,6 @@ export const OurProcessSvg: React.FC<{ className?: string; active?: boolean }> =
                   boxSizing: 'border-box',
                 }}
               >
-                <span
-                  style={{
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    color: '#0866F5',
-                    letterSpacing: '0.06em',
-                    textTransform: 'uppercase',
-                    marginBottom: '3px',
-                  }}
-                >
-                  Step 0{i + 1}
-                </span>
                 <h3
                   style={{
                     margin: 0,
@@ -464,7 +452,7 @@ export const OurProcessSvg: React.FC<{ className?: string; active?: boolean }> =
                 <p
                   style={{
                     margin: '6px 0 0',
-                    fontSize: '12.5px',
+                    fontSize: 'var(--font-card-desc, 1.125rem)',
                     fontWeight: 500,
                     color: '#526B8B',
                     lineHeight: 1.45,
@@ -505,15 +493,12 @@ export const OurProcess: React.FC = () => {
 
   return (
     <div ref={ref}>
-      <div className={`op-heading text-center max-w-3xl mx-auto mb-6 sm:mb-8 ${inView ? 'is-visible' : ''}`}>
+      <div className={`op-heading text-center w-full mx-auto mb-6 sm:mb-8 ${inView ? 'is-visible' : ''}`}>
         <h2 id="process-title" className="text-section-title text-center">
           Our Process
         </h2>
-        <p className="section-subtitle text-center mx-auto">
-          From Initial Concept to Successful Digital Delivery
-        </p>
-        <p className="text-slate-600 text-sm sm:text-base leading-relaxed text-center max-w-2xl mx-auto mt-3 sm:mt-4">
-          Our structured development process ensures transparency, quality, and seamless collaboration at every stage. From understanding your requirements to launching and maintaining your solution, we turn your vision into reliable digital experiences.
+        <p className="section-subtitle w-full max-w-full text-balance text-center mx-auto" style={{ maxWidth: '100%' }}>
+          From initial concept to successful digital delivery, our structured development process ensures transparency, quality, and seamless collaboration at every stage. From understanding your requirements to launching and maintaining your solution, we turn your vision into reliable digital experiences.
         </p>
       </div>
 
@@ -562,13 +547,10 @@ export const OurProcess: React.FC = () => {
                   marginBottom: i < PROCESS_STEPS.length - 1 ? 14 : 0,
                 }}
               >
-                <span className="text-[11px] font-bold text-[#0866F5] tracking-wider uppercase mb-1 block">
-                  Step 0{i + 1}
-                </span>
                 <h3 className="text-card-title font-bold" style={{ color: NAVY, fontSize: '1.05rem', lineHeight: 1.25 }}>
                   {step.title}
                 </h3>
-                <p style={{ color: GRAY, fontSize: '0.88rem', marginTop: 4, lineHeight: 1.55 }}>{step.desc}</p>
+                <p className="text-card-desc" style={{ color: GRAY, marginTop: 4, lineHeight: 1.55 }}>{step.desc}</p>
               </div>
             </div>
           </li>
