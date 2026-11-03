@@ -182,7 +182,10 @@ export function sendTelemetry(event: TelemetryEventPayload): void {
         section_name: payload.section_name || null,
         dwell_time_seconds: payload.dwell_time_seconds,
         element_label: payload.element_label || null,
-        metadata: payload.metadata || null,
+        metadata: {
+          ...(payload.metadata || {}),
+          client_meta,
+        },
       })
     } catch {
       // Silently fail — telemetry must never break the UI

@@ -115,7 +115,6 @@ export interface AuditLog {
 // Obfuscated Gateway Route Constants
 export const GATEWAY_PREFIX = '/_k9x_gateway_92a7'
 export const ROUTE_AUTH = `${GATEWAY_PREFIX}/auth`
-export const ROUTE_BOOTSTRAP = `${GATEWAY_PREFIX}/init-bootstrap`
 export const ROUTE_CONSOLE = `${GATEWAY_PREFIX}/console`
 
 // Storage keys (localStorage — used for active session token only)
@@ -138,7 +137,7 @@ export function getClientIp(): string {
   try {
     let ip = sessionStorage.getItem('dev_client_ip') || localStorage.getItem('dev_client_ip')
     if (!ip) {
-      ip = '192.168.1.105' // Local developer/client gateway IP
+      ip = '127.0.0.1'
       localStorage.setItem('dev_client_ip', ip)
     }
     return ip
@@ -182,13 +181,41 @@ export function getIpBlocks(): IpBlockRecord[] {
   }
 }
 
+export async function getIpBlocksFromDB(): Promise<IpBlockRecord[]> {
+  try {
+    const { data, error } = await supabase
+      .from('dev_admin_ip_blocks')
+      .select('*')
+      .order('last_attempt_at', { ascending: false })
+
+    if (error || !data) return getIpBlocks()
+
+    const blocks: IpBlockRecord[] = data.map((item: Record<string, unknown>) => ({
+      id: String(item['id']),
+      ip_address: item['ip_address'] as string,
+      failed_attempts: (item['failed_attempts'] as number) || 0,
+      is_blocked: !!item['is_blocked'],
+      blocked_until: item['blocked_until'] ? new Date(item['blocked_until'] as string).getTime() : 0,
+      block_tier: (item['block_tier'] as number) || 0,
+      first_failed_at: item['first_failed_at'] ? new Date(item['first_failed_at'] as string).getTime() : 0,
+      last_attempt_at: (item['last_attempt_at'] as string) || new Date().toISOString(),
+      last_attempt_username: (item['last_attempt_username'] as string) || undefined,
+      total_lifetime_blocks: (item['total_lifetime_blocks'] as number) || 0,
+    }))
+    localStorage.setItem(STORAGE_IP_BLOCKS, JSON.stringify(blocks))
+    return blocks
+  } catch {
+    return getIpBlocks()
+  }
+}
+
 async function getIpBlockFromDB(ip: string): Promise<IpBlockRecord | null> {
   try {
     const { data } = await supabase
       .from('dev_admin_ip_blocks')
       .select('*')
       .eq('ip_address', ip)
-      .single()
+      .maybeSingle()
     if (!data) return null
     return {
       id: String(data.id),
@@ -320,6 +347,26 @@ export function recordFailedLoginAttempt(ip: string, username: string): {
 
     localStorage.setItem(STORAGE_IP_BLOCKS, JSON.stringify(blocks))
 
+    // Sync to Supabase dev_admin_ip_blocks table
+    supabase
+      .from('dev_admin_ip_blocks')
+      .upsert(
+        {
+          ip_address: ip,
+          failed_attempts: record.failed_attempts,
+          is_blocked: true,
+          blocked_until: new Date(record.blocked_until).toISOString(),
+          block_tier: record.block_tier,
+          first_failed_at: new Date(record.first_failed_at).toISOString(),
+          last_attempt_at: record.last_attempt_at,
+          last_attempt_username: username,
+          total_lifetime_blocks: record.total_lifetime_blocks,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: 'ip_address' }
+      )
+      .then(() => {})
+
     addAuditLog(
       'SYSTEM_GATEWAY_FIREWALL',
       'ip_blocked',
@@ -345,6 +392,26 @@ export function recordFailedLoginAttempt(ip: string, username: string): {
 
   localStorage.setItem(STORAGE_IP_BLOCKS, JSON.stringify(blocks))
 
+  // Sync failed attempts count to Supabase dev_admin_ip_blocks
+  supabase
+    .from('dev_admin_ip_blocks')
+    .upsert(
+      {
+        ip_address: ip,
+        failed_attempts: record.failed_attempts,
+        is_blocked: false,
+        blocked_until: null,
+        block_tier: record.block_tier,
+        first_failed_at: new Date(record.first_failed_at).toISOString(),
+        last_attempt_at: record.last_attempt_at,
+        last_attempt_username: username,
+        total_lifetime_blocks: record.total_lifetime_blocks,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: 'ip_address' }
+    )
+    .then(() => {})
+
   return {
     isBlocked: false,
     remainingSeconds: 0,
@@ -353,7 +420,7 @@ export function recordFailedLoginAttempt(ip: string, username: string): {
   }
 }
 
-export function clearIpBlock(ip: string): void {
+export async function clearIpBlock(ip: string): Promise<void> {
   const blocks = getIpBlocks()
   const record = blocks.find((b) => b.ip_address === ip)
   if (record) {
@@ -361,15 +428,29 @@ export function clearIpBlock(ip: string): void {
     record.blocked_until = 0
     record.failed_attempts = 0
     localStorage.setItem(STORAGE_IP_BLOCKS, JSON.stringify(blocks))
-
-    addAuditLog(
-      getCurrentAdminSession()?.username || 'SUPER_ADMIN',
-      'ip_unblocked',
-      'dev_admin_ip_blocks',
-      ip,
-      { ip_address: ip, reason: 'Manual administrator clearance' }
-    )
   }
+
+  try {
+    await supabase
+      .from('dev_admin_ip_blocks')
+      .update({
+        is_blocked: false,
+        blocked_until: null,
+        failed_attempts: 0,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('ip_address', ip)
+  } catch {
+    // Non-blocking
+  }
+
+  addAuditLog(
+    getCurrentAdminSession()?.username || 'SUPER_ADMIN',
+    'ip_unblocked',
+    'dev_admin_ip_blocks',
+    ip,
+    { ip_address: ip, reason: 'Manual administrator clearance' }
+  )
 }
 
 // ----------------------------------------------------------------------
@@ -479,8 +560,8 @@ export async function createAdmin(input: {
   return { success: true, admin: newAdmin }
 }
 
-export function deleteAdmin(adminId: string): { success: boolean; error?: string } {
-  const admins = getAdmins()
+export async function deleteAdmin(adminId: string): Promise<{ success: boolean; error?: string }> {
+  const admins = await getAdminsFromDB()
   const target = admins.find((a) => a.admin_id === adminId)
   if (!target) return { success: false, error: 'Admin not found.' }
 
@@ -489,6 +570,12 @@ export function deleteAdmin(adminId: string): { success: boolean; error?: string
     if (superAdmins.length <= 1) {
       return { success: false, error: 'Cannot remove the last super administrator.' }
     }
+  }
+
+  try {
+    await supabase.from('dev_admins').delete().eq('admin_id', adminId)
+  } catch (err) {
+    console.error('Failed to delete admin in Supabase:', err)
   }
 
   const updated = admins.filter((a) => a.admin_id !== adminId)
@@ -522,6 +609,42 @@ export function getAllSessions(): AdminSession[] {
   }
 }
 
+export async function getSessionsFromDB(): Promise<AdminSession[]> {
+  try {
+    const { data, error } = await supabase
+      .from('dev_admin_sessions')
+      .select('*, dev_admins(username, full_name, email, role)')
+      .order('last_activity_at', { ascending: false })
+      .limit(100)
+
+    if (error || !data) return getAllSessions()
+
+    const sessions: AdminSession[] = data.map((item: Record<string, unknown>) => {
+      const admin = (item['dev_admins'] as Record<string, unknown>) || {}
+      return {
+        token: (item['token_hash'] as string) || '',
+        session_id: item['session_id'] as string,
+        admin_id: item['admin_id'] as string,
+        username: (admin['username'] as string) || 'admin',
+        full_name: (admin['full_name'] as string) || '',
+        email: (admin['email'] as string) || '',
+        role: (admin['role'] as string) || 'operations',
+        ip_address: (item['ip_address'] as string) || '',
+        user_agent: (item['user_agent'] as string) || '',
+        is_revoked: !!item['is_revoked'],
+        revoked_reason: (item['revoked_reason'] as string) || undefined,
+        last_activity_at: (item['last_activity_at'] as string) || new Date().toISOString(),
+        created_at: (item['created_at'] as string) || new Date().toISOString(),
+        expires_at: (item['expires_at'] as string) || new Date().toISOString(),
+      }
+    })
+    localStorage.setItem(STORAGE_SESSIONS, JSON.stringify(sessions))
+    return sessions
+  } catch {
+    return getAllSessions()
+  }
+}
+
 export function createAdminSession(admin: AdminUser): AdminSession {
   const now = Date.now()
   const expiresAt = new Date(now + 12 * 60 * 60 * 1000).toISOString()
@@ -545,6 +668,21 @@ export function createAdminSession(admin: AdminUser): AdminSession {
     created_at: new Date().toISOString(),
     expires_at: expiresAt,
   }
+
+  // Insert into dev_admin_sessions table in Supabase
+  supabase
+    .from('dev_admin_sessions')
+    .insert({
+      session_id: sessionId,
+      admin_id: admin.admin_id,
+      token_hash: token,
+      ip_address: ip,
+      user_agent: ua,
+      is_revoked: false,
+      last_activity_at: session.last_activity_at,
+      expires_at: session.expires_at,
+    })
+    .then(() => {})
 
   const sessions = getAllSessions()
   // Append new session to table
@@ -647,6 +785,16 @@ export function logoutAdmin(reason: string = 'user_logout'): void {
       localStorage.setItem(STORAGE_SESSIONS, JSON.stringify(sessions))
     }
 
+    supabase
+      .from('dev_admin_sessions')
+      .update({
+        is_revoked: true,
+        revoked_at: new Date().toISOString(),
+        revoked_reason: reason,
+      })
+      .eq('token_hash', current.token)
+      .then(() => {})
+
     addAuditLog(current.username, 'admin_logout', 'dev_admin_sessions', current.session_id, {
       reason,
     })
@@ -655,21 +803,34 @@ export function logoutAdmin(reason: string = 'user_logout'): void {
   purgeCurrentSessionTokens()
 }
 
-export function revokeSession(sessionId: string): boolean {
+export async function revokeSession(sessionId: string): Promise<boolean> {
   const sessions = getAllSessions()
   const target = sessions.find((s) => s.session_id === sessionId)
-  if (!target) return false
+  if (target) {
+    target.is_revoked = true
+    target.revoked_reason = 'admin_manually_revoked'
+    localStorage.setItem(STORAGE_SESSIONS, JSON.stringify(sessions))
+  }
 
-  target.is_revoked = true
-  target.revoked_reason = 'admin_manually_revoked'
-  localStorage.setItem(STORAGE_SESSIONS, JSON.stringify(sessions))
+  try {
+    await supabase
+      .from('dev_admin_sessions')
+      .update({
+        is_revoked: true,
+        revoked_at: new Date().toISOString(),
+        revoked_reason: 'admin_manually_revoked',
+      })
+      .eq('session_id', sessionId)
+  } catch (err) {
+    console.error('Failed to revoke session in Supabase:', err)
+  }
 
   addAuditLog(
     getCurrentAdminSession()?.username || 'SUPER_ADMIN',
     'session_revoked',
     'dev_admin_sessions',
     sessionId,
-    { revoked_username: target.username, session_ip: target.ip_address }
+    { revoked_username: target?.username || 'admin', session_ip: target?.ip_address || '' }
   )
 
   return true
@@ -684,6 +845,16 @@ export function revokeAllSessionsForAdmin(adminId: string, reason: string): void
     }
   })
   localStorage.setItem(STORAGE_SESSIONS, JSON.stringify(sessions))
+
+  supabase
+    .from('dev_admin_sessions')
+    .update({
+      is_revoked: true,
+      revoked_at: new Date().toISOString(),
+      revoked_reason: reason,
+    })
+    .eq('admin_id', adminId)
+    .then(() => {})
 }
 
 // ----------------------------------------------------------------------
@@ -691,7 +862,7 @@ export function revokeAllSessionsForAdmin(adminId: string, reason: string): void
 // ----------------------------------------------------------------------
 
 export async function verifyAdminCredentials(
-  username: string,
+  identifier: string,
   password: string
 ): Promise<{
   success: boolean
@@ -702,7 +873,7 @@ export async function verifyAdminCredentials(
   attemptsLeft?: number
 }> {
   const ip = getClientIp()
-  const cleanUsername = username.trim()
+  const cleanId = identifier.trim()
 
   // 1. Check IP lockout (check DB first, fallback to localStorage)
   const dbBlock = await getIpBlockFromDB(ip)
@@ -726,16 +897,27 @@ export async function verifyAdminCredentials(
     }
   }
 
-  // 2. Fetch admin from Supabase
+  // 2. Fetch admin from Supabase by username OR email
   let admin: AdminUser | undefined
   try {
-    const { data } = await supabase
-      .from('dev_admins')
-      .select('*')
-      .ilike('username', cleanUsername)
-      .single()
+    const isEmail = cleanId.includes('@')
+    let query = supabase.from('dev_admins').select('*')
+    if (isEmail) {
+      query = query.ilike('email', cleanId)
+    } else {
+      query = query.ilike('username', cleanId)
+    }
+
+    const { data } = await query.maybeSingle()
     if (data) {
       admin = data as AdminUser
+    } else if (!isEmail) {
+      // Also try matching by email just in case
+      const { data: byEmail } = await supabase.from('dev_admins').select('*').ilike('email', cleanId).maybeSingle()
+      if (byEmail) admin = byEmail as AdminUser
+    }
+
+    if (admin) {
       // Update local cache
       const localAdmins = getAdmins()
       const idx = localAdmins.findIndex((a) => a.admin_id === admin!.admin_id)
@@ -744,13 +926,21 @@ export async function verifyAdminCredentials(
       localStorage.setItem(STORAGE_ADMINS, JSON.stringify(localAdmins))
     }
   } catch {
-    // Fallback to localStorage
+    // Non-blocking
+  }
+
+  // Fallback to local cache
+  if (!admin) {
     const localAdmins = getAdmins()
-    admin = localAdmins.find((a) => a.username.toLowerCase() === cleanUsername.toLowerCase())
+    admin = localAdmins.find(
+      (a) =>
+        a.username.toLowerCase() === cleanId.toLowerCase() ||
+        (a.email && a.email.toLowerCase() === cleanId.toLowerCase())
+    )
   }
 
   if (!admin) {
-    const strike = recordFailedLoginAttempt(ip, cleanUsername)
+    const strike = recordFailedLoginAttempt(ip, cleanId)
     if (strike.isBlocked) {
       return {
         success: false,
@@ -772,9 +962,22 @@ export async function verifyAdminCredentials(
     return { success: false, error: 'This account has been deactivated.' }
   }
 
-  const computedHash = await hashPassword(password, admin.salt)
-  if (computedHash !== admin.password_hash) {
-    const strike = recordFailedLoginAttempt(ip, cleanUsername)
+  // Verify password:
+  // 1. If cryptographic salt exists, hash with salt
+  // 2. If no salt (e.g. seeded directly in Postgres), check with empty salt or direct hash match
+  let isPasswordValid = false
+  if (admin.salt) {
+    const computedHash = await hashPassword(password, admin.salt)
+    isPasswordValid = computedHash === admin.password_hash
+  } else {
+    const computedNoSalt = await hashPassword(password, '')
+    isPasswordValid =
+      computedNoSalt === admin.password_hash ||
+      password === admin.password_hash
+  }
+
+  if (!isPasswordValid) {
+    const strike = recordFailedLoginAttempt(ip, cleanId)
     if (strike.isBlocked) {
       return {
         success: false,
@@ -797,12 +1000,14 @@ export async function verifyAdminCredentials(
   const rec = blocks.find((b) => b.ip_address === ip)
   if (rec) {
     rec.failed_attempts = 0
+    rec.is_blocked = false
+    rec.blocked_until = 0
     localStorage.setItem(STORAGE_IP_BLOCKS, JSON.stringify(blocks))
   }
   // Also reset in Supabase
   supabase
     .from('dev_admin_ip_blocks')
-    .update({ failed_attempts: 0, is_blocked: false })
+    .update({ failed_attempts: 0, is_blocked: false, blocked_until: null })
     .eq('ip_address', ip)
     .then(() => {})
 
@@ -810,7 +1015,7 @@ export async function verifyAdminCredentials(
   const loginAt = new Date().toISOString()
   await supabase
     .from('dev_admins')
-    .update({ last_login_at: loginAt })
+    .update({ last_login_at: loginAt, last_login_ip: ip })
     .eq('admin_id', admin.admin_id)
 
   admin.last_login_at = loginAt
@@ -893,74 +1098,86 @@ export async function getAllInquiriesFromDB(): Promise<AdminInquiry[]> {
   }
 }
 
-export function updateInquiryStatus(
+export async function updateInquiryStatus(
   inquiryId: string | number,
   status: AdminInquiry['status']
-): boolean {
+): Promise<boolean> {
   const inquiries = getAllInquiries()
   const item = inquiries.find((i) => String(i.id) === String(inquiryId))
-  if (!item) return false
+  const prevStatus = item?.status || 'new'
 
-  const prevStatus = item.status
-  item.status = status
-  localStorage.setItem(STORAGE_INQUIRIES, JSON.stringify(inquiries))
+  if (item) {
+    item.status = status
+    localStorage.setItem(STORAGE_INQUIRIES, JSON.stringify(inquiries))
+  }
 
-  // Sync to Supabase
-  supabase
-    .from('dev_contact_inquiries')
-    .update({ status, updated_at: new Date().toISOString() })
-    .eq('id', inquiryId)
-    .then(() => {})
+  // Sync to Supabase dev_contact_inquiries
+  try {
+    await supabase
+      .from('dev_contact_inquiries')
+      .update({ status, updated_at: new Date().toISOString() })
+      .eq('id', inquiryId)
+  } catch (err) {
+    console.error('Failed to update inquiry status in Supabase:', err)
+  }
 
   addAuditLog(
     getCurrentAdminSession()?.username || 'ADMIN',
     'inquiry_status_updated',
     'dev_contact_inquiries',
     String(inquiryId),
-    { client_name: item.name, previous_status: prevStatus, new_status: status }
+    { client_name: item?.name || 'Inquiry', previous_status: prevStatus, new_status: status }
   )
 
   return true
 }
 
-export function toggleStarInquiry(inquiryId: string | number): boolean {
+export async function toggleStarInquiry(inquiryId: string | number): Promise<boolean> {
   const inquiries = getAllInquiries()
   const item = inquiries.find((i) => String(i.id) === String(inquiryId))
-  if (!item) return false
+  const newStarred = item ? !item.is_starred : true
 
-  item.is_starred = !item.is_starred
-  localStorage.setItem(STORAGE_INQUIRIES, JSON.stringify(inquiries))
+  if (item) {
+    item.is_starred = newStarred
+    localStorage.setItem(STORAGE_INQUIRIES, JSON.stringify(inquiries))
+  }
 
   // Sync to Supabase
-  supabase
-    .from('dev_contact_inquiries')
-    .update({ is_starred: item.is_starred, updated_at: new Date().toISOString() })
-    .eq('id', inquiryId)
-    .then(() => {})
+  try {
+    await supabase
+      .from('dev_contact_inquiries')
+      .update({ is_starred: newStarred, updated_at: new Date().toISOString() })
+      .eq('id', inquiryId)
+  } catch (err) {
+    console.error('Failed to toggle star in Supabase:', err)
+  }
 
   addAuditLog(
     getCurrentAdminSession()?.username || 'ADMIN',
-    item.is_starred ? 'inquiry_starred' : 'inquiry_unstarred',
+    newStarred ? 'inquiry_starred' : 'inquiry_unstarred',
     'dev_contact_inquiries',
     String(inquiryId),
-    { client_name: item.name, is_starred: item.is_starred }
+    { client_name: item?.name || 'Inquiry', is_starred: newStarred }
   )
 
   return true
 }
 
-export function deleteInquiry(inquiryId: string | number): boolean {
+export async function deleteInquiry(inquiryId: string | number): Promise<boolean> {
   const inquiries = getAllInquiries()
   const target = inquiries.find((i) => String(i.id) === String(inquiryId))
   const updated = inquiries.filter((i) => String(i.id) !== String(inquiryId))
   localStorage.setItem(STORAGE_INQUIRIES, JSON.stringify(updated))
 
   // Sync to Supabase
-  supabase
-    .from('dev_contact_inquiries')
-    .delete()
-    .eq('id', inquiryId)
-    .then(() => {})
+  try {
+    await supabase
+      .from('dev_contact_inquiries')
+      .delete()
+      .eq('id', inquiryId)
+  } catch (err) {
+    console.error('Failed to delete inquiry from Supabase:', err)
+  }
 
   if (target) {
     addAuditLog(
@@ -994,11 +1211,28 @@ export async function getTelemetryRecordsFromDB(): Promise<TelemetryRecord[]> {
       .from('dev_telemetry_events')
       .select('*')
       .order('created_at', { ascending: false })
-      .limit(200)
+      .limit(300)
 
     if (error || !data) return getTelemetryRecords()
 
-    const records = data as TelemetryRecord[]
+    const records: TelemetryRecord[] = data.map((item: Record<string, unknown>) => {
+      const meta = (item['metadata'] as Record<string, unknown>) || {}
+      const clientMeta = (meta['client_meta'] as TelemetryRecord['client_meta']) || undefined
+      return {
+        id: item['id'] as string | number,
+        visitor_id: item['visitor_id'] as string | undefined,
+        session_id: item['session_id'] as string | undefined,
+        event_name: item['event_name'] as string,
+        page_path: item['page_path'] as string,
+        section_id: item['section_id'] as string | undefined,
+        section_name: item['section_name'] as string | undefined,
+        dwell_time_seconds: (item['dwell_time_seconds'] as number) || 0,
+        element_label: item['element_label'] as string | undefined,
+        created_at: item['created_at'] as string,
+        metadata: meta,
+        client_meta: clientMeta,
+      }
+    })
     localStorage.setItem(STORAGE_TELEMETRY, JSON.stringify(records))
     return records
   } catch {
@@ -1013,6 +1247,35 @@ export function getAuditLogs(): AuditLog[] {
     return raw ? JSON.parse(raw) : []
   } catch {
     return []
+  }
+}
+
+export async function getAuditLogsFromDB(): Promise<AuditLog[]> {
+  try {
+    const { data, error } = await supabase
+      .from('dev_admin_audit_logs')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(300)
+
+    if (error || !data) return getAuditLogs()
+
+    const logs: AuditLog[] = data.map((item: Record<string, unknown>) => ({
+      id: String(item['id']),
+      admin_id: (item['admin_id'] as string) || undefined,
+      admin_username: (item['admin_username'] as string) || 'system',
+      admin_role: (item['admin_role'] as string) || 'super_admin',
+      action: item['action'] as string,
+      target_type: item['target_type'] as string,
+      target_id: item['target_id'] as string,
+      details: (item['details'] as Record<string, unknown>) || undefined,
+      ip_address: (item['ip_address'] as string) || '',
+      created_at: item['created_at'] as string,
+    }))
+    localStorage.setItem(STORAGE_AUDIT, JSON.stringify(logs))
+    return logs
+  } catch {
+    return getAuditLogs()
   }
 }
 
@@ -1043,7 +1306,7 @@ export function addAuditLog(
     if (logs.length > 300) logs.length = 300
     localStorage.setItem(STORAGE_AUDIT, JSON.stringify(logs))
 
-    // Fire-and-forget to Supabase
+    // Fire-and-forget to Supabase dev_admin_audit_logs
     supabase.from('dev_admin_audit_logs').insert({
       admin_id: active?.admin_id || null,
       admin_username,
@@ -1060,150 +1323,29 @@ export function addAuditLog(
 }
 
 // ----------------------------------------------------------------------
-// SEED REALISTIC INITIAL DATA
+// NO HARDCODED DATA — CLEANUP ROUTINES
 // ----------------------------------------------------------------------
 
 export function seedSampleDataIfEmpty(): void {
+  // Hardcoded mock data disabled: All records are fetched live from Supabase PostgreSQL tables.
+}
+
+export function purgeMockLocalStorageData(): void {
   if (typeof window === 'undefined') return
-
-  const existingInquiries = getAllInquiries()
-  if (existingInquiries.length < 3) {
-    const sampleInquiries: AdminInquiry[] = [
-      {
-        id: 'inq_101',
-        name: 'Rajesh K. Sundaram',
-        email: 'rajesh.sundaram@texflowfabrics.com',
-        phone: '+91 98421 88421',
-        address: 'Gandhipuram, Coimbatore, Tamil Nadu 641012',
-        solution: 'ERP & Business Management Software',
-        requirements:
-          'Need complete textile inventory, dyeing batch tracking, and automated client billing ERP system with multi-warehouse synchronization.',
-        city: 'Coimbatore',
-        status: 'in_discussion',
-        is_starred: true,
-        submittedAt: new Date(Date.now() - 2 * 3600 * 1000).toISOString(),
-        assigned_to: 'Praveen',
-        admin_notes: 'Initial requirement call scheduled for tomorrow 11 AM.',
-      },
-      {
-        id: 'inq_102',
-        name: 'Dr. Ananya Narayanan',
-        email: 'contact@apexhealthlabs.in',
-        phone: '+91 94432 11098',
-        address: 'Race Course Road, Coimbatore, Tamil Nadu 641018',
-        solution: 'Web Application Development',
-        requirements:
-          'Patient diagnostic reporting portal with encrypted PDF download and SMS WhatsApp automated notification pipeline.',
-        city: 'Coimbatore',
-        status: 'proposal_sent',
-        is_starred: true,
-        submittedAt: new Date(Date.now() - 9 * 3600 * 1000).toISOString(),
-        assigned_to: 'Vikram',
-        admin_notes: 'Commercial estimate sent. Awaiting board approval.',
-      },
-      {
-        id: 'inq_103',
-        name: 'Karthik Balakrishnan',
-        email: 'karthik@kblocistics.ae',
-        phone: '+971 50 123 4567',
-        address: 'Business Bay, Dubai, UAE',
-        solution: 'AI & Automation',
-        requirements:
-          'AI document OCR parsing for customs declarations, automated shipping manifests categorization and CRM integration.',
-        city: 'Dubai',
-        status: 'new',
-        is_starred: false,
-        submittedAt: new Date(Date.now() - 18 * 3600 * 1000).toISOString(),
-      },
-      {
-        id: 'inq_104',
-        name: 'Muthukumar S.',
-        email: 'mkumar@kongupumps.com',
-        phone: '+91 97890 44321',
-        address: 'SIDCO Industrial Estate, Kurichi, Coimbatore 641021',
-        solution: 'Website Development',
-        requirements:
-          'Modern product catalog website for industrial pump export with multilingual support and interactive 3D product view.',
-        city: 'Coimbatore',
-        status: 'won',
-        is_starred: true,
-        submittedAt: new Date(Date.now() - 36 * 3600 * 1000).toISOString(),
-        assigned_to: 'Praveen',
-        admin_notes: 'Contract signed! Development sprint 1 starting this week.',
-      },
-      {
-        id: 'inq_105',
-        name: 'Sanjay Mehra',
-        email: 'sanjay@urbanfintech.co',
-        phone: '+91 98200 77654',
-        address: 'Indiranagar, Bengaluru, Karnataka 560038',
-        solution: 'Mobile App Development',
-        requirements:
-          'Cross-platform iOS and Android mobile app for wealth management and digital micro-investing with biometric auth.',
-        city: 'Bengaluru',
-        status: 'contacted',
-        is_starred: false,
-        submittedAt: new Date(Date.now() - 52 * 3600 * 1000).toISOString(),
-      },
-      {
-        id: 'inq_106',
-        name: 'Revathi Krishnaswamy',
-        email: 'revathi@organicgrove.in',
-        phone: '+91 99400 33211',
-        address: 'RS Puram, Coimbatore, Tamil Nadu 641002',
-        solution: 'Custom Software Development',
-        requirements:
-          'Cold-pressed oil retail franchise POS and subscription delivery logistics dispatch management tool.',
-        city: 'Coimbatore',
-        status: 'new',
-        is_starred: false,
-        submittedAt: new Date(Date.now() - 74 * 3600 * 1000).toISOString(),
-      },
-    ]
-
-    const merged = [...sampleInquiries, ...existingInquiries]
-    localStorage.setItem(STORAGE_INQUIRIES, JSON.stringify(merged))
-  }
-
-  const existingTelemetry = getTelemetryRecords()
-  if (existingTelemetry.length < 5) {
-    const sections = ['services', 'about-us', 'projects', 'why-us', 'process', 'contact', 'faq']
-    const devices: ('desktop' | 'mobile' | 'tablet')[] = ['desktop', 'mobile', 'desktop', 'mobile', 'tablet']
-    const sampleTelemetry: TelemetryRecord[] = []
-
-    for (let i = 0; i < 48; i++) {
-      const section = sections[i % sections.length]
-      const dev = devices[i % devices.length]
-      const hoursAgo = Math.floor(i * 1.5)
-      sampleTelemetry.push({
-        id: `tel_${1000 + i}`,
-        visitor_id: `v_${100 + (i % 12)}`,
-        session_id: `s_${200 + (i % 18)}`,
-        event_name: i % 4 === 0 ? 'cta_click' : 'section_view',
-        page_path: i % 7 === 0 ? '/faq' : '/',
-        section_id: section,
-        section_name: section.replace('-', ' ').toUpperCase(),
-        dwell_time_seconds: Math.floor(12 + Math.random() * 45),
-        created_at: new Date(Date.now() - hoursAgo * 3600 * 1000).toISOString(),
-        client_meta: {
-          device_type: dev,
-          browser: dev === 'mobile' ? 'Mobile Safari' : 'Chrome',
-          os: dev === 'mobile' ? 'iOS' : 'Windows',
-          screen_resolution: dev === 'mobile' ? '390x844' : '1920x1080',
-          language: 'en-IN',
-          referrer: i % 3 === 0 ? 'https://google.com' : 'Direct / Bookmark',
-        },
-      })
+  try {
+    const rawInq = localStorage.getItem(STORAGE_INQUIRIES)
+    if (rawInq) {
+      const parsed = JSON.parse(rawInq)
+      const cleaned = parsed.filter((i: Record<string, unknown>) => !String(i['id']).startsWith('inq_10'))
+      localStorage.setItem(STORAGE_INQUIRIES, JSON.stringify(cleaned))
     }
-
-    localStorage.setItem(STORAGE_TELEMETRY, JSON.stringify(sampleTelemetry))
-  }
-
-  // Pre-seed an audit log entry
-  const existingAudit = getAuditLogs()
-  if (existingAudit.length === 0) {
-    addAuditLog('marvel_root', 'system_initialized', 'dev_admins', 'sys_root', {
-      note: 'System gateway and security tables initialized with dev_ schema prefix',
-    })
+    const rawTel = localStorage.getItem(STORAGE_TELEMETRY)
+    if (rawTel) {
+      const parsed = JSON.parse(rawTel)
+      const cleaned = parsed.filter((t: Record<string, unknown>) => !String(t['id']).startsWith('tel_10'))
+      localStorage.setItem(STORAGE_TELEMETRY, JSON.stringify(cleaned))
+    }
+  } catch {
+    // Non-blocking
   }
 }

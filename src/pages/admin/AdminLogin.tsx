@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useState, useEffect, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   ShieldCheck,
   Lock,
@@ -8,7 +8,6 @@ import {
   AlertCircle,
   Eye,
   EyeOff,
-  Sparkles,
   Layers,
   Clock,
   ShieldAlert,
@@ -16,11 +15,6 @@ import {
 import {
   verifyAdminCredentials,
   createAdminSession,
-  hasAnyAdmin,
-  seedSampleDataIfEmpty,
-  createAdmin,
-  clearIpBlock,
-  ROUTE_BOOTSTRAP,
   ROUTE_CONSOLE,
   getCurrentAdminSession,
   getIpSecurityStatus,
@@ -29,12 +23,11 @@ import {
 
 export default function AdminLogin() {
   const navigate = useNavigate()
-  const [username, setUsername] = useState('')
+  const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-  const [hasAdmins, setHasAdmins] = useState(true)
 
   // IP Block & Rate limit state
   const [isIpBlocked, setIsIpBlocked] = useState(false)
@@ -43,6 +36,13 @@ export default function AdminLogin() {
   const [attemptsRemaining, setAttemptsRemaining] = useState<number | null>(null)
   const clientIp = getClientIp()
 
+  const checkIpSecurity = useCallback(() => {
+    const sec = getIpSecurityStatus(clientIp)
+    setIsIpBlocked(sec.isBlocked)
+    setBlockSecondsRemaining(sec.remainingSeconds)
+    setBlockTier(sec.blockTier)
+  }, [clientIp])
+
   // Auto-route to dashboard if already authenticated
   useEffect(() => {
     const active = getCurrentAdminSession()
@@ -50,20 +50,8 @@ export default function AdminLogin() {
       navigate(ROUTE_CONSOLE, { replace: true })
       return
     }
-
-    hasAnyAdmin().then((adminExists) => {
-      setHasAdmins(adminExists)
-    })
-    seedSampleDataIfEmpty()
     checkIpSecurity()
-  }, [navigate])
-
-  const checkIpSecurity = () => {
-    const sec = getIpSecurityStatus(clientIp)
-    setIsIpBlocked(sec.isBlocked)
-    setBlockSecondsRemaining(sec.remainingSeconds)
-    setBlockTier(sec.blockTier)
-  }
+  }, [navigate, checkIpSecurity])
 
   // Live countdown timer for IP block
   useEffect(() => {
@@ -106,7 +94,7 @@ export default function AdminLogin() {
     setLoading(true)
 
     try {
-      const res = await verifyAdminCredentials(username, password)
+      const res = await verifyAdminCredentials(identifier, password)
       if (!res.success || !res.admin) {
         if (res.isBlocked) {
           setIsIpBlocked(true)
@@ -114,7 +102,7 @@ export default function AdminLogin() {
           setError(res.error || 'IP blocked due to excessive failed attempts.')
         } else {
           setAttemptsRemaining(res.attemptsLeft ?? null)
-          setError(res.error || 'Invalid credentials. Please verify your username and password.')
+          setError(res.error || 'Invalid credentials. Please verify your username or email and password.')
         }
         setLoading(false)
         return
@@ -125,39 +113,6 @@ export default function AdminLogin() {
       navigate(ROUTE_CONSOLE, { replace: true })
     } catch {
       setError('An error occurred during authentication. Please retry.')
-      setLoading(false)
-    }
-  }
-
-  // Quick seed and immediate auto-route to dashboard
-  const handleQuickSeedLogin = async () => {
-    setLoading(true)
-    setError(null)
-    try {
-      clearIpBlock(clientIp)
-      setIsIpBlocked(false)
-      seedSampleDataIfEmpty()
-      const adminExists = hasAnyAdmin()
-      if (!adminExists) {
-        await createAdmin({
-          username: 'marvel_root',
-          password: 'MarvelAdmin#2026',
-          full_name: 'Lead Systems Architect',
-          email: 'admin@marvelsoftwares.in',
-          role: 'super_admin',
-        })
-      }
-      const authRes = await verifyAdminCredentials('marvel_root', 'MarvelAdmin#2026')
-      if (authRes.success && authRes.admin) {
-        createAdminSession(authRes.admin)
-        // Auto route to dashboard immediately
-        navigate(ROUTE_CONSOLE, { replace: true })
-      } else {
-        setError('Default master credentials could not be verified.')
-      }
-    } catch {
-      setError('Quick sign-in encountered an error.')
-    } finally {
       setLoading(false)
     }
   }
@@ -195,7 +150,7 @@ export default function AdminLogin() {
               <ShieldCheck className="w-7 h-7" />
             </div>
             <h1 className="text-xl font-bold text-white tracking-tight">Admin Console Access</h1>
-            <p className="text-xs text-slate-400 mt-1">Authenticate to access site analytics, leads, and systems</p>
+            <p className="text-xs text-slate-400 mt-1">Authenticate using your admin username or email address</p>
           </div>
 
           {/* IP Blockout Warning Banner */}
@@ -223,25 +178,6 @@ export default function AdminLogin() {
             </div>
           )}
 
-          {!hasAdmins && !isIpBlocked && (
-            <div className="mb-6 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex items-start gap-2.5">
-              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-amber-400" />
-              <div>
-                <p className="font-semibold text-amber-200">No Administrator Account Detected</p>
-                <p className="text-slate-300 mt-0.5 leading-relaxed">
-                  Please initialize your master credentials using the bootstrap page first.
-                </p>
-                <Link
-                  to={ROUTE_BOOTSTRAP}
-                  className="mt-2 inline-flex items-center gap-1 text-[11px] font-medium text-amber-400 hover:text-amber-300 underline underline-offset-2"
-                >
-                  <span>Go to Bootstrap Admin Setup</span>
-                  <ArrowRight className="w-3 h-3" />
-                </Link>
-              </div>
-            </div>
-          )}
-
           {error && !isIpBlocked && (
             <div className="mb-5 p-3 rounded-xl bg-rose-950/50 border border-rose-500/40 text-rose-300 text-xs flex items-center gap-2.5">
               <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
@@ -258,7 +194,7 @@ export default function AdminLogin() {
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">Username</label>
+              <label className="block text-xs font-medium text-slate-300 mb-1.5">Admin Username or Email</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
                   <User className="w-4 h-4" />
@@ -266,10 +202,11 @@ export default function AdminLogin() {
                 <input
                   type="text"
                   required
+                  autoComplete="username"
                   disabled={isIpBlocked}
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Enter admin username"
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
+                  placeholder="e.g. admin or admin@marvelsoftwares.in"
                   className="w-full bg-slate-950/80 border border-slate-700/80 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-mono disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
@@ -284,6 +221,7 @@ export default function AdminLogin() {
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
+                  autoComplete="current-password"
                   disabled={isIpBlocked}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -318,31 +256,6 @@ export default function AdminLogin() {
               )}
             </button>
           </form>
-
-          {/* Quick Demo Access Button */}
-          <div className="mt-6 pt-5 border-t border-slate-800/80">
-            <button
-              type="button"
-              onClick={handleQuickSeedLogin}
-              disabled={loading}
-              className="w-full py-2.5 px-3 rounded-xl bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 text-slate-300 hover:text-white text-xs font-medium flex items-center justify-center gap-2 transition-colors"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-              <span>One-Click Root Demo Login</span>
-            </button>
-            <p className="text-[10px] text-center text-slate-500 mt-2 font-mono">
-              Auto-provisions <code className="text-slate-400">marvel_root</code> & routes straight to console
-            </p>
-          </div>
-
-          <div className="mt-5 text-center">
-            <Link
-              to={ROUTE_BOOTSTRAP}
-              className="text-[11px] text-slate-400 hover:text-indigo-300 transition-colors"
-            >
-              Need to bootstrap a fresh admin account? <span className="underline">Click here</span>
-            </Link>
-          </div>
         </div>
       </main>
 

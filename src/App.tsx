@@ -2,11 +2,10 @@ import { lazy, Suspense } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
 import Home from './pages/Home'
-import { ROUTE_AUTH, ROUTE_BOOTSTRAP, ROUTE_CONSOLE, GATEWAY_PREFIX } from './utils/adminAuth'
+import { ROUTE_AUTH, ROUTE_CONSOLE, GATEWAY_PREFIX } from './utils/adminAuth'
 
 const Faq = lazy(() => import('./pages/Faq'))
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'))
-const AdminBootstrap = lazy(() => import('./pages/admin/AdminBootstrap'))
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'))
 
 function PageFallback() {
@@ -35,14 +34,6 @@ function App() {
   return (
     <Routes>
       {/* Obfuscated Isolated Gateway & Console Routes (Outside of public layout) */}
-      <Route
-        path={ROUTE_BOOTSTRAP}
-        element={
-          <Suspense fallback={<AdminFallback />}>
-            <AdminBootstrap />
-          </Suspense>
-        }
-      />
       <Route
         path={ROUTE_AUTH}
         element={

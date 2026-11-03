@@ -35,20 +35,20 @@ import {
 import {
   getCurrentAdminSession,
   logoutAdmin,
-  getAllInquiries,
+  getAllInquiriesFromDB,
   updateInquiryStatus,
   toggleStarInquiry,
   deleteInquiry,
-  getTelemetryRecords,
-  getAdmins,
+  getTelemetryRecordsFromDB,
+  getAdminsFromDB,
   createAdmin,
   deleteAdmin,
-  seedSampleDataIfEmpty,
-  getAllSessions,
+  getSessionsFromDB,
   revokeSession,
-  getIpBlocks,
+  getIpBlocksFromDB,
   clearIpBlock,
-  getAuditLogs,
+  getAuditLogsFromDB,
+  purgeMockLocalStorageData,
   updateSessionActivity,
   INACTIVITY_TIMEOUT_MS,
   ROUTE_AUTH,
@@ -103,15 +103,32 @@ export default function AdminDashboard() {
 
   // Copy SQL feedback
   const [copiedSection, setCopiedSection] = useState<string | null>(null)
+  const [isLoadingData, setIsLoadingData] = useState(true)
 
-  // Load all state
-  const loadAllData = useCallback(() => {
-    setInquiries(getAllInquiries())
-    setTelemetry(getTelemetryRecords())
-    setAdmins(getAdmins())
-    setSessionsList(getAllSessions())
-    setIpBlocks(getIpBlocks())
-    setAuditLogs(getAuditLogs())
+  // Load all state directly from Supabase DB tables
+  const loadAllData = useCallback(async () => {
+    setIsLoadingData(true)
+    purgeMockLocalStorageData()
+    try {
+      const [inqs, tels, adms, sess, ips, logs] = await Promise.all([
+        getAllInquiriesFromDB(),
+        getTelemetryRecordsFromDB(),
+        getAdminsFromDB(),
+        getSessionsFromDB(),
+        getIpBlocksFromDB(),
+        getAuditLogsFromDB(),
+      ])
+      setInquiries(inqs)
+      setTelemetry(tels)
+      setAdmins(adms)
+      setSessionsList(sess)
+      setIpBlocks(ips)
+      setAuditLogs(logs)
+    } catch (err) {
+      console.error('Failed to load dashboard data from Supabase:', err)
+    } finally {
+      setIsLoadingData(false)
+    }
   }, [])
 
   // Auto-logout trigger
@@ -128,7 +145,6 @@ export default function AdminDashboard() {
       return
     }
     setSession(currentSession)
-    seedSampleDataIfEmpty()
     loadAllData()
   }, [navigate, refreshKey, loadAllData])
 
@@ -188,31 +204,34 @@ export default function AdminDashboard() {
   }
 
   // Handle status update (tracks diff in audit log)
-  const handleStatusChange = (inquiryId: string | number, newStatus: AdminInquiry['status']) => {
-    updateInquiryStatus(inquiryId, newStatus)
-    setInquiries(getAllInquiries())
-    setAuditLogs(getAuditLogs())
+  const handleStatusChange = async (inquiryId: string | number, newStatus: AdminInquiry['status']) => {
+    await updateInquiryStatus(inquiryId, newStatus)
+    setInquiries((prev) => prev.map((i) => (i.id === inquiryId ? { ...i, status: newStatus } : i)))
+    const logs = await getAuditLogsFromDB()
+    setAuditLogs(logs)
     if (selectedInquiry && selectedInquiry.id === inquiryId) {
       setSelectedInquiry((prev) => (prev ? { ...prev, status: newStatus } : null))
     }
   }
 
   // Handle star toggle
-  const handleToggleStar = (inquiryId: string | number) => {
-    toggleStarInquiry(inquiryId)
-    setInquiries(getAllInquiries())
-    setAuditLogs(getAuditLogs())
+  const handleToggleStar = async (inquiryId: string | number) => {
+    await toggleStarInquiry(inquiryId)
+    setInquiries((prev) => prev.map((i) => (i.id === inquiryId ? { ...i, is_starred: !i.is_starred } : i)))
+    const logs = await getAuditLogsFromDB()
+    setAuditLogs(logs)
     if (selectedInquiry && selectedInquiry.id === inquiryId) {
       setSelectedInquiry((prev) => (prev ? { ...prev, is_starred: !prev.is_starred } : null))
     }
   }
 
   // Handle delete inquiry
-  const handleDeleteInquiry = (inquiryId: string | number) => {
+  const handleDeleteInquiry = async (inquiryId: string | number) => {
     if (window.confirm('Are you sure you want to delete this inquiry record? This action is logged.')) {
-      deleteInquiry(inquiryId)
-      setInquiries(getAllInquiries())
-      setAuditLogs(getAuditLogs())
+      await deleteInquiry(inquiryId)
+      setInquiries((prev) => prev.filter((i) => i.id !== inquiryId))
+      const logs = await getAuditLogsFromDB()
+      setAuditLogs(logs)
       if (selectedInquiry && selectedInquiry.id === inquiryId) {
         setSelectedInquiry(null)
       }
@@ -241,8 +260,9 @@ export default function AdminDashboard() {
       }
 
       setNewAdminSuccess(true)
-      setAdmins(getAdmins())
-      setAuditLogs(getAuditLogs())
+      const [adms, logs] = await Promise.all([getAdminsFromDB(), getAuditLogsFromDB()])
+      setAdmins(adms)
+      setAuditLogs(logs)
 
       setTimeout(() => {
         setNewAdminSuccess(false)
@@ -261,25 +281,27 @@ export default function AdminDashboard() {
   }
 
   // Handle delete admin
-  const handleDeleteAdmin = (adminId: string) => {
+  const handleDeleteAdmin = async (adminId: string) => {
     if (window.confirm('Are you sure you want to remove this administrator? All active sessions will be terminated.')) {
-      const res = deleteAdmin(adminId)
+      const res = await deleteAdmin(adminId)
       if (!res.success) {
         alert(res.error || 'Cannot remove admin.')
       } else {
-        setAdmins(getAdmins())
-        setSessionsList(getAllSessions())
-        setAuditLogs(getAuditLogs())
+        const [adms, sess, logs] = await Promise.all([getAdminsFromDB(), getSessionsFromDB(), getAuditLogsFromDB()])
+        setAdmins(adms)
+        setSessionsList(sess)
+        setAuditLogs(logs)
       }
     }
   }
 
   // Handle Revoke Session
-  const handleRevokeSession = (sessionId: string) => {
+  const handleRevokeSession = async (sessionId: string) => {
     if (window.confirm('Revoke this session? The user will be logged out immediately.')) {
-      revokeSession(sessionId)
-      setSessionsList(getAllSessions())
-      setAuditLogs(getAuditLogs())
+      await revokeSession(sessionId)
+      const [sess, logs] = await Promise.all([getSessionsFromDB(), getAuditLogsFromDB()])
+      setSessionsList(sess)
+      setAuditLogs(logs)
 
       if (session && session.session_id === sessionId) {
         handleAutoLogout('current_session_revoked')
@@ -288,11 +310,12 @@ export default function AdminDashboard() {
   }
 
   // Handle Unblock IP
-  const handleUnblockIp = (ip: string) => {
+  const handleUnblockIp = async (ip: string) => {
     if (window.confirm(`Manually release lockout for IP ${ip}?`)) {
-      clearIpBlock(ip)
-      setIpBlocks(getIpBlocks())
-      setAuditLogs(getAuditLogs())
+      await clearIpBlock(ip)
+      const [ips, logs] = await Promise.all([getIpBlocksFromDB(), getAuditLogsFromDB()])
+      setIpBlocks(ips)
+      setAuditLogs(logs)
     }
   }
 
@@ -393,6 +416,61 @@ export default function AdminDashboard() {
       activeBlocksCount,
     }
   }, [inquiries, telemetry, sessionsList, ipBlocks])
+
+  // Real dynamic 7-day timeline computed directly from database telemetry and inquiries
+  const dailyChartData = useMemo(() => {
+    const days: { label: string; dateStr: string; telemetryCount: number; inquiryCount: number }[] = []
+    const now = new Date()
+
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now)
+      d.setDate(d.getDate() - i)
+      const dateStr = d.toISOString().slice(0, 10)
+      const dayName = i === 0 ? 'Today' : d.toLocaleDateString('en-US', { weekday: 'short' })
+      days.push({
+        label: dayName,
+        dateStr,
+        telemetryCount: 0,
+        inquiryCount: 0,
+      })
+    }
+
+    telemetry.forEach((t) => {
+      if (!t.created_at) return
+      const dStr = t.created_at.slice(0, 10)
+      const day = days.find((d) => d.dateStr === dStr)
+      if (day) day.telemetryCount++
+    })
+
+    inquiries.forEach((inq) => {
+      if (!inq.submittedAt) return
+      const dStr = inq.submittedAt.slice(0, 10)
+      const day = days.find((d) => d.dateStr === dStr)
+      if (day) day.inquiryCount++
+    })
+
+    const maxVal = Math.max(1, ...days.map((d) => d.telemetryCount), ...days.map((d) => d.inquiryCount))
+    const stepX = 560 / 6
+    const chartHeight = 110
+
+    const telPoints = days.map((d, idx) => {
+      const x = 20 + idx * stepX
+      const y = 145 - (d.telemetryCount / maxVal) * chartHeight
+      return { x, y, count: d.telemetryCount }
+    })
+
+    const inqPoints = days.map((d, idx) => {
+      const x = 20 + idx * stepX
+      const y = 145 - (d.inquiryCount / maxVal) * chartHeight
+      return { x, y, count: d.inquiryCount }
+    })
+
+    const telPath = telPoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ')
+    const telArea = `${telPath} L 580 150 L 20 150 Z`
+    const inqPath = inqPoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ')
+
+    return { days, telPoints, inqPoints, telPath, telArea, inqPath, maxVal }
+  }, [telemetry, inquiries])
 
   // Status Badge Colors
   const getStatusBadge = (status: AdminInquiry['status']) => {
@@ -680,11 +758,12 @@ export default function AdminDashboard() {
           <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={handleRefresh}
-              title="Reload live metrics"
-              className="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white text-xs font-mono flex items-center gap-1.5 transition-colors"
+              disabled={isLoadingData}
+              title="Reload live metrics from DB"
+              className="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white text-xs font-mono flex items-center gap-1.5 transition-colors disabled:opacity-50"
             >
-              <RefreshCw className="w-3.5 h-3.5 text-indigo-400" />
-              <span className="hidden sm:inline">Refresh</span>
+              <RefreshCw className={`w-3.5 h-3.5 text-indigo-400 ${isLoadingData ? 'animate-spin' : ''}`} />
+              <span className="hidden sm:inline">{isLoadingData ? 'Fetching...' : 'Refresh'}</span>
             </button>
 
             {activeTab === 'inquiries' && (
@@ -810,56 +889,30 @@ export default function AdminDashboard() {
                         </linearGradient>
                       </defs>
 
-                      <line x1="0" y1="30" x2="600" y2="30" stroke="#1e293b" strokeDasharray="3 3" />
-                      <line x1="0" y1="80" x2="600" y2="80" stroke="#1e293b" strokeDasharray="3 3" />
-                      <line x1="0" y1="130" x2="600" y2="130" stroke="#1e293b" strokeDasharray="3 3" />
+                      <line x1="0" y1="35" x2="600" y2="35" stroke="#1e293b" strokeDasharray="3 3" />
+                      <line x1="0" y1="90" x2="600" y2="90" stroke="#1e293b" strokeDasharray="3 3" />
+                      <line x1="0" y1="145" x2="600" y2="145" stroke="#1e293b" strokeDasharray="3 3" />
 
-                      <path
-                        d="M 20 120 Q 100 80 180 95 T 340 50 T 480 70 T 580 40 L 580 160 L 20 160 Z"
-                        fill="url(#gradIndigo)"
-                      />
-                      <path
-                        d="M 20 120 Q 100 80 180 95 T 340 50 T 480 70 T 580 40"
-                        fill="none"
-                        stroke="#6366f1"
-                        strokeWidth="2.5"
-                      />
+                      <path d={dailyChartData.telArea} fill="url(#gradIndigo)" />
+                      <path d={dailyChartData.telPath} fill="none" stroke="#6366f1" strokeWidth="2.5" />
+                      <path d={dailyChartData.inqPath} fill="none" stroke="#10b981" strokeWidth="2.5" />
 
-                      <path
-                        d="M 20 150 Q 100 140 180 130 T 340 110 T 480 100 T 580 85"
-                        fill="none"
-                        stroke="#10b981"
-                        strokeWidth="2.5"
-                      />
-
-                      {[
-                        { cx: 20, cy: 120 },
-                        { cx: 180, cy: 95 },
-                        { cx: 340, cy: 50 },
-                        { cx: 480, cy: 70 },
-                        { cx: 580, cy: 40 },
-                      ].map((p, i) => (
-                        <circle key={i} cx={p.cx} cy={p.cy} r="4" fill="#6366f1" stroke="#0f172a" strokeWidth="2" />
+                      {dailyChartData.telPoints.map((p, i) => (
+                        <circle key={`tel-${i}`} cx={p.x} cy={p.y} r="4" fill="#6366f1" stroke="#0f172a" strokeWidth="2">
+                          <title>{dailyChartData.days[i].label}: {p.count} events</title>
+                        </circle>
                       ))}
 
-                      {[
-                        { cx: 20, cy: 150 },
-                        { cx: 180, cy: 130 },
-                        { cx: 340, cy: 110 },
-                        { cx: 480, cy: 100 },
-                        { cx: 580, cy: 85 },
-                      ].map((p, i) => (
-                        <circle key={i} cx={p.cx} cy={p.cy} r="4" fill="#10b981" stroke="#0f172a" strokeWidth="2" />
+                      {dailyChartData.inqPoints.map((p, i) => (
+                        <circle key={`inq-${i}`} cx={p.x} cy={p.y} r="4" fill="#10b981" stroke="#0f172a" strokeWidth="2">
+                          <title>{dailyChartData.days[i].label}: {p.count} leads</title>
+                        </circle>
                       ))}
                     </svg>
                     <div className="flex justify-between text-[10px] font-mono text-slate-400 mt-2 px-2">
-                      <span>Mon</span>
-                      <span>Tue</span>
-                      <span>Wed</span>
-                      <span>Thu</span>
-                      <span>Fri</span>
-                      <span>Sat</span>
-                      <span>Today</span>
+                      {dailyChartData.days.map((d, idx) => (
+                        <span key={idx}>{d.label}</span>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -888,7 +941,7 @@ export default function AdminDashboard() {
                               width: `${
                                 stats.totalTelemetry > 0
                                   ? (stats.deviceCounts.desktop / stats.totalTelemetry) * 100
-                                  : 60
+                                  : 0
                               }%`,
                             }}
                           />
@@ -912,7 +965,7 @@ export default function AdminDashboard() {
                               width: `${
                                 stats.totalTelemetry > 0
                                   ? (stats.deviceCounts.mobile / stats.totalTelemetry) * 100
-                                  : 35
+                                  : 0
                               }%`,
                             }}
                           />
@@ -936,7 +989,7 @@ export default function AdminDashboard() {
                               width: `${
                                 stats.totalTelemetry > 0
                                   ? (stats.deviceCounts.tablet / stats.totalTelemetry) * 100
-                                  : 5
+                                  : 0
                               }%`,
                             }}
                           />
