@@ -175,7 +175,7 @@ export const Home: React.FC = () => {
                   alt="About Marvel Softwares technology and engineering excellence"
                   width={1536}
                   height={1024}
-                  className="w-full h-auto max-w-[480px] lg:max-w-full drop-shadow-lg transition-transform hover:scale-[1.02] duration-300"
+                  className="w-full h-auto max-w-[480px] lg:max-w-full rounded-2xl shadow-lg transition-transform hover:scale-[1.02] duration-300 mt-4 lg:mt-10"
                   decoding="async"
                 />
               </AnimatedSection>
@@ -281,7 +281,10 @@ export const Home: React.FC = () => {
               Technologies
             </h2>
             <p className="section-subtitle">
-              Modern frameworks, cloud architectures, and battle-tested engineering practices powering your digital products.
+              We leverage modern frameworks, scalable cloud architectures, and proven
+              engineering practices to build powerful digital solutions. Every technology
+              we choose is carefully selected to ensure exceptional performance, enhanced
+              security, seamless scalability, and long-term reliability for your business.
             </p>
           </AnimatedSection>
 

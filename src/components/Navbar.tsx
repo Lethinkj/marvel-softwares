@@ -247,7 +247,7 @@ export function Navbar() {
                 openMenuButtonColor="#0F172A"
                 logoUrl="/images/brand/logo.avif"
                 headerHeight={isScrolled ? 58 : 66}
-                headerPadding="0"
+                headerPadding="0 20px 0 0"
                 closeOnClickAway={true}
                 onItemClick={(item) => {
                   const targetId = item.link.replace(/^(\/)?#/, '')

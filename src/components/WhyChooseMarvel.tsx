@@ -164,7 +164,7 @@ export const WhyChooseMarvel: React.FC = () => {
       </AnimatedSection>
 
       {/* 4-in-a-Row Grid of Squarish Cards with Corner Accent Wave */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-y-10 w-full">
         {valueCards.map((item, index) => (
           <AnimatedSection
             key={item.id}
@@ -175,7 +175,7 @@ export const WhyChooseMarvel: React.FC = () => {
               
               {/* Center: Rounded-Square Gradient Icon */}
               <div
-                className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br ${item.iconGradient} flex items-center justify-center text-white shadow-xs transition-transform duration-300 hover:scale-105 shrink-0 mb-3 sm:mb-3.5`}
+                className={`w-14 h-14 p-3 rounded-full shadow-[0_10px_24px_-8px_rgba(178,190,181,0.95)] bg-gradient-to-br ${item.iconGradient} flex items-center justify-center text-white transition-transform duration-300 hover:scale-105 shrink-0 mb-3 sm:mb-3.5`}
               >
                 {item.icon}
               </div>
