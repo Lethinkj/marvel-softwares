@@ -78,7 +78,7 @@
   --font-label: 0.75rem;
 
   /* --- Layout --- */
-  --container-width: 1720px;
+  --container-width: 1600px;
   --page-gutter: clamp(16px, 4vw, 32px);
   --section-space-desktop: 40px;
   --section-space-tablet: 34px;
