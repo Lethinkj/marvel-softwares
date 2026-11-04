@@ -609,7 +609,7 @@ body.nav-menu-open #root {
   font-family: var(--font-sans);
   font-size: var(--font-section-subtitle) !important;
   font-weight: 400;
-  line-height: 1.65;
+  line-height: 2;
   color: var(--color-text-muted);
   max-width: 64ch;
   margin-top: 0.875rem;
@@ -629,7 +629,7 @@ body.nav-menu-open #root {
 .text-card-desc {
   font-family: var(--font-sans);
   font-size: var(--font-card-desc) !important;
-  line-height: 1.625;
+  line-height: 2;
   color: var(--color-text-muted);
 }
 
@@ -637,7 +637,7 @@ body.nav-menu-open #root {
 .text-body {
   font-family: var(--font-sans);
   font-size: var(--font-body-size);
-  line-height: 1.625;
+  line-height: 2;
   color: var(--color-text-muted);
 }
 
@@ -2197,7 +2197,7 @@ body.nav-menu-open #root {
   margin-top: 22px;
   max-width: 56ch;
   font-size: var(--font-body-size);
-  line-height: 1.7;
+  line-height: 2;
   color: var(--color-text-muted);
 }
 

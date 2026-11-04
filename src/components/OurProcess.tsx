@@ -561,7 +561,7 @@ export const OurProcess: React.FC = () => {
                 <h3 className="text-card-title font-bold" style={{ color: BLUE, fontSize: '1.05rem', lineHeight: 1.25 }}>
                   {step.title}
                 </h3>
-                <p className="text-card-desc" style={{ color: '#000000', marginTop: 4, lineHeight: 1.55 }}>{step.desc}</p>
+                <p className="text-card-desc" style={{ color: '#000000', marginTop: 4 }}>{step.desc}</p>
               </div>
             </div>
           </li>

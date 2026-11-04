@@ -170,7 +170,7 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, meta }) => {
         </div>
 
         {/* Bio */}
-        <p className="text-card-desc leading-relaxed mt-3.5 flex-1 text-slate-600">
+        <p className="text-card-desc mt-3.5 flex-1 text-slate-600">
           {member.bio}
         </p>
       </div>
