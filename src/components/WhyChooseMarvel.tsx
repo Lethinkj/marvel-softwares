@@ -189,7 +189,7 @@ export const WhyChooseMarvel: React.FC = () => {
               </h3>
 
               {/* Description */}
-              <p className="text-card-desc text-slate-600 leading-relaxed text-center">
+              <p className="text-card-desc text-slate-600 text-center">
                 {item.description}
               </p>
 
