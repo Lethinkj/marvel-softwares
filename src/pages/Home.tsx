@@ -138,9 +138,9 @@ export const Home: React.FC = () => {
               <a
                 href="#contact"
                 className="hero-btn hero-btn--primary"
-                onClick={() => trackCtaClick('Start a Project (Hero)', '#contact')}
+                onClick={() => trackCtaClick('Get a Quote (Hero)', '#contact')}
               >
-                Start a Project
+                Get a Quote
               </a>
               <a
                 href="#services"

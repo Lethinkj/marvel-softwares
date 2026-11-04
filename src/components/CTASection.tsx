@@ -1,9 +1,10 @@
 import { type CSSProperties } from "react";
-import { Phone } from "lucide-react";
-import { siteConfig } from "../data/siteData";
+import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useInView } from "../hooks/useInView";
 import { useReducedMotion } from "../hooks/useMediaQuery";
 import CtaParticles from "./CtaParticles";
+import { trackCtaClick } from "../utils/analytics";
 import "./CTASection.css";
 
 const reveal = (delay: number): CSSProperties =>
@@ -52,20 +53,16 @@ export default function CTASection() {
 
           {/* Actions */}
           <div className="cta-panel">
-            <a
-              href={siteConfig.phoneHref}
-              className="cta-callback cta-reveal"
+            <Link
+              to="/#contact"
+              className="hero-btn hero-btn--primary cta-reveal"
               style={reveal(160)}
-              aria-label={`Request a call back at ${siteConfig.phone}`}
+              aria-label="Get a Quote — go to the contact form"
+              onClick={() => trackCtaClick('Get a Quote (CTA Banner)', '/#contact')}
             >
-              <span className="cta-callback-copy">
-                <span className="cta-callback-label">Have a project in mind?</span>
-                <span className="cta-callback-number">{siteConfig.phone}</span>
-              </span>
-              <span className="cta-callback-icon" aria-hidden="true">
-                <Phone size={20} fill="currentColor" strokeWidth={1.5} />
-              </span>
-            </a>
+              Get a Quote
+              <ArrowRight size={18} strokeWidth={2} aria-hidden="true" />
+            </Link>
           </div>
         </div>
       </div>
