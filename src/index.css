@@ -2115,10 +2115,13 @@ body.nav-menu-open #root {
 }
 
 .hero-actions {
-  display: flex;
-  flex-wrap: wrap;
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
   gap: 12px;
   margin-top: 32px;
+  width: max-content;
+  max-width: 100%;
 }
 
 @media (min-width: 1024px) {
@@ -2135,6 +2138,7 @@ body.nav-menu-open #root {
   .hero-actions {
     grid-column: 1 / span 6;
     grid-row: 2;
+    justify-self: start;
   }
 }
 
@@ -2144,11 +2148,13 @@ body.nav-menu-open #root {
   justify-content: center;
   gap: 8px;
   min-height: 54px;
+  min-width: 220px;
   padding: 0 28px;
   border-radius: 999px;
   font-size: 0.98rem;
   font-weight: 700;
   white-space: nowrap;
+  text-align: center;
   transition:
     transform 0.25s cubic-bezier(0.22, 0.75, 0.3, 1),
     box-shadow 0.25s ease,
@@ -2182,13 +2188,14 @@ body.nav-menu-open #root {
 
 @media (max-width: 640px) {
   .hero-actions {
-    flex-wrap: nowrap;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
     gap: 8px;
     width: 100%;
   }
 
   .hero-btn {
-    flex: 1 1 0;
     min-width: 0;
     min-height: 46px;
     padding-inline: 8px;
@@ -2204,15 +2211,17 @@ body.nav-menu-open #root {
   }
 
   .hero-actions {
-    flex-wrap: nowrap;
-    gap: 8px;
+    display: inline-grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: 10px;
+    width: auto;
   }
 
   .hero-btn {
-    flex: 1 1 0;
-    min-width: 0;
-    padding-inline: 8px;
-    font-size: 0.78rem;
+    min-width: 200px;
+    padding-inline: 16px;
+    font-size: 0.88rem;
   }
 }
 
@@ -3896,10 +3905,12 @@ a.page-hero-card-item:hover .page-hero-card-arrow {
 }
 
 .home-cta-actions {
-  display: flex;
-  flex-wrap: wrap;
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
   gap: 12px;
   margin-top: 30px;
+  max-width: 100%;
 }
 
 .home-cta-btn {
@@ -3908,11 +3919,13 @@ a.page-hero-card-item:hover .page-hero-card-arrow {
   justify-content: center;
   gap: 8px;
   min-height: 54px;
+  min-width: 220px;
   padding: 0 28px;
   border-radius: 999px;
   font-size: 0.98rem;
   font-weight: 700;
   white-space: nowrap;
+  text-align: center;
   transition:
     transform 0.25s cubic-bezier(0.22, 0.75, 0.3, 1),
     box-shadow 0.25s ease,
@@ -4121,8 +4134,15 @@ a.page-hero-card-item:hover .page-hero-card-arrow {
 }
 
 @media (max-width: 575px) {
+  .home-cta-actions {
+    display: grid;
+    grid-auto-flow: row;
+    width: 100%;
+  }
+
   .home-cta-btn {
     width: 100%;
+    min-width: 0;
   }
 }
 

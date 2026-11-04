@@ -76,7 +76,7 @@ export interface NavLink {
 export const siteConfig = {
   name: 'MARVEL SOFTWARES',
   // Update these with verified business details only.
-  email: 'softwaresmarvel@gmail.com',
+  email: 'sales@marvelsoftwares.in',
   phone: '+91 8088218609',
   phoneHref: 'tel:+918088218609',
   phone2: '+91 8903711003',

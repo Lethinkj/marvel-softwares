@@ -109,20 +109,20 @@ for (const r of routes) {
         name: 'MARVEL SOFTWARES',
         url: 'https://marvelsoftwares.in',
         logo: 'https://marvelsoftwares.in/marvel-softwares-logo-horizontal.png',
-        email: 'softwaresmarvel@gmail.com',
+        email: 'sales@marvelsoftwares.in',
         telephone: '+91 8088218609',
         contactPoint: [
           {
             '@type': 'ContactPoint',
             telephone: '+91 8088218609',
-            email: 'softwaresmarvel@gmail.com',
+            email: 'sales@marvelsoftwares.in',
             contactType: 'customer service',
             availableLanguage: ['en', 'ta'],
           },
           {
             '@type': 'ContactPoint',
             telephone: '+91 8903711003',
-            email: 'softwaresmarvel@gmail.com',
+            email: 'sales@marvelsoftwares.in',
             contactType: 'technical support',
             availableLanguage: ['en', 'ta'],
           },
