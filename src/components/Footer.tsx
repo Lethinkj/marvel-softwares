@@ -182,7 +182,7 @@ export function Footer() {
                   href="https://www.marvelslice.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="footer-link"
+                  className="footer-link footer-venture-link"
                   onClick={() => trackCtaClick('www.marvelslice.com', 'https://www.marvelslice.com/')}
                 >
                   www.marvelslice.com
@@ -193,7 +193,7 @@ export function Footer() {
                   href="https://lms.marvelslice.com/login"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="footer-link"
+                  className="footer-link footer-venture-link"
                   onClick={() => trackCtaClick('lms.marvelslice.com/login', 'https://lms.marvelslice.com/login')}
                 >
                   lms.marvelslice.com/login
@@ -204,7 +204,7 @@ export function Footer() {
                   href="https://www.marvelvillas.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="footer-link"
+                  className="footer-link footer-venture-link"
                   onClick={() => trackCtaClick('www.marvelvillas.com', 'https://www.marvelvillas.com/')}
                 >
                   www.marvelvillas.com

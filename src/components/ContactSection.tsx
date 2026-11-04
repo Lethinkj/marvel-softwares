@@ -130,6 +130,8 @@ export const ContactSection: React.FC = () => {
       </AnimatedSection>
 
       <AnimatedSection delay={0.1}>
+        {/* Separate 1200px container for the form card only */}
+        <div className="w-full mx-auto" style={{ maxWidth: 1200 }}>
         <div
           className="rounded-3xl overflow-hidden bg-white grid grid-cols-1 lg:grid-cols-[45%_55%] shadow-sm hover:shadow-md transition-shadow"
           style={{
@@ -308,6 +310,7 @@ export const ContactSection: React.FC = () => {
               </div>
             )}
           </div>
+        </div>
         </div>
       </AnimatedSection>
     </div>

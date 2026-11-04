@@ -1645,9 +1645,23 @@ body.nav-menu-open #root {
   overflow-wrap: anywhere;
 }
 
+/* Venture links only — underlined + highlighted to read as links */
+.footer-venture-link {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(148, 163, 184, 0.4);
+}
+
 .footer-link:hover {
   color: #38bdf8;
   transform: translateY(-1px);
+}
+
+.footer-venture-link:hover {
+  color: #38bdf8;
+  text-decoration-color: #38bdf8;
+  text-decoration-thickness: 2px;
 }
 
 @media (min-width: 640px) {
@@ -4557,10 +4571,14 @@ blockquote {
    ============================================ */
 .op-list-card p,
 .our-process-svg p,
-.why-marvel-card p,
-.site-footer p,
-.site-footer .footer-link {
+.why-marvel-card p {
   line-height: 1.5 !important;
+}
+
+.site-footer p,
+.site-footer li,
+.site-footer .footer-link {
+  line-height: 1.25 !important;
 }
 
 /* Why Choose Marvel card titles — 1px off the base card-title clamp, capped at 18px */
