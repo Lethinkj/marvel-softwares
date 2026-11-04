@@ -281,7 +281,7 @@ export const Home: React.FC = () => {
       </section>
 
       {/* ============ E. TECHNOLOGIES ============ */}
-      <section id="technologies" aria-labelledby="technologies-title" className="section">
+      <section id="technologies" aria-labelledby="technologies-title" className="section technologies-section">
         <div className="container">
           <AnimatedSection className="text-center mx-auto w-full">
             <h2 id="technologies-title" className="text-section-title">
