@@ -225,7 +225,7 @@ export const ContactSection: React.FC = () => {
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
                       autoComplete="street-address"
-                      placeholder="Street, city and state"
+
                       aria-invalid={Boolean(errors.address)}
                       aria-describedby={errors.address ? `${formId}-address-error` : undefined}
                     />
@@ -242,7 +242,7 @@ export const ContactSection: React.FC = () => {
                     className={`field-textarea${errors.message ? ' field-error' : ''}`}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    placeholder="What problem should the software solve? Who will use it? Any features, systems or deadlines we should know about?"
+
                     aria-invalid={Boolean(errors.message)}
                     aria-describedby={errors.message ? `${formId}-message-error` : undefined}
                   />
