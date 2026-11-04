@@ -2785,11 +2785,11 @@ body.nav-menu-open #root {
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
-  filter: blur(48px);
+  filter: blur(34px);
 }
 
 .entry-reveal__glow--cyan {
-  width: min(52vw, 560px);
+  width: min(52vw, 392px);
   aspect-ratio: 1;
   top: -12%;
   right: -10%;
@@ -2798,7 +2798,7 @@ body.nav-menu-open #root {
 }
 
 .entry-reveal__glow--orange {
-  width: min(46vw, 480px);
+  width: min(46vw, 336px);
   aspect-ratio: 1;
   bottom: -14%;
   left: -8%;
@@ -2811,7 +2811,7 @@ body.nav-menu-open #root {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: min(58vw, 540px);
+  width: min(58vw, 378px);
   aspect-ratio: 1;
   border-radius: 50%;
   transform: translate(-50%, -50%);
@@ -2833,7 +2833,7 @@ body.nav-menu-open #root {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: min(44vw, 420px);
+  width: min(44vw, 294px);
   aspect-ratio: 1;
   border-radius: 50%;
   transform: translate(-50%, -50%);
@@ -2855,7 +2855,7 @@ body.nav-menu-open #root {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 18px;
+  gap: 13px;
   animation: entry-content-in 0.8s cubic-bezier(0.21, 0.47, 0.32, 0.98) both;
 }
 
@@ -2868,7 +2868,7 @@ body.nav-menu-open #root {
 .entry-reveal__logo {
   position: relative;
   z-index: 1;
-  width: min(340px, 65vw);
+  width: min(200px, 65vw);
   animation:
     entry-logo-in 0.9s cubic-bezier(0.21, 0.9, 0.32, 1.12) both,
     entry-logo-glow 2.2s 0.9s ease-in-out infinite alternate;
@@ -2961,7 +2961,7 @@ body.nav-menu-open #root {
 }
 
 @keyframes entry-line-expand {
-  to { width: min(250px, 48vw); }
+  to { width: min(175px, 48vw); }
 }
 
 @keyframes entry-line-shine {
@@ -3030,7 +3030,7 @@ body.nav-menu-open #root {
   }
 
   .entry-reveal__line {
-    width: min(250px, 48vw);
+    width: min(175px, 48vw);
   }
 
   .entry-reveal__tagline {
