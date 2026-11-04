@@ -7,6 +7,17 @@ import { openConsentBanner } from '../utils/consent'
 
 const CURRENT_YEAR = new Date().getFullYear()
 
+// Footer-only: hide the Team link (navbar keeps it)
+const footerNavLinks = navLinks.filter((link) => link.href !== '#team')
+
+// Footer-only label overrides (site nav stays as-is)
+const footerLinkLabels: Record<string, string> = {
+  '#about': 'About Us',
+  '#services': 'Our Service',
+  '#projects': 'Our Project',
+  '#contact': 'Contact Us',
+}
+
 const socialLinks = [
   { label: 'YouTube', href: 'https://www.youtube.com/', color: '#ff0000', icon: 'youtube' },
   { label: 'Instagram', href: 'https://www.instagram.com/', color: '#e1306c', icon: 'instagram' },
@@ -123,8 +134,8 @@ export function Footer() {
           </div>
 
           {/* Col 2: Services */}
-          <nav className="footer-col" aria-label="Services navigation">
-            <h3 className="footer-col-title">Services</h3>
+          <nav className="footer-col footer-services-col" aria-label="Our services">
+            <h3 className="footer-col-title">Our Services</h3>
             <ul className="footer-col-list">
               {homeServices.map((id) => {
                 const service = services.find((s) => s.id === id)
@@ -145,37 +156,26 @@ export function Footer() {
           </nav>
 
           {/* Col 3: Explore */}
-          <nav className="footer-col" aria-label="Explore navigation">
-            <h3 className="footer-col-title">Explore</h3>
+          <nav className="footer-col footer-explore-col" aria-label="Useful links">
+            <h3 className="footer-col-title">Useful Links</h3>
             <ul className="footer-col-list">
-              {navLinks.map((link) => (
+              {footerNavLinks.map((link) => (
                 <li key={link.href}>
                   <a
                     href={link.href}
                     onClick={(e) => scrollToSection(e, link.href)}
                     className="footer-link"
                   >
-                    {link.label}
+                    {footerLinkLabels[link.href] ?? link.label}
                   </a>
                 </li>
               ))}
-              <li>
-                <Link
-                  to="/faq"
-                  className="footer-link"
-                  onClick={() => {
-                    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
-                  }}
-                >
-                  FAQ
-                </Link>
-              </li>
             </ul>
           </nav>
 
           {/* Col 4: Other ventures */}
-          <nav className="footer-col" aria-label="Other ventures">
-            <h3 className="footer-col-title">Our Other Ventures</h3>
+          <nav className="footer-col footer-ventures-col" aria-label="Other websites">
+            <h3 className="footer-col-title">Other Websites</h3>
             <ul className="footer-col-list">
               <li>
                 <a
@@ -214,7 +214,7 @@ export function Footer() {
           </nav>
 
           {/* Col 5: Reach Us */}
-          <div className="footer-col" aria-label="Reach us">
+          <div className="footer-col footer-reach-col" aria-label="Reach us">
             <h3 className="footer-col-title">Reach Us</h3>
             <ul className="footer-contact-list">
               <li>
@@ -274,26 +274,38 @@ export function Footer() {
 
       {/* --- Legal Bar --- */}
       <div className="footer-bottom-wrap">
-        <div className="container footer-bottom flex flex-col sm:flex-row items-center justify-between gap-3 text-[13px]">
+        <div className="container footer-bottom">
+          {/* Left spacer keeps the copyright centered in the 1fr auto 1fr grid (desktop grid only) */}
+          <div className="footer-bottom-spacer" aria-hidden="true" />
           <p className="footer-copyright">
             © {CURRENT_YEAR} MARVEL SOFTWARES. All rights reserved.
           </p>
-          <div className="flex items-center gap-4 text-xs text-slate-400">
+          <div className="footer-bottom-legal">
             <button
               type="button"
               onClick={openConsentBanner}
-              className="hover:text-white transition-colors underline underline-offset-2 cursor-pointer bg-transparent border-0 p-0 text-slate-400"
+              className="hover:text-blue-100 transition-colors underline underline-offset-2 cursor-pointer bg-transparent border-0 p-0 text-white"
             >
               Cookie Preferences
             </button>
-            <span aria-hidden="true" className="text-slate-600">|</span>
+            <span aria-hidden="true" className="text-white/50">|</span>
             <a
               href="/#contact"
               onClick={(e) => scrollToSection(e, '#contact')}
-              className="hover:text-white transition-colors"
+              className="hover:text-blue-100 transition-colors"
             >
               Privacy & Inquiries
             </a>
+            <span aria-hidden="true" className="text-white/50">|</span>
+            <Link
+              to="/faq"
+              className="hover:text-blue-100 transition-colors"
+              onClick={() => {
+                window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+              }}
+            >
+              FAQ
+            </Link>
           </div>
         </div>
       </div>
