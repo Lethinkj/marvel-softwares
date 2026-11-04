@@ -2206,7 +2206,7 @@ body.nav-menu-open #root {
   grid-auto-flow: column;
   grid-auto-columns: 1fr;
   gap: 12px;
-  margin-top: 32px;
+  margin-top: 8px;
   width: max-content;
   max-width: 100%;
 }

@@ -103,7 +103,10 @@ export const Home: React.FC = () => {
         >
           <div
             className="flex flex-col lg:grid lg:grid-cols-12 lg:items-center"
-            style={{ gap: 'clamp(20px, 2.5vw, 36px)' }}
+            style={{
+              columnGap: 'clamp(20px, 2.5vw, 36px)',
+              rowGap: '12px',
+            }}
           >
             {/* Copy column */}
             <div className="hero-copy order-1 lg:order-none text-left">
