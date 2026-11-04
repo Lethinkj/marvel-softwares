@@ -38,12 +38,15 @@ export default function CTASection() {
           {/* Message + action */}
           <div className="cta-copy">
             <h2 id="cta-title" className="cta-title cta-reveal" style={reveal(0)}>
-              <span className="cta-title-line">Looking to Transform Your Business?</span>
-              <br />
-              <span className="cta-title-lav">Let&apos;s Create Technology</span>
-              <br />
-              <span className="cta-title-lastrow">
-                <span className="cta-title-lav cta-title-accent">That Moves You Forward.</span>
+              <span className="cta-title-line">
+                <span className="cta-mobile-first-line">Looking to Transform</span>
+                <br className="cta-mobile-break" /> Your Business?
+              </span>
+              <span className="cta-lav-row">
+                <span className="cta-lav-copy">
+                  <span className="cta-title-lav">Let&apos;s Create Technology</span>
+                  <span className="cta-title-lav cta-title-accent">That Moves You Forward.</span>
+                </span>
                 <Link
                   to="/#contact"
                   className="hero-btn hero-btn--primary"
