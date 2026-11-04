@@ -2010,6 +2010,36 @@ body.nav-menu-open #root {
   margin-bottom: 4px;
 }
 
+@media (min-width: 640px) {
+  .contact-form {
+    gap: 10px !important;
+  }
+
+  .contact-form > .grid {
+    gap: 10px !important;
+  }
+
+  .contact-form .field-input,
+  .contact-form .field-select {
+    min-height: 38px;
+    padding: 7px 12px;
+    font-size: 0.9rem;
+    line-height: 1.3;
+  }
+
+  .contact-form .field-textarea {
+    min-height: 82px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .contact-form .field-label {
+    font-size: 0.8rem;
+    margin-bottom: 3px;
+  }
+}
+
 .field-error:focus {
   box-shadow: 0 0 0 3px rgba(217, 45, 32, 0.12) !important;
 }
