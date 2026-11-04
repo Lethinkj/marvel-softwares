@@ -98,7 +98,7 @@ export const Home: React.FC = () => {
           className="container relative"
           style={{
             paddingTop: 'calc(var(--header-offset) + clamp(28px, 4vw, 56px))',
-            paddingBottom: 'clamp(32px, 4vw, 56px)',
+            paddingBottom: 'clamp(22px, 3vw, 40px)',
           }}
         >
           <div
@@ -160,8 +160,8 @@ export const Home: React.FC = () => {
         aria-labelledby="about-us-title"
         className="section bg-white relative overflow-hidden"
         style={{
-          paddingTop: 'clamp(36px, 4vw, 64px)',
-          paddingBottom: 'clamp(36px, 4vw, 64px)',
+          paddingTop: 'clamp(22px, 2.6vw, 42px)',
+          paddingBottom: 'clamp(22px, 2.6vw, 42px)',
         }}
       >
         <div className="container relative z-10">
@@ -211,8 +211,8 @@ export const Home: React.FC = () => {
         aria-label="Our mission and vision"
         className="section section-warm relative overflow-hidden"
         style={{
-          paddingTop: 'clamp(36px, 4vw, 60px)',
-          paddingBottom: 'clamp(36px, 4vw, 60px)',
+          paddingTop: 'clamp(22px, 2.6vw, 42px)',
+          paddingBottom: 'clamp(22px, 2.6vw, 42px)',
         }}
       >
         <div className="container relative z-10">

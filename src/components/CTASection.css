@@ -18,7 +18,7 @@
   isolation: isolate;
   width: 100%;
   overflow: hidden;
-  padding-block: clamp(36px, 4vw, 56px);
+  padding-block: clamp(26px, 3vw, 42px);
   background:
     radial-gradient(90% 120% at 88% -12%, rgba(255, 138, 36, 0.18) 0%, transparent 55%),
     radial-gradient(70% 110% at 8% 108%, rgba(40, 120, 240, 0.26) 0%, transparent 60%),
@@ -120,6 +120,7 @@
 /* ---------- Left column ---------- */
 
 .cta-copy {
+  position: relative; /* anchors the desktop button placement */
   min-width: 0;
 }
 
@@ -133,38 +134,99 @@
   overflow-wrap: break-word;
 }
 
-.cta-title-accent {
-  background: linear-gradient(90deg, #eb230a 0%, #f7700c 100%);
+/* Short underline below the title — same gradient as the first line */
+.cta-title::after {
+  content: "";
+  display: block;
+  width: 132px;
+  height: 5px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgb(235, 35, 10) 0%, rgb(247, 112, 12) 100%);
+  margin-top: 18px;
+}
+
+/* "Looking to Transform Your Business?" — animated gradient text, 4px larger */
+.cta-title-line {
+  font-size: calc(1em + 4px);
+  color: rgba(0, 0, 0, 0);
+  background: linear-gradient(
+    90deg,
+    #eb230a 0%,
+    #ff9a3d 26%,
+    #f7700c 52%,
+    #ffb800 76%,
+    #eb230a 100%
+  );
+  background-size: 250% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  color: transparent;
+  animation: cta-title-shimmer 6s ease-in-out infinite;
 }
 
-/* "Looking to Transform Your Business?" stays on one line from tablet up */
-@media (min-width: 640px) {
+/* Stays on one line from tablet up */
+@media (min-width: 820px) {
   .cta-title-line {
     white-space: nowrap;
   }
 }
 
-/* ---------- Right column ---------- */
-
-.cta-panel {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 12px;
-  width: 100%;
-  max-width: 360px;
-  justify-self: end;
+/* Lines 2 & 3 — animated white-silver metallic gradient text */
+.cta-title-lav {
+  font-size: calc(1em - 2px);
+  color: rgba(0, 0, 0, 0);
+  background: linear-gradient(
+    90deg,
+    #ffffff 0%,
+    #e7ecf3 20%,
+    #b9c4d2 45%,
+    #f2f6fa 72%,
+    #ffffff 100%
+  );
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: cta-title-shimmer 7s ease-in-out infinite;
 }
 
-/* Quote button reuses the hero button design — sized and aligned to its content */
-.cta-panel .hero-btn {
+@keyframes cta-title-shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* ---------- Title action row (last line + button) ---------- */
+
+.cta-title-lastrow {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(20px, 2.6vw, 36px);
+  vertical-align: middle;
+}
+
+.cta-title .hero-btn {
   width: auto;
   min-width: 0;
-  padding-inline: 34px;
+  padding-inline: 30px;
+  letter-spacing: normal;
+  white-space: nowrap;
+  text-wrap: nowrap;
+}
+
+/* Desktop: park the button below the end of the first line (right corner) */
+@media (min-width: 820px) {
+  .cta-title .hero-btn {
+    position: absolute;
+    right: 90px;
+    top: calc((clamp(2.1rem, 3.4vw + 0.6rem, 3.8rem) + 4px) * 1.06 + 70px);
+  }
 }
 
 /* ---------- Entrance ---------- */
@@ -202,17 +264,12 @@
 
 /* ---------- Responsive ---------- */
 
-@media (max-width: 1024px) {
-  .cta-panel {
-    max-width: 360px;
-  }
-}
-
 @media (max-width: 900px) {
-  .cta-panel {
-    max-width: 100%;
-    justify-self: center;
+  .cta-title-lastrow {
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
+    gap: 18px;
   }
 }
 
@@ -246,6 +303,11 @@
 @media (prefers-reduced-motion: reduce) {
   .cta-bg::before,
   .cta-bg::after {
+    animation: none;
+  }
+
+  .cta-title-line,
+  .cta-title-lav {
     animation: none;
   }
 

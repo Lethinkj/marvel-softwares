@@ -35,28 +35,26 @@ export default function CTASection() {
 
       <div className="container">
         <div className="cta-shell">
-          {/* Message */}
+          {/* Message + action */}
           <div className="cta-copy">
             <h2 id="cta-title" className="cta-title cta-reveal" style={reveal(0)}>
               <span className="cta-title-line">Looking to Transform Your Business?</span>
               <br />
-              Let&apos;s Create Technology{" "}
-              <span className="cta-title-accent">That Moves You Forward.</span>
+              <span className="cta-title-lav">Let&apos;s Create Technology</span>
+              <br />
+              <span className="cta-title-lastrow">
+                <span className="cta-title-lav cta-title-accent">That Moves You Forward.</span>
+                <Link
+                  to="/#contact"
+                  className="hero-btn hero-btn--primary"
+                  aria-label="Get a Quote — go to the contact form"
+                  onClick={() => trackCtaClick('Get a Quote (CTA Banner)', '/#contact')}
+                >
+                  Get a Quote
+                  <ArrowRight size={18} strokeWidth={2} aria-hidden="true" />
+                </Link>
+              </span>
             </h2>
-          </div>
-
-          {/* Actions */}
-          <div className="cta-panel">
-            <Link
-              to="/#contact"
-              className="hero-btn hero-btn--primary cta-reveal"
-              style={reveal(160)}
-              aria-label="Get a Quote — go to the contact form"
-              onClick={() => trackCtaClick('Get a Quote (CTA Banner)', '/#contact')}
-            >
-              Get a Quote
-              <ArrowRight size={18} strokeWidth={2} aria-hidden="true" />
-            </Link>
           </div>
         </div>
       </div>
