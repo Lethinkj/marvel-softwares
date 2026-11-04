@@ -9,6 +9,36 @@ export default defineConfig({
     react(),
     tailwindcss(),
     {
+      name: 'smtp-inquiry-email-handler',
+      configureServer(server) {
+        server.middlewares.use(async (req, res, next) => {
+          if (req.url === '/api/send-inquiry-email' && req.method === 'POST') {
+            let body = ''
+            req.on('data', (chunk) => {
+              body += chunk
+            })
+            req.on('end', async () => {
+              try {
+                const payload = JSON.parse(body || '{}')
+                // @ts-expect-error dynamic import of server email service
+                const { sendInquiryEmails } = await import('./server/emailService.mjs')
+                const result = await sendInquiryEmails(payload)
+                res.statusCode = 200
+                res.setHeader('Content-Type', 'application/json')
+                res.end(JSON.stringify(result))
+              } catch (err: any) {
+                res.statusCode = 500
+                res.setHeader('Content-Type', 'application/json')
+                res.end(JSON.stringify({ error: err?.message || String(err) }))
+              }
+            })
+            return
+          }
+          next()
+        })
+      },
+    },
+    {
       name: 'preview-html-rewriter',
       configureServer(server) {
         server.middlewares.use(async (request, response, next) => {

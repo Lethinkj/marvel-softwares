@@ -172,7 +172,7 @@ export const WhyChooseMarvel: React.FC = () => {
             className="h-full"
           >
             <div
-              className="relative flex flex-col items-center text-center justify-start h-full p-4.5 sm:p-5 lg:p-5.5 bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.035)] hover:shadow-[0_10px_28px_rgba(0,0,0,0.07)] transition-all duration-300 hover:-translate-y-1 overflow-hidden select-none border border-slate-200"
+              className="why-marvel-card relative flex flex-col items-center text-center justify-start h-full p-4.5 sm:p-5 lg:p-5.5 bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.035)] hover:shadow-[0_10px_28px_rgba(0,0,0,0.07)] transition-all duration-300 hover:-translate-y-1 overflow-hidden select-none border border-slate-200"
               style={{ border: '1px solid var(--color-slate-200)' }}
             >
               
@@ -184,7 +184,7 @@ export const WhyChooseMarvel: React.FC = () => {
               </div>
 
               {/* Title */}
-              <h3 className="text-card-title text-[16px] sm:text-[17px] tracking-tight leading-snug mb-1.5 sm:mb-2 text-center text-slate-900">
+              <h3 className="text-card-title tracking-tight leading-snug mb-1.5 sm:mb-2 text-center text-slate-900">
                 {item.title}
               </h3>
 

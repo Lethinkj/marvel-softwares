@@ -52,6 +52,25 @@ export async function submitProjectInquiry(inquiry: ProjectInquiry): Promise<Inq
     session_id: sessionId,
   }
 
+  // Trigger automated SMTP emails (Thank-you to client + Notification to admin)
+  // Sent asynchronously so UI responsiveness is never delayed by mail servers
+  try {
+    fetch('/api/send-inquiry-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...payload,
+        submittedAt: new Date().toISOString(),
+      }),
+    }).catch((emailErr) => {
+      if (import.meta.env.DEV) {
+        console.warn('[inquiryApi] Email dispatch notification error:', emailErr)
+      }
+    })
+  } catch {
+    // Non-blocking
+  }
+
   // Try inserting directly into Supabase dev_contact_inquiries table
   try {
     // 1. Ensure visitor profile exists in dev_visitors and link lead details

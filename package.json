@@ -7,13 +7,20 @@
     "dev": "vite",
     "build": "tsc -b && vite build && node scripts/prerender.mjs",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "node server.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.111.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/nodemailer": "^8.0.2",
+    "cors": "^2.8.6",
+    "express": "^5.3.0",
     "gsap": "^3.15.0",
     "lucide-react": "^1.66.0",
     "motion": "^14.2.0",
+    "nodemailer": "^10.3.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.4"

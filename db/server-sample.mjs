@@ -18,6 +18,7 @@
 import express from 'express'
 import cors from 'cors'
 import { createClient } from '@supabase/supabase-js'
+import { sendInquiryEmails } from '../server/emailService.mjs'
 
 const app = express()
 const port = process.env.PORT || 4000
@@ -175,10 +176,46 @@ app.post('/api/inquiry', async (req, res) => {
         .eq('visitor_id', visitor_id)
     }
 
+    // 3. Dispatch automated SMTP emails (Thank you to client & Alert to admin)
+    sendInquiryEmails({
+      ...req.body,
+      ip_address: ip,
+      city,
+      country,
+      region,
+      submittedAt: data.created_at || new Date().toISOString(),
+    }).catch((emailErr) => {
+      console.warn('[server] SMTP email dispatch warning:', emailErr.message)
+    })
+
     return res.status(201).json({ status: 'sent', inquiryId: data.id })
   } catch (error) {
     console.error('Error submitting inquiry:', error)
     return res.status(500).json({ error: 'Failed to process inquiry' })
+  }
+})
+
+/**
+ * POST /api/send-inquiry-email
+ * Direct endpoint for frontend SMTP email dispatch
+ */
+app.post('/api/send-inquiry-email', async (req, res) => {
+  try {
+    const ip = getClientIp(req)
+    const country = req.headers['cf-ipcountry'] || 'India'
+    const city = req.headers['cf-ipcity'] || null
+
+    const result = await sendInquiryEmails({
+      ...req.body,
+      ip_address: ip,
+      city,
+      country,
+    })
+
+    return res.status(200).json(result)
+  } catch (error) {
+    console.error('Error sending inquiry emails:', error)
+    return res.status(500).json({ error: error.message || 'Failed to dispatch email' })
   }
 })
 

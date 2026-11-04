@@ -809,7 +809,7 @@ body.nav-menu-open #root {
 .op-professional-icon {
   width: 44px;
   height: 44px;
-  color: #0866f5;
+  color: #ff6b00;
   stroke-width: 1.8;
 }
 
@@ -1404,6 +1404,7 @@ body.nav-menu-open #root {
   display: block;
   margin-top: clamp(24px, 3.5vw, 36px);
   margin-bottom: 14px;
+  text-align: center;
 }
 
 .why-desktop-title {
@@ -1641,6 +1642,7 @@ body.nav-menu-open #root {
   transition: all 0.2s ease;
   text-decoration: none;
   text-align: center;
+  overflow-wrap: anywhere;
 }
 
 .footer-link:hover {
@@ -4538,4 +4540,30 @@ a.page-hero-card-item:hover .page-hero-card-arrow {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ============================================
+   GLOBAL TEXT — double line height, paragraphs only
+   (headings keep their own tight line-height)
+   ============================================ */
+p,
+blockquote {
+  line-height: 2 !important;
+}
+
+/* ============================================
+   Card + footer body text — tighter line height
+   (overrides the paragraph double spacing above)
+   ============================================ */
+.op-list-card p,
+.our-process-svg p,
+.why-marvel-card p,
+.site-footer p,
+.site-footer .footer-link {
+  line-height: 1.5 !important;
+}
+
+/* Why Choose Marvel cards — type (desktop capped at 18px/15px, 1px off the base scale everywhere) */
+.why-marvel-card .text-card-title {
+  font-size: clamp(calc(1.15rem - 3px), calc(0.4vw + 1rem - 3px), 18px) !important;
 }

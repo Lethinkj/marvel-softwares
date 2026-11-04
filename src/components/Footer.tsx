@@ -179,13 +179,13 @@ export function Footer() {
             <ul className="footer-col-list">
               <li>
                 <a
-                  href="https://marvelslice.com/"
+                  href="https://www.marvelslice.com/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="footer-link"
-                  onClick={() => trackCtaClick('Marvel Slice', 'https://marvelslice.com/')}
+                  onClick={() => trackCtaClick('www.marvelslice.com', 'https://www.marvelslice.com/')}
                 >
-                  Marvel Slice
+                  www.marvelslice.com
                 </a>
               </li>
               <li>
@@ -194,9 +194,9 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="footer-link"
-                  onClick={() => trackCtaClick('MarvelSlice LMS', 'https://lms.marvelslice.com/login')}
+                  onClick={() => trackCtaClick('lms.marvelslice.com/login', 'https://lms.marvelslice.com/login')}
                 >
-                  MarvelSlice LMS
+                  lms.marvelslice.com/login
                 </a>
               </li>
               <li>
@@ -205,9 +205,9 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="footer-link"
-                  onClick={() => trackCtaClick('Marvel Villas', 'https://www.marvelvillas.com/')}
+                  onClick={() => trackCtaClick('www.marvelvillas.com', 'https://www.marvelvillas.com/')}
                 >
-                  Marvel Villas
+                  www.marvelvillas.com
                 </a>
               </li>
             </ul>

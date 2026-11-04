@@ -3,12 +3,10 @@ import { useInView } from '../hooks/useInView'
 import { useReducedMotion } from '../hooks/useMediaQuery'
 
 const BLUE = '#0866F5'
-const NAVY = '#102653'
 const ORANGE = '#FF6B00'
 const LIGHT_BLUE = '#B7DCFF'
 const PALE_BLUE = '#EAF4FF'
 const FLOW = '#7FD8FF'
-const GRAY = '#526B8B'
 const WHITE = '#FFFFFF'
 
 const IconBase = ({ children }: { children: React.ReactNode }) => (
@@ -265,7 +263,7 @@ const POS: Array<[number, number]> = [
 const COL_X = [140, 610, 1080]
 const ROW_Y = [195, 487, 779]
 const CARD_W = 380
-const CARD_H = 180
+const CARD_H = 200
 const CARD_RX = 22
 
 const horizontalConnector = (row: number, from: number, to: number) => {
@@ -324,7 +322,7 @@ export const OurProcessSvg: React.FC<{ className?: string; active?: boolean }> =
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 140 1600 860"
+      viewBox="0 140 1600 882"
       width="100%"
       preserveAspectRatio="xMidYMid meet"
       role="img"
@@ -356,15 +354,15 @@ export const OurProcessSvg: React.FC<{ className?: string; active?: boolean }> =
         <Connector line={row0a.line} arrow={row0a.arrow} delay={0.45} />
         <Connector line={row0b.line} arrow={row0b.arrow} delay={0.58} />
         <Connector
-          line="M1460 285 H1502 Q1522 285 1522 305 V557 Q1522 577 1502 577 H1474"
-          arrow="M1474 569 L1460 577 L1474 585 Z"
+          line="M1460 295 H1502 Q1522 295 1522 315 V567 Q1522 587 1502 587 H1474"
+          arrow="M1474 579 L1460 587 L1474 595 Z"
           delay={0.71}
         />
         <Connector line={row1a.line} arrow={row1a.arrow} delay={0.84} />
         <Connector line={row1b.line} arrow={row1b.arrow} delay={0.97} />
         <Connector
-          line="M140 577 H98 Q78 577 78 597 V849 Q78 869 98 869 H126"
-          arrow="M126 861 L140 869 L126 877 Z"
+          line="M140 587 H98 Q78 587 78 607 V859 Q78 879 98 879 H126"
+          arrow="M126 871 L140 879 L126 887 Z"
           delay={1.1}
         />
         <Connector line={row2a.line} arrow={row2a.arrow} delay={1.23} />
@@ -375,7 +373,6 @@ export const OurProcessSvg: React.FC<{ className?: string; active?: boolean }> =
         const [row, col] = POS[i]
         const x = COL_X[col]
         const y = ROW_Y[row]
-        const cy = y + CARD_H / 2
         const delay = 0.3 + i * 0.11
         return (
           <g key={step.title} className="op-card" style={{ animationDelay: `${delay}s` }}>
@@ -400,7 +397,7 @@ export const OurProcessSvg: React.FC<{ className?: string; active?: boolean }> =
             />
             <rect
               x={x + 34}
-              y={cy - 32}
+              y={y + 68}
               width={64}
               height={64}
               rx={18}
@@ -412,21 +409,47 @@ export const OurProcessSvg: React.FC<{ className?: string; active?: boolean }> =
               <ProcessIcon
                 name={['users', 'clipboard', 'planning', 'dashboard', 'design', 'code', 'checkcircle', 'rocket', 'cloud'][i]}
                 x={x + 44}
-                y={cy - 22}
+                y={y + 78}
               />
             </g>
 
             <line
               x1={x + 124}
-              y1={cy - 40}
+              y1={y + 52}
               x2={x + 124}
-              y2={cy + 40}
+              y2={y + 148}
               stroke="#E3EDFA"
               strokeWidth="2.5"
               strokeLinecap="round"
             />
 
-            <foreignObject x={x + 138} y={y + 8} width={226} height={165}>
+            <foreignObject x={x + 22} y={y + 12} width={CARD_W - 44} height={34}>
+              <div
+                style={{
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  boxSizing: 'border-box',
+                }}
+              >
+                <h3
+                  style={{
+                    margin: 0,
+                    fontSize: '16.5px',
+                    fontWeight: 700,
+                    color: '#0866F5',
+                    lineHeight: 1.2,
+                    letterSpacing: '-0.015em',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {step.title}
+                </h3>
+              </div>
+            </foreignObject>
+            <foreignObject x={x + 138} y={y + 30} width={226} height={140}>
               <div
                 style={{
                   height: '100%',
@@ -437,24 +460,12 @@ export const OurProcessSvg: React.FC<{ className?: string; active?: boolean }> =
                   boxSizing: 'border-box',
                 }}
               >
-                <h3
-                  style={{
-                    margin: 0,
-                    fontSize: '16.5px',
-                    fontWeight: 700,
-                    color: '#102653',
-                    lineHeight: 1.25,
-                    letterSpacing: '-0.015em',
-                  }}
-                >
-                  {step.title}
-                </h3>
                 <p
                   style={{
-                    margin: '6px 0 0',
+                    margin: 0,
                     fontSize: 'var(--font-card-desc, 1.125rem)',
                     fontWeight: 500,
-                    color: '#526B8B',
+                    color: '#000000',
                     lineHeight: 1.45,
                   }}
                 >
@@ -547,10 +558,10 @@ export const OurProcess: React.FC = () => {
                   marginBottom: i < PROCESS_STEPS.length - 1 ? 14 : 0,
                 }}
               >
-                <h3 className="text-card-title font-bold" style={{ color: NAVY, fontSize: '1.05rem', lineHeight: 1.25 }}>
+                <h3 className="text-card-title font-bold" style={{ color: BLUE, fontSize: '1.05rem', lineHeight: 1.25 }}>
                   {step.title}
                 </h3>
-                <p className="text-card-desc" style={{ color: GRAY, marginTop: 4, lineHeight: 1.55 }}>{step.desc}</p>
+                <p className="text-card-desc" style={{ color: '#000000', marginTop: 4, lineHeight: 1.55 }}>{step.desc}</p>
               </div>
             </div>
           </li>

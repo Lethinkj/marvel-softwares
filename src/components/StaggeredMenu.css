@@ -1,7 +1,7 @@
 .staggered-menu-wrapper {
   --sm-menu-width: 72%;
   --sm-menu-max-width: 440px;
-  --sm-menu-pad-x: clamp(20px, 5vw, 32px);
+  --sm-menu-pad-x: clamp(16px, 3.5vw, 24px);
   position: relative;
   width: 100%;
   height: 100%;
@@ -13,7 +13,7 @@
   .staggered-menu-wrapper {
     --sm-menu-width: 75%;
     --sm-menu-max-width: 360px;
-    --sm-menu-pad-x: 1.5rem;
+    --sm-menu-pad-x: 1rem;
   }
 }
 
@@ -21,7 +21,7 @@
   .staggered-menu-wrapper {
     --sm-menu-width: 82%;
     --sm-menu-max-width: 100%;
-    --sm-menu-pad-x: 1.25rem;
+    --sm-menu-pad-x: 0.875rem;
   }
 }
 
@@ -268,11 +268,11 @@
 .sm-panel-item {
   position: relative;
   color: #ffffff;
-  font-weight: 700;
-  font-size: clamp(0.9rem, 2.8vw, 1rem);
+  font-weight: 600;
+  font-size: clamp(0.78rem, 2.2vw, 0.86rem);
   cursor: pointer;
   line-height: 1.25;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   transition:
     color 0.2s ease,
@@ -281,8 +281,8 @@
   align-items: center;
   width: 100%;
   text-decoration: none;
-  padding: 13px var(--sm-menu-pad-x);
-  min-height: 46px;
+  padding: 9px var(--sm-menu-pad-x);
+  min-height: 38px;
 }
 
 .sm-panel-item:hover {
@@ -317,8 +317,8 @@
    ======================================================== */
 .sm-socials {
   margin-top: auto;
-  padding: 14px var(--sm-menu-pad-x);
-  padding-bottom: max(16px, env(safe-area-inset-bottom, 14px) + 4px);
+  padding: 10px var(--sm-menu-pad-x);
+  padding-bottom: max(12px, env(safe-area-inset-bottom, 10px) + 2px);
   background: #ffffff;
   border-top: none;
   display: flex;
@@ -334,7 +334,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.15rem;
   flex-wrap: wrap;
 }
 
@@ -364,7 +364,7 @@
 }
 
 .sm-socials-link {
-  font-size: 0.84rem;
+  font-size: 0.78rem;
   font-weight: 600;
   color: #14203a;
   text-decoration: none;
