@@ -21,6 +21,7 @@ import {
   getIpSecurityStatus,
   getClientIp,
 } from '../../utils/adminAuth'
+import './admin.css'
 
 export default function AdminLogin() {
   const navigate = useNavigate()
@@ -112,7 +113,7 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-[#F5F7FB] text-[#111827] flex flex-col justify-between font-sans relative overflow-hidden">
+    <div className="admin-login-page min-h-screen w-full bg-[#F5F7FB] text-[#111827] flex flex-col justify-between font-sans relative overflow-hidden">
       {/* Subtle modern geometric background accents */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-100/60 rounded-full blur-3xl" />

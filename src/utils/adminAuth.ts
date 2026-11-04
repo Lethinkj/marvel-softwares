@@ -117,6 +117,15 @@ export interface VisitorRecord {
   first_seen: string
   last_seen: string
   session_count?: number
+  ip_address?: string
+  country?: string
+  country_code?: string
+  region?: string
+  city?: string
+  postal_code?: string
+  latitude?: number
+  longitude?: number
+  timezone?: string
   device_type?: 'mobile' | 'tablet' | 'desktop'
   browser?: string
   os?: string
@@ -124,6 +133,7 @@ export interface VisitorRecord {
   language?: string
   referrer?: string
   consent_status?: string
+  user_agent?: string
   lead_name?: string
   lead_email?: string
   lead_phone?: string

@@ -7,7 +7,6 @@ import {
   ShieldAlert,
   History,
   Users,
-  Database,
   LogOut,
   RefreshCw,
   ExternalLink,
@@ -21,6 +20,8 @@ import {
   CheckCircle2,
   Shield,
   Clock,
+  MapPin,
+  Languages,
   Smartphone,
   Monitor,
   Tablet,
@@ -32,7 +33,6 @@ import {
   Check,
   Save,
   Plus,
-  Copy,
   Lock,
   Filter,
   Laptop,
@@ -68,8 +68,9 @@ import {
   type AuditLog,
   type IpBlockRecord,
 } from '../../utils/adminAuth'
+import './admin.css'
 
-type TabType = 'overview' | 'inquiries' | 'telemetry' | 'admins' | 'audit' | 'security' | 'database'
+type TabType = 'overview' | 'inquiries' | 'telemetry' | 'admins' | 'audit' | 'security'
 
 export default function AdminDashboard() {
   const navigate = useNavigate()
@@ -137,9 +138,6 @@ export default function AdminDashboard() {
   const [manualBlockIpInput, setManualBlockIpInput] = useState('')
   const [manualBlockReasonInput, setManualBlockReasonInput] = useState('Suspicious administrative probing')
   const [manualBlockLoading, setManualBlockLoading] = useState(false)
-
-  // Copy SQL feedback
-  const [copiedSection, setCopiedSection] = useState<string | null>(null)
 
   // Load all live state directly from Supabase tables
   const loadAllData = useCallback(async () => {
@@ -300,6 +298,34 @@ export default function AdminDashboard() {
       topSections,
     }
   }, [inquiries, telemetry, visitors, sessionsList, ipBlocks, nowMs])
+
+  const visitorInsights = useMemo(() => {
+    const countries = new Map<string, number>()
+    const cities = new Map<string, number>()
+    const browsers = new Map<string, number>()
+    const languages = new Map<string, number>()
+
+    visitors.forEach((visitor) => {
+      const country = visitor.country || 'Location unavailable'
+      const city = visitor.city || 'City unavailable'
+      const browser = visitor.browser || 'Unknown browser'
+      const language = visitor.language || 'Unknown language'
+      countries.set(country, (countries.get(country) || 0) + 1)
+      cities.set(city, (cities.get(city) || 0) + 1)
+      browsers.set(browser, (browsers.get(browser) || 0) + 1)
+      languages.set(language, (languages.get(language) || 0) + 1)
+    })
+
+    const top = (values: Map<string, number>) =>
+      [...values.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5)
+
+    return {
+      countries: top(countries),
+      cities: top(cities),
+      browsers: top(browsers),
+      languages: top(languages),
+    }
+  }, [visitors])
 
   // 7-day activity timeline computation
   const sevenDayChartData = useMemo(() => {
@@ -525,19 +551,13 @@ export default function AdminDashboard() {
     setAdmins((prev) => prev.filter((a) => a.admin_id !== adminId))
   }
 
-  const handleCopyCode = (code: string, id: string) => {
-    navigator.clipboard.writeText(code)
-    setCopiedSection(id)
-    setTimeout(() => setCopiedSection(null), 2000)
-  }
-
   if (!session) return null
 
   const idleMins = Math.floor(idleSecondsRemaining / 60)
   const idleSecs = idleSecondsRemaining % 60
 
   return (
-    <div className="min-h-screen bg-[#F5F7FB] text-[#111827] flex font-sans selection:bg-blue-100 selection:text-blue-900">
+    <div className="admin-dashboard-page min-h-screen bg-[#F5F7FB] text-[#111827] flex font-sans selection:bg-blue-100 selection:text-blue-900">
       {/* Mobile Sidebar Backdrop */}
       {isSidebarOpen && (
         <div
@@ -723,26 +743,6 @@ export default function AdminDashboard() {
               <span className="text-[10px] font-mono text-[#64748B]">{admins.length}</span>
             </button>
 
-            {/* Tab: Database */}
-            <button
-              onClick={() => {
-                setActiveTab('database')
-                setIsSidebarOpen(false)
-              }}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
-                activeTab === 'database'
-                  ? 'bg-[#2563EB] text-white shadow-md shadow-blue-500/20 font-semibold'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <Database className="w-4 h-4" />
-                <span>Postgres Schema & SQL</span>
-              </div>
-              <span className="text-[10px] font-mono text-[#2563EB] bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200">
-                dev_*
-              </span>
-            </button>
           </div>
         </div>
 
@@ -1668,14 +1668,44 @@ export default function AdminDashboard() {
               {/* Sub-tab 1: Unique Visitors Table (dev_visitors) */}
               {telemetrySubTab === 'visitors' && (
                 <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                    {[
+                      { title: 'Top Countries', icon: Globe, values: visitorInsights.countries },
+                      { title: 'Top Cities', icon: MapPin, values: visitorInsights.cities },
+                      { title: 'Browsers', icon: Monitor, values: visitorInsights.browsers },
+                      { title: 'Languages', icon: Languages, values: visitorInsights.languages },
+                    ].map(({ title, icon: Icon, values }) => (
+                      <div key={title} className="bg-white border border-[#E5E7EB] rounded-2xl p-4 shadow-xs">
+                        <div className="flex items-center gap-2 text-xs font-bold text-[#172554]">
+                          <Icon className="w-4 h-4 text-[#2563EB]" />
+                          {title}
+                        </div>
+                        <div className="mt-3 space-y-2">
+                          {values.length === 0 ? (
+                            <p className="text-[11px] text-[#94A3B8]">Location data will appear after backend GeoIP is enabled.</p>
+                          ) : (
+                            values.map(([label, count]) => (
+                              <div key={label} className="flex items-center justify-between gap-3 text-[11px]">
+                                <span className="truncate text-[#475569]" title={label}>{label}</span>
+                                <span className="font-mono font-bold text-[#172554]">{count}</span>
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
                   <div className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-xs">
                     <div className="overflow-x-auto">
                       <table className="w-full text-left text-xs">
                         <thead className="bg-[#F8FAFC] border-b border-[#E5E7EB] text-[#64748B] font-mono uppercase tracking-wider text-[11px]">
                           <tr>
                             <th className="py-3.5 px-4">Visitor Profile (UUID)</th>
+                            <th className="py-3.5 px-4">IP & Location</th>
                             <th className="py-3.5 px-4">Device & OS</th>
                             <th className="py-3.5 px-4">Browser & Screen</th>
+                            <th className="py-3.5 px-4">Language & Referrer</th>
                             <th className="py-3.5 px-4">First Seen</th>
                             <th className="py-3.5 px-4">Last Active</th>
                             <th className="py-3.5 px-4">Converted Lead</th>
@@ -1684,7 +1714,7 @@ export default function AdminDashboard() {
                         <tbody className="divide-y divide-[#E5E7EB]">
                           {visitors.length === 0 ? (
                             <tr>
-                              <td colSpan={6} className="py-12 text-center text-[#64748B]">
+                              <td colSpan={8} className="py-12 text-center text-[#64748B]">
                                 No visitor records in dev_visitors table yet.
                               </td>
                             </tr>
@@ -1698,6 +1728,18 @@ export default function AdminDashboard() {
                                       {v.visitor_id}
                                     </span>
                                   </div>
+                                </td>
+
+                                <td className="py-3.5 px-4 text-[#334155]">
+                                  <div className="font-mono font-semibold">{v.ip_address || 'Unavailable'}</div>
+                                  <div className="text-[10px] text-[#64748B] mt-0.5">
+                                    {[v.city, v.region, v.country].filter(Boolean).join(', ') || 'GeoIP unavailable'}
+                                  </div>
+                                  {(v.latitude !== undefined && v.longitude !== undefined) && (
+                                    <div className="text-[10px] font-mono text-[#94A3B8]">
+                                      {v.latitude}, {v.longitude}
+                                    </div>
+                                  )}
                                 </td>
 
                                 <td className="py-3.5 px-4">
@@ -1717,6 +1759,13 @@ export default function AdminDashboard() {
                                 <td className="py-3.5 px-4 text-[#334155]">
                                   <div className="font-medium">{v.browser || '—'}</div>
                                   <div className="text-[10px] font-mono text-[#64748B]">{v.screen_resolution || '—'}</div>
+                                </td>
+
+                                <td className="py-3.5 px-4 text-[#334155]">
+                                  <div className="font-medium">{v.language || '—'}</div>
+                                  <div className="text-[10px] text-[#64748B] max-w-[180px] truncate" title={v.referrer || ''}>
+                                    {v.referrer || 'Direct visit'}
+                                  </div>
                                 </td>
 
                                 <td className="py-3.5 px-4 font-mono text-[11px] text-[#64748B] whitespace-nowrap">
@@ -2543,368 +2592,6 @@ export default function AdminDashboard() {
             </div>
           )}
 
-          {/* ========================================================================= */}
-          {/* TAB 7: POSTGRES SCHEMA & SQL */}
-          {/* ========================================================================= */}
-          {activeTab === 'database' && (
-            <div className="space-y-6">
-              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-xs flex items-start gap-3.5">
-                <Database className="w-6 h-6 text-[#2563EB] shrink-0 mt-0.5" />
-                <div className="text-xs space-y-1">
-                  <p className="font-bold text-sm text-[#172554]">PostgreSQL dev_ Schema Definitions</p>
-                  <p className="text-[#64748B] leading-relaxed">
-                    Use these production queries to verify or bootstrap PostgreSQL tables, triggers, and views in Supabase, Neon, AWS RDS, or Docker. All objects use the required <code className="text-[#2563EB] font-mono font-semibold">dev_</code> prefix to prevent collisions.
-                  </p>
-                </div>
-              </div>
-
-              {/* SQL Query 1: dev_admins & dev_admin_sessions */}
-              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-xs space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-[#111827] font-mono">1. dev_admins & dev_admin_sessions</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-50 text-[#2563EB] border border-blue-200 font-semibold">
-                      Security & Zero Persistence
-                    </span>
-                  </div>
-                  <button
-                    onClick={() =>
-                      handleCopyCode(
-                        `CREATE TABLE IF NOT EXISTS dev_admins (
-    admin_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    username VARCHAR(60) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
-    salt VARCHAR(64),
-    full_name VARCHAR(120),
-    email VARCHAR(255) UNIQUE,
-    role VARCHAR(30) NOT NULL DEFAULT 'super_admin',
-    is_active BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE IF NOT EXISTS dev_admin_sessions (
-    session_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    admin_id UUID NOT NULL REFERENCES dev_admins(admin_id) ON DELETE CASCADE,
-    token_hash VARCHAR(255) NOT NULL UNIQUE,
-    ip_address INET,
-    user_agent TEXT,
-    is_revoked BOOLEAN NOT NULL DEFAULT FALSE,
-    revoked_reason VARCHAR(100),
-    last_activity_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    expires_at TIMESTAMPTZ NOT NULL,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);`,
-                        'sql_admin'
-                      )
-                    }
-                    className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors cursor-pointer font-semibold"
-                  >
-                    {copiedSection === 'sql_admin' ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 text-emerald-600" />
-                        <span className="text-emerald-700">Copied</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3.5 h-3.5" />
-                        <span>Copy Query</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-                <div className="bg-[#F8FAFC] p-4 rounded-xl border border-[#E5E7EB] font-mono text-[11px] text-[#334155] overflow-x-auto leading-relaxed">
-                  <pre>{`CREATE TABLE IF NOT EXISTS dev_admins (
-    admin_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    username VARCHAR(60) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
-    salt VARCHAR(64),
-    full_name VARCHAR(120),
-    email VARCHAR(255) UNIQUE,
-    role VARCHAR(30) NOT NULL DEFAULT 'super_admin',
-    is_active BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE IF NOT EXISTS dev_admin_sessions (
-    session_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    admin_id UUID NOT NULL REFERENCES dev_admins(admin_id) ON DELETE CASCADE,
-    token_hash VARCHAR(255) NOT NULL UNIQUE,
-    ip_address INET,
-    user_agent TEXT,
-    is_revoked BOOLEAN NOT NULL DEFAULT FALSE,
-    revoked_reason VARCHAR(100),
-    last_activity_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    expires_at TIMESTAMPTZ NOT NULL,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);`}</pre>
-                </div>
-              </div>
-
-              {/* SQL Query 2: dev_admin_ip_blocks */}
-              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-xs space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-[#111827] font-mono">2. dev_admin_ip_blocks</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-50 text-[#F97316] border border-orange-200 font-semibold">
-                      Brute-Force Rate Limiting
-                    </span>
-                  </div>
-                  <button
-                    onClick={() =>
-                      handleCopyCode(
-                        `CREATE TABLE IF NOT EXISTS dev_admin_ip_blocks (
-    id BIGSERIAL PRIMARY KEY,
-    ip_address INET NOT NULL UNIQUE,
-    failed_attempts INT NOT NULL DEFAULT 0,
-    is_blocked BOOLEAN NOT NULL DEFAULT FALSE,
-    blocked_until TIMESTAMPTZ,
-    block_tier INT NOT NULL DEFAULT 0,
-    first_failed_at TIMESTAMPTZ,
-    last_attempt_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    last_attempt_username VARCHAR(60),
-    total_lifetime_blocks INT NOT NULL DEFAULT 0,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);`,
-                        'sql_ip'
-                      )
-                    }
-                    className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors cursor-pointer font-semibold"
-                  >
-                    {copiedSection === 'sql_ip' ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 text-emerald-600" />
-                        <span className="text-emerald-700">Copied</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3.5 h-3.5" />
-                        <span>Copy Query</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-                <div className="bg-[#F8FAFC] p-4 rounded-xl border border-[#E5E7EB] font-mono text-[11px] text-[#334155] overflow-x-auto leading-relaxed">
-                  <pre>{`CREATE TABLE IF NOT EXISTS dev_admin_ip_blocks (
-    id BIGSERIAL PRIMARY KEY,
-    ip_address INET NOT NULL UNIQUE,
-    failed_attempts INT NOT NULL DEFAULT 0,
-    is_blocked BOOLEAN NOT NULL DEFAULT FALSE,
-    blocked_until TIMESTAMPTZ,
-    block_tier INT NOT NULL DEFAULT 0,
-    first_failed_at TIMESTAMPTZ,
-    last_attempt_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    last_attempt_username VARCHAR(60),
-    total_lifetime_blocks INT NOT NULL DEFAULT 0,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);`}</pre>
-                </div>
-              </div>
-
-              {/* SQL Query 3: dev_admin_audit_logs */}
-              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-xs space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-[#111827] font-mono">3. dev_admin_audit_logs</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 font-semibold">
-                      Immutable Audit Trail
-                    </span>
-                  </div>
-                  <button
-                    onClick={() =>
-                      handleCopyCode(
-                        `CREATE TABLE IF NOT EXISTS dev_admin_audit_logs (
-    id BIGSERIAL PRIMARY KEY,
-    admin_id UUID REFERENCES dev_admins(admin_id) ON DELETE SET NULL,
-    admin_username VARCHAR(60) NOT NULL,
-    admin_role VARCHAR(30) DEFAULT 'super_admin',
-    action VARCHAR(80) NOT NULL,
-    target_type VARCHAR(60),
-    target_id VARCHAR(100),
-    details JSONB,
-    ip_address INET,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);`,
-                        'sql_audit'
-                      )
-                    }
-                    className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors cursor-pointer font-semibold"
-                  >
-                    {copiedSection === 'sql_audit' ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 text-emerald-600" />
-                        <span className="text-emerald-700">Copied</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3.5 h-3.5" />
-                        <span>Copy Query</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-                <div className="bg-[#F8FAFC] p-4 rounded-xl border border-[#E5E7EB] font-mono text-[11px] text-[#334155] overflow-x-auto leading-relaxed">
-                  <pre>{`CREATE TABLE IF NOT EXISTS dev_admin_audit_logs (
-    id BIGSERIAL PRIMARY KEY,
-    admin_id UUID REFERENCES dev_admins(admin_id) ON DELETE SET NULL,
-    admin_username VARCHAR(60) NOT NULL,
-    admin_role VARCHAR(30) DEFAULT 'super_admin',
-    action VARCHAR(80) NOT NULL,
-    target_type VARCHAR(60),
-    target_id VARCHAR(100),
-    details JSONB,
-    ip_address INET,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);`}</pre>
-                </div>
-              </div>
-
-              {/* SQL Query 4: dev_contact_inquiries, dev_visitors, dev_sessions, dev_telemetry_events */}
-              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-xs space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-[#111827] font-mono">4. dev_visitors, dev_sessions, dev_telemetry_events & dev_contact_inquiries</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold">
-                      CRM & Viewers Tracking
-                    </span>
-                  </div>
-                  <button
-                    onClick={() =>
-                      handleCopyCode(
-                        `CREATE TABLE IF NOT EXISTS dev_visitors (
-    visitor_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    first_seen TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    last_seen TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    device_type VARCHAR(20) DEFAULT 'desktop',
-    browser VARCHAR(50),
-    os VARCHAR(50),
-    screen_resolution VARCHAR(30),
-    language VARCHAR(20),
-    referrer TEXT,
-    consent_status VARCHAR(20) NOT NULL DEFAULT 'accepted',
-    lead_name VARCHAR(150),
-    lead_email VARCHAR(255),
-    lead_phone VARCHAR(50),
-    lead_address TEXT,
-    converted_at TIMESTAMPTZ
-);
-
-CREATE TABLE IF NOT EXISTS dev_sessions (
-    session_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    visitor_id UUID NOT NULL REFERENCES dev_visitors(visitor_id) ON DELETE CASCADE,
-    started_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    landing_page VARCHAR(255)
-);
-
-CREATE TABLE IF NOT EXISTS dev_telemetry_events (
-    id BIGSERIAL PRIMARY KEY,
-    visitor_id UUID NOT NULL REFERENCES dev_visitors(visitor_id) ON DELETE CASCADE,
-    session_id UUID REFERENCES dev_sessions(session_id) ON DELETE CASCADE,
-    event_name VARCHAR(60) NOT NULL,
-    page_path VARCHAR(255) NOT NULL,
-    section_id VARCHAR(60),
-    section_name VARCHAR(120),
-    dwell_time_seconds INT DEFAULT 0,
-    element_label VARCHAR(150),
-    metadata JSONB,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE IF NOT EXISTS dev_contact_inquiries (
-    id BIGSERIAL PRIMARY KEY,
-    visitor_id UUID REFERENCES dev_visitors(visitor_id) ON DELETE SET NULL,
-    session_id UUID REFERENCES dev_sessions(session_id) ON DELETE SET NULL,
-    name VARCHAR(150) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    phone VARCHAR(50) NOT NULL,
-    address TEXT NOT NULL,
-    solution VARCHAR(100) DEFAULT 'Other',
-    requirements TEXT NOT NULL,
-    status VARCHAR(30) NOT NULL DEFAULT 'new',
-    admin_notes TEXT,
-    is_starred BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);`,
-                        'sql_telemetry_crm'
-                      )
-                    }
-                    className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors cursor-pointer font-semibold"
-                  >
-                    {copiedSection === 'sql_telemetry_crm' ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 text-emerald-600" />
-                        <span className="text-emerald-700">Copied</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3.5 h-3.5" />
-                        <span>Copy Query</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-                <div className="bg-[#F8FAFC] p-4 rounded-xl border border-[#E5E7EB] font-mono text-[11px] text-[#334155] overflow-x-auto leading-relaxed">
-                  <pre>{`CREATE TABLE IF NOT EXISTS dev_visitors (
-    visitor_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    first_seen TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    last_seen TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    device_type VARCHAR(20) DEFAULT 'desktop',
-    browser VARCHAR(50),
-    os VARCHAR(50),
-    screen_resolution VARCHAR(30),
-    language VARCHAR(20),
-    referrer TEXT,
-    consent_status VARCHAR(20) NOT NULL DEFAULT 'accepted',
-    lead_name VARCHAR(150),
-    lead_email VARCHAR(255),
-    lead_phone VARCHAR(50),
-    lead_address TEXT,
-    converted_at TIMESTAMPTZ
-);
-
-CREATE TABLE IF NOT EXISTS dev_sessions (
-    session_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    visitor_id UUID NOT NULL REFERENCES dev_visitors(visitor_id) ON DELETE CASCADE,
-    started_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    landing_page VARCHAR(255)
-);
-
-CREATE TABLE IF NOT EXISTS dev_telemetry_events (
-    id BIGSERIAL PRIMARY KEY,
-    visitor_id UUID NOT NULL REFERENCES dev_visitors(visitor_id) ON DELETE CASCADE,
-    session_id UUID REFERENCES dev_sessions(session_id) ON DELETE CASCADE,
-    event_name VARCHAR(60) NOT NULL,
-    page_path VARCHAR(255) NOT NULL,
-    section_id VARCHAR(60),
-    section_name VARCHAR(120),
-    dwell_time_seconds INT DEFAULT 0,
-    element_label VARCHAR(150),
-    metadata JSONB,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE IF NOT EXISTS dev_contact_inquiries (
-    id BIGSERIAL PRIMARY KEY,
-    visitor_id UUID REFERENCES dev_visitors(visitor_id) ON DELETE SET NULL,
-    session_id UUID REFERENCES dev_sessions(session_id) ON DELETE SET NULL,
-    name VARCHAR(150) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    phone VARCHAR(50) NOT NULL,
-    address TEXT NOT NULL,
-    solution VARCHAR(100) DEFAULT 'Other',
-    requirements TEXT NOT NULL,
-    status VARCHAR(30) NOT NULL DEFAULT 'new',
-    admin_notes TEXT,
-    is_starred BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);`}</pre>
-                </div>
-              </div>
-            </div>
-          )}
         </main>
       </div>
     </div>

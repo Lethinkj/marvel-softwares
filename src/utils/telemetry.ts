@@ -11,6 +11,7 @@ export interface ClientMeta {
   device_type: 'mobile' | 'tablet' | 'desktop'
   browser: string
   os: string
+  user_agent: string
   screen_resolution: string
   language: string
   referrer: string
@@ -98,6 +99,7 @@ export function getClientMeta(): ClientMeta {
       device_type: 'desktop',
       browser: 'Unknown',
       os: 'Unknown',
+      user_agent: '',
       screen_resolution: '',
       language: '',
       referrer: '',
@@ -128,6 +130,7 @@ export function getClientMeta(): ClientMeta {
     device_type,
     browser,
     os,
+    user_agent: ua,
     screen_resolution: `${window.screen.width || 0}x${window.screen.height || 0}`,
     language: navigator.language || 'en',
     referrer: document.referrer || '',
@@ -193,6 +196,7 @@ export function sendTelemetry(event: TelemetryEventPayload): void {
             device_type: client_meta.device_type,
             browser: client_meta.browser,
             os: client_meta.os,
+            user_agent: client_meta.user_agent,
             screen_resolution: client_meta.screen_resolution,
             language: client_meta.language,
             referrer: client_meta.referrer,

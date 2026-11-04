@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS dev_visitors (
     device_type VARCHAR(20) DEFAULT 'desktop', -- 'mobile', 'tablet', 'desktop'
     browser VARCHAR(50),
     os VARCHAR(50),
+    user_agent TEXT,
     screen_resolution VARCHAR(30),
     language VARCHAR(20),
     referrer TEXT,
