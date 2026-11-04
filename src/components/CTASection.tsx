@@ -38,7 +38,7 @@ export default function CTASection() {
           {/* Message */}
           <div className="cta-copy">
             <h2 id="cta-title" className="cta-title cta-reveal" style={reveal(0)}>
-              Looking to Transform Your Business?
+              <span className="cta-title-line">Looking to Transform Your Business?</span>
               <br />
               Let&apos;s Create Technology{" "}
               <span className="cta-title-accent">That Moves You Forward.</span>
