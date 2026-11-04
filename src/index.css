@@ -4563,7 +4563,7 @@ blockquote {
   line-height: 1.5 !important;
 }
 
-/* Why Choose Marvel cards — type (desktop capped at 18px/15px, 1px off the base scale everywhere) */
+/* Why Choose Marvel card titles — 1px off the base card-title clamp, capped at 18px */
 .why-marvel-card .text-card-title {
   font-size: clamp(calc(1.15rem - 3px), calc(0.4vw + 1rem - 3px), 18px) !important;
 }
