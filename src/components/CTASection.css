@@ -145,23 +145,10 @@
   margin-top: 18px;
 }
 
-/* "Looking to Transform Your Business?" — animated gradient text, 4px larger */
+/* "Looking to Transform Your Business?" — clean white headline, 4px larger */
 .cta-title-line {
   font-size: calc(1em + 4px);
-  color: rgba(0, 0, 0, 0);
-  background: linear-gradient(
-    90deg,
-    #eb230a 0%,
-    #ff9a3d 26%,
-    #f7700c 52%,
-    #ffb800 76%,
-    #eb230a 100%
-  );
-  background-size: 250% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: cta-title-shimmer 6s ease-in-out infinite;
+  color: var(--cta-white);
 }
 
 .cta-mobile-break {
@@ -191,17 +178,17 @@
   }
 }
 
-/* Lines 2 & 3 — animated white-silver metallic gradient text */
+/* Lines 2 & 3 — animated red-orange gradient text */
 .cta-title-lav {
   font-size: calc(1em - 2px);
   color: rgba(0, 0, 0, 0);
   background: linear-gradient(
     90deg,
-    #ffffff 0%,
-    #e7ecf3 20%,
-    #b9c4d2 45%,
-    #f2f6fa 72%,
-    #ffffff 100%
+    #eb230a 0%,
+    #ff9a3d 26%,
+    #f7700c 52%,
+    #ffb800 76%,
+    #eb230a 100%
   );
   background-size: 250% 100%;
   -webkit-background-clip: text;
