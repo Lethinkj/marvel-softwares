@@ -2324,7 +2324,24 @@ body.nav-menu-open #root {
 }
 
 @media (max-width: 640px) {
+  .hero-copy {
+    display: contents;
+  }
+
+  .hero-copy h1 {
+    order: 1;
+  }
+
+  .hero-visual {
+    order: 2;
+  }
+
+  .hero-copy .hero-lead {
+    order: 3;
+  }
+
   .hero-actions {
+    order: 4;
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: minmax(0, 1fr);
