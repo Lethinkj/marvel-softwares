@@ -2,22 +2,41 @@ import React, { useState, useEffect } from 'react'
 import { getConsentStatus, setConsentStatus, onOpenConsentBanner } from '../utils/consent'
 import { initGA } from '../utils/analytics'
 
+/**
+ * Checks whether the current context is a mobile device or viewport (< 768px).
+ */
+function isMobileContext(): boolean {
+  if (typeof window === 'undefined') return false
+  const isSmallScreen = window.innerWidth < 768 || window.matchMedia('(max-width: 767px)').matches
+  const isMobileUA = /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(
+    navigator.userAgent || ''
+  )
+  return isSmallScreen || isMobileUA
+}
+
 export const CookieBanner: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
 
   useEffect(() => {
-    // If user has not yet decided, show banner after a gentle 800ms delay
+    // In mobile, do not ask for cookies (keep hidden)
+    if (isMobileContext()) {
+      return
+    }
+
+    // If user has not yet decided, show banner after a gentle 800ms delay on desktop/tablet
     const currentStatus = getConsentStatus()
     let timer: number | null = null
     if (currentStatus === 'undecided') {
       timer = window.setTimeout(() => setIsVisible(true), 800)
     }
 
-    // Always listen for manual reopen requests (e.g. from footer "Cookie Preferences" link)
+    // Always listen for manual reopen requests (e.g. from footer "Cookie Preferences" link on desktop)
     const unsubscribe = onOpenConsentBanner(() => {
-      setIsExpanded(false)
-      setIsVisible(true)
+      if (!isMobileContext()) {
+        setIsExpanded(false)
+        setIsVisible(true)
+      }
     })
     return () => {
       if (timer !== null) window.clearTimeout(timer)
@@ -43,10 +62,10 @@ export const CookieBanner: React.FC = () => {
       role="dialog"
       aria-live="polite"
       aria-label="Cookie and Privacy Consent"
-      className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:bottom-6 sm:max-w-md z-50 transition-all duration-300 ease-out"
+      className="hidden md:block fixed right-6 bottom-6 max-w-md z-50 transition-all duration-300 ease-out"
     >
       <div
-        className="rounded-2xl p-4 sm:p-5 text-slate-100 shadow-2xl border border-slate-700/80"
+        className="rounded-2xl p-5 text-slate-100 shadow-2xl border border-slate-700/80"
         style={{
           background: 'rgba(15, 23, 42, 0.95)',
           backdropFilter: 'blur(14px)',
@@ -92,11 +111,11 @@ export const CookieBanner: React.FC = () => {
           </div>
         </div>
 
-        <div className="mt-3.5 pt-3 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-2.5">
+        <div className="mt-3.5 pt-3 border-t border-slate-800 flex items-center justify-between gap-2.5">
           <button
             type="button"
             onClick={() => setIsExpanded((prev) => !prev)}
-            className="text-[11.5px] text-slate-400 hover:text-white inline-flex items-center gap-1 transition-colors self-start sm:self-center cursor-pointer"
+            className="text-[11.5px] text-slate-400 hover:text-white inline-flex items-center gap-1 transition-colors self-center cursor-pointer"
             aria-expanded={isExpanded}
           >
             <span>{isExpanded ? 'Show less' : 'Learn more'}</span>
@@ -115,18 +134,18 @@ export const CookieBanner: React.FC = () => {
             </svg>
           </button>
 
-          <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+          <div className="flex items-center gap-2 justify-end">
             <button
               type="button"
               onClick={handleOnlyRequired}
-              className="flex-1 sm:flex-none px-3.5 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-lg border border-slate-700 hover:border-slate-600 transition-colors cursor-pointer"
+              className="px-3.5 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-lg border border-slate-700 hover:border-slate-600 transition-colors cursor-pointer"
             >
               Only Required
             </button>
             <button
               type="button"
               onClick={handleAccept}
-              className="flex-1 sm:flex-none px-4 py-1.5 text-xs font-semibold text-white rounded-lg transition-transform active:scale-95 cursor-pointer"
+              className="px-4 py-1.5 text-xs font-semibold text-white rounded-lg transition-transform active:scale-95 cursor-pointer"
               style={{
                 background: 'linear-gradient(135deg, #0057E7 0%, #0033A0 100%)',
                 boxShadow: '0 2px 8px rgba(0, 87, 231, 0.4)',

@@ -284,11 +284,11 @@ export function Footer() {
             <button
               type="button"
               onClick={openConsentBanner}
-              className="hover:text-blue-100 transition-colors underline underline-offset-2 cursor-pointer bg-transparent border-0 p-0 text-white"
+              className="hidden md:inline hover:text-blue-100 transition-colors underline underline-offset-2 cursor-pointer bg-transparent border-0 p-0 text-white"
             >
               Cookie Preferences
             </button>
-            <span aria-hidden="true" className="text-white/50">|</span>
+            <span aria-hidden="true" className="hidden md:inline text-white/50">|</span>
             <a
               href="/#contact"
               onClick={(e) => scrollToSection(e, '#contact')}
