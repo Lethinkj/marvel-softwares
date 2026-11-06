@@ -48,6 +48,14 @@ Matches the Marvel Softwares consultation form:
 * `dwell_time_seconds`: Reading time in seconds
 * `metadata`: JSON payload
 
+### 5. `dev_build_requests` (Build & Price Configurator Leads — optional)
+The `/build` wizard stores its structured configuration here. It is written best-effort: even without this table, every request is also saved in `dev_contact_inquiries` and emailed to the admin, so no lead is ever lost.
+* `track`: `website` | `software`
+* `tier`: `basic` | `modern` | `ultra`
+* `accessories`: JSONB array of selected add-on names
+* `note`: Free-form client note
+* `status`: `new`, `contacted`, `quoted`, `won`, `lost`, `spam`
+
 ---
 
 ## 🚀 How to Execute Schema in PostgreSQL

@@ -8,7 +8,7 @@ import CookieBanner from './CookieBanner'
 import { initGA, trackPageView, trackSectionView } from '../utils/analytics'
 
 /**
- * PageTracker records virtual pageviews across all routes (/ and /faq) for Google Analytics.
+ * PageTracker records virtual pageviews across all routes (/, /faq and /build) for Google Analytics.
  */
 function PageTracker() {
   const { pathname, search } = useLocation()

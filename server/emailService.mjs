@@ -105,12 +105,20 @@ function escapeHtml(str) {
  * Generate User Confirmation / Thank You HTML Email
  */
 export function renderUserConfirmationEmail(inquiry) {
+  const isBuild = inquiry.source === 'build-configurator'
   const name = escapeHtml(inquiry.name || 'Valued Client')
   const solution = escapeHtml(inquiry.solution || 'Custom Software Solution')
   const phone = escapeHtml(inquiry.phone || 'Not provided')
   const address = escapeHtml(inquiry.address || 'Not specified')
   const requirements = escapeHtml(inquiry.requirements || 'No additional details provided.')
   const year = new Date().getFullYear()
+  const summaryTitle = isBuild ? 'Your Build Configuration' : 'Summary of Your Inquiry'
+  const leadText = isBuild
+    ? 'Thank you — we have successfully received your <strong>Build &amp; Price</strong> request.'
+    : 'Thank you for reaching out to <strong>Marvel Softwares</strong>. We have successfully received your consultation inquiry.'
+  const secondLead = isBuild
+    ? 'Our engineering team is reviewing the exact configuration you selected. <strong>Our team will contact you soon</strong> with a tailored written quote and next steps.'
+    : 'Our engineering and project advisory team is currently reviewing your project requirements. One of our technical leads will get in touch with you shortly to discuss your vision, architecture, and timeline.'
 
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -287,17 +295,17 @@ export function renderUserConfirmationEmail(inquiry) {
       <div class="content">
         <p class="greeting">Dear ${name},</p>
         <p class="lead-text">
-          Thank you for reaching out to <strong>Marvel Softwares</strong>. We have successfully received your consultation inquiry.
+          ${leadText}
         </p>
         <p class="lead-text">
-          Our engineering and project advisory team is currently reviewing your project requirements. One of our technical leads will get in touch with you shortly to discuss your vision, architecture, and timeline.
+          ${secondLead}
         </p>
 
         <!-- SUBMITTED INQUIRY RECAP -->
         <div class="summary-card">
-          <div class="summary-title">Summary of Your Inquiry</div>
+          <div class="summary-title">${summaryTitle}</div>
           <div class="summary-item">
-            <span class="summary-label">Requested Solution:</span>
+            <span class="summary-label">${isBuild ? 'Your Build:' : 'Requested Solution:'}</span>
             <span class="summary-value" style="color: #0057E7;">${solution}</span>
           </div>
           <div class="summary-item">
@@ -353,12 +361,10 @@ export function renderUserConfirmationEmail(inquiry) {
 
   const text = `Dear ${inquiry.name || 'Valued Client'},
 
-Thank you for reaching out to Marvel Softwares. We have successfully received your inquiry and our engineering team is reviewing your requirements.
-
-We will contact you shortly to discuss your project in detail.
+${isBuild ? 'Thank you — we have received your Build & Price request.\n\nOur engineering team is reviewing the exact configuration you selected. Our team will contact you soon with a tailored written quote.' : 'Thank you for reaching out to Marvel Softwares. We have successfully received your inquiry and our engineering team is reviewing your requirements.\n\nWe will contact you shortly to discuss your project in detail.'}
 
 Summary of Your Submission:
-- Solution Requested: ${inquiry.solution || 'Custom Software Solution'}
+- ${isBuild ? 'Your Build' : 'Solution Requested'}: ${inquiry.solution || 'Custom Software Solution'}
 - Contact Number: ${inquiry.phone || 'Not provided'}
 - Location: ${inquiry.address || 'Not specified'}
 - Requirements:
@@ -381,6 +387,7 @@ https://marvelsoftwares.in
  * Generate Admin Notification HTML Email
  */
 export function renderAdminNotificationEmail(inquiry) {
+  const isBuild = inquiry.source === 'build-configurator'
   const name = escapeHtml(inquiry.name || 'Anonymous')
   const email = escapeHtml(inquiry.email || 'N/A')
   const phone = escapeHtml(inquiry.phone || 'Not provided')
@@ -513,8 +520,8 @@ export function renderAdminNotificationEmail(inquiry) {
   <div class="wrapper">
     <div class="card">
       <div class="banner">
-        <span class="badge">New Contact Inquiry</span>
-        <h1 class="banner-title">⚡ Response Received from Website</h1>
+        <span class="badge">${isBuild ? 'Build & Price Request' : 'New Contact Inquiry'}</span>
+        <h1 class="banner-title">${isBuild ? '🛠️ New Build Quote Request — Action Needed' : '⚡ Response Received from Website'}</h1>
         <p style="margin: 6px 0 0; color: #93c5fd; font-size: 13px;">
           Submitted at ${submittedAt} (IST)
         </p>
@@ -539,9 +546,10 @@ export function renderAdminNotificationEmail(inquiry) {
             <td class="val">${address}</td>
           </tr>
           <tr>
-            <td class="label">Requested Solution:</td>
+            <td class="label">${isBuild ? 'Your Build:' : 'Requested Solution:'}</td>
             <td class="val" style="color: #0033A0;">${solution}</td>
           </tr>
+          ${isBuild ? '<tr><td class="label">Request Type:</td><td class="val" style="color:#b45309;">Build &amp; Price Configurator (/build)</td></tr>' : ''}
           <tr>
             <td class="label">IP / Location:</td>
             <td class="val" style="font-size: 12.5px; color: #64748b;">${ip}${geoString ? ` (${geoString})` : ''}</td>
@@ -572,7 +580,7 @@ export function renderAdminNotificationEmail(inquiry) {
 </body>
 </html>`
 
-  const text = `[NEW CONTACT INQUIRY RECEIVED]
+  const text = `${isBuild ? '[NEW BUILD & PRICE QUOTE REQUEST]' : '[NEW CONTACT INQUIRY RECEIVED]'}
 Time: ${submittedAt} (IST)
 
 Client Details:
@@ -580,7 +588,7 @@ Client Details:
 - Email: ${inquiry.email || 'N/A'}
 - Phone: ${inquiry.phone || 'N/A'}
 - Location: ${inquiry.address || 'N/A'}
-- Service: ${inquiry.solution || 'General'}
+- Service: ${inquiry.solution || 'General'}${isBuild ? '\n- Source: Build & Price Configurator (/build)' : ''}
 - IP / Location: ${inquiry.ip_address || 'Unknown'} (${geoString || 'N/A'})
 
 Message / Requirements:
@@ -657,6 +665,7 @@ export async function sendInquiryEmails(inquiry) {
       ]
     : []
 
+  const isBuildInquiry = inquiry.source === 'build-configurator'
   const userTemplates = renderUserConfirmationEmail(inquiry)
   const adminTemplates = renderAdminNotificationEmail(inquiry)
 
@@ -675,7 +684,9 @@ export async function sendInquiryEmails(inquiry) {
       from: fromHeader,
       to: inquiry.email,
       replyTo: cfg.adminEmail,
-      subject: `Thank you for contacting Marvel Softwares`,
+      subject: isBuildInquiry
+        ? 'Your Marvel Softwares build request — what happens next'
+        : `Thank you for contacting Marvel Softwares`,
       text: userTemplates.text,
       html: userTemplates.html,
       attachments: commonAttachments,
@@ -695,7 +706,9 @@ export async function sendInquiryEmails(inquiry) {
       from: fromHeader,
       to: cfg.adminEmail,
       replyTo: inquiry.email,
-      subject: `🔔 New Project Inquiry: ${inquiry.name || 'Prospect'} (${inquiry.solution || 'General'})`,
+      subject: isBuildInquiry
+        ? `🛠️ New Build Quote Request: ${inquiry.name || 'Prospect'} (${inquiry.solution || 'Build'})`
+        : `🔔 New Project Inquiry: ${inquiry.name || 'Prospect'} (${inquiry.solution || 'General'})`,
       text: adminTemplates.text,
       html: adminTemplates.html,
       attachments: commonAttachments,

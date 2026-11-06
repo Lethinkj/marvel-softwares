@@ -198,3 +198,41 @@ SELECT
 FROM dev_contact_inquiries ci
 LEFT JOIN dev_visitors v ON ci.visitor_id = v.visitor_id
 ORDER BY ci.created_at DESC;
+
+-- --------------------------------------------------------------------
+-- 5. DEV_BUILD_REQUESTS TABLE (optional — structured /build configurator leads)
+-- The frontend always stores build requests in dev_contact_inquiries as well,
+-- so lead flow keeps working even without this migration. This table gives the
+-- Build & Price wizard a structured, query-friendly home.
+-- --------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS dev_build_requests (
+    id BIGSERIAL PRIMARY KEY,
+    visitor_id UUID REFERENCES dev_visitors(visitor_id) ON DELETE SET NULL,
+    session_id UUID REFERENCES dev_sessions(session_id) ON DELETE SET NULL,
+
+    -- Client details (from wizard step 4)
+    name VARCHAR(150) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(50) NOT NULL,
+
+    -- The exact configuration the prospect selected
+    track VARCHAR(20) NOT NULL,                    -- 'website' | 'software'
+    track_label VARCHAR(100) NOT NULL DEFAULT '',  -- 'Business Website' | 'Custom Software / Web App'
+    tier VARCHAR(20) NOT NULL,                     -- 'basic' | 'modern' | 'ultra'
+    tier_name VARCHAR(50) NOT NULL DEFAULT '',     -- 'Basic' | 'Modern' | 'Ultra'
+    accessories JSONB NOT NULL DEFAULT '[]'::jsonb, -- ["Domain & Hosting", "SSL & Security", ...]
+    note TEXT,                                     -- free-form client note from the wizard
+
+    -- Business Operations & CRM Status
+    status VARCHAR(30) NOT NULL DEFAULT 'new',     -- 'new', 'contacted', 'quoted', 'won', 'lost', 'spam'
+    assigned_to VARCHAR(100),
+    admin_notes TEXT,
+
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_dev_build_requests_created_at ON dev_build_requests (created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_dev_build_requests_email ON dev_build_requests (email);
+CREATE INDEX IF NOT EXISTS idx_dev_build_requests_track_tier ON dev_build_requests (track, tier);
+CREATE INDEX IF NOT EXISTS idx_dev_build_requests_status ON dev_build_requests (status);

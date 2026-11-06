@@ -21,11 +21,22 @@ export interface ProjectInquiry {
   requirements: string
   visitor_id?: string
   session_id?: string
+  /** 'build-configurator' = submitted via /build wizard (drives email templates) */
+  source?: 'contact' | 'build-configurator'
+  /** Structured build configuration (best-effort insert into dev_build_requests) */
+  buildRequest?: {
+    track: string
+    track_label: string
+    tier: string
+    tier_name: string
+    accessories: string[]
+    note?: string
+  }
 }
 
 export type InquiryResult =
-  | { status: 'sent' }
-  | { status: 'queued'; pending: true }
+  | { status: 'sent'; reference?: string }
+  | { status: 'queued'; pending: true; reference?: string }
 
 const QUEUE_KEY = 'ms-project-inquiries'
 
@@ -60,6 +71,7 @@ export async function submitProjectInquiry(inquiry: ProjectInquiry): Promise<Inq
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ...payload,
+        source: payload.source ?? 'contact',
         submittedAt: new Date().toISOString(),
       }),
     }).catch((emailErr) => {
@@ -153,7 +165,31 @@ export async function submitProjectInquiry(inquiry: ProjectInquiry): Promise<Inq
     }
 
     if (!insertRes.error && insertRes.data) {
-      return { status: 'sent' }
+      // Best-effort structured row in dev_build_requests (table ships with db/schema.sql migration;
+      // skipped silently if the migration has not been applied yet)
+      if (payload.buildRequest) {
+        try {
+          await supabase.from('dev_build_requests').insert({
+            visitor_id: visitorId || null,
+            session_id: sessionId || null,
+            name: payload.name,
+            email: payload.email,
+            phone: payload.phone || '',
+            track: payload.buildRequest.track,
+            track_label: payload.buildRequest.track_label,
+            tier: payload.buildRequest.tier,
+            tier_name: payload.buildRequest.tier_name,
+            accessories: payload.buildRequest.accessories,
+            note: payload.buildRequest.note || payload.requirements,
+            status: 'new',
+          })
+        } catch (buildErr) {
+          if (import.meta.env.DEV) {
+            console.warn('[inquiryApi] dev_build_requests insert skipped:', buildErr)
+          }
+        }
+      }
+      return { status: 'sent', reference: `MS-${insertRes.data.id}` }
     }
 
     // Log error in dev for debugging
@@ -173,5 +209,5 @@ export async function submitProjectInquiry(inquiry: ProjectInquiry): Promise<Inq
   } catch {
     // Storage unavailable — still resolve so the UI can show its fallback note.
   }
-  return { status: 'queued', pending: true }
+  return { status: 'queued', pending: true, reference: `MS-${Date.now().toString(36).toUpperCase()}` }
 }

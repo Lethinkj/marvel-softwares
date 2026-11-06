@@ -873,3 +873,189 @@ export const testimonials: Testimonial[] = [
     avatar: '/images/team/elena-rodriguez.avif',
   },
 ]
+
+// ============================================
+// Build Your Website / Software configurator (/build)
+// Dell-style build-and-price, without public pricing:
+// clients assemble a configuration and send it straight
+// to the engineering team for a tailored written quote.
+// Prices are intentionally NOT shown anywhere on the page.
+// ============================================
+
+export type BuildTrackId = 'website' | 'software'
+export type BuildTierId = 'basic' | 'modern' | 'ultra'
+
+export interface BuildTrack {
+  id: BuildTrackId
+  label: string
+  tagline: string
+  description: string
+  icon: string
+  /** Example builds shown as quick chips on the track card */
+  examples: string[]
+  /** Mapped onto the contact inquiry `solution` field on submit */
+  solutionValue: string
+}
+
+export interface BuildTier {
+  id: BuildTierId
+  name: string
+  tagline: string
+  badge?: string
+  bestFor: string
+  /** Indicative delivery window only — never a price */
+  timeline: string
+  features: string[]
+}
+
+export interface BuildAccessory {
+  id: string
+  name: string
+  description: string
+  icon: string
+  /** Tracks this add-on is relevant for */
+  appliesTo: BuildTrackId[]
+  /** Tier-based recommendation per track (renders a "Recommended" ribbon + pre-selection) */
+  recommendedFor: Partial<Record<BuildTrackId, BuildTierId[]>>
+}
+
+export const buildTracks: BuildTrack[] = [
+  {
+    id: 'website',
+    label: 'Business Website',
+    tagline: 'A fast, conversion-focused website',
+    description:
+      'Corporate sites, landing pages, e-commerce storefronts and blogs — engineered for speed, SEO and trust.',
+    icon: 'web',
+    examples: ['Corporate site', 'E-commerce', 'Landing page', 'Website redesign'],
+    solutionValue: 'Website',
+  },
+  {
+    id: 'software',
+    label: 'Custom Software / Web App',
+    tagline: 'Software that runs your business',
+    description:
+      'Web applications, internal tools, ERP/CRM systems, portals and AI automations — built around your workflows.',
+    icon: 'custom',
+    examples: ['ERP / CRM', 'Admin portal', 'SaaS product', 'AI automation'],
+    solutionValue: 'Web Application',
+  },
+]
+
+export const buildTiers: Record<BuildTrackId, BuildTier[]> = {
+  website: [
+    {
+      id: 'basic',
+      name: 'Basic',
+      tagline: 'Get your business online',
+      bestFor: 'Startups & small businesses, 1–5 pages',
+      timeline: 'Typical delivery: 1–2 weeks',
+      features: [
+        'Up to 5 pages (Home, About, Services, Contact)',
+        'Mobile-responsive design',
+        'Contact form + WhatsApp button',
+        'Basic on-page SEO & fast load',
+        'Google Maps & social links',
+        '1 revision round',
+      ],
+    },
+    {
+      id: 'modern',
+      name: 'Modern',
+      tagline: 'Grow and scale online',
+      badge: 'Most Popular',
+      bestFor: 'Growing businesses, up to 15 pages',
+      timeline: 'Typical delivery: 2–4 weeks',
+      features: [
+        'Up to 15 pages + blog / news section',
+        'CMS — your team edits content without code',
+        'Advanced SEO + Google Analytics setup',
+        'Premium UI/UX with smooth animations',
+        'Speed & Core Web Vitals optimization',
+        '2 revision rounds',
+        '30-day post-launch support',
+      ],
+    },
+    {
+      id: 'ultra',
+      name: 'Ultra',
+      tagline: 'A category-defining flagship',
+      bestFor: 'Established brands & high-traffic sites',
+      timeline: 'Typical delivery: 4–8 weeks',
+      features: [
+        'Custom design from scratch + brand system',
+        'Unlimited pages / app-like experiences',
+        'E-commerce, booking or member portals',
+        'Deep integrations (CRM, payments, ERP)',
+        'Headless CMS, API-ready architecture',
+        'Dedicated project manager',
+        'Priority post-launch SLA',
+      ],
+    },
+  ],
+  software: [
+    {
+      id: 'basic',
+      name: 'Basic',
+      tagline: 'Launch your core idea fast',
+      bestFor: 'Founders validating a product (MVP)',
+      timeline: 'Typical delivery: 3–5 weeks',
+      features: [
+        '1 core module automating your key workflow',
+        'Simple admin panel',
+        'Login with basic user roles',
+        'Standard cloud database + hosting',
+        'Essential reports & exports',
+        '30-day bug-fix support',
+      ],
+    },
+    {
+      id: 'modern',
+      name: 'Modern',
+      tagline: 'A complete custom platform',
+      badge: 'Most Popular',
+      bestFor: 'SMBs replacing manual work with software',
+      timeline: 'Typical delivery: 6–10 weeks',
+      features: [
+        'Multi-module web application',
+        'Role-based access (admin, staff, customer)',
+        'Interactive dashboards & reports',
+        'REST APIs + 3rd-party integrations',
+        'In-app notifications & email alerts',
+        '2 review cycles with demos',
+        '60-day post-launch support',
+      ],
+    },
+    {
+      id: 'ultra',
+      name: 'Ultra',
+      tagline: 'Enterprise-grade, unlimited scale',
+      bestFor: 'Enterprises & mission-critical systems',
+      timeline: 'Typical delivery: 10–16 weeks',
+      features: [
+        'Everything in Modern, plus AI / automation',
+        'ERP, CRM, LMS & MS Teams integrations',
+        'High-availability, scalable architecture',
+        'Advanced security, audit logs & RBAC',
+        'Dedicated PM + SLA-backed support',
+        'Full documentation & team training',
+        '90-day post-launch support',
+      ],
+    },
+  ],
+}
+
+export const buildAccessories: BuildAccessory[] = [
+  { id: 'domain-hosting', name: 'Domain & Hosting', description: 'Domain registration, fast hosting, launch deployment', icon: 'cloud', appliesTo: ['website', 'software'], recommendedFor: { website: ['basic', 'modern', 'ultra'] } },
+  { id: 'business-email', name: 'Business Email', description: 'name@yourdomain.com mailboxes with setup help', icon: 'mail', appliesTo: ['website', 'software'], recommendedFor: { website: ['modern', 'ultra'], software: ['ultra'] } },
+  { id: 'ssl-security', name: 'SSL & Security', description: 'HTTPS, firewall rules, backups & security headers', icon: 'shield', appliesTo: ['website', 'software'], recommendedFor: { website: ['basic', 'modern', 'ultra'], software: ['basic', 'modern', 'ultra'] } },
+  { id: 'seo-boost', name: 'Advanced SEO', description: 'On-page SEO, metadata, sitemap & indexing', icon: 'growth', appliesTo: ['website'], recommendedFor: { website: ['modern', 'ultra'] } },
+  { id: 'content-writing', name: 'Content & Copy', description: 'Compelling, conversion-focused website copy', icon: 'strategy', appliesTo: ['website'], recommendedFor: { website: ['basic', 'modern'] } },
+  { id: 'logo-brand', name: 'Logo & Branding', description: 'Logo refinement, brand colors & usage kit', icon: 'design', appliesTo: ['website'], recommendedFor: { website: ['basic', 'modern'] } },
+  { id: 'analytics', name: 'Analytics Setup', description: 'Google Analytics, event tracking & dashboards', icon: 'dashboard', appliesTo: ['website', 'software'], recommendedFor: { website: ['modern', 'ultra'], software: ['ultra'] } },
+  { id: 'integrations', name: 'Integrations', description: 'CRM, payment gateways, APIs & WhatsApp', icon: 'api', appliesTo: ['website', 'software'], recommendedFor: { website: ['ultra'], software: ['modern', 'ultra'] } },
+  { id: 'data-migration', name: 'Data Migration', description: 'Safe migration from your old site or spreadsheets', icon: 'custom', appliesTo: ['website', 'software'], recommendedFor: { website: ['ultra'], software: ['modern', 'ultra'] } },
+  { id: 'team-training', name: 'Team Training', description: 'CMS / admin panel training for your staff', icon: 'feedback', appliesTo: ['software'], recommendedFor: { software: ['modern', 'ultra'] } },
+  { id: 'maintenance', name: 'Maintenance Plan', description: 'Monthly updates, monitoring & priority fixes', icon: 'erp', appliesTo: ['website', 'software'], recommendedFor: { website: ['ultra'], software: ['ultra'] } },
+  { id: 'priority-support', name: 'Priority Launch Support', description: 'Dedicated help during your first 30 days live', icon: 'rocket', appliesTo: ['website', 'software'], recommendedFor: { website: ['ultra'], software: ['ultra'] } },
+]

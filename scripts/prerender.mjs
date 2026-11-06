@@ -36,6 +36,17 @@ const routes = [
     lead: 'Quick answers to common questions about Marvel Softwares, our engineering processes, technologies, pricing models, and project lifecycle across India and international markets.',
     isFaq: true,
   },
+  {
+    path: '/build',
+    title: 'Build Your Website or Software | Marvel Softwares',
+    description:
+      'Configure your website or custom software build — pick Basic, Modern or Ultra, add accessories like hosting, SEO and maintenance, and get a tailored written quote from the Marvel Softwares engineering team. No prices shown, no obligation.',
+    keywords:
+      'build your website, software configurator, website package builder, custom software quote, website development free quote, basic modern ultra website, website add-ons, software build your own, Marvel Softwares build',
+    h1: 'Build Your Website or Software',
+    lead: 'Assemble exactly what you need — pick a build type, choose a Basic, Modern or Ultra tier, add accessories — then send it straight to the Marvel Softwares engineering team for a tailored written quote.',
+    isFaq: false,
+  },
 ]
 
 console.log('🚀 Starting static SEO prerender for existing routes...')
@@ -239,4 +250,4 @@ for (const r of routes) {
   console.log(` ✅ Prerendered: ${r.path} -> ${targetFilePath.replace(distDir, 'dist')}`)
 }
 
-console.log('✨ Prerender complete: Exactly 2 official routes generated for production SEO.')
+console.log('✨ Prerender complete: Official routes generated for production SEO.')
