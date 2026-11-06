@@ -190,17 +190,6 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://lms.marvelslice.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="footer-link footer-venture-link"
-                  onClick={() => trackCtaClick('lms.marvelslice.com', 'https://lms.marvelslice.com/')}
-                >
-                  lms.marvelslice.com
-                </a>
-              </li>
-              <li>
-                <a
                   href="https://www.marvelvillas.com/"
                   target="_blank"
                   rel="noopener noreferrer"
