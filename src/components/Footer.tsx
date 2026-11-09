@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom'
 import { homeServices, navLinks, services, siteConfig } from '../data/siteData'
 import { MailIcon, PhoneIcon, MapPinIcon } from './Icons'
 import { trackSectionNavigation, trackContactClick, trackCtaClick } from '../utils/analytics'
-import { openConsentBanner } from '../utils/consent'
 
 const CURRENT_YEAR = new Date().getFullYear()
 
@@ -270,14 +269,6 @@ export function Footer() {
             © {CURRENT_YEAR} MARVEL SOFTWARES. All rights reserved.
           </p>
           <div className="footer-bottom-legal">
-            <button
-              type="button"
-              onClick={openConsentBanner}
-              className="hidden md:inline hover:text-blue-100 transition-colors underline underline-offset-2 cursor-pointer bg-transparent border-0 p-0 text-white"
-            >
-              Cookie Preferences
-            </button>
-            <span aria-hidden="true" className="hidden md:inline text-white/50">|</span>
             <a
               href="/#contact"
               onClick={(e) => scrollToSection(e, '#contact')}
