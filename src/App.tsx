@@ -6,6 +6,7 @@ import { ROUTE_AUTH, ROUTE_CONSOLE, GATEWAY_PREFIX } from './utils/adminAuth'
 
 const Faq = lazy(() => import('./pages/Faq'))
 const Build = lazy(() => import('./pages/Build'))
+const Plans = lazy(() => import('./pages/Plans'))
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'))
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'))
 
@@ -87,6 +88,15 @@ function App() {
           element={
             <Suspense fallback={<PageFallback />}>
               <Build />
+            </Suspense>
+          }
+        />
+        {/* Unlinked /plans — intentionally NOT added to navLinks/Navbar/Footer */}
+        <Route
+          path="/plans"
+          element={
+            <Suspense fallback={<PageFallback />}>
+              <Plans />
             </Suspense>
           }
         />
