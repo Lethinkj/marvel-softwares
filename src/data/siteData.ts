@@ -112,7 +112,7 @@ export const services: Service[] = [
     description:
       'Professional, responsive websites designed to communicate your brand, engage visitors and support your business goals.',
     paragraphs: [
-      'We engineer custom, high-performance websites designed to elevate your brand presence, engage prospective clients, and communicate your business value with unmistakable clarity. From responsive corporate platforms and conversion-focused landing pages to dynamic content-managed systems, every solution is built from the ground up for technical speed, search engine visibility, rock-solid security, and seamless cross-device responsiveness. By combining thoughtful UX architecture with clean, modern code and intuitive publishing tools, we deliver fast, accessible, and scalable digital experiences that establish lasting credibility and turn casual visitors into loyal clients.',
+      'We build fast, responsive websites that clearly present your brand and work smoothly across every device. Each site is designed for accessibility, search visibility, and easy future updates. From landing pages to full business websites, we create polished experiences that help visitors understand your services and take action.',
     ],
     capabilities: [
       'Business and corporate websites',
@@ -133,7 +133,7 @@ export const services: Service[] = [
     description:
       'Powerful browser-based applications tailored to your workflows, customers and operational needs.',
     paragraphs: [
-      'We build powerful, scalable web applications and cloud-native SaaS platforms engineered to streamline complex business logic and support demanding daily operational workflows. Utilizing modern frontend technologies and resilient, modular backend architectures, our web apps feature real-time data synchronization, enterprise-grade role-based permissions, automated background processing, and secure third-party integrations. From intuitive customer portals and administrative dashboards to mission-critical business tools, we engineer secure, high-throughput web platforms that eliminate bottlenecks, enhance productivity, and adapt effortlessly as your organization expands.',
+      'We develop secure web applications that simplify workflows and support your customers, teams, and daily operations. Our solutions are built to scale as your business grows. Dashboards, portals, and custom tools give your team faster access to the information and actions they need every day.',
     ],
     capabilities: [
       'SaaS products',
@@ -154,7 +154,7 @@ export const services: Service[] = [
     description:
       'Mobile experiences that help customers and teams access your services wherever they are.',
     paragraphs: [
-      'We design and develop native and cross-platform mobile applications for iOS and Android that provide fluid, intuitive, and dependable user experiences on any device. Covering the complete product lifecycle from UX conceptualization and interface design through app store deployment, our mobile engineering incorporates biometric authentication, offline synchronization, push notifications, and resilient cloud backends. Whether you require a customer-facing digital product or an internal mobile tool for field operations, we deliver high-performing, secure mobile solutions that keep your users engaged and connected wherever they are.',
+      'We create intuitive mobile apps for iOS and Android that keep customers and teams connected wherever they work. Apps are designed for reliable performance, secure access, and simple everyday use. We support the complete journey from interface design and development to backend integration and ongoing improvements.',
     ],
     capabilities: [
       'Android applications',
@@ -175,7 +175,7 @@ export const services: Service[] = [
     description:
       'Connected business systems that help manage operations, records, people, inventory and reporting in one place.',
     paragraphs: [
-      'We engineer comprehensive enterprise resource planning (ERP) systems and tailored business management software that unify your entire operational ecosystem into a single, cohesive platform. By centralizing inventory tracking, automated billing, customer management, procurement, and departmental workflows with granular access controls and real-time analytics, our solutions eliminate data silos and costly manual overhead. We design each module specifically around your unique operating model, providing management with total operational transparency, dependable business intelligence, and the scalability required to fuel long-term corporate growth.',
+      'We connect inventory, billing, customers, staff, and reporting in one business platform. Each ERP solution is shaped around your processes to reduce manual work and improve visibility. Centralized data and clear reports help teams coordinate operations and make informed decisions with confidence.',
     ],
     capabilities: [
       'Inventory and stock management',
@@ -197,15 +197,15 @@ export const services: Service[] = [
     description:
       'Purpose-built software designed around your unique processes, requirements and long-term goals.',
     paragraphs: [
-      'When off-the-shelf software cannot meet your business requirements, we develop purpose-built software solutions designed around your unique workflows, operational needs, and long-term objectives. From custom business management systems and automated workflow platforms to data processing solutions and legacy system modernization, our engineering team builds reliable, scalable, and secure applications. We prioritize seamless integration with your existing systems, efficient implementation, and flexible architectures that adapt to changing business demands. Our goal is to simplify complex operations, improve productivity, and provide your organization with technology that supports continuous innovation and sustainable growth.',
+      'We build custom software around your specific workflows, requirements, and goals. Purpose-built tools help simplify complex work, connect existing systems, and improve productivity. We work closely with your team to turn real business needs into practical, maintainable software that can evolve over time.',
     ],
     capabilities: [
       'Internal business tools',
       'Automation systems',
       'Custom workflow engines',
       'System modernization',
-      'Legacy application integration',
-      'Desktop or cross-platform tools where appropriate',
+      'Legacy system integration',
+      'Cross-platform tools',
     ],
     cta: 'Discuss Custom Software',
     solutionValue: 'Custom Software',
@@ -218,7 +218,7 @@ export const services: Service[] = [
     description:
       'Clear, intuitive user experiences that make digital products easier to understand and use.',
     paragraphs: [
-      'We craft human-centered UI/UX designs that transform complex digital workflows into intuitive, engaging, and effortless experiences. From user journey mapping and wireframing to interactive prototyping and comprehensive design systems, our design practice balances aesthetic elegance with accessibility and functional clarity, reducing user friction and accelerating product adoption.',
+      'We design clear, accessible interfaces that make digital products easier to understand and use. User flows, wireframes, prototypes, and design systems keep every experience consistent. Our approach balances visual quality with practical navigation, helping users complete tasks with less friction on every screen.',
     ],
     capabilities: [
       'User flows',
@@ -281,7 +281,7 @@ export const services: Service[] = [
     description:
       'Practical AI and automation capabilities that help reduce repetitive work and make information more useful.',
     paragraphs: [
-      'We develop intelligent AI solutions and workflow automation systems that help businesses reduce repetitive tasks, improve operational efficiency, and make smarter decisions. By integrating machine learning models, intelligent document processing, AI-powered assistants, autonomous agents, and data-driven automation into your existing software environment, we transform complex business processes into streamlined digital workflows. From automating customer interactions and document handling to predictive analytics and intelligent decision support, our solutions help organizations process information faster, minimize manual effort, reduce errors, and unlock valuable insights from their business data.',
+      'We develop practical AI and automation solutions that reduce repetitive work, improve efficiency, and support better decisions. From document processing and AI assistants to workflow automation and data analysis, we help teams work faster with fewer errors. Our solutions connect with existing software and turn everyday business data into useful insights. This helps organizations save time, improve consistency, and focus on higher-value work.',
     ],
     capabilities: [
       'AI-enabled applications',

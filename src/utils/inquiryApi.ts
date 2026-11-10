@@ -38,6 +38,11 @@ export type InquiryResult =
   | { status: 'sent'; reference?: string }
   | { status: 'queued'; pending: true; reference?: string }
 
+export interface SubmitInquiryOptions {
+  /** Wait for the email endpoint to respond before resolving (used by the plan modal). */
+  awaitEmail?: boolean
+}
+
 const QUEUE_KEY = 'ms-project-inquiries'
 
 function readQueue(): ProjectInquiry[] {
@@ -53,7 +58,10 @@ export function getQueuedInquiries(): ProjectInquiry[] {
   return readQueue()
 }
 
-export async function submitProjectInquiry(inquiry: ProjectInquiry): Promise<InquiryResult> {
+export async function submitProjectInquiry(
+  inquiry: ProjectInquiry,
+  options: SubmitInquiryOptions = {},
+): Promise<InquiryResult> {
   const visitorId = inquiry.visitor_id || getVisitorId()
   const sessionId = inquiry.session_id || getSessionId()
 
@@ -64,9 +72,11 @@ export async function submitProjectInquiry(inquiry: ProjectInquiry): Promise<Inq
   }
 
   // Trigger automated SMTP emails (Thank-you to client + Notification to admin)
-  // Sent asynchronously so UI responsiveness is never delayed by mail servers
+  // Sent asynchronously so UI responsiveness is never delayed by mail servers.
+  // The plan modal opts into awaiting the request so its success step only appears
+  // once both emails have been handed off by the server.
   try {
-    fetch('/api/send-inquiry-email', {
+    const emailRequest = fetch('/api/send-inquiry-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -79,6 +89,10 @@ export async function submitProjectInquiry(inquiry: ProjectInquiry): Promise<Inq
         console.warn('[inquiryApi] Email dispatch notification error:', emailErr)
       }
     })
+
+    if (options.awaitEmail) {
+      await emailRequest
+    }
   } catch {
     // Non-blocking
   }

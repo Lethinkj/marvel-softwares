@@ -23,7 +23,7 @@ import { submitProjectInquiry } from '../utils/inquiryApi'
 import { trackCtaClick, trackFormSubmit } from '../utils/analytics'
 import { useReducedMotion } from '../hooks/useMediaQuery'
 
-type WizardStep = 'intro' | 'type' | 'tier' | 'addons' | 'details' | 'done'
+export type WizardStep = 'intro' | 'type' | 'tier' | 'addons' | 'details' | 'done'
 
 const STEP_ORDER: Array<{ id: Exclude<WizardStep, 'intro' | 'done'>; label: string }> = [
   { id: 'type', label: 'Build type' },
@@ -40,14 +40,19 @@ interface FormErrors {
 
 
 
-export const Build: React.FC = () => {
+interface BuildProps {
+  initialStep?: WizardStep
+  initialTierId?: BuildTierId
+}
+
+export const Build: React.FC<BuildProps> = ({ initialStep = 'intro', initialTierId = 'modern' }) => {
   const formId = useId()
   const shouldReduceMotion = useReducedMotion()
 
   // --- Wizard state ---
-  const [step, setStep] = useState<WizardStep>('intro')
+  const [step, setStep] = useState<WizardStep>(initialStep)
   const [trackId, setTrackId] = useState<BuildTrackId>('website')
-  const [tierId, setTierId] = useState<BuildTierId>('modern')
+  const [tierId, setTierId] = useState<BuildTierId>(initialTierId)
   const [accessoryIds, setAccessoryIds] = useState<string[]>(['ssl-security'])
   const [addonsTouched, setAddonsTouched] = useState(false)
   const [reference, setReference] = useState<string | null>(null)

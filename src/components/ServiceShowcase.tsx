@@ -40,10 +40,18 @@ export const ServiceShowcase: React.FC = () => {
               {/* Desktop-only heading (shown only on >= 992px desktop) */}
               <h3 className="svc-copy-title svc-copy-title--desktop">{service.title}</h3>
 
-              {/* Main narrative content */}
-              <p className="text-body text-slate-600 text-justify leading-relaxed text-base sm:text-lg">
+              <p className="text-body text-slate-600 leading-relaxed text-base sm:text-lg">
                 {service.paragraphs?.[0] ?? service.description}
               </p>
+
+              <ul className="svc-copy-list svc-copy-table" aria-label={`${service.title} features`}>
+                {service.capabilities.slice(0, 6).map((capability) => (
+                  <li key={capability}>
+                    <span className="svc-copy-tick" aria-hidden="true" />
+                    <span>{capability}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </AnimatedSection>
         )

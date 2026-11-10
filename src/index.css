@@ -1153,6 +1153,53 @@ body.nav-menu-open #root {
   color: var(--color-text-muted);
 }
 
+.svc-copy-table {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin-top: 18px;
+}
+
+.svc-copy-table li {
+  min-width: 0;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 11px 12px;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.svc-copy-table li > span:last-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.svc-copy-table .svc-copy-tick {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  margin-top: 0;
+  border-radius: 50%;
+  background: var(--color-primary);
+}
+
+.svc-copy-table .svc-copy-tick::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 4px;
+  width: 5px;
+  height: 8px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+@media (max-width: 560px) {
+  .svc-copy-table {
+    grid-template-columns: 1fr;
+  }
+}
+
 .svc-copy-tick {
   display: inline-flex;
   align-items: center;
@@ -6327,54 +6374,62 @@ blockquote {
   display: flex;
   flex-direction: column;
   padding: 26px 22px 22px;
-  border-radius: 16px;
+  border-radius: 6px;
   background: #ffffff;
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-card);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #d5dce5;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .plans-card:hover {
-  border-color: rgba(0, 87, 231, 0.35);
-  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 38px rgba(15, 23, 42, 0.22);
 }
 .plans-card--featured {
-  border: 2px solid var(--color-primary);
-  background: #f7faff;
+  border: 1px solid #d5dce5;
+  background: #ffffff;
+  transform: translateY(-8px);
+  box-shadow: 0 20px 38px rgba(15, 23, 42, 0.22);
+}
+
+.plans-grid:has(.plans-card:not(.plans-card--featured):hover) .plans-card--featured {
+  transform: translateY(0);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14);
 }
 .plans-badge {
-  align-self: flex-start;
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   padding: 5px 12px;
-  margin-bottom: 14px;
-  border-radius: 999px;
-  font-size: 0.66rem;
+  min-height: 44px;
+  white-space: nowrap;
+  border-radius: 6px;
+  font-size: 0.9rem;
   font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
   color: #ffffff;
-  background: #ff5a00;
+  background: #f97316;
+  box-shadow: 0 5px 12px rgba(249, 115, 22, 0.28);
+}
+.plans-badge::after {
+  content: '';
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  background: #f97316;
+  transform: translateX(-50%) rotate(45deg);
+  z-index: -1;
 }
 .plans-card-head {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
-}
-.plans-card-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  color: var(--color-primary);
-  background: #eef4ff;
-  margin-bottom: 6px;
-}
-.plans-card--featured .plans-card-icon {
-  background: var(--color-primary);
-  color: #ffffff;
+  gap: 2px;
 }
 .plans-card-name {
   font-size: 1.45rem;
@@ -6399,7 +6454,7 @@ blockquote {
   line-height: 1.45;
   color: #334155;
 }
-.plans-card--featured .plans-bestfor { background: #e8f0ff; }
+.plans-card--featured .plans-bestfor { background: #f1f5f9; }
 .plans-bestfor-label {
   font-size: 0.62rem;
   font-weight: 800;
@@ -6427,7 +6482,7 @@ blockquote {
   margin-top: 2px;
   color: var(--color-primary);
 }
-.plans-card--featured .plans-feature-check { color: #059669; }
+.plans-card--featured .plans-feature-check { color: var(--color-primary); }
 .plans-card-foot {
   margin-top: auto;
   padding-top: 16px;
@@ -6439,7 +6494,35 @@ blockquote {
   color: var(--color-text-muted);
   margin-bottom: 12px;
 }
-.plans-card-cta { width: 100%; }
+.plans-card-cta {
+  width: min(100%, 220px);
+  margin-inline: auto;
+  min-height: 42px;
+  padding: 10px 16px;
+  font-size: 0.88rem;
+}
+
+
+.plans-card--featured .plans-card-cta {
+  color: #fff;
+  background: linear-gradient(135deg, #ff9a3d 0%, #ff5a00 100%);
+  border-color: transparent;
+  box-shadow: 0 14px 30px -14px rgba(255, 90, 0, 0.85);
+}
+
+.plans-card:not(.plans-card--featured):hover .plans-card-cta {
+  color: #fff;
+  background: linear-gradient(135deg, #ff9a3d 0%, #ff5a00 100%);
+  border-color: transparent;
+  box-shadow: 0 14px 30px -14px rgba(255, 90, 0, 0.85);
+}
+
+.plans-grid:has(.plans-card:not(.plans-card--featured):hover) .plans-card--featured .plans-card-cta {
+  color: var(--color-primary);
+  background: #fff;
+  border: 1.5px solid rgba(0, 87, 231, 0.28);
+  box-shadow: 0 8px 20px -16px rgba(0, 51, 160, 0.5);
+}
 .plans-note {
   margin: 24px auto 0;
   max-width: 56ch;
@@ -6542,4 +6625,340 @@ blockquote {
   .plans-toggle-btn { padding: 9px 14px; font-size: 0.84rem; }
   .plans-included-list { grid-template-columns: minmax(0, 1fr); }
   .plans-side-ctas .hero-btn { width: 100%; }
+}
+
+/* ============================================
+   HOME PLAN REQUEST MODAL
+   ============================================ */
+.plan-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(2, 8, 23, 0.55);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  backdrop-filter: blur(10px) saturate(120%);
+  overflow-y: auto;
+  animation: plan-modal-fade-in 180ms ease both;
+}
+
+.plan-modal {
+  position: relative;
+  width: min(680px, 100%);
+  max-height: calc(100vh - 20px);
+  display: flex;
+  flex-direction: column;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 40px 90px -32px rgba(2, 8, 23, 0.65);
+  animation: plan-modal-pop-in 220ms cubic-bezier(0.22, 0.75, 0.3, 1) both;
+}
+
+/* Contact + success size to their content. Add-ons gets a stable stage with
+   only the add-on grid scrolling when the list is long. */
+.plan-modal--addons {
+  height: min(680px, calc(100vh - 20px));
+}
+
+.plan-modal-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: clamp(22px, 3.2vw, 34px);
+  border-radius: inherit;
+}
+
+.plan-modal-scroll--addons {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.plan-modal p {
+  line-height: 1.55 !important;
+}
+
+.plan-modal-close {
+  position: absolute;
+  top: -16px;
+  right: -16px;
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #e11d48;
+  cursor: pointer;
+  box-shadow: 0 10px 28px -10px rgba(2, 8, 23, 0.55);
+  transition: transform 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.plan-modal-close:hover {
+  transform: scale(1.06);
+  color: #be123c;
+  box-shadow: 0 14px 32px -10px rgba(2, 8, 23, 0.65);
+}
+
+.plan-modal-head {
+  padding-right: 34px;
+  text-align: left;
+}
+
+.plan-modal-title {
+  margin-top: 12px;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.12;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--color-text);
+}
+
+.plan-modal-sub {
+  margin-top: 6px;
+  font-size: 0.92rem;
+  color: var(--color-text-muted);
+}
+
+.plan-modal-steps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 18px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.plan-modal-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.plan-modal-step-dot {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.plan-modal-step.is-current {
+  color: var(--color-text);
+}
+
+.plan-modal-step.is-current .plan-modal-step-dot {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.plan-modal-step.is-done {
+  color: #334155;
+}
+
+.plan-modal-step.is-done .plan-modal-step-dot {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #059669;
+}
+
+.plan-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.plan-modal-addons-step {
+  flex: 1;
+  min-height: 0;
+}
+
+.plan-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.plan-modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 18px;
+  padding-top: 4px;
+}
+
+.plan-modal-btn {
+  flex: 0 0 auto;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 22px;
+  font-size: 0.9rem;
+}
+
+.plan-modal-back {
+  margin-right: auto;
+}
+
+.plan-modal-actions--center {
+  justify-content: center;
+}
+
+.plan-modal-actions--center .plan-modal-btn {
+  flex: 0 0 auto;
+}
+
+.plan-modal-addons-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.plan-modal-clear {
+  border: none;
+  background: transparent;
+  padding: 0;
+  color: var(--color-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.plan-modal-clear:hover {
+  text-decoration: underline;
+}
+
+.plan-modal-addons {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  align-content: start;
+  margin-top: 4px;
+  padding: 10px 4px 2px 2px;
+}
+
+.plan-modal-submit-error {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.plan-modal-success {
+  padding: 12px 0 4px;
+  text-align: center;
+}
+
+.plan-modal-success-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  color: #059669;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+}
+
+.plan-modal-success-title {
+  margin-top: 16px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+
+.plan-modal-success-copy {
+  margin-top: 8px;
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+}
+
+.plan-modal-success-note {
+  margin-top: 6px;
+  font-size: 0.84rem;
+  color: #64748b;
+}
+
+.plan-modal-success .plan-modal-actions {
+  margin-top: 22px;
+}
+
+@keyframes plan-modal-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes plan-modal-pop-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 560px) {
+  .plan-modal-backdrop {
+    align-items: flex-start;
+    padding: 10px;
+  }
+
+  .plan-modal {
+    border-radius: 18px;
+  }
+
+  .plan-modal--addons {
+    height: calc(100vh - 20px);
+  }
+
+  .plan-modal-scroll {
+    padding: 20px 16px;
+  }
+
+  .plan-modal-close {
+    top: -12px;
+    right: -10px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .plan-modal-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .build-accessories-grid.plan-modal-addons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .build-accessories-grid.plan-modal-addons {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plan-modal-backdrop,
+  .plan-modal {
+    animation: none;
+  }
 }

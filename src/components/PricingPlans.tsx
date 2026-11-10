@@ -1,64 +1,19 @@
+import { useState } from 'react'
 import AnimatedSection from './AnimatedSection'
 import { ArrowRightIcon, CheckIcon } from './Icons'
 import { renderAppIcon } from '../utils/iconResolver'
+import { homePlans, type HomePlan } from '../data/homePlans'
 import { trackCtaClick } from '../utils/analytics'
-
-interface HomePlan {
-  id: string
-  name: string
-  tagline: string
-  badge?: string
-  bestFor: string
-  features: string[]
-}
-
-const homePlans: HomePlan[] = [
-  {
-    id: 'basic',
-    name: 'Basic',
-    tagline: 'Get your business online',
-    bestFor: 'Startups & small businesses, 1–5 pages',
-    features: [
-      'Up to 5 pages (Home, About, Services, Contact)',
-      'Mobile-responsive design',
-      'Contact form + WhatsApp button',
-      'Basic on-page SEO & fast load',
-      'Google Maps & social links',
-    ],
-  },
-  {
-    id: 'professional',
-    name: 'Professional',
-    tagline: 'Grow and scale online',
-    badge: 'Most Popular',
-    bestFor: 'Growing businesses, up to 10 pages',
-    features: [
-      'Up to 10 pages + CMS',
-      'Custom design and animations',
-      'Advanced SEO + Google Analytics setup',
-      'Speed & Core Web Vitals optimization',
-      '30-day post-launch support',
-    ],
-  },
-  {
-    id: 'premium',
-    name: 'Premium',
-    tagline: 'A category-defining flagship',
-    bestFor: 'Established brands & high-traffic sites',
-    features: [
-      'Custom design from scratch + brand system',
-      'Unlimited pages + custom features',
-      'Multiple roles + admin panel',
-      'E-commerce, booking or member portals',
-      'Deep integrations (CRM, payments, ERP)',
-      'Headless CMS, API-ready architecture',
-      'Dedicated project manager',
-      'Priority post-launch SLA',
-    ],
-  },
-]
+import PlanInquiryModal from './PlanInquiryModal'
 
 export const PricingPlans = () => {
+  const [activePlan, setActivePlan] = useState<HomePlan | null>(null)
+
+  const openPlanModal = (plan: HomePlan) => {
+    setActivePlan(plan)
+    trackCtaClick(`Home Plans CTA: ${plan.name}`, 'plan-request-modal')
+  }
+
   return (
     <>
       <AnimatedSection className="text-center mx-auto w-full">
@@ -107,24 +62,32 @@ export const PricingPlans = () => {
                 </ul>
 
                 <footer className="plans-card-foot">
-                  <a
-                    href="#contact"
+                  <button
+                    type="button"
                     className={
                       featured
                         ? 'hero-btn hero-btn--primary plans-card-cta'
                         : 'hero-btn hero-btn--ghost plans-card-cta'
                     }
-                    onClick={() => trackCtaClick(`Home Plans CTA: ${plan.name}`, '#contact')}
+                    onClick={() => openPlanModal(plan)}
                   >
                     Start with {plan.name}
                     <ArrowRightIcon className="w-4 h-4" />
-                  </a>
+                  </button>
                 </footer>
               </article>
             )
           })}
         </div>
       </AnimatedSection>
+
+      {activePlan && (
+        <PlanInquiryModal
+          key={activePlan.id}
+          plan={activePlan}
+          onClose={() => setActivePlan(null)}
+        />
+      )}
     </>
   )
 }
