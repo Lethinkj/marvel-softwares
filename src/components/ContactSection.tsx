@@ -9,7 +9,6 @@ interface FormErrors {
   name?: string
   email?: string
   phone?: string
-  address?: string
   message?: string
 }
 
@@ -19,7 +18,6 @@ export const ContactSection: React.FC = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
-  const [address, setAddress] = useState('')
   const [message, setMessage] = useState('')
   const [errors, setErrors] = useState<FormErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -30,7 +28,6 @@ export const ContactSection: React.FC = () => {
     setName('')
     setEmail('')
     setPhone('')
-    setAddress('')
     setMessage('')
     setErrors({})
     setSubmitError(null)
@@ -63,12 +60,10 @@ export const ContactSection: React.FC = () => {
       next.email = 'Please enter a valid email address (e.g. name@company.com).'
     if (phone.replace(/\D/g, '').length < 7)
       next.phone = 'Please enter a valid phone number.'
-    if (address.trim().length < 6)
-      next.address = 'Please enter your address.'
     if (message.trim().length < 10)
       next.message = 'Please describe your requirements in at least 10 characters.'
     setErrors(next)
-    const firstError = (['name', 'phone', 'email', 'address', 'message'] as const).find(
+    const firstError = (['name', 'phone', 'email', 'message'] as const).find(
       (f) => next[f],
     )
     return { valid: !firstError, firstError }
@@ -90,7 +85,6 @@ export const ContactSection: React.FC = () => {
         name: name.trim(),
         email: email.trim(),
         phone: phone.trim(),
-        address: address.trim(),
         solution: 'Other',
         requirements: message.trim(),
       })
@@ -164,25 +158,26 @@ export const ContactSection: React.FC = () => {
               aria-hidden={isSubmitted}
             >
               <form onSubmit={handleSubmit} noValidate className="contact-form" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                <div>
+                  <label className="field-label" htmlFor={`${formId}-name`}>
+                    Full Name <span className="field-required" aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    id={`${formId}-name`}
+                    className={`field-input${errors.name ? ' field-error' : ''}`}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    autoComplete="name"
+                    aria-invalid={Boolean(errors.name)}
+                    aria-describedby={errors.name ? `${formId}-name-error` : undefined}
+                  />
+                  {errorFor('name')}
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 14 }}>
                   <div>
-                    <label className="field-label" htmlFor={`${formId}-name`}>
-                      Full Name <span className="field-required" aria-hidden="true">*</span>
-                    </label>
-                    <input
-                      id={`${formId}-name`}
-                      className={`field-input${errors.name ? ' field-error' : ''}`}
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      autoComplete="name"
-                      aria-invalid={Boolean(errors.name)}
-                      aria-describedby={errors.name ? `${formId}-name-error` : undefined}
-                    />
-                    {errorFor('name')}
-                  </div>
-                  <div>
                     <label className="field-label" htmlFor={`${formId}-phone`}>
-                      Phone Number <span className="field-required" aria-hidden="true">*</span>
+                      Mobile <span className="field-required" aria-hidden="true">*</span>
                     </label>
                     <input
                       id={`${formId}-phone`}
@@ -196,9 +191,6 @@ export const ContactSection: React.FC = () => {
                     />
                     {errorFor('phone')}
                   </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 14 }}>
                   <div>
                     <label className="field-label" htmlFor={`${formId}-email`}>
                       Email <span className="field-required" aria-hidden="true">*</span>
@@ -214,22 +206,6 @@ export const ContactSection: React.FC = () => {
                       aria-describedby={errors.email ? `${formId}-email-error` : undefined}
                     />
                     {errorFor('email')}
-                  </div>
-                  <div>
-                    <label className="field-label" htmlFor={`${formId}-address`}>
-                      Address <span className="field-required" aria-hidden="true">*</span>
-                    </label>
-                    <input
-                      id={`${formId}-address`}
-                      className={`field-input${errors.address ? ' field-error' : ''}`}
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      autoComplete="street-address"
-
-                      aria-invalid={Boolean(errors.address)}
-                      aria-describedby={errors.address ? `${formId}-address-error` : undefined}
-                    />
-                    {errorFor('address')}
                   </div>
                 </div>
 
