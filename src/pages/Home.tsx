@@ -10,7 +10,8 @@ import WhyChooseMarvel from '../components/WhyChooseMarvel'
 import OurTeam from '../components/OurTeam'
 import UpcomingProjects from '../components/UpcomingProjects'
 import OurClients from '../components/OurClients'
-import Testimonials from '../components/Testimonials'
+// Hidden for now — re-enable the import and section below when ready.
+// import Testimonials from '../components/Testimonials'
 import ContactSection from '../components/ContactSection'
 import CTASection from '../components/CTASection'
 import { projects } from '../data/siteData'
@@ -520,10 +521,12 @@ export const Home: React.FC = () => {
         <OurClients />
       </section>
 
-      {/* ============ K. TESTIMONIALS ============ */}
+      {/* ============ K. TESTIMONIALS (hidden for now — do not delete) ============ */}
+      {/*
       <section id="testimonials" aria-labelledby="testimonials-heading" className="section testimonials-v2">
         <Testimonials />
       </section>
+      */}
 
       {/* ============ L. CONTACT US ============ */}
       <section id="contact" aria-labelledby="contact-heading" className="section section-warm">

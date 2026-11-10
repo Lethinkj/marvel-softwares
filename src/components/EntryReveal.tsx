@@ -8,13 +8,18 @@ const sparkles = [
   { top: '38%', left: '50%', delay: '0.65s', size: 3 },
 ]
 
+// How long the branded intro stays visible before fading out / unmounting.
+// Keep these in sync with the .entry-reveal animation duration in index.css.
+const LEAVE_DELAY_MS = 2500
+const HIDE_DELAY_MS = 3000
+
 export default function EntryReveal() {
   const [leaving, setLeaving] = useState(false)
   const [visible, setVisible] = useState(true)
 
   useEffect(() => {
-    const leaveTimer = window.setTimeout(() => setLeaving(true), 1350)
-    const hideTimer = window.setTimeout(() => setVisible(false), 1800)
+    const leaveTimer = window.setTimeout(() => setLeaving(true), LEAVE_DELAY_MS)
+    const hideTimer = window.setTimeout(() => setVisible(false), HIDE_DELAY_MS)
 
     return () => {
       window.clearTimeout(leaveTimer)

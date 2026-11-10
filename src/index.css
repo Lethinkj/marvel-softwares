@@ -2835,7 +2835,7 @@ body.nav-menu-open #root {
     radial-gradient(900px 620px at 12% 88%, rgba(255, 90, 0, 0.16), transparent 58%),
     linear-gradient(155deg, #050b18 0%, #0a1730 52%, #04070f 100%);
   transition: opacity 0.35s ease;
-  animation: entry-reveal-bg 1.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: entry-reveal-bg 3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .entry-reveal__dots {
@@ -3007,7 +3007,7 @@ body.nav-menu-open #root {
 }
 
 @keyframes entry-reveal-bg {
-  0%, 75% { opacity: 1; filter: blur(0); }
+  0%, 80% { opacity: 1; filter: blur(0); }
   100% { opacity: 0; visibility: hidden; filter: blur(8px); }
 }
 
@@ -4778,6 +4778,7 @@ a.page-hero-card-item:hover .page-hero-card-arrow {
   max-width: 60ch;
   margin-left: auto;
   margin-right: auto;
+  font-size: 18px !important;
 }
 
 .faq-page .faq-list {
@@ -4890,6 +4891,11 @@ a.page-hero-card-item:hover .page-hero-card-arrow {
   font-size: var(--font-body-size);
   line-height: 1.7;
   animation: faq-answer-in 240ms ease both;
+}
+
+/* FAQ page only — answer text is a fixed 16px */
+.faq-page .faq-item p {
+  font-size: 16px;
 }
 
 @keyframes faq-answer-in {
