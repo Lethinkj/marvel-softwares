@@ -590,13 +590,13 @@ export const teamMembers: TeamMember[] = [
   {
     name: 'Sundareswaranathan',
     role: 'Co-Founder, Marvelsoftwares',
-    bio: 'Co-leads Marvelsoftwares and helps shape the company’s product vision and software solutions.',
+    bio: 'Leads the design vision at Marvelsoftwares, creating clear and engaging digital experiences. Focuses on thoughtful user experiences and strong visual direction.',
     expertise: ['System Architecture', 'Cloud Strategy', 'Product Delivery'],
   },
   {
     name: 'Sindhukumar',
     role: 'Co-Founder, Marvelsoftwares',
-    bio: 'Co-leads Marvelsoftwares and contributes to the company’s product vision and software solutions.',
+    bio: 'Leads technology and software development at Marvelsoftwares, building reliable solutions for our clients. Focuses on secure, scalable systems that perform smoothly.',
     expertise: ['Distributed Systems', 'Cloud & DevOps', 'Database Scaling'],
   },
   {

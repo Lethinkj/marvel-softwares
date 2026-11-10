@@ -125,7 +125,7 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, meta }) => {
   return (
     <SpotlightCard
       theme="light"
-      spotlightColor={meta.spotlightColor}
+      spotlightColor="transparent"
       spotlightSize={320}
       intensity={0.25}
       borderGlow={0.8}
@@ -134,8 +134,7 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, meta }) => {
       {/* Top / Body Section (Centered content) */}
       <div className="p-6 sm:p-7 pb-5 flex flex-col flex-1 items-center text-center">
         <div className="relative mb-5 flex w-full justify-center">
-          <div className="absolute inset-0 rounded-full bg-blue-500/10 blur-xl transform scale-125 -z-10 group-hover:bg-blue-500/25 transition-all duration-300" />
-          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 bg-gradient-to-tr from-[#0057E7] via-sky-400 to-indigo-500 shadow-md group-hover:scale-105 group-hover:shadow-lg transition-all duration-300 flex items-center justify-center">
+          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 bg-slate-200 shadow-md flex items-center justify-center">
             {!imgFailed && meta.photo ? (
               <img
                 src={meta.photo}
@@ -171,7 +170,7 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, meta }) => {
           <p className="text-sm text-blue-600 font-semibold mt-1">
             {member.role}
           </p>
-          <p className="text-card-desc mt-3.5 flex-1 text-slate-600">
+          <p className="text-card-desc mt-3.5 min-h-[6.5rem] text-slate-600 flex items-center justify-center">
             {member.bio}
           </p>
         </div>
