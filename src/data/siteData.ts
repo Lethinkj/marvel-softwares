@@ -588,15 +588,15 @@ export interface TeamMember {
 
 export const teamMembers: TeamMember[] = [
   {
-    name: 'Alex Chen',
-    role: 'CEO & Co-Founder',
-    bio: 'Guides technical direction, core architecture, and long-term product roadmaps with 12+ years in distributed systems.',
+    name: 'Sundareswaranathan',
+    role: 'Co-Founder, Marvelsoftwares',
+    bio: 'Co-leads Marvelsoftwares and helps shape the company’s product vision and software solutions.',
     expertise: ['System Architecture', 'Cloud Strategy', 'Product Delivery'],
   },
   {
-    name: 'Sarah Mitchell',
-    role: 'CTO & Co-Founder',
-    bio: 'Leads full-stack engineering and cloud DevOps, ensuring resilient, high-throughput software systems with zero downtime.',
+    name: 'Sindhukumar',
+    role: 'Co-Founder, Marvelsoftwares',
+    bio: 'Co-leads Marvelsoftwares and contributes to the company’s product vision and software solutions.',
     expertise: ['Distributed Systems', 'Cloud & DevOps', 'Database Scaling'],
   },
   {

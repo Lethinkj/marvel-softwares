@@ -15,6 +15,7 @@ import UpcomingProjects from '../components/UpcomingProjects'
 // import Testimonials from '../components/Testimonials'
 import ContactSection from '../components/ContactSection'
 import CTASection from '../components/CTASection'
+import PricingPlans from '../components/PricingPlans'
 import { projects } from '../data/siteData'
 import { trackCtaClick, trackProjectPreview } from '../utils/analytics'
 
@@ -301,7 +302,14 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* ============ F. WHY CHOOSE MARVEL SOFTWARES ============ */}
+      {/* ============ F. PLANS ============ */}
+      <section id="plans" aria-labelledby="plans-heading" className="section">
+        <div className="container">
+          <PricingPlans />
+        </div>
+      </section>
+
+      {/* ============ G. WHY CHOOSE MARVEL SOFTWARES ============ */}
       <section id="why-choose-us" aria-labelledby="why-choose-us-title" className="section section-warm">
         <WhyChooseMarvel />
       </section>

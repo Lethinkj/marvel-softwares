@@ -22,9 +22,9 @@ interface MemberMetadata {
 }
 
 const memberMetadataMap: Record<string, MemberMetadata> = {
-  'Alex Chen': {
-    initials: 'AC',
-    photo: '/images/team/alex-chen.avif',
+  Sundareswaranathan: {
+    initials: 'S',
+    photo: '/images/team/sundareswaranathan.png',
     avatarBg: 'bg-gradient-to-br from-blue-100 via-sky-50 to-indigo-50',
     avatarBorder: 'border-blue-200/90',
     avatarRing: 'ring-blue-100/70',
@@ -38,9 +38,9 @@ const memberMetadataMap: Record<string, MemberMetadata> = {
       email: siteConfig.email,
     },
   },
-  'Sarah Mitchell': {
-    initials: 'SM',
-    photo: '/images/team/sarah-mitchell.avif',
+  Sindhukumar: {
+    initials: 'S',
+    photo: '/images/team/sindhukumar.png',
     avatarBg: 'bg-gradient-to-br from-indigo-100 via-violet-50 to-indigo-50',
     avatarBorder: 'border-indigo-200/90',
     avatarRing: 'ring-indigo-100/70',
@@ -133,8 +133,7 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, meta }) => {
     >
       {/* Top / Body Section (Centered content) */}
       <div className="p-6 sm:p-7 pb-5 flex flex-col flex-1 items-center text-center">
-        {/* Centered Photo with ambient glow & stylish ring */}
-        <div className="relative mb-5 flex justify-center">
+        <div className="relative mb-5 flex w-full justify-center">
           <div className="absolute inset-0 rounded-full bg-blue-500/10 blur-xl transform scale-125 -z-10 group-hover:bg-blue-500/25 transition-all duration-300" />
           <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 bg-gradient-to-tr from-[#0057E7] via-sky-400 to-indigo-500 shadow-md group-hover:scale-105 group-hover:shadow-lg transition-all duration-300 flex items-center justify-center">
             {!imgFailed && meta.photo ? (
@@ -142,7 +141,13 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, meta }) => {
                 src={meta.photo}
                 alt={member.name}
                 onError={() => setImgFailed(true)}
-                className="w-full h-full rounded-full object-cover bg-slate-100"
+                className={`block aspect-square w-full rounded-full object-cover bg-slate-100 ${
+                  member.name === 'Sundareswaranathan'
+                    ? 'object-[center_28%]'
+                    : member.name === 'Sindhukumar'
+                      ? 'object-[center_-5%]'
+                      : ''
+                }`}
                 loading="lazy"
               />
             ) : (
@@ -159,7 +164,6 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, meta }) => {
           </div>
         </div>
 
-        {/* Name & Role */}
         <div className="w-full">
           <h3 className="text-card-title group-hover:text-blue-600 transition-colors">
             {member.name}
@@ -167,12 +171,10 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, meta }) => {
           <p className="text-sm text-blue-600 font-semibold mt-1">
             {member.role}
           </p>
+          <p className="text-card-desc mt-3.5 flex-1 text-slate-600">
+            {member.bio}
+          </p>
         </div>
-
-        {/* Bio */}
-        <p className="text-card-desc mt-3.5 flex-1 text-slate-600">
-          {member.bio}
-        </p>
       </div>
 
       {/* Bottom Bar: Distinct Background Color with White Social Icons */}
@@ -241,8 +243,8 @@ export const OurTeam: React.FC = () => {
       </AnimatedSection>
 
       {/* Team Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8" style={{ marginTop: 28 }}>
-        {teamMembers.map((member, i) => {
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8 max-w-3xl mx-auto" style={{ marginTop: 28 }}>
+        {[...teamMembers.slice(0, 2)].reverse().map((member, i) => {
           const meta = getMemberMeta(member.name)
 
           return (
