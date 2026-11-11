@@ -609,7 +609,15 @@ body.nav-menu-open #root {
   line-height: 1.25;
   letter-spacing: -0.015em;
   color: #155dfc;
-  text-wrap: balance;
+  white-space: nowrap !important;
+  text-wrap: nowrap !important;
+}
+
+@media (max-width: 640px) {
+  .text-section-title {
+    font-size: clamp(1.05rem, 4.2vw, 1.5rem) !important;
+    letter-spacing: -0.025em;
+  }
 }
 
 .heading-last-word {
@@ -638,6 +646,19 @@ body.nav-menu-open #root {
 .text-section-title::after {
   margin-left: clamp(10px, 1.4vw, 16px);
   background: linear-gradient(90deg, #ff5a00 0%, rgba(255, 90, 0, 0) 100%);
+}
+
+@media (max-width: 640px) {
+  .text-section-title::before,
+  .text-section-title::after {
+    width: clamp(12px, 3vw, 22px);
+  }
+  .text-section-title::before {
+    margin-right: clamp(6px, 1.2vw, 8px);
+  }
+  .text-section-title::after {
+    margin-left: clamp(6px, 1.2vw, 8px);
+  }
 }
 
 /* Headings with accompanying badges or left-aligned layouts shouldn't have inline decorative lines */
