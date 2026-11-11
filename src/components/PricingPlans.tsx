@@ -4,6 +4,7 @@ import { CheckIcon, RocketIcon, SparklesIcon, DiamondIcon } from './Icons'
 import { homePlans, type HomePlan } from '../data/homePlans'
 import { trackCtaClick } from '../utils/analytics'
 import PlanInquiryModal from './PlanInquiryModal'
+import PlansRibbon from './PlansRibbon'
 
 const planIconMap = {
   basic: RocketIcon,
@@ -44,11 +45,7 @@ export const PricingPlans = () => {
                 aria-label={`${plan.title} plan`}
               >
                 <header className="plans-card-head">
-                  {plan.badge && (
-                    <span className="plans-ribbon">
-                      <span>{plan.badge}</span>
-                    </span>
-                  )}
+                  {plan.badge && <PlansRibbon badge={plan.badge} />}
                   <span className="plans-card-globe" aria-hidden="true">
                     <PlanIcon />
                   </span>

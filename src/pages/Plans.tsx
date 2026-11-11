@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Seo from '../components/Seo'
+import PlansRibbon from '../components/PlansRibbon'
 import {
   CheckIcon,
   CheckCircleIcon,
@@ -126,11 +127,7 @@ export const Plans = () => {
                   aria-label={`${tier.name} ${track.solutionValue} plan`}
                 >
                   <header className="plans-card-head">
-                    {tier.badge && (
-                      <span className="plans-ribbon">
-                        <span>{tier.badge}</span>
-                      </span>
-                    )}
+                    {tier.badge && <PlansRibbon badge={tier.badge} />}
                     <span className="plans-card-globe" aria-hidden="true">
                       <TierIcon />
                     </span>
