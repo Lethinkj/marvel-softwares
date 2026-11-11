@@ -1,5 +1,6 @@
 import React from 'react'
 import {
+  Boxes,
   CodeXml,
   Database,
   Headphones,
@@ -16,23 +17,6 @@ interface ValueCard {
   theme: string
   icon: React.ReactNode
 }
-
-const HexNetworkIcon = (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.8"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M12 2.5 14.6 4v3L12 8.5 9.4 7V4L12 2.5Z" />
-    <path d="M7 13.5 9.6 15v3L7 19.5 4.4 18v-3L7 13.5Z" />
-    <path d="M17 13.5 19.6 15v3L17 19.5 14.4 18v-3L17 13.5Z" />
-    <path d="M12 8.5 8.1 13.1" />
-    <path d="M12 8.5 15.9 13.1" />
-  </svg>
-)
 
 const valueCards: ValueCard[] = [
   // Row 1
@@ -58,7 +42,7 @@ const valueCards: ValueCard[] = [
     id: 'scalable-architecture',
     title: ['Scalable', 'Architecture'],
     theme: 'purple',
-    icon: HexNetworkIcon,
+    icon: <Boxes />,
   },
   // Row 2
   {
@@ -103,19 +87,15 @@ export const WhyChooseMarvel: React.FC = () => {
       <div className="why-marvel-grid">
         {valueCards.map((item, index) => (
           <AnimatedSection key={item.id} delay={index * 0.04} className="h-full">
-            <article className={`why-marvel-card-shell why-theme--${item.theme}`}>
-              <div className="why-card-inner">
-                <div className="why-card-content">
-                  <div className="why-card-icon" aria-hidden="true">
-                    {item.icon}
-                  </div>
-                  <h3 className="text-card-title why-card-title">
-                    {item.title[0]}
-                    <br />
-                    {item.title[1]}
-                  </h3>
-                </div>
+            <article className={`why-marvel-card why-theme--${item.theme}`}>
+              <div className="why-card-icon" aria-hidden="true">
+                {item.icon}
               </div>
+              <h3 className="why-card-title">
+                {item.title[0]}
+                <br />
+                {item.title[1]}
+              </h3>
             </article>
           </AnimatedSection>
         ))}
@@ -125,3 +105,4 @@ export const WhyChooseMarvel: React.FC = () => {
 }
 
 export default WhyChooseMarvel
+
