@@ -596,6 +596,41 @@ body.nav-menu-open #root {
   color: #ff5a00 !important;
 }
 
+/* Decorative orange gradient lines before and after section headings */
+.text-section-title::before,
+.text-section-title::after {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  transform: translateY(-0.08em);
+  width: clamp(24px, 5.5vw, 76px);
+  height: 2px;
+  border-radius: 9999px;
+  pointer-events: none;
+}
+
+.text-section-title::before {
+  margin-right: clamp(10px, 1.4vw, 16px);
+  background: linear-gradient(90deg, rgba(255, 90, 0, 0) 0%, #ff5a00 100%);
+}
+
+.text-section-title::after {
+  margin-left: clamp(10px, 1.4vw, 16px);
+  background: linear-gradient(90deg, #ff5a00 0%, rgba(255, 90, 0, 0) 100%);
+}
+
+/* Headings with accompanying badges or left-aligned layouts shouldn't have inline decorative lines */
+#mission-title::before,
+#mission-title::after,
+#vision-title::before,
+#vision-title::after,
+.text-left.text-section-title::before,
+.text-left .text-section-title::before,
+.text-left.text-section-title::after,
+.text-left .text-section-title::after {
+  display: none !important;
+}
+
 /* All section subheadings across the entire home page share this exact 1 size */
 .section-subtitle {
   font-family: var(--font-sans);
@@ -6406,7 +6441,7 @@ blockquote {
   width: 220px;
   height: 38px;
   padding: 0;
-  background: linear-gradient(135deg, #e50932 0%, #c8102e 65%, #a90825 100%);
+  background: linear-gradient(135deg, #ff9a3d 0%, #ff5a00 62%, #e04a00 100%);
   color: #ffffff;
   font-family: var(--font-sans);
   font-size: 0.68rem;
@@ -6438,14 +6473,14 @@ blockquote {
 .plans-ribbon::before {
   top: 0;
   left: -13px;
-  border-top: 13px solid #75091f;
+  border-top: 13px solid #a33a00;
   border-left: 13px solid transparent;
   filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.2));
 }
 .plans-ribbon::after {
   right: -13px;
   bottom: 0;
-  border-bottom: 13px solid #75091f;
+  border-bottom: 13px solid #a33a00;
   border-right: 13px solid transparent;
   filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.2));
 }
@@ -6596,49 +6631,51 @@ blockquote {
   width: min(100%, 220px);
   min-height: 44px;
   padding: 10px 16px;
-  background-color: #ffffff;
+  background-color: var(--color-primary, #0057e7);
   background-image: linear-gradient(135deg, #ff9a3d 0%, #ff5a00 100%);
   background-repeat: no-repeat;
   background-position: left bottom;
   background-size: 100% 0%;
-  color: var(--color-primary);
-  border: 1.5px solid rgba(0, 87, 231, 0.28);
+  background-origin: border-box;
+  background-clip: border-box;
+  color: #ffffff;
+  border: none !important;
   box-shadow: 0 8px 20px -16px rgba(0, 51, 160, 0.5);
   transform: none;
   transition:
     background-size 0.45s cubic-bezier(0.22, 0.75, 0.3, 1),
     color 0.15s ease,
-    border-color 0.25s ease,
     box-shadow 0.25s ease;
 }
 
 .plans-card--featured .plans-card-cta {
   background-size: 100% 100%;
   color: #ffffff;
-  border-color: transparent;
+  border: none !important;
   box-shadow: 0 10px 22px -12px rgba(255, 90, 0, 0.55);
 }
 
 .plans-grid:has(.plans-card:not(.plans-card--featured):hover) .plans-card--featured .plans-card-cta {
   background-size: 100% 0%;
-  color: var(--color-primary);
-  border-color: rgba(0, 87, 231, 0.28);
+  color: #ffffff;
+  border: none !important;
   box-shadow: 0 8px 20px -16px rgba(0, 51, 160, 0.5);
 }
 
 .plans-card:hover .plans-card-cta,
 .plans-card-cta:focus-visible {
-  background-color: #ffffff;
+  background-color: var(--color-primary, #0057e7);
   background-image: linear-gradient(135deg, #ff9a3d 0%, #ff5a00 100%);
   background-size: 100% 100%;
+  background-origin: border-box;
+  background-clip: border-box;
   color: #ffffff;
-  border-color: transparent;
+  border: none !important;
   box-shadow: 0 10px 22px -12px rgba(255, 90, 0, 0.55);
   transform: none;
   transition:
     background-size 0.45s cubic-bezier(0.22, 0.75, 0.3, 1),
     color 0.2s ease 0.18s,
-    border-color 0.25s ease,
     box-shadow 0.25s ease;
 }
 .plans-note {
@@ -6732,6 +6769,52 @@ blockquote {
   gap: 10px;
   margin-top: auto;
   padding-top: 20px;
+}
+
+/* Ribbon stays clear of the plan copy on tighter card widths */
+@media (max-width: 1439px) and (min-width: 1025px) {
+  .plans-ribbon {
+    top: 24px;
+    right: -42px;
+    width: 160px;
+    height: 32px;
+    font-size: 0.6rem;
+  }
+  .plans-ribbon::before {
+    left: -11px;
+    border-top: 11px solid #a33a00;
+    border-left: 11px solid transparent;
+  }
+  .plans-ribbon::after {
+    right: -11px;
+    border-bottom: 11px solid #a33a00;
+    border-right: 11px solid transparent;
+  }
+  .plans-card--featured .plans-card-copy {
+    padding-right: 56px;
+  }
+}
+@media (max-width: 440px) {
+  .plans-ribbon {
+    top: 22px;
+    right: -34px;
+    width: 140px;
+    height: 30px;
+    font-size: 0.58rem;
+  }
+  .plans-ribbon::before {
+    left: -10px;
+    border-top: 10px solid #a33a00;
+    border-left: 10px solid transparent;
+  }
+  .plans-ribbon::after {
+    right: -10px;
+    border-bottom: 10px solid #a33a00;
+    border-right: 10px solid transparent;
+  }
+  .plans-card--featured .plans-card-copy {
+    padding-right: 56px;
+  }
 }
 
 /* ---------- Responsive ---------- */

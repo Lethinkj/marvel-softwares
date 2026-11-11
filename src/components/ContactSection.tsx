@@ -116,7 +116,7 @@ export const ContactSection: React.FC = () => {
     <div className="container">
       <AnimatedSection className="text-center mx-auto w-full mb-3">
         <h2 id="contact-heading" className="text-section-title">
-          Contact <span className="heading-last-word">Us</span>
+          Let's Build Something <span className="heading-last-word">Together</span>
         </h2>
         <p className="section-subtitle w-full max-w-full text-balance" style={{ maxWidth: '100%' }}>
           Share your requirements, business goals, and challenges. We&apos;ll review your requirements and engineer the right software solution.

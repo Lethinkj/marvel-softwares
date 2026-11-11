@@ -63,7 +63,7 @@ export const HomeBelowHero: React.FC = () => {
           <AnimatedSection style={{ maxWidth: 640 }}>
             <span className="eyebrow">Services</span>
             <h2 id="services-title" className="text-section-title" style={{ marginTop: 14 }}>
-              What We Do
+              Technology Meets <span className="heading-last-word">Creative Thinking</span>
             </h2>
             <p className="text-body" style={{ marginTop: 14 }}>
               Four focused service areas, delivered by one team — from the first design
@@ -147,7 +147,7 @@ export const HomeBelowHero: React.FC = () => {
           <div className="order-1 lg:order-2 lg:col-span-7">
             <span className="eyebrow">Who we are</span>
             <h2 id="about-title" className="text-section-title" style={{ marginTop: 14 }}>
-              Practical software, built with you.
+              Passion Behind Every <span className="heading-last-word">Innovation</span>
             </h2>
             <p className="text-body" style={{ marginTop: 14 }}>
               Marvel Softwares is a software development team that works closely with

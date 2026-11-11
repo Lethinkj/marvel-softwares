@@ -36,7 +36,7 @@ export const homePlans: HomePlan[] = [
     name: 'Professional',
     title: 'Professional Website',
     tagline: 'Grow and scale online',
-    badge: 'Best Choice',
+    badge: 'Most Popular',
     bestFor: 'Growing businesses, up to 10 pages',
     tierId: 'modern',
     features: [
