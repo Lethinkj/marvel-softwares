@@ -9,6 +9,7 @@ import {
   ShieldIcon,
   ClipboardIcon,
   BoltIcon,
+  GlobeIcon,
 } from '../components/Icons'
 import { renderAppIcon } from '../utils/iconResolver'
 import {
@@ -118,9 +119,14 @@ export const Plans = () => {
                   {tier.badge && <span className="plans-badge">{tier.badge}</span>}
 
                   <header className="plans-card-head">
-                    <h2 className="plans-card-name">
-                      {tier.name} {track.solutionValue}
-                    </h2>
+                    <div className="plans-card-title-row">
+                      <span className="plans-card-globe" aria-hidden="true">
+                        <GlobeIcon />
+                      </span>
+                      <h2 className="plans-card-name">
+                        {tier.name} {track.solutionValue}
+                      </h2>
+                    </div>
                     <p className="plans-card-tagline">{tier.tagline}</p>
                   </header>
 

@@ -56,7 +56,6 @@ export function BackToTop() {
         className="floating-action-arrow w-11 h-11 sm:w-12 sm:h-12 rounded-full text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-200 group relative cursor-pointer"
         style={{ backgroundColor: '#FF5A00' }}
         aria-label="Scroll back to top"
-        title="Back to Top"
       >
         <svg
           width="20"
@@ -73,10 +72,6 @@ export function BackToTop() {
           <path d="M12 19V5" />
           <path d="m5 12 7-7 7 7" />
         </svg>
-        {/* Desktop Tooltip */}
-        <span className="pointer-events-none absolute right-full mr-3 px-2.5 py-1 rounded-md bg-slate-900/90 text-white text-xs font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-md hidden sm:block">
-          Back to Top
-        </span>
       </button>
     </aside>
   )

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import AnimatedSection from './AnimatedSection'
-import { CheckIcon } from './Icons'
+import { CheckIcon, GlobeIcon } from './Icons'
 import { homePlans, type HomePlan } from '../data/homePlans'
 import { trackCtaClick } from '../utils/analytics'
 import PlanInquiryModal from './PlanInquiryModal'
@@ -39,7 +39,12 @@ export const PricingPlans = () => {
                 {plan.badge && <span className="plans-badge">{plan.badge}</span>}
 
                 <header className="plans-card-head">
-                  <h3 className="plans-card-name">{plan.title}</h3>
+                  <div className="plans-card-title-row">
+                    <span className="plans-card-globe" aria-hidden="true">
+                      <GlobeIcon />
+                    </span>
+                    <h3 className="plans-card-name">{plan.title}</h3>
+                  </div>
                   <p className="plans-card-tagline">{plan.tagline}</p>
                 </header>
 
