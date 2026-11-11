@@ -89,7 +89,7 @@ export const Testimonials: React.FC = () => {
       <div className="container">
         <AnimatedSection className="ts-head">
           <h2 id="testimonials-heading" className="text-section-title ts-title">
-            Testimonial
+            <span className="heading-last-word">Testimonial</span>
           </h2>
         </AnimatedSection>
 

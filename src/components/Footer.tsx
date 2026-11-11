@@ -19,7 +19,7 @@ const footerLinkLabels: Record<string, string> = {
 
 const socialLinks = [
   { label: 'YouTube', href: 'https://www.youtube.com/', color: '#ff0000', icon: 'youtube' },
-  { label: 'Instagram', href: 'https://www.instagram.com/', color: '#e1306c', icon: 'instagram' },
+  { label: 'Instagram', href: 'https://www.instagram.com/marvelsoftwares?dlrf=M3oxN2RsNWIwaWto', color: '#e1306c', icon: 'instagram' },
   { label: 'X', href: 'https://x.com/', color: '#000000', icon: 'x' },
   { label: 'Facebook', href: 'https://www.facebook.com/', color: '#1877f2', icon: 'facebook' },
 ] as const

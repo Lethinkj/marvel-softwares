@@ -174,7 +174,7 @@ export const Home: React.FC = () => {
           {/* Centered Section Heading across the whole section */}
           <AnimatedSection className="text-center max-w-3xl mx-auto mb-8 sm:mb-10 lg:mb-12">
             <h2 id="about-us-title" className="text-section-title text-center">
-              About Us
+              About <span className="heading-last-word">Us</span>
             </h2>
           </AnimatedSection>
 
@@ -229,7 +229,7 @@ export const Home: React.FC = () => {
                 <div className="flex items-center justify-center gap-4 sm:gap-5 mb-4">
                   <MissionBadge className="w-20 sm:w-24 lg:w-28 shrink-0" />
                   <h2 id="mission-title" className="text-section-title text-center">
-                    Our Mission
+                    Our <span className="heading-last-word">Mission</span>
                   </h2>
                 </div>
                 <p className="text-body text-justify leading-relaxed text-slate-600 w-full text-base sm:text-lg">
@@ -244,7 +244,7 @@ export const Home: React.FC = () => {
                 <div className="flex items-center justify-center gap-4 sm:gap-5 mb-4">
                   <VisionBadge className="w-20 sm:w-24 lg:w-28 shrink-0" />
                   <h2 id="vision-title" className="text-section-title text-center">
-                    Our Vision
+                    Our <span className="heading-last-word">Vision</span>
                   </h2>
                 </div>
                 <p className="text-body text-justify leading-relaxed text-slate-600 w-full text-base sm:text-lg">
@@ -261,7 +261,7 @@ export const Home: React.FC = () => {
         <div className="container">
           <AnimatedSection className="text-center mx-auto w-full">
             <h2 id="services-title" className="text-section-title">
-              Our Services
+              Our <span className="heading-last-word">Services</span>
             </h2>
             <p className="section-subtitle w-full max-w-full text-balance" style={{ maxWidth: '100%' }}>
               From your first digital product to complex enterprise systems, we build
@@ -288,7 +288,7 @@ export const Home: React.FC = () => {
         <div className="container">
           <AnimatedSection className="text-center mx-auto w-full">
             <h2 id="technologies-title" className="text-section-title">
-              Technologies
+              Technologies we <span className="heading-last-word">use</span>
             </h2>
             <p className="section-subtitle w-full max-w-full text-balance" style={{ maxWidth: '100%' }}>
               We leverage modern frameworks, scalable cloud architectures, and proven
@@ -324,7 +324,7 @@ export const Home: React.FC = () => {
         <div className="container">
           <div className="flex flex-col items-center text-center gap-4 w-full mx-auto">
             <h2 id="work-title" className="text-section-title">
-              Our Projects
+              Our <span className="heading-last-word">Projects</span>
             </h2>
             <p className="section-subtitle w-full max-w-full text-balance" style={{ maxWidth: '100%' }}>
               Explore our portfolio of scalable web applications, digital platforms, and custom software solutions engineered for performance and reliability.

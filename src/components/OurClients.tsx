@@ -122,7 +122,7 @@ export const OurClients: React.FC = () => {
       <div className="container">
         <AnimatedSection className="text-center max-w-3xl mx-auto mb-4 sm:mb-6">
           <h2 id="clients-heading" className="text-section-title text-center">
-            Our Clients
+            Our <span className="heading-last-word">Clients</span>
           </h2>
           <p className="section-subtitle text-center mx-auto">
             Empowering Businesses Through Innovation

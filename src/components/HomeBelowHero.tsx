@@ -297,7 +297,7 @@ export const HomeBelowHero: React.FC = () => {
       <div className="container">
         <AnimatedSection style={{ maxWidth: 640 }}>
           <h2 id="why-title" className="text-section-title">
-            Why Marvel Softwares?
+            Why Marvel <span className="heading-last-word">Softwares?</span>
           </h2>
           <p className="text-body" style={{ marginTop: 14 }}>
             Three things we do not compromise on.

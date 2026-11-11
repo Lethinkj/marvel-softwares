@@ -23,7 +23,7 @@ export const PricingPlans = () => {
     <>
       <AnimatedSection className="text-center mx-auto w-full">
         <h2 id="plans-heading" className="text-section-title">
-          Our Plans
+          Plans Designed for Your <span className="heading-last-word">Success</span>
         </h2>
         <p className="section-subtitle w-full max-w-full text-balance" style={{ maxWidth: '100%' }}>
           Choose the plan that fits your business today, and upgrade anytime as you grow.
@@ -43,9 +43,12 @@ export const PricingPlans = () => {
                 className={`plans-card${featured ? ' plans-card--featured' : ''}`}
                 aria-label={`${plan.title} plan`}
               >
-                {plan.badge && <span className="plans-badge">{plan.badge}</span>}
-
                 <header className="plans-card-head">
+                  {plan.badge && (
+                    <span className="plans-ribbon">
+                      <span>{plan.badge}</span>
+                    </span>
+                  )}
                   <span className="plans-card-globe" aria-hidden="true">
                     <PlanIcon />
                   </span>

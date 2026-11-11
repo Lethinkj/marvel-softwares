@@ -125,9 +125,12 @@ export const Plans = () => {
                   className={`plans-card${featured ? ' plans-card--featured' : ''}`}
                   aria-label={`${tier.name} ${track.solutionValue} plan`}
                 >
-                  {tier.badge && <span className="plans-badge">{tier.badge}</span>}
-
                   <header className="plans-card-head">
+                    {tier.badge && (
+                      <span className="plans-ribbon">
+                        <span>{tier.badge}</span>
+                      </span>
+                    )}
                     <span className="plans-card-globe" aria-hidden="true">
                       <TierIcon />
                     </span>

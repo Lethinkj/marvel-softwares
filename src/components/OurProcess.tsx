@@ -506,7 +506,7 @@ export const OurProcess: React.FC = () => {
     <div ref={ref}>
       <div className={`op-heading text-center w-full mx-auto mb-6 sm:mb-8 ${inView ? 'is-visible' : ''}`}>
         <h2 id="process-title" className="text-section-title text-center">
-          Our Process
+          Our <span className="heading-last-word">Process</span>
         </h2>
         <p className="section-subtitle w-full max-w-full text-balance text-center mx-auto" style={{ maxWidth: '100%' }}>
           From initial concept to successful digital delivery, our structured development process ensures transparency, quality, and seamless collaboration at every stage. From understanding your requirements to launching and maintaining your solution, we turn your vision into reliable digital experiences.

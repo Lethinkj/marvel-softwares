@@ -40,7 +40,7 @@ export const Faq = () => {
               id="faq-page-title"
               className="text-section-title faq-heading-single-line text-[#0033A0]"
             >
-              Frequently Asked Questions
+              Frequently Asked <span className="heading-last-word">Questions</span>
             </h1>
             <p className="section-subtitle faq-page-lead text-center mx-auto mt-3">
               Quick answers to the questions we hear most often. If you cannot find

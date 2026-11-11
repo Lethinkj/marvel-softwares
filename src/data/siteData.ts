@@ -963,7 +963,7 @@ export const buildTiers: Record<BuildTrackId, BuildTier[]> = {
       id: 'modern',
       name: 'Modern',
       tagline: 'Grow and scale online',
-      badge: 'Most Popular',
+      badge: 'Best Choice',
       bestFor: 'Growing businesses, up to 15 pages',
       timeline: 'Typical delivery: 2–4 weeks',
       features: [
@@ -1013,7 +1013,7 @@ export const buildTiers: Record<BuildTrackId, BuildTier[]> = {
       id: 'modern',
       name: 'Modern',
       tagline: 'A complete custom platform',
-      badge: 'Most Popular',
+      badge: 'Best Choice',
       bestFor: 'SMBs replacing manual work with software',
       timeline: 'Typical delivery: 6–10 weeks',
       features: [

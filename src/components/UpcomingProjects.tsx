@@ -15,7 +15,7 @@ export const UpcomingProjects: React.FC = () => {
       {/* Section Header matching Our Projects alignment */}
       <div className="flex flex-col items-center text-center gap-4 w-full mx-auto">
         <h2 id="upcoming-title" className="text-section-title">
-          Upcoming Projects
+          Upcoming <span className="heading-last-word">Projects</span>
         </h2>
         <p className="section-subtitle w-full max-w-full text-balance" style={{ maxWidth: '100%' }}>
           Next-generation software platforms and digital solutions currently in active development by Marvel Softwares.

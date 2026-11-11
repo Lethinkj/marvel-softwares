@@ -234,7 +234,7 @@ export const OurTeam: React.FC = () => {
       {/* Section Header */}
       <AnimatedSection className="text-center mx-auto w-full">
         <h2 id="team-heading" className="text-section-title">
-          Our Team
+          The People Behind Our <span className="heading-last-word">Success</span>
         </h2>
         <p className="section-subtitle w-full max-w-full text-balance" style={{ maxWidth: '100%' }}>
           A dedicated group of experienced engineers, designers, and system architects passionate about building reliable software. Together, we combine deep domain expertise, modern development methodologies, and a collaborative mindset to engineer high-impact digital products for your business.

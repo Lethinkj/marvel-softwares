@@ -93,7 +93,7 @@ export const WhyChooseMarvel: React.FC = () => {
       {/* Section Header */}
       <AnimatedSection className="text-center mx-auto w-full mb-8 sm:mb-12">
         <h2 id="why-choose-us-title" className="text-section-title text-[#0033A0]">
-          Why Choose Marvel Softwares?
+          Why Choose Marvel <span className="heading-last-word">Softwares?</span>
         </h2>
         <p className="section-subtitle w-full max-w-full text-balance" style={{ maxWidth: '100%' }}>
           Your Trusted Partner for Digital Transformation

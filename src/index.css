@@ -584,7 +584,7 @@ body.nav-menu-open #root {
 /* All section headings across the entire home page share this exact 1 size */
 .text-section-title {
   font-family: var(--font-sans);
-  font-size: var(--font-section-title) !important;
+  font-size: calc(var(--font-section-title) + 2px) !important;
   font-weight: 600 !important;
   line-height: 1.2;
   letter-spacing: -0.025em;
@@ -592,16 +592,8 @@ body.nav-menu-open #root {
   text-wrap: balance;
 }
 
-/* Small uniform underline accent for all main section headings */
-.text-section-title::after {
-  content: '';
-  display: block;
-  width: 72px;
-  height: 3.5px;
-  background: #FF5A00;
-  border-radius: 9999px;
-  margin-top: 0.75rem;
-  margin-inline: auto;
+.heading-last-word {
+  color: #ff5a00 !important;
 }
 
 /* All section subheadings across the entire home page share this exact 1 size */
@@ -6368,6 +6360,8 @@ blockquote {
   position: relative;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  isolation: isolate;
   padding: 0 22px 22px;
   border-radius: 18px;
   background-color: #ffffff;
@@ -6401,32 +6395,69 @@ blockquote {
   border-color: #dce9fa;
   box-shadow: 0 8px 20px rgba(16, 38, 83, 0.12);
 }
-.plans-badge {
+.plans-ribbon {
   position: absolute;
-  top: -18px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: inline-flex;
+  top: 34px;
+  right: -58px;
+  z-index: 5;
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 15px;
-  min-height: 0;
-  white-space: nowrap;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  width: 220px;
+  height: 38px;
+  padding: 0;
+  background: linear-gradient(135deg, #e50932 0%, #c8102e 65%, #a90825 100%);
   color: #ffffff;
-  background: #f97316;
-  box-shadow: 0 3px 8px rgba(249, 115, 22, 0.18);
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: rotate(45deg);
+  box-shadow:
+    0 8px 14px rgba(0, 0, 0, 0.28),
+    0 2px 4px rgba(0, 0, 0, 0.15);
+}
+.plans-ribbon > span {
+  position: relative;
+  z-index: 2;
+}
+.plans-ribbon::before,
+.plans-ribbon::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  width: 0;
+  height: 0;
+  background: transparent;
+  pointer-events: none;
+}
+.plans-ribbon::before {
+  top: 0;
+  left: -13px;
+  border-top: 13px solid #75091f;
+  border-left: 13px solid transparent;
+  filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.2));
+}
+.plans-ribbon::after {
+  right: -13px;
+  bottom: 0;
+  border-bottom: 13px solid #75091f;
+  border-right: 13px solid transparent;
+  filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.2));
 }
 .plans-card-head {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 18px;
   margin: 0 -22px;
   padding: 18px 22px 14px;
   border-radius: 17px 17px 0 0;
+  overflow: hidden;
   background: var(--color-primary);
   border-bottom: 1px solid rgba(255, 255, 255, 0.16);
   text-align: left;
@@ -6436,6 +6467,9 @@ blockquote {
   flex-direction: column;
   gap: 4px;
   min-width: 0;
+}
+.plans-page .plans-card--featured .plans-card-copy {
+  padding-right: 30px;
 }
 .plans-card-globe {
   display: inline-flex;
