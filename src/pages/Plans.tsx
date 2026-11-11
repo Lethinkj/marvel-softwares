@@ -126,19 +126,22 @@ export const Plans = () => {
 
                   <p className="plans-bestfor">
                     <span className="plans-bestfor-label">Best for</span>
-                    <span>{tier.bestFor}</span>
+                    <span className="plans-bestfor-value">{tier.bestFor}</span>
                   </p>
 
-                  <ul className="plans-feature-list">
-                    {tier.features.map((feature) => (
-                      <li key={feature} className="plans-feature-item">
-                        <span className="plans-feature-check" aria-hidden="true">
-                          <CheckIcon className="w-4 h-4" />
-                        </span>
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="plans-features">
+                    <span className="plans-features-label">What&rsquo;s included</span>
+                    <ul className="plans-feature-list">
+                      {tier.features.map((feature) => (
+                        <li key={feature} className="plans-feature-item">
+                          <span className="plans-feature-check" aria-hidden="true">
+                            <CheckIcon className="w-4 h-4" />
+                          </span>
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
 
                   <footer className="plans-card-foot">
                     <p className="plans-timeline">{tier.timeline}</p>

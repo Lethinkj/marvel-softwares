@@ -6435,13 +6435,14 @@ blockquote {
 .plans-card-head {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 4px;
   margin: 0 -22px;
-  padding: 24px 22px 18px;
+  padding: 28px 22px 20px;
   border-radius: 17px 17px 0 0;
-  background: #fbfcfe;
+  background: #ffffff;
   border-bottom: 1px solid #eef2f7;
+  text-align: center;
 }
 .plans-card-name {
   font-size: var(--font-card-title);
@@ -6449,6 +6450,7 @@ blockquote {
   letter-spacing: -0.015em;
   line-height: 1.3;
   color: var(--color-text);
+  text-wrap: balance;
 }
 .plans-card-tagline {
   font-size: var(--font-card-desc);
@@ -6457,18 +6459,37 @@ blockquote {
 }
 .plans-bestfor {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  min-height: 72px;
   margin-top: 18px;
   padding: 12px 14px;
   border-radius: 12px;
-  background: #f8fafc;
-  border: 1px solid #f0f3f8;
-  font-size: 0.92rem;
-  line-height: 1.55;
-  color: #40506a;
+  background: #f2f6fb;
+  border: 1px solid #dce5f0;
+  text-align: left;
 }
 .plans-bestfor-label {
+  flex: 0 0 auto;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-primary-dark);
+  white-space: nowrap;
+}
+.plans-bestfor-value {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.55;
+  color: #1e293b;
+}
+.plans-features-label {
+  display: block;
+  margin-top: 20px;
   font-size: 0.6rem;
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -6478,7 +6499,7 @@ blockquote {
 .plans-feature-list {
   display: grid;
   gap: 9px;
-  margin: 16px 0 0;
+  margin: 10px 0 0;
   padding: 0;
   list-style: none;
 }
