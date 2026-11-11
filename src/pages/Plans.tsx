@@ -132,7 +132,9 @@ export const Plans = () => {
                   <ul className="plans-feature-list">
                     {tier.features.map((feature) => (
                       <li key={feature} className="plans-feature-item">
-                        <CheckIcon className="w-4 h-4 plans-feature-check" />
+                        <span className="plans-feature-check" aria-hidden="true">
+                          <CheckIcon className="w-4 h-4" />
+                        </span>
                         <span>{feature}</span>
                       </li>
                     ))}
