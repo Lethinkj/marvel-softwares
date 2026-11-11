@@ -4986,11 +4986,6 @@ blockquote {
   line-height: 1.65 !important;
 }
 
-/* Why Choose Marvel card titles — 1px off the base card-title clamp, capped at 18px */
-.why-marvel-card .text-card-title {
-  font-size: clamp(calc(1.15rem - 3px), calc(0.4vw + 1rem - 3px), 18px) !important;
-}
-
 /* ============================================
    FOOTER — mobile layout (<640px only)
    First (brand) section unchanged; Our Services (left) and
@@ -7035,5 +7030,201 @@ blockquote {
   .plan-modal-backdrop,
   .plan-modal {
     animation: none;
+  }
+}
+
+
+/* ============================================
+   WHY CHOOSE MARVEL — soft pastel icon cards
+   ============================================ */
+.why-marvel-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(14px, 1.4vw, 22px);
+}
+
+.why-marvel-card-shell {
+  --why-accent: #2f80ed;
+  --why-bg: linear-gradient(145deg, #f7fbff 0%, #fafdff 58%, #edf6ff 100%);
+  --why-icon-bg: linear-gradient(145deg, #eef6ff 0%, #dcecff 100%);
+  --why-border: rgba(47, 128, 237, 0.46);
+  --why-glow: rgba(47, 128, 237, 0.1);
+  position: relative;
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  aspect-ratio: 2;
+  padding: 1.5px;
+  border-radius: 24px;
+  background: var(--why-border);
+  filter: drop-shadow(0 14px 22px var(--why-glow));
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
+}
+
+.why-marvel-card-shell:hover {
+  transform: translateY(-5px);
+  filter: drop-shadow(0 20px 28px var(--why-glow));
+}
+
+.why-card-inner {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  padding: clamp(14px, 1.4vw, 20px);
+  overflow: hidden;
+  border-radius: 22.5px;
+  background: var(--why-bg);
+}
+
+/* Soft curved accent pattern in the bottom-right corner */
+.why-card-inner::before,
+.why-card-inner::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  border-radius: 100% 0 0 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.why-card-inner::before {
+  width: 76%;
+  height: 68%;
+  background: linear-gradient(135deg, transparent 40%, var(--why-accent) 100%);
+  opacity: 0.13;
+}
+.why-card-inner::after {
+  width: 54%;
+  height: 45%;
+  background: linear-gradient(135deg, transparent 34%, var(--why-accent) 100%);
+  opacity: 0.42;
+}
+
+.why-card-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: clamp(14px, 1.6vw, 22px);
+  width: 100%;
+  text-align: left;
+}
+
+.why-card-icon {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(56px, 4.8vw, 78px);
+  height: clamp(56px, 4.8vw, 78px);
+  border-radius: clamp(16px, 1.5vw, 22px);
+  background: var(--why-icon-bg);
+  color: var(--why-accent);
+  transition: transform 0.3s ease;
+}
+
+.why-card-icon svg {
+  width: 55%;
+  height: 55%;
+  stroke-width: 2;
+}
+
+.why-marvel-card-shell:hover .why-card-icon {
+  transform: scale(1.06);
+}
+
+.why-card-title {
+  margin: 0;
+  text-align: left;
+  font-size: var(--font-card-title) !important;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+}
+
+/* ---------- Themes ---------- */
+.why-theme--blue {
+  --why-accent: #2f80ed;
+  --why-bg: linear-gradient(145deg, #f7fbff 0%, #fafdff 58%, #edf6ff 100%);
+  --why-icon-bg: linear-gradient(145deg, #eef6ff 0%, #dcecff 100%);
+  --why-border: rgba(47, 128, 237, 0.46);
+  --why-glow: rgba(47, 128, 237, 0.13);
+}
+.why-theme--green {
+  --why-accent: #22c55e;
+  --why-bg: linear-gradient(145deg, #f7fefa 0%, #fbfffd 58%, #e9fbf1 100%);
+  --why-icon-bg: linear-gradient(145deg, #ecfff4 0%, #d5f8e4 100%);
+  --why-border: rgba(34, 197, 94, 0.46);
+  --why-glow: rgba(34, 197, 94, 0.12);
+}
+.why-theme--orange {
+  --why-accent: #f97316;
+  --why-bg: linear-gradient(145deg, #fffaf6 0%, #fffdfb 58%, #fff0e5 100%);
+  --why-icon-bg: linear-gradient(145deg, #fff4ea 0%, #ffe1ca 100%);
+  --why-border: rgba(249, 115, 22, 0.46);
+  --why-glow: rgba(249, 115, 22, 0.13);
+}
+.why-theme--purple {
+  --why-accent: #8b5cf6;
+  --why-bg: linear-gradient(145deg, #fbf9ff 0%, #fdfcff 58%, #f1e9ff 100%);
+  --why-icon-bg: linear-gradient(145deg, #f5efff 0%, #e6d9ff 100%);
+  --why-border: rgba(139, 92, 246, 0.46);
+  --why-glow: rgba(139, 92, 246, 0.13);
+}
+.why-theme--pink {
+  --why-accent: #f43f5e;
+  --why-bg: linear-gradient(145deg, #fff9fa 0%, #fffdfd 58%, #ffedf2 100%);
+  --why-icon-bg: linear-gradient(145deg, #fff0f4 0%, #ffdce6 100%);
+  --why-border: rgba(244, 63, 94, 0.46);
+  --why-glow: rgba(244, 63, 94, 0.13);
+}
+.why-theme--yellow {
+  --why-accent: #eab308;
+  --why-bg: linear-gradient(145deg, #fffdf5 0%, #fffefa 58%, #fff5d8 100%);
+  --why-icon-bg: linear-gradient(145deg, #fff9e6 0%, #ffedb9 100%);
+  --why-border: rgba(234, 179, 8, 0.46);
+  --why-glow: rgba(234, 179, 8, 0.13);
+}
+.why-theme--cyan {
+  --why-accent: #06b6d4;
+  --why-bg: linear-gradient(145deg, #f5feff 0%, #fbffff 58%, #e4fafe 100%);
+  --why-icon-bg: linear-gradient(145deg, #e8fcff 0%, #d0f4fa 100%);
+  --why-border: rgba(6, 182, 212, 0.46);
+  --why-glow: rgba(6, 182, 212, 0.13);
+}
+.why-theme--sky {
+  --why-accent: #2563eb;
+  --why-bg: linear-gradient(145deg, #f7faff 0%, #fbfdff 58%, #e9f1ff 100%);
+  --why-icon-bg: linear-gradient(145deg, #eef4ff 0%, #dce8ff 100%);
+  --why-border: rgba(37, 99, 235, 0.46);
+  --why-glow: rgba(37, 99, 235, 0.13);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1199px) {
+  .why-marvel-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .why-marvel-card-shell {
+    aspect-ratio: 1.8;
+  }
+}
+
+@media (max-width: 639px) {
+  .why-marvel-grid {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 420px;
+    margin-inline: auto;
+  }
+
+  .why-marvel-card-shell {
+    aspect-ratio: 1.7;
   }
 }
