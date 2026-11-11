@@ -172,7 +172,7 @@ export const Home: React.FC = () => {
       >
         <div className="container relative z-10">
           {/* Centered Section Heading across the whole section */}
-          <AnimatedSection className="text-center max-w-3xl mx-auto mb-8 sm:mb-10 lg:mb-12">
+          <AnimatedSection className="text-center mx-auto w-full mb-8 sm:mb-10 lg:mb-12">
             <h2 id="about-us-title" className="text-section-title text-center">
               Passion Behind Every <span className="heading-last-word">Innovation</span>
             </h2>
