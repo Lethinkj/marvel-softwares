@@ -20,6 +20,24 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+@font-face {
+  font-family: 'Newsreader';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/newsreader-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Newsreader';
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/newsreader-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 /* ============================================
    MARVEL SOFTWARES — Brand Design Tokens
    Single source of truth for colour, type,
@@ -48,9 +66,11 @@
 
   --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-serif: 'Newsreader', 'Playfair Display', Georgia, Cambria, 'Times New Roman', serif;
 }
 
 :root {
+  --font-serif: 'Newsreader', 'Playfair Display', Georgia, Cambria, 'Times New Roman', serif;
   /* --- Brand colours --- */
   --color-primary: #0057e7;
   --color-primary-dark: #0033a0;
@@ -583,17 +603,18 @@ body.nav-menu-open #root {
 
 /* All section headings across the entire home page share this exact 1 size */
 .text-section-title {
-  font-family: var(--font-sans);
-  font-size: calc(var(--font-section-title) + 2px) !important;
+  font-family: var(--font-serif);
+  font-size: calc(var(--font-section-title) + 3px) !important;
   font-weight: 600 !important;
-  line-height: 1.2;
-  letter-spacing: -0.025em;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
   color: #155dfc;
   text-wrap: balance;
 }
 
 .heading-last-word {
   color: #ff5a00 !important;
+  font-style: italic;
 }
 
 /* Decorative orange gradient lines before and after section headings */
