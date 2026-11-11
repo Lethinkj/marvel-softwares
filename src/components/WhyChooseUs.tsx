@@ -1,5 +1,6 @@
 import React from 'react'
 import AnimatedSection from './AnimatedSection'
+import { trackCtaClick } from '../utils/analytics'
 
 export const WhyChooseUs: React.FC = () => (
   <div className="w-full">
@@ -33,9 +34,21 @@ export const WhyChooseUs: React.FC = () => (
         <p className="text-body text-slate-600 leading-relaxed text-justify max-w-[65ch] text-base sm:text-lg">
           We leverage modern technologies, proven frameworks, and powerful development tools to transform ideas into reliable digital products. From interactive web applications and mobile platforms to complex enterprise systems, we carefully select technologies that align with project requirements, focusing on performance, security, flexibility, and scalability. By combining established engineering practices with continuous technological innovation, we build adaptable software solutions that evolve with your business, support changing demands, and deliver lasting value.
         </p>
+
+        <div className="pt-6 sm:pt-7">
+          <a
+            href="#contact"
+            className="why-cta-btn"
+            aria-label="Contact Us — go to contact section"
+            onClick={() => trackCtaClick('Contact Us (Technologies)', '#contact')}
+          >
+            Contact Us
+          </a>
+        </div>
       </AnimatedSection>
     </div>
   </div>
 )
 
 export default WhyChooseUs
+
