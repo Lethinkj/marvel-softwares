@@ -324,7 +324,7 @@ export const Home: React.FC = () => {
         <div className="container">
           <div className="flex flex-col items-center text-center gap-4 w-full mx-auto">
             <h2 id="work-title" className="text-section-title">
-              Projects That Define <span className="heading-last-word">Us</span>
+              Projects That <span className="heading-last-word">Define Us</span>
             </h2>
             <p className="section-subtitle w-full max-w-full text-balance" style={{ maxWidth: '100%' }}>
               Explore our portfolio of scalable web applications, digital platforms, and custom software solutions engineered for performance and reliability.

@@ -22,7 +22,7 @@ interface MemberMetadata {
 }
 
 const memberMetadataMap: Record<string, MemberMetadata> = {
-  'Mr. Er. Sundareswaran Nathan': {
+  'Er. Sundareswaran Nathan': {
     initials: 'S',
     photo: '/images/team/sundareswaranathan.png',
     avatarBg: 'bg-gradient-to-br from-blue-100 via-sky-50 to-indigo-50',
@@ -38,7 +38,7 @@ const memberMetadataMap: Record<string, MemberMetadata> = {
       email: siteConfig.email,
     },
   },
-  'Mr. Er. Sindhu Kumar': {
+  'Er. Sindhu Kumar': {
     initials: 'S',
     photo: '/images/team/sindhukumar.png',
     avatarBg: 'bg-gradient-to-br from-indigo-100 via-violet-50 to-indigo-50',
@@ -134,16 +134,16 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, meta }) => {
       {/* Top / Body Section (Centered content) */}
       <div className="p-6 sm:p-7 pb-5 flex flex-col flex-1 items-center text-center">
         <div className="relative mb-5 flex w-full justify-center">
-          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 bg-slate-200 shadow-md flex items-center justify-center">
+          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 bg-white border border-blue-500 shadow-md flex items-center justify-center">
             {!imgFailed && meta.photo ? (
               <img
                 src={meta.photo}
                 alt={member.name}
                 onError={() => setImgFailed(true)}
                 className={`block aspect-square w-full rounded-full object-cover bg-slate-100 ${
-                  member.name === 'Mr. Er. Sundareswaran Nathan'
+                  member.name === 'Er. Sundareswaran Nathan'
                     ? 'object-[center_28%]'
-                    : member.name === 'Mr. Er. Sindhu Kumar'
+                    : member.name === 'Er. Sindhu Kumar'
                       ? 'object-[center_-5%]'
                       : ''
                 }`}
@@ -234,7 +234,7 @@ export const OurTeam: React.FC = () => {
       {/* Section Header */}
       <AnimatedSection className="text-center mx-auto w-full">
         <h2 id="team-heading" className="text-section-title">
-          The People Behind Our <span className="heading-last-word">Success</span>
+          The People Behind <span className="heading-last-word">Our Success</span>
         </h2>
         <p className="section-subtitle w-full max-w-full text-balance" style={{ maxWidth: '100%' }}>
           A dedicated group of experienced engineers, designers, and system architects passionate about building reliable software. Together, we combine deep domain expertise, modern development methodologies, and a collaborative mindset to engineer high-impact digital products for your business.

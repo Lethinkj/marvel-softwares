@@ -6474,7 +6474,7 @@ blockquote {
   border: 1px solid #dce9fa;
   font-family: var(--font-sans);
   font-weight: 700;
-  box-shadow: 0 8px 20px rgba(16, 38, 83, 0.12);
+  box-shadow: 0 8px 20px rgba(16, 38, 83, 0.08);
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease,
@@ -6483,48 +6483,58 @@ blockquote {
 .plans-card:hover {
   z-index: 2;
   transform: translateY(-10px) scale(1.015);
-  border-color: #b9d5f5;
-  box-shadow: 0 8px 20px rgba(16, 38, 83, 0.12);
+  border-color: #9ac2f0;
+  box-shadow:
+    0 24px 48px -6px rgba(16, 38, 83, 0.28),
+    0 12px 24px -4px rgba(16, 38, 83, 0.18),
+    0 0 0 1px rgba(0, 87, 231, 0.15);
 }
 .plans-card--featured {
   z-index: 2;
   transform: translateY(-10px) scale(1.015);
   border-color: #b9d5f5;
   background-color: #ffffff;
-  box-shadow: 0 8px 20px rgba(16, 38, 83, 0.12);
+  box-shadow: 0 12px 28px rgba(16, 38, 83, 0.12);
+}
+.plans-card--featured:hover {
+  border-color: #9ac2f0;
+  box-shadow:
+    0 26px 52px -6px rgba(16, 38, 83, 0.32),
+    0 14px 28px -4px rgba(16, 38, 83, 0.2),
+    0 0 0 1px rgba(0, 87, 231, 0.2);
 }
 
 .plans-grid:has(.plans-card:not(.plans-card--featured):hover) .plans-card--featured {
   z-index: 1;
   transform: none;
   border-color: #dce9fa;
-  box-shadow: 0 8px 20px rgba(16, 38, 83, 0.12);
+  box-shadow: 0 8px 20px rgba(16, 38, 83, 0.08);
 }
 .plans-ribbon {
   position: absolute;
-  top: 34px;
-  right: -58px;
+  top: 14px;
+  right: -42px;
   z-index: 5;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 220px;
-  height: 38px;
+  width: 150px;
+  height: 26px;
   padding: 0;
   background: linear-gradient(135deg, #ff9a3d 0%, #ff5a00 62%, #e04a00 100%);
   color: #ffffff;
   font-family: var(--font-sans);
-  font-size: 0.68rem;
+  font-size: calc(0.68rem + 1px);
   font-weight: 800;
   line-height: 1;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   text-align: center;
   text-transform: uppercase;
   white-space: nowrap;
   transform: rotate(45deg);
   box-shadow:
-    0 8px 14px rgba(0, 0, 0, 0.28),
-    0 2px 4px rgba(0, 0, 0, 0.15);
+    0 4px 10px rgba(0, 0, 0, 0.24),
+    0 1px 3px rgba(0, 0, 0, 0.14);
 }
 .plans-ribbon > span {
   position: relative;
@@ -6532,27 +6542,7 @@ blockquote {
 }
 .plans-ribbon::before,
 .plans-ribbon::after {
-  content: '';
-  position: absolute;
-  z-index: 1;
-  width: 0;
-  height: 0;
-  background: transparent;
-  pointer-events: none;
-}
-.plans-ribbon::before {
-  top: 0;
-  left: -13px;
-  border-top: 13px solid #a33a00;
-  border-left: 13px solid transparent;
-  filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.2));
-}
-.plans-ribbon::after {
-  right: -13px;
-  bottom: 0;
-  border-bottom: 13px solid #a33a00;
-  border-right: 13px solid transparent;
-  filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.2));
+  display: none !important;
 }
 .plans-card-head {
   position: relative;
@@ -6844,21 +6834,15 @@ blockquote {
 /* Ribbon stays clear of the plan copy on tighter card widths */
 @media (max-width: 1439px) and (min-width: 1025px) {
   .plans-ribbon {
-    top: 24px;
+    top: 14px;
     right: -42px;
-    width: 160px;
-    height: 32px;
-    font-size: 0.6rem;
+    width: 150px;
+    height: 26px;
+    font-size: calc(0.62rem + 1px);
   }
-  .plans-ribbon::before {
-    left: -11px;
-    border-top: 11px solid #a33a00;
-    border-left: 11px solid transparent;
-  }
+  .plans-ribbon::before,
   .plans-ribbon::after {
-    right: -11px;
-    border-bottom: 11px solid #a33a00;
-    border-right: 11px solid transparent;
+    display: none !important;
   }
   .plans-card--featured .plans-card-copy {
     padding-right: 56px;
@@ -6866,21 +6850,15 @@ blockquote {
 }
 @media (max-width: 440px) {
   .plans-ribbon {
-    top: 22px;
-    right: -34px;
+    top: 12px;
+    right: -46px;
     width: 140px;
-    height: 30px;
-    font-size: 0.58rem;
+    height: 24px;
+    font-size: calc(0.58rem + 1px);
   }
-  .plans-ribbon::before {
-    left: -10px;
-    border-top: 10px solid #a33a00;
-    border-left: 10px solid transparent;
-  }
+  .plans-ribbon::before,
   .plans-ribbon::after {
-    right: -10px;
-    border-bottom: 10px solid #a33a00;
-    border-right: 10px solid transparent;
+    display: none !important;
   }
   .plans-card--featured .plans-card-copy {
     padding-right: 56px;
@@ -7343,7 +7321,7 @@ blockquote {
 .why-card-title {
   margin: 0;
   text-align: left;
-  font-size: var(--font-card-title) !important;
+  font-size: 18px !important;
   font-weight: 700;
   line-height: 1.3;
   letter-spacing: -0.015em;

@@ -588,13 +588,13 @@ export interface TeamMember {
 
 export const teamMembers: TeamMember[] = [
   {
-    name: 'Mr. Er. Sundareswaran Nathan',
-    role: 'CEO & Co-Founder, Marvelsoftwares',
+    name: 'Er. Sundareswaran Nathan',
+    role: 'COO & Co-Founder, Marvelsoftwares',
     bio: 'Leads the design vision at Marvelsoftwares, creating clear and engaging digital experiences. Focuses on thoughtful user experiences and strong visual direction.',
     expertise: ['System Architecture', 'Cloud Strategy', 'Product Delivery'],
   },
   {
-    name: 'Mr. Er. Sindhu Kumar',
+    name: 'Er. Sindhu Kumar',
     role: 'CTO & Co-Founder, Marvelsoftwares',
     bio: 'Leads technology and software development at Marvelsoftwares, building reliable solutions for our clients. Focuses on secure, scalable systems that perform smoothly.',
     expertise: ['Distributed Systems', 'Cloud & DevOps', 'Database Scaling'],
@@ -963,7 +963,7 @@ export const buildTiers: Record<BuildTrackId, BuildTier[]> = {
       id: 'modern',
       name: 'Modern',
       tagline: 'Grow and scale online',
-      badge: 'Most Popular',
+      badge: 'Popular',
       bestFor: 'Growing businesses, up to 15 pages',
       timeline: 'Typical delivery: 2–4 weeks',
       features: [
@@ -1013,7 +1013,7 @@ export const buildTiers: Record<BuildTrackId, BuildTier[]> = {
       id: 'modern',
       name: 'Modern',
       tagline: 'A complete custom platform',
-      badge: 'Most Popular',
+      badge: 'Popular',
       bestFor: 'SMBs replacing manual work with software',
       timeline: 'Typical delivery: 6–10 weeks',
       features: [

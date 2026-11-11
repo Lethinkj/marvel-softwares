@@ -304,7 +304,7 @@ export const Build: React.FC<BuildProps> = ({ initialStep = 'intro', initialTier
                   <p className="build-mock-heading">Configure your build</p>
                   <ol className="build-mock-steps">
                     <li className="is-done"><span className="build-mock-check"><CheckIcon className="w-3 h-3" /></span> Build type — Website</li>
-                    <li className="is-done"><span className="build-mock-check"><CheckIcon className="w-3 h-3" /></span> Tier — Modern <em>Most Popular</em></li>
+                    <li className="is-done"><span className="build-mock-check"><CheckIcon className="w-3 h-3" /></span> Tier — Modern <em>Popular</em></li>
                     <li className="is-active"><span className="build-mock-dotline" /> Add-ons — 3 selected</li>
                     <li><span className="build-mock-dotline" /> Your details → quote</li>
                   </ol>
