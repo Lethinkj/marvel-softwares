@@ -1,5 +1,4 @@
-import React from 'react'
-import AnimatedSection from './AnimatedSection'
+import React, { useEffect, useRef } from 'react'
 import { ServiceScene } from './illustrations/ServiceScenes'
 import { homeServices, services } from '../data/siteData'
 
@@ -8,22 +7,122 @@ import { homeServices, services } from '../data/siteData'
  * Responsive service presentation:
  * Mobile view (< 992px): First Heading, then Image (ServiceScene), then Contents.
  * Desktop view (>= 992px): Alternating rows of Image (40%) and Content (60%).
+ * 
+ * Scroll animations:
+ * - Row 0, 2, 4 (left-aligned): glides in from Left to Right
+ * - Row 1, 3, 5 (right-aligned): glides in from Right to Left
+ * - Plays dynamically on scroll DOWN and scroll UP
  */
 export const ServiceShowcase: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null)
+
   const overview = homeServices
     .map((id) => services.find((s) => s.id === id))
     .filter((s): s is (typeof services)[number] => Boolean(s))
 
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container || typeof window === 'undefined') return
+
+    const rows = container.querySelectorAll<HTMLElement>('.svc-scroll-row')
+    if (!rows.length) return
+
+    // Reduced motion support
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (prefersReducedMotion) {
+      rows.forEach((row) => {
+        row.classList.add('svc-row--visible')
+      })
+      return
+    }
+
+    let lastScrollY = window.scrollY
+    let globalScrollDir: 'down' | 'up' = 'down'
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY
+      const diff = currentScrollY - lastScrollY
+      if (Math.abs(diff) >= 4) {
+        globalScrollDir = diff > 0 ? 'down' : 'up'
+        lastScrollY = currentScrollY
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
+    // Reveal observer: triggers when row enters viewport
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const row = entry.target as HTMLElement
+          if (entry.isIntersecting) {
+            const rect = entry.boundingClientRect
+            const enteringFromTop = rect.bottom < window.innerHeight * 0.45 && globalScrollDir === 'up'
+            const dir = enteringFromTop ? 'up' : globalScrollDir
+
+            row.dataset.scrollDirection = dir
+            row.classList.remove('svc-row--resetting')
+            requestAnimationFrame(() => {
+              row.classList.add('svc-row--visible')
+            })
+          }
+        })
+      },
+      {
+        threshold: 0.08,
+        rootMargin: '-20px 0px -40px 0px',
+      }
+    )
+
+    // Reset observer: only resets when row is SAFELY OFFSCREEN (>100px)
+    const resetObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const row = entry.target as HTMLElement
+          if (!entry.isIntersecting) {
+            const rect = entry.boundingClientRect
+            const isFarAbove = rect.bottom < 0
+            const isFarBelow = rect.top > window.innerHeight
+
+            if (isFarAbove) {
+              row.classList.add('svc-row--resetting')
+              row.classList.remove('svc-row--visible')
+              row.dataset.scrollDirection = 'up'
+            } else if (isFarBelow) {
+              row.classList.add('svc-row--resetting')
+              row.classList.remove('svc-row--visible')
+              row.dataset.scrollDirection = 'down'
+            }
+          }
+        })
+      },
+      {
+        threshold: 0,
+        rootMargin: '100px 0px 100px 0px',
+      }
+    )
+
+    rows.forEach((row) => {
+      revealObserver.observe(row)
+      resetObserver.observe(row)
+    })
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      revealObserver.disconnect()
+      resetObserver.disconnect()
+    }
+  }, [overview.length])
+
   return (
-    <div className="svc-showcase">
+    <div ref={containerRef} className="svc-showcase">
       {overview.map((service, i) => {
         const flip = i % 2 === 1
         return (
-          <AnimatedSection
+          <div
             key={service.id}
-            as="div"
-            direction="up"
-            className={`svc-showcase-row${flip ? ' is-flip' : ''}`}
+            className={`svc-showcase-row svc-scroll-row${flip ? ' is-flip' : ''}`}
+            data-service-index={i}
           >
             {/* 1. Mobile-only heading (First on mobile view) */}
             <div className="svc-mobile-header text-center">
@@ -53,7 +152,7 @@ export const ServiceShowcase: React.FC = () => {
                 ))}
               </ul>
             </div>
-          </AnimatedSection>
+          </div>
         )
       })}
     </div>
