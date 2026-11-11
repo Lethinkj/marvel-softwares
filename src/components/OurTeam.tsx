@@ -22,7 +22,7 @@ interface MemberMetadata {
 }
 
 const memberMetadataMap: Record<string, MemberMetadata> = {
-  Sundareswaranathan: {
+  'Mr. Er. Sundareswaran Nathan': {
     initials: 'S',
     photo: '/images/team/sundareswaranathan.png',
     avatarBg: 'bg-gradient-to-br from-blue-100 via-sky-50 to-indigo-50',
@@ -38,7 +38,7 @@ const memberMetadataMap: Record<string, MemberMetadata> = {
       email: siteConfig.email,
     },
   },
-  Sindhukumar: {
+  'Mr. Er. Sindhu Kumar': {
     initials: 'S',
     photo: '/images/team/sindhukumar.png',
     avatarBg: 'bg-gradient-to-br from-indigo-100 via-violet-50 to-indigo-50',
@@ -141,9 +141,9 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, meta }) => {
                 alt={member.name}
                 onError={() => setImgFailed(true)}
                 className={`block aspect-square w-full rounded-full object-cover bg-slate-100 ${
-                  member.name === 'Sundareswaranathan'
+                  member.name === 'Mr. Er. Sundareswaran Nathan'
                     ? 'object-[center_28%]'
-                    : member.name === 'Sindhukumar'
+                    : member.name === 'Mr. Er. Sindhu Kumar'
                       ? 'object-[center_-5%]'
                       : ''
                 }`}

@@ -9,7 +9,9 @@ import {
   ShieldIcon,
   ClipboardIcon,
   BoltIcon,
-  GlobeIcon,
+  RocketIcon,
+  SparklesIcon,
+  DiamondIcon,
 } from '../components/Icons'
 import { renderAppIcon } from '../utils/iconResolver'
 import {
@@ -19,6 +21,12 @@ import {
   type BuildTrackId,
 } from '../data/siteData'
 import { trackCtaClick } from '../utils/analytics'
+
+const tierIconMap = {
+  basic: RocketIcon,
+  modern: SparklesIcon,
+  ultra: DiamondIcon,
+} as const
 
 const EVERY_PLAN = [
   'Responsive design on mobile, tablet & desktop',
@@ -109,6 +117,7 @@ export const Plans = () => {
           <div className="plans-grid" role="list">
             {tiers.map((tier) => {
               const featured = Boolean(tier.badge)
+              const TierIcon = tierIconMap[tier.id]
               return (
                 <article
                   key={tier.id}
@@ -119,15 +128,15 @@ export const Plans = () => {
                   {tier.badge && <span className="plans-badge">{tier.badge}</span>}
 
                   <header className="plans-card-head">
-                    <div className="plans-card-title-row">
-                      <span className="plans-card-globe" aria-hidden="true">
-                        <GlobeIcon />
-                      </span>
+                    <span className="plans-card-globe" aria-hidden="true">
+                      <TierIcon />
+                    </span>
+                    <div className="plans-card-copy">
                       <h2 className="plans-card-name">
                         {tier.name} {track.solutionValue}
                       </h2>
+                      <p className="plans-card-tagline">{tier.tagline}</p>
                     </div>
-                    <p className="plans-card-tagline">{tier.tagline}</p>
                   </header>
 
                   <p className="plans-bestfor">

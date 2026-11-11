@@ -588,14 +588,14 @@ export interface TeamMember {
 
 export const teamMembers: TeamMember[] = [
   {
-    name: 'Sundareswaranathan',
-    role: 'Co-Founder, Marvelsoftwares',
+    name: 'Mr. Er. Sundareswaran Nathan',
+    role: 'CEO & Co-Founder, Marvelsoftwares',
     bio: 'Leads the design vision at Marvelsoftwares, creating clear and engaging digital experiences. Focuses on thoughtful user experiences and strong visual direction.',
     expertise: ['System Architecture', 'Cloud Strategy', 'Product Delivery'],
   },
   {
-    name: 'Sindhukumar',
-    role: 'Co-Founder, Marvelsoftwares',
+    name: 'Mr. Er. Sindhu Kumar',
+    role: 'CTO & Co-Founder, Marvelsoftwares',
     bio: 'Leads technology and software development at Marvelsoftwares, building reliable solutions for our clients. Focuses on secure, scalable systems that perform smoothly.',
     expertise: ['Distributed Systems', 'Cloud & DevOps', 'Database Scaling'],
   },
@@ -952,8 +952,8 @@ export const buildTiers: Record<BuildTrackId, BuildTier[]> = {
       timeline: 'Typical delivery: 1–2 weeks',
       features: [
         'Up to 5 pages (Home, About, Services, Contact)',
-        'Mobile-responsive design',
-        'Contact form + WhatsApp button',
+        'Fully Mobile-responsive design',
+        'Contact form + WhatsApp integration',
         'Basic on-page SEO & fast load',
         'Google Maps & social links',
         '1 revision round',

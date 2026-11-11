@@ -25,8 +25,8 @@ export const homePlans: HomePlan[] = [
     tierId: 'basic',
     features: [
       'Up to 5 pages (Home, About, Services, Contact)',
-      'Mobile-responsive design',
-      'Contact form + WhatsApp button',
+      'Fully Mobile-responsive design',
+      'Contact form + WhatsApp integration',
       'Basic on-page SEO & fast load',
       'Google Maps & social links',
     ],

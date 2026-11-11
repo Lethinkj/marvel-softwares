@@ -1,9 +1,15 @@
 import { useState } from 'react'
 import AnimatedSection from './AnimatedSection'
-import { CheckIcon, GlobeIcon } from './Icons'
+import { CheckIcon, RocketIcon, SparklesIcon, DiamondIcon } from './Icons'
 import { homePlans, type HomePlan } from '../data/homePlans'
 import { trackCtaClick } from '../utils/analytics'
 import PlanInquiryModal from './PlanInquiryModal'
+
+const planIconMap = {
+  basic: RocketIcon,
+  professional: SparklesIcon,
+  premium: DiamondIcon,
+} as const
 
 export const PricingPlans = () => {
   const [activePlan, setActivePlan] = useState<HomePlan | null>(null)
@@ -17,7 +23,7 @@ export const PricingPlans = () => {
     <>
       <AnimatedSection className="text-center mx-auto w-full">
         <h2 id="plans-heading" className="text-section-title">
-          Plans
+          Our Plans
         </h2>
         <p className="section-subtitle w-full max-w-full text-balance" style={{ maxWidth: '100%' }}>
           Choose the plan that fits your business today, and upgrade anytime as you grow.
@@ -29,6 +35,7 @@ export const PricingPlans = () => {
         <div className="plans-grid" role="list">
           {homePlans.map((plan) => {
             const featured = Boolean(plan.badge)
+            const PlanIcon = planIconMap[plan.id]
             return (
               <article
                 key={plan.id}
@@ -39,13 +46,13 @@ export const PricingPlans = () => {
                 {plan.badge && <span className="plans-badge">{plan.badge}</span>}
 
                 <header className="plans-card-head">
-                  <div className="plans-card-title-row">
-                    <span className="plans-card-globe" aria-hidden="true">
-                      <GlobeIcon />
-                    </span>
+                  <span className="plans-card-globe" aria-hidden="true">
+                    <PlanIcon />
+                  </span>
+                  <div className="plans-card-copy">
                     <h3 className="plans-card-name">{plan.title}</h3>
+                    <p className="plans-card-tagline">{plan.tagline}</p>
                   </div>
-                  <p className="plans-card-tagline">{plan.tagline}</p>
                 </header>
 
                 <p className="plans-bestfor">
