@@ -229,8 +229,15 @@ h2[id] {
      glides in downward when scrolling up
    - Zero-glitch hysteresis: elements NEVER disappear while visible
    ======================================================== */
+/* ========================================================
+   Global Scroll Animation System (Bidirectional Scroll Down & Up)
+   - Operates across the entire website: sections, cards, grids, headings
+   - Scroll Down: smooth upward rise with subtle scale (y: 26px -> 0, scale: 0.98 -> 1)
+   - Scroll Up: smooth downward glide with subtle scale (y: -26px -> 0, scale: 0.98 -> 1)
+   - Zero-glitch hysteresis: elements reset silently off-screen with no layout jump
+   ======================================================== */
 .scroll-scene {
-  --scene-offset: 20px;
+  --scene-offset: 18px;
   opacity: 0;
   transform: translate3d(0, var(--scene-offset), 0);
   transition:
@@ -240,11 +247,11 @@ h2[id] {
 }
 
 .scroll-scene[data-scroll-direction='up'] {
-  --scene-offset: -20px;
+  --scene-offset: -18px;
 }
 
 .scroll-scene[data-scroll-direction='down'] {
-  --scene-offset: 20px;
+  --scene-offset: 18px;
 }
 
 .scroll-scene.scroll-scene--visible {
@@ -254,36 +261,74 @@ h2[id] {
 
 /* Off-screen reset: silent without transition animation */
 .scroll-scene.scroll-scene--resetting,
-.scroll-scene.scroll-scene--resetting .mild-reveal {
+.mild-reveal.scroll-scene--resetting,
+.project-card.scroll-scene--resetting,
+.faq-item.scroll-scene--resetting {
   transition: none !important;
+  transition-delay: 0s !important;
 }
 
-/* Staggered cards and elements inside an animated layout section */
-.scroll-scene .mild-reveal {
+/* Individual cards, headings, and elements throughout the website */
+.mild-reveal,
+.project-card,
+.faq-item {
+  --item-offset: 26px;
   opacity: 0;
-  transform: translate3d(0, 12px, 0);
+  transform: translate3d(0, var(--item-offset), 0) scale(0.98);
   transition:
-    opacity 480ms cubic-bezier(0.16, 1, 0.3, 1),
-    transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 580ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 
-.scroll-scene[data-scroll-direction='up'] .mild-reveal {
-  transform: translate3d(0, -12px, 0);
+.mild-reveal[data-scroll-direction='down'],
+.project-card[data-scroll-direction='down'],
+.faq-item[data-scroll-direction='down'] {
+  --item-offset: 26px;
 }
 
-.scroll-scene.scroll-scene--visible .mild-reveal {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
+.mild-reveal[data-scroll-direction='up'],
+.project-card[data-scroll-direction='up'],
+.faq-item[data-scroll-direction='up'] {
+  --item-offset: -26px;
 }
 
-/* Elements outside of .scroll-scene stay naturally visible */
-.mild-reveal:not(.scroll-scene *) {
+/* Visible state */
+.mild-reveal.scroll-scene--visible,
+.project-card.scroll-scene--visible,
+.faq-item.scroll-scene--visible,
+.scroll-scene.scroll-scene--visible > .mild-reveal {
   opacity: 1;
-  transform: none;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+/* Tablet & Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .mild-reveal,
+  .project-card,
+  .faq-item {
+    --item-offset: 16px;
+    transition:
+      opacity 480ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .mild-reveal[data-scroll-direction='down'],
+  .project-card[data-scroll-direction='down'],
+  .faq-item[data-scroll-direction='down'] {
+    --item-offset: 16px;
+  }
+
+  .mild-reveal[data-scroll-direction='up'],
+  .project-card[data-scroll-direction='up'],
+  .faq-item[data-scroll-direction='up'] {
+    --item-offset: -16px;
+  }
 }
 
 /* Hero section is always fully visible */
+#home .mild-reveal,
+#home .project-card,
 .scroll-scene#home,
 .scroll-scene#home .mild-reveal,
 .scroll-scene:first-of-type,
@@ -293,9 +338,11 @@ h2[id] {
   transition: none !important;
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce), (scripting: none) {
   .scroll-scene,
-  .scroll-scene .mild-reveal {
+  .mild-reveal,
+  .project-card,
+  .faq-item {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;

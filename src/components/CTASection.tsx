@@ -13,7 +13,7 @@ const reveal = (delay: number): CSSProperties =>
 export default function CTASection() {
   const [sectionRef, inView] = useInView<HTMLElement>({
     threshold: 0.15,
-    once: true,
+    once: false,
   });
   const shouldReduceMotion = useReducedMotion();
 

@@ -498,7 +498,7 @@ const MobileConnector = () => (
 )
 
 export const OurProcess: React.FC = () => {
-  const [ref, inView] = useInView<HTMLDivElement>({ threshold: 0.08, rootMargin: '0px 0px -4% 0px' })
+  const [ref, inView] = useInView<HTMLDivElement>({ threshold: 0.08, rootMargin: '0px 0px -4% 0px', once: true })
   const reduceMotion = useReducedMotion()
   const active = inView && !reduceMotion
 

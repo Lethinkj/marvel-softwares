@@ -322,20 +322,20 @@ export const Home: React.FC = () => {
       {/* ============ H. SELECTED PROJECTS ============ */}
       <section id="projects" aria-labelledby="work-title" className="section section-warm">
         <div className="container">
-          <div className="flex flex-col items-center text-center gap-4 w-full mx-auto">
+          <AnimatedSection className="flex flex-col items-center text-center gap-4 w-full mx-auto">
             <h2 id="work-title" className="text-section-title">
               Projects That <span className="heading-last-word">Define Us</span>
             </h2>
             <p className="section-subtitle w-full max-w-full text-balance" style={{ maxWidth: '100%' }}>
               Explore our portfolio of scalable web applications, digital platforms, and custom software solutions engineered for performance and reliability.
             </p>
-          </div>
+          </AnimatedSection>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full" style={{ marginTop: 28 }}>
-            {projects.map((project) => (
-              <article
-                key={project.id}
-                className="project-card flex flex-col h-full overflow-hidden transition-all duration-300 hover:-translate-y-1.5 group cursor-pointer text-inherit no-underline"
+            {projects.map((project, idx) => (
+              <AnimatedSection key={project.id} delay={(idx % 3) * 0.08} className="h-full">
+                <article
+                  className="project-card flex flex-col h-full overflow-hidden transition-all duration-300 hover:-translate-y-1.5 group cursor-pointer text-inherit no-underline"
                 style={cardStyle}
                 role="button"
                 tabIndex={0}
@@ -515,7 +515,8 @@ export const Home: React.FC = () => {
                   </div>
                 </div>
               </article>
-            ))}
+            </AnimatedSection>
+          ))}
           </div>
         </div>
       </section>
