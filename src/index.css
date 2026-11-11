@@ -6430,6 +6430,11 @@ blockquote {
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
+  margin: -26px -22px 0;
+  padding: 22px 22px 18px;
+  border-radius: 6px 6px 0 0;
+  background: linear-gradient(135deg, rgba(0, 87, 231, 0.1) 0%, rgba(0, 87, 231, 0.03) 60%, rgba(255, 122, 0, 0.06) 100%);
+  border-bottom: 1px solid rgba(0, 87, 231, 0.14);
 }
 .plans-card-name {
   font-size: 1.45rem;
@@ -6484,6 +6489,9 @@ blockquote {
 }
 .plans-card--featured .plans-feature-check { color: var(--color-primary); }
 .plans-card-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-top: auto;
   padding-top: 16px;
 }
@@ -6496,7 +6504,6 @@ blockquote {
 }
 .plans-card-cta {
   width: min(100%, 220px);
-  margin-inline: auto;
   min-height: 42px;
   padding: 10px 16px;
   font-size: 0.88rem;

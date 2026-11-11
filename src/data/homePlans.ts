@@ -5,6 +5,8 @@ export type HomePlanId = 'basic' | 'professional' | 'premium'
 export interface HomePlan {
   id: HomePlanId
   name: string
+  /** Display title on pricing cards, e.g. "Basic Website". */
+  title: string
   tagline: string
   badge?: string
   bestFor: string
@@ -17,6 +19,7 @@ export const homePlans: HomePlan[] = [
   {
     id: 'basic',
     name: 'Basic',
+    title: 'Basic Website',
     tagline: 'Get your business online',
     bestFor: 'Startups & small businesses, 1–5 pages',
     tierId: 'basic',
@@ -31,6 +34,7 @@ export const homePlans: HomePlan[] = [
   {
     id: 'professional',
     name: 'Professional',
+    title: 'Professional Website',
     tagline: 'Grow and scale online',
     badge: 'Most Popular',
     bestFor: 'Growing businesses, up to 10 pages',
@@ -46,6 +50,7 @@ export const homePlans: HomePlan[] = [
   {
     id: 'premium',
     name: 'Premium',
+    title: 'Premium Website',
     tagline: 'A category-defining flagship',
     bestFor: 'Established brands & high-traffic sites',
     tierId: 'ultra',

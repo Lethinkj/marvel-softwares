@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import AnimatedSection from './AnimatedSection'
-import { ArrowRightIcon, CheckIcon } from './Icons'
-import { renderAppIcon } from '../utils/iconResolver'
+import { CheckIcon } from './Icons'
 import { homePlans, type HomePlan } from '../data/homePlans'
 import { trackCtaClick } from '../utils/analytics'
 import PlanInquiryModal from './PlanInquiryModal'
@@ -35,15 +34,12 @@ export const PricingPlans = () => {
                 key={plan.id}
                 role="listitem"
                 className={`plans-card${featured ? ' plans-card--featured' : ''}`}
-                aria-label={`${plan.name} plan`}
+                aria-label={`${plan.title} plan`}
               >
                 {plan.badge && <span className="plans-badge">{plan.badge}</span>}
 
                 <header className="plans-card-head">
-                  <span className="plans-card-icon" aria-hidden="true">
-                    {renderAppIcon('web', 'w-5 h-5')}
-                  </span>
-                  <h3 className="plans-card-name">{plan.name}</h3>
+                  <h3 className="plans-card-name">{plan.title}</h3>
                   <p className="plans-card-tagline">{plan.tagline}</p>
                 </header>
 
@@ -72,7 +68,6 @@ export const PricingPlans = () => {
                     onClick={() => openPlanModal(plan)}
                   >
                     Start with {plan.name}
-                    <ArrowRightIcon className="w-4 h-4" />
                   </button>
                 </footer>
               </article>

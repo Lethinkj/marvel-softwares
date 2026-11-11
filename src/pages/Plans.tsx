@@ -113,15 +113,14 @@ export const Plans = () => {
                   key={tier.id}
                   role="listitem"
                   className={`plans-card${featured ? ' plans-card--featured' : ''}`}
-                  aria-label={`${track.label} ${tier.name} plan`}
+                  aria-label={`${tier.name} ${track.solutionValue} plan`}
                 >
                   {tier.badge && <span className="plans-badge">{tier.badge}</span>}
 
                   <header className="plans-card-head">
-                    <span className="plans-card-icon" aria-hidden="true">
-                      {renderAppIcon(track.icon, 'w-5 h-5')}
-                    </span>
-                    <h2 className="plans-card-name">{tier.name}</h2>
+                    <h2 className="plans-card-name">
+                      {tier.name} {track.solutionValue}
+                    </h2>
                     <p className="plans-card-tagline">{tier.tagline}</p>
                   </header>
 
@@ -151,7 +150,6 @@ export const Plans = () => {
                       onClick={() => trackCtaClick(`Plans CTA: ${trackId}/${tier.name}`, '/plans')}
                     >
                       Start with {tier.name}
-                      <ArrowRightIcon className="w-4 h-4" />
                     </Link>
                   </footer>
                 </article>
