@@ -129,7 +129,7 @@
   color: var(--cta-white);
   font-size: clamp(2.1rem, 3.4vw + 0.6rem, 3.8rem);
   font-weight: 800;
-  line-height: 1.06;
+  line-height: 1.12;
   letter-spacing: -0.035em;
   overflow-wrap: break-word;
 }
@@ -314,7 +314,7 @@
 
   .cta-title {
     font-size: clamp(1.65rem, 8.5vw, 2.1rem);
-    line-height: 1.09;
+    line-height: 1.14;
     letter-spacing: -0.025em;
     text-align: left;
   }
