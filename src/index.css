@@ -7954,3 +7954,19 @@ blockquote {
     padding: 14px 18px;
   }
 }
+
+/* ---------- Team card hover ---------- */
+.team-card {
+  transform-origin: center;
+  transition:
+    transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 300ms ease;
+}
+
+.team-card:hover,
+.team-card:focus-within {
+  transform: translateY(-6px);
+  box-shadow:
+    0 32px 72px -16px rgba(0, 87, 231, 0.4),
+    0 14px 30px -12px rgba(0, 87, 231, 0.28) !important;
+}

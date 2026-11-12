@@ -85,7 +85,7 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, meta }) => {
       spotlightSize={320}
       intensity={0.25}
       borderGlow={0.8}
-      className="group rounded-[24px] flex flex-col justify-between h-full bg-white border border-slate-200/80 transition-all duration-300 hover:-translate-y-1.5 overflow-hidden"
+      className="team-card group rounded-[24px] flex flex-col justify-between h-full bg-white border border-slate-200/80 transition-all duration-300 hover:-translate-y-1.5 focus-within:-translate-y-1.5 overflow-hidden"
       style={{
         boxShadow:
           '0 24px 60px -15px rgba(15, 23, 42, 0.42), 0 10px 24px -12px rgba(15, 23, 42, 0.2)',
@@ -199,7 +199,7 @@ export const OurTeam: React.FC = () => {
       </AnimatedSection>
 
       {/* Team Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-12 max-w-3xl mx-auto" style={{ marginTop: 28 }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-12 max-w-[720px] mx-auto" style={{ marginTop: 28 }}>
         {teamMembers.map((member, i) => {
           const meta = getMemberMeta(member.name)
 
