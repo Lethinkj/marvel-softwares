@@ -1,6 +1,49 @@
 import React, { useEffect, useRef } from 'react'
+import {
+  Globe,
+  AppWindow,
+  Smartphone,
+  Database,
+  Code2,
+  Sparkles,
+  Palette,
+  Terminal,
+  Cloud,
+  Wrench,
+  Layers,
+} from 'lucide-react'
 import { ServiceScene } from './illustrations/ServiceScenes'
 import { homeServices, services } from '../data/siteData'
+
+/**
+ * Helper to get a tailored, semantic icon for each service heading
+ */
+const getServiceHeadingIcon = (serviceId: string) => {
+  switch (serviceId) {
+    case 'website-development':
+      return <Globe />
+    case 'web-application-development':
+      return <AppWindow />
+    case 'mobile-app-development':
+      return <Smartphone />
+    case 'erp-business-software':
+      return <Database />
+    case 'custom-software-development':
+      return <Code2 />
+    case 'ai-automation':
+      return <Sparkles />
+    case 'ui-ux-design':
+      return <Palette />
+    case 'api-integration':
+      return <Terminal />
+    case 'cloud-devops':
+      return <Cloud />
+    case 'maintenance-consulting':
+      return <Wrench />
+    default:
+      return <Layers />
+  }
+}
 
 /**
  * ServiceShowcase
@@ -144,7 +187,12 @@ export const ServiceShowcase: React.FC = () => {
           >
             {/* 1. Mobile-only heading (First on mobile view) */}
             <div className="svc-mobile-header text-center svc-anim-item svc-anim-heading">
-              <h3 className="svc-copy-title text-center">{service.title}</h3>
+              <h3 className="svc-copy-title text-center">
+                <span className="svc-heading-icon" aria-hidden="true">
+                  {getServiceHeadingIcon(service.id)}
+                </span>
+                <span>{service.title}</span>
+              </h3>
             </div>
 
             {/* 2. Media / Image (Second on mobile view) */}
@@ -156,7 +204,10 @@ export const ServiceShowcase: React.FC = () => {
             <div className="svc-copy text-left">
               {/* Desktop-only heading (shown only on >= 992px desktop) */}
               <h3 className="svc-copy-title svc-copy-title--desktop svc-anim-item svc-anim-heading">
-                {service.title}
+                <span className="svc-heading-icon" aria-hidden="true">
+                  {getServiceHeadingIcon(service.id)}
+                </span>
+                <span>{service.title}</span>
               </h3>
 
               <p className="text-body text-slate-600 leading-relaxed text-base sm:text-lg svc-anim-item svc-anim-para">

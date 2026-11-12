@@ -105,7 +105,7 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, meta }) => {
                   ? 'object-[center_0%]'
                   : ''
             }`}
-            style={{ height: '100%', transform: 'translateY(3px)' }}
+            style={{ height: '100%', transform: 'translateY(4px)' }}
             loading="lazy"
           />
         ) : (
