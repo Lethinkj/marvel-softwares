@@ -13,14 +13,14 @@ export const UpcomingProjects: React.FC = () => {
   return (
     <div className="container">
       {/* Section Header matching Our Projects alignment */}
-      <div className="flex flex-col items-center text-center gap-4 w-full mx-auto">
+      <AnimatedSection as="div" className="flex flex-col items-center text-center gap-4 w-full mx-auto">
         <h2 id="upcoming-title" className="text-section-title">
           Future Projects in <span className="heading-last-word">Development</span>
         </h2>
         <p className="section-subtitle w-full max-w-full text-balance" style={{ maxWidth: '100%' }}>
           Next-generation software platforms and digital solutions currently in active development by Marvel Softwares.
         </p>
-      </div>
+      </AnimatedSection>
 
       {/* Cards aligned with the exact dimensions and grid of the project card section */}
       <div

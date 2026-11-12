@@ -498,19 +498,21 @@ const MobileConnector = () => (
 )
 
 export const OurProcess: React.FC = () => {
-  const [ref, inView] = useInView<HTMLDivElement>({ threshold: 0.08, rootMargin: '0px 0px -4% 0px', once: true })
+  const [ref, inView] = useInView<HTMLDivElement>({ threshold: 0.08, rootMargin: '0px 0px -4% 0px', once: false })
   const reduceMotion = useReducedMotion()
   const active = inView && !reduceMotion
 
   return (
     <div ref={ref}>
       <div className={`op-heading text-center w-full mx-auto mb-6 sm:mb-8 ${inView ? 'is-visible' : ''}`}>
-        <h2 id="process-title" className="text-section-title text-center">
-          From Concept to <span className="heading-last-word">Creation</span>
-        </h2>
-        <p className="section-subtitle w-full max-w-full text-balance text-center mx-auto" style={{ maxWidth: '100%' }}>
-          From initial concept to successful digital delivery, our structured development process ensures transparency, quality, and seamless collaboration at every stage. From understanding your requirements to launching and maintaining your solution, we turn your vision into reliable digital experiences.
-        </p>
+        <div className="mild-reveal">
+          <h2 id="process-title" className="text-section-title text-center">
+            From Concept to <span className="heading-last-word">Creation</span>
+          </h2>
+          <p className="section-subtitle w-full max-w-full text-balance text-center mx-auto" style={{ maxWidth: '100%' }}>
+            From initial concept to successful digital delivery, our structured development process ensures transparency, quality, and seamless collaboration at every stage. From understanding your requirements to launching and maintaining your solution, we turn your vision into reliable digital experiences.
+          </p>
+        </div>
       </div>
 
       <div className="hidden lg:block" style={{ marginTop: 8 }}>

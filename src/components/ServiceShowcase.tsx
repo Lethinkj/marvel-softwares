@@ -187,7 +187,7 @@ export const ServiceShowcase: React.FC = () => {
           >
             {/* 1. Mobile-only heading (First on mobile view) */}
             <div className="svc-mobile-header text-center svc-anim-item svc-anim-heading">
-              <h3 className="svc-copy-title text-center">
+              <h3 className="svc-copy-title">
                 <span className="svc-heading-icon" aria-hidden="true">
                   {getServiceHeadingIcon(service.id)}
                 </span>

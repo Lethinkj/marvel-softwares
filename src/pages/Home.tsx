@@ -114,21 +114,31 @@ export const Home: React.FC = () => {
           >
             {/* Copy column */}
             <div className="hero-copy order-1 lg:order-none text-left">
-              <h1 id="hero-title" className="text-hero" style={{ marginTop: 0 }}>
+              <h1
+                id="hero-title"
+                className="text-hero mild-reveal"
+                style={{ marginTop: 0, transitionDelay: '80ms' }}
+              >
                 <span className="hero-shimmer-text block">Software That Grows</span>
                 <span className="hero-shimmer-text block" style={{ animationDelay: '-3.5s' }}>
                   Your Business
                 </span>
               </h1>
 
-              <p className="hero-lead text-justify text-slate-600 mt-5 leading-relaxed indent-8 sm:indent-10" style={{ maxWidth: '64ch' }}>
+              <p
+                className="hero-lead mild-reveal text-justify text-slate-600 mt-5 leading-relaxed indent-8 sm:indent-10"
+                style={{ maxWidth: '64ch', transitionDelay: '160ms' }}
+              >
                 From high-performing websites and intuitive mobile applications to integrated enterprise ERP systems and custom software architectures, we engineer scalable digital solutions tailored to your business operations. Whether your goal is to modernize customer-facing digital experiences, automate complex operational workflows, or establish a secure and resilient technological foundation from the ground up, our dedicated engineering team manages the entire product lifecycle &mdash; from initial discovery and UI/UX design to development, deployment, continuous optimization, and dependable long-term support.
               </p>
 
             </div>
 
             {/* Visual column */}
-            <div className="hero-visual order-2 lg:order-none relative w-full flex justify-center lg:justify-start pt-2">
+            <div
+              className="hero-visual mild-reveal order-2 lg:order-none relative w-full flex justify-center lg:justify-start pt-2"
+              style={{ transitionDelay: '240ms' }}
+            >
               <img
                 src="/images/hero/hero-home.avif"
                 alt="Marvel Softwares digital solutions and software development workspace"
@@ -141,7 +151,7 @@ export const Home: React.FC = () => {
             </div>
 
             {/* CTAs */}
-            <div className="hero-actions order-3 lg:order-none">
+            <div className="hero-actions mild-reveal order-3 lg:order-none" style={{ transitionDelay: '320ms' }}>
               <a
                 href="#contact"
                 className="hero-btn hero-btn--primary"

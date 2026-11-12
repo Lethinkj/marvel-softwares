@@ -185,8 +185,6 @@ function ScrollSceneObserver() {
       (entries) => {
         entries.forEach((entry) => {
           const el = entry.target as HTMLElement
-          // Hero section and Our Process stay permanently visible once revealed (animate 1 time on scroll down)
-          if (el.id === 'home' || el.closest('#home') || el.id === 'process' || el.closest('#process')) return
 
           if (!entry.isIntersecting) {
             const rect = entry.boundingClientRect
@@ -226,12 +224,6 @@ function ScrollSceneObserver() {
 
         if (observed.has(el)) return
         observed.add(el)
-
-        // Permanent visibility for Hero section
-        if (el.id === 'home' || el.closest('#home')) {
-          el.classList.add('scroll-scene', 'scroll-scene--visible')
-          return
-        }
 
         const rect = el.getBoundingClientRect()
         // If already in or touching initial viewport (above the fold):

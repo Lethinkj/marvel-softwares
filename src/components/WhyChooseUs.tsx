@@ -5,7 +5,7 @@ import { trackCtaClick } from '../utils/analytics'
 export const WhyChooseUs: React.FC = () => (
   <div className="w-full">
     {/* 1. Mobile-only heading: 1st on mobile view (< 992px) */}
-    <div className="why-mobile-header">
+    <div className="why-mobile-header mild-reveal">
       <h3 className="text-card-title leading-snug" style={{ color: '#fa5603' }}>
         The Technology Behind Every Solution
       </h3>
