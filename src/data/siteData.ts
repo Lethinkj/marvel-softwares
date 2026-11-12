@@ -599,18 +599,6 @@ export const teamMembers: TeamMember[] = [
     bio: 'Leads technology and software development at Marvelsoftwares, building reliable solutions for our clients. Focuses on secure, scalable systems that perform smoothly.',
     expertise: ['Distributed Systems', 'Cloud & DevOps', 'Database Scaling'],
   },
-  {
-    name: 'Marcus Johnson',
-    role: 'Head of Product Design',
-    bio: 'Shapes intuitive design systems and polished user journeys that turn complex software workflows into accessible digital experiences.',
-    expertise: ['UI/UX Systems', 'Design Thinking', 'Interaction Design'],
-  },
-  {
-    name: 'Elena Rodriguez',
-    role: 'Lead Software Engineer',
-    bio: 'Specializes in high-velocity web applications, modern frontend architectures, and resilient REST/GraphQL APIs across enterprise ecosystems.',
-    expertise: ['React & Next.js', 'API Integration', 'Full-Stack Web'],
-  },
 ]
 
 // --- Upcoming Projects ---
@@ -842,7 +830,6 @@ export const testimonials: Testimonial[] = [
     isVerified: true,
     initials: 'VR',
     accentColor: '#B8860B',
-    avatar: '/images/team/marcus-johnson.avif',
   },
   {
     id: 't-apex',
@@ -870,7 +857,6 @@ export const testimonials: Testimonial[] = [
     isVerified: true,
     initials: 'MR',
     accentColor: '#7C3AED',
-    avatar: '/images/team/elena-rodriguez.avif',
   },
 ]
 

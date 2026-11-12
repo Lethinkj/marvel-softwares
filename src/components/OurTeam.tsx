@@ -1,18 +1,15 @@
 import React, { useState } from 'react'
 import AnimatedSection from './AnimatedSection'
-import { SpotlightCard } from './SpotlightCard'
 import { teamMembers, siteConfig } from '../data/siteData'
 import { LinkedInIcon, GitHubIcon, TwitterIcon, MailIcon } from './Icons'
 
 interface MemberMetadata {
   initials: string
   photo: string
-  avatarBg: string
-  avatarBorder: string
-  avatarRing: string
-  avatarText: string
-  spotlightColor: string
-  bottomBg: string
+  /** Keeps faces centred inside the portrait crop. */
+  photoPosition?: string
+  /** Adds breathing room above portraits that sit too close to the crop edge. */
+  photoShift?: string
   socials: {
     linkedin: string
     github?: string
@@ -23,14 +20,9 @@ interface MemberMetadata {
 
 const memberMetadataMap: Record<string, MemberMetadata> = {
   'Er. Sundareswara Nathan': {
-    initials: 'S',
+    initials: 'SN',
     photo: '/images/team/sundareswaranathan.png',
-    avatarBg: 'bg-gradient-to-br from-blue-100 via-sky-50 to-indigo-50',
-    avatarBorder: 'border-blue-200/90',
-    avatarRing: 'ring-blue-100/70',
-    avatarText: 'text-[#0047BA]',
-    spotlightColor: '#0057E7',
-    bottomBg: 'bg-gradient-to-r from-[#0057E7] via-[#0047BA] to-[#0033A0]',
+    photoPosition: '50% 18%',
     socials: {
       linkedin: 'https://linkedin.com',
       github: 'https://github.com',
@@ -39,46 +31,10 @@ const memberMetadataMap: Record<string, MemberMetadata> = {
     },
   },
   'Er. Sindhu Kumar': {
-    initials: 'S',
+    initials: 'SK',
     photo: '/images/team/sindhukumar.png',
-    avatarBg: 'bg-gradient-to-br from-indigo-100 via-violet-50 to-indigo-50',
-    avatarBorder: 'border-indigo-200/90',
-    avatarRing: 'ring-indigo-100/70',
-    avatarText: 'text-[#4338CA]',
-    spotlightColor: '#4F46E5',
-    bottomBg: 'bg-gradient-to-r from-[#0057E7] via-[#0047BA] to-[#0033A0]',
-    socials: {
-      linkedin: 'https://linkedin.com',
-      github: 'https://github.com',
-      twitter: 'https://x.com',
-      email: siteConfig.email,
-    },
-  },
-  'Marcus Johnson': {
-    initials: 'MJ',
-    photo: '/images/team/marcus-johnson.avif',
-    avatarBg: 'bg-gradient-to-br from-sky-100 via-cyan-50 to-blue-50',
-    avatarBorder: 'border-sky-200/90',
-    avatarRing: 'ring-sky-100/70',
-    avatarText: 'text-[#0284C7]',
-    spotlightColor: '#0284C7',
-    bottomBg: 'bg-gradient-to-r from-[#0057E7] via-[#0047BA] to-[#0033A0]',
-    socials: {
-      linkedin: 'https://linkedin.com',
-      github: 'https://github.com',
-      twitter: 'https://x.com',
-      email: siteConfig.email,
-    },
-  },
-  'Elena Rodriguez': {
-    initials: 'ER',
-    photo: '/images/team/elena-rodriguez.avif',
-    avatarBg: 'bg-gradient-to-br from-blue-100 via-indigo-50 to-sky-50',
-    avatarBorder: 'border-blue-200/90',
-    avatarRing: 'ring-blue-100/70',
-    avatarText: 'text-[#1D4ED8]',
-    spotlightColor: '#2563EB',
-    bottomBg: 'bg-gradient-to-r from-[#0057E7] via-[#0047BA] to-[#0033A0]',
+    photoPosition: '50% 0%',
+    photoShift: 'clamp(22px, 3.4vw, 48px)',
     socials: {
       linkedin: 'https://linkedin.com',
       github: 'https://github.com',
@@ -98,13 +54,7 @@ const getMemberMeta = (name: string): MemberMetadata => {
     .slice(0, 2)
   return {
     initials,
-    photo: '/images/team/alex-chen.avif',
-    avatarBg: 'bg-gradient-to-br from-blue-100 via-sky-50 to-blue-50',
-    avatarBorder: 'border-blue-200/90',
-    avatarRing: 'ring-blue-100/70',
-    avatarText: 'text-[#0057E7]',
-    spotlightColor: '#0057E7',
-    bottomBg: 'bg-gradient-to-r from-[#0057E7] via-[#0047BA] to-[#0033A0]',
+    photo: '',
     socials: {
       linkedin: 'https://linkedin.com',
       github: 'https://github.com',
@@ -123,108 +73,82 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, meta }) => {
   const [imgFailed, setImgFailed] = useState(false)
 
   return (
-    <SpotlightCard
-      theme="light"
-      spotlightColor="transparent"
-      spotlightSize={320}
-      intensity={0.25}
-      borderGlow={0.8}
-      className="group rounded-[24px] flex flex-col justify-between h-full bg-white border border-slate-200/80 shadow-xs hover:shadow-xl transition-all duration-300 hover:-translate-y-1.5 overflow-hidden"
-    >
-      {/* Top / Body Section (Centered content) */}
-      <div className="p-6 sm:p-7 pb-5 flex flex-col flex-1 items-center text-center">
-        <div className="relative mb-5 flex w-full justify-center">
-          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 bg-white border border-blue-500 shadow-md flex items-center justify-center">
-            {!imgFailed && meta.photo ? (
-              <img
-                src={meta.photo}
-                alt={member.name}
-                onError={() => setImgFailed(true)}
-                className={`block aspect-square w-full rounded-full object-cover bg-slate-100 ${
-                  member.name === 'Er. Sundareswara Nathan'
-                    ? 'object-[center_28%]'
-                    : member.name === 'Er. Sindhu Kumar'
-                      ? 'object-[center_-5%]'
-                      : ''
-                }`}
-                loading="lazy"
-              />
-            ) : (
-              <div
-                className={`w-full h-full rounded-full ${meta.avatarBg} flex items-center justify-center select-none`}
-                role="img"
-                aria-label={`${member.name} avatar`}
-              >
-                <span className={`text-xl font-bold tracking-wider ${meta.avatarText}`}>
-                  {meta.initials}
-                </span>
-              </div>
-            )}
+    <article className="team-card">
+      <div className="team-card-media">
+        {!imgFailed && meta.photo ? (
+          <img
+            src={meta.photo}
+            alt={member.name}
+            onError={() => setImgFailed(true)}
+            className="team-card-photo"
+            style={
+              {
+                ...(meta.photoPosition ? { objectPosition: meta.photoPosition } : {}),
+                ...(meta.photoShift ? { '--team-photo-shift': meta.photoShift } : {}),
+              } as React.CSSProperties
+            }
+            loading="lazy"
+          />
+        ) : (
+          <div className="team-card-fallback" role="img" aria-label={`${member.name} avatar`}>
+            <span>{meta.initials}</span>
           </div>
-        </div>
-
-        <div className="w-full">
-          <h3 className="text-card-title group-hover:text-blue-600 transition-colors">
-            {member.name}
-          </h3>
-          <p className="text-sm text-blue-600 font-semibold mt-1">
-            {member.role}
-          </p>
-          <p className="text-card-desc mt-3.5 min-h-[6.5rem] text-slate-600 flex items-center justify-center">
-            {member.bio}
-          </p>
-        </div>
+        )}
       </div>
 
-      {/* Bottom Bar: Distinct Background Color with White Social Icons */}
-      <div className={`w-full py-3.5 px-6 ${meta.bottomBg} flex items-center justify-center gap-3 transition-colors duration-300`}>
-        <a
-          href={meta.socials.linkedin}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-9 h-9 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-2xs"
-          aria-label={`${member.name} on LinkedIn`}
-          title="LinkedIn"
-        >
-          <LinkedInIcon className="w-4 h-4 text-white" />
-        </a>
+      <div className="team-card-body">
+        <h3 className="team-card-name">{member.name}</h3>
+        <p className="team-card-role">{member.role}</p>
 
-        {meta.socials.github && (
+        <div className="team-card-socials">
           <a
-            href={meta.socials.github}
+            href={meta.socials.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-9 h-9 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-2xs"
-            aria-label={`${member.name} on GitHub`}
-            title="GitHub"
+            className="team-card-social"
+            aria-label={`${member.name} on LinkedIn`}
+            title="LinkedIn"
           >
-            <GitHubIcon className="w-4 h-4 text-white" />
+            <LinkedInIcon />
           </a>
-        )}
 
-        {meta.socials.twitter && (
+          {meta.socials.github && (
+            <a
+              href={meta.socials.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="team-card-social"
+              aria-label={`${member.name} on GitHub`}
+              title="GitHub"
+            >
+              <GitHubIcon />
+            </a>
+          )}
+
+          {meta.socials.twitter && (
+            <a
+              href={meta.socials.twitter}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="team-card-social"
+              aria-label={`${member.name} on X (Twitter)`}
+              title="X (Twitter)"
+            >
+              <TwitterIcon />
+            </a>
+          )}
+
           <a
-            href={meta.socials.twitter}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-9 h-9 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-2xs"
-            aria-label={`${member.name} on X (Twitter)`}
-            title="X (Twitter)"
+            href={`mailto:${meta.socials.email}`}
+            className="team-card-social"
+            aria-label={`Email ${member.name}`}
+            title="Send Email"
           >
-            <TwitterIcon className="w-3.5 h-3.5 text-white" />
+            <MailIcon />
           </a>
-        )}
-
-        <a
-          href={`mailto:${meta.socials.email}`}
-          className="w-9 h-9 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-2xs"
-          aria-label={`Email ${member.name}`}
-          title="Send Email"
-        >
-          <MailIcon className="w-4 h-4 text-white" />
-        </a>
+        </div>
       </div>
-    </SpotlightCard>
+    </article>
   )
 }
 
@@ -242,12 +166,12 @@ export const OurTeam: React.FC = () => {
       </AnimatedSection>
 
       {/* Team Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8 max-w-3xl mx-auto" style={{ marginTop: 28 }}>
-        {[...teamMembers.slice(0, 2)].reverse().map((member, i) => {
+      <div className="team-grid">
+        {teamMembers.map((member, i) => {
           const meta = getMemberMeta(member.name)
 
           return (
-            <AnimatedSection key={member.name} delay={i * 0.08} className="h-full">
+            <AnimatedSection key={member.name} as="div" delay={i * 0.08} className="h-full">
               <TeamMemberCard member={member} meta={meta} />
             </AnimatedSection>
           )
