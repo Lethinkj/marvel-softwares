@@ -12,6 +12,7 @@ export const SECTION_TITLES: Record<string, string> = {
   services: 'Core Engineering Services',
   process: '5-Step Engineering Lifecycle',
   technologies: 'Modern Technology Stack',
+  industries: 'Industries We Serve',
   'why-choose-us': 'Why Choose Marvel Softwares',
   team: 'Leadership & Engineering Team',
   projects: 'Featured Work & Case Studies',

@@ -7,6 +7,7 @@ import { OurProcess } from '../components/OurProcess'
 import ServiceShowcase from '../components/ServiceShowcase'
 import WhyChooseUs from '../components/WhyChooseUs'
 import WhyChooseMarvel from '../components/WhyChooseMarvel'
+import IndustriesWeServe from '../components/IndustriesWeServe'
 import OurTeam from '../components/OurTeam'
 import UpcomingProjects from '../components/UpcomingProjects'
 // Hidden for now — re-enable the import and section below when ready.
@@ -299,6 +300,13 @@ export const Home: React.FC = () => {
           </AnimatedSection>
 
           <WhyChooseUs />
+        </div>
+      </section>
+
+      {/* ============ E2. INDUSTRIES WE SERVE ============ */}
+      <section id="industries" aria-labelledby="industries-title" className="section industries-section">
+        <div className="container">
+          <IndustriesWeServe />
         </div>
       </section>
 

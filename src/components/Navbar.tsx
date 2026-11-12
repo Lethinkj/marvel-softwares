@@ -18,6 +18,7 @@ const SECTIONS_IN_ORDER = [
   { id: 'services', nav: 'services' },
   { id: 'process', nav: 'services' },
   { id: 'technologies', nav: 'services' },
+  { id: 'industries', nav: 'services' },
   { id: 'plans', nav: 'services' },
   { id: 'why-choose-us', nav: 'services' },
   { id: 'team', nav: 'team' },

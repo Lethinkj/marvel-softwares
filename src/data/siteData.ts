@@ -588,7 +588,7 @@ export interface TeamMember {
 
 export const teamMembers: TeamMember[] = [
   {
-    name: 'Er. Sundareswaran Nathan',
+    name: 'Er. Sundareswara Nathan',
     role: 'COO & Co-Founder, Marvelsoftwares',
     bio: 'Leads the design vision at Marvelsoftwares, creating clear and engaging digital experiences. Focuses on thoughtful user experiences and strong visual direction.',
     expertise: ['System Architecture', 'Cloud Strategy', 'Product Delivery'],

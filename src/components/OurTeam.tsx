@@ -22,7 +22,7 @@ interface MemberMetadata {
 }
 
 const memberMetadataMap: Record<string, MemberMetadata> = {
-  'Er. Sundareswaran Nathan': {
+  'Er. Sundareswara Nathan': {
     initials: 'S',
     photo: '/images/team/sundareswaranathan.png',
     avatarBg: 'bg-gradient-to-br from-blue-100 via-sky-50 to-indigo-50',
@@ -141,7 +141,7 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, meta }) => {
                 alt={member.name}
                 onError={() => setImgFailed(true)}
                 className={`block aspect-square w-full rounded-full object-cover bg-slate-100 ${
-                  member.name === 'Er. Sundareswaran Nathan'
+                  member.name === 'Er. Sundareswara Nathan'
                     ? 'object-[center_28%]'
                     : member.name === 'Er. Sindhu Kumar'
                       ? 'object-[center_-5%]'

@@ -105,7 +105,7 @@
   --color-border: #e8e5e1;
 
   /* --- Typography (fluid: smooth auto-scaling for mobile, tablet, PC) --- */
-  --font-hero: clamp(2.1rem, 3.8vw + 0.8rem, 3.6rem);
+  --font-hero: clamp(2.5rem, 3.8vw + 0.8rem, 3.6rem);
   --font-page-title: clamp(1.8rem, 3vw + 0.75rem, 3.1rem);
   --font-section-title: clamp(1.65rem, 1.8vw + 0.9rem, 2.35rem);
   --font-section-subtitle: clamp(1rem, 0.25vw + 0.95rem, 1.125rem);
@@ -683,10 +683,39 @@ body.nav-menu-open #root {
 
 @media (max-width: 640px) {
   .text-section-title {
-    font-size: clamp(1.05rem, 4.2vw, 1.5rem) !important;
-    letter-spacing: -0.025em;
-    margin-top: clamp(10px, 2.5vw, 16px);
-    margin-bottom: clamp(10px, 2.5vw, 16px);
+    /* Big, readable mobile headings — allow them to wrap naturally */
+    font-size: clamp(1.8rem, 8.2vw, 2.4rem) !important;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    white-space: normal !important;
+    text-wrap: balance !important;
+    margin-top: clamp(14px, 3vw, 20px);
+    margin-bottom: clamp(14px, 3vw, 20px);
+    text-align: left !important;
+  }
+
+  /* Two-tone heading: first part sits left, colored part sits right */
+  .text-section-title .heading-last-word {
+    display: block;
+    text-align: right;
+  }
+
+  /* Mission/Vision keep their badge row and single-line heading */
+  #mission-title,
+  #vision-title {
+    text-align: center !important;
+  }
+
+  #mission-title .heading-last-word,
+  #vision-title .heading-last-word {
+    display: inline;
+    text-align: inherit;
+  }
+
+  /* Remove the decorative left/right lines on mobile */
+  .text-section-title::before,
+  .text-section-title::after {
+    display: none !important;
   }
 }
 
@@ -718,18 +747,7 @@ body.nav-menu-open #root {
   background: linear-gradient(90deg, #ff5a00 0%, rgba(255, 90, 0, 0) 100%);
 }
 
-@media (max-width: 640px) {
-  .text-section-title::before,
-  .text-section-title::after {
-    width: clamp(12px, 3vw, 22px);
-  }
-  .text-section-title::before {
-    margin-right: clamp(6px, 1.2vw, 8px);
-  }
-  .text-section-title::after {
-    margin-left: clamp(6px, 1.2vw, 8px);
-  }
-}
+/* Decorative orange gradient lines are hidden on mobile (see max-width: 640px above) */
 
 /* Headings with accompanying badges or left-aligned layouts shouldn't have inline decorative lines or excess vertical margin */
 #mission-title,
@@ -1211,88 +1229,174 @@ body.nav-menu-open #root {
 }
 
 /* ========================================================
-   Our Services Scroll Animation (Alternating Left/Right)
-   - Left-aligned rows (index 0, 2, 4): glide in from Left to Right
-   - Right-aligned rows (index 1, 3, 5): glide in from Right to Left
+   Our Services - Separate Element Scroll Animations
+   Image, Heading, Paragraph, and Points animate independently
+   - Row 0, 2, 4 (Not flipped):
+       • Media / Image: glides from Left (-65px) with scale (0.94 -> 1)
+       • Heading: glides from Right (50px)
+       • Paragraph: glides from Right (50px) with stagger
+       • Points table: glides from Right (45px) with stagger
+   - Row 1, 3, 5 (is-flip):
+       • Heading: glides from Left (-50px)
+       • Paragraph: glides from Left (-50px) with stagger
+       • Points table: glides from Left (-45px) with stagger
+       • Media / Image: glides from Right (65px) with scale (0.94 -> 1)
    - Bi-directional: smooth entrance on scroll down AND scroll up
-   - Zero-glitch hysteresis: silent off-screen reset with no layout shift
+   - Zero-glitch hysteresis: silent off-screen reset (>90px)
    ======================================================== */
 .svc-scroll-row {
-  --svc-x: -70px;
-  --svc-y: 24px;
+  opacity: 1;
+  transform: none;
+}
+
+/* Base style for every separately animated element */
+.svc-anim-item {
+  --svc-dir-y: 16px;
   opacity: 0;
-  transform: translate3d(var(--svc-x), var(--svc-y), 0);
-  transition:
-    opacity 650ms cubic-bezier(0.16, 1, 0.3, 1),
-    transform 680ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
+  transition-property: opacity, transform;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Flipped / right-aligned rows: glide in from Right to Left */
-.svc-scroll-row.is-flip {
-  --svc-x: 70px;
+.svc-anim-item[data-scroll-direction='down'] {
+  --svc-dir-y: 16px;
 }
 
-/* Directional vertical modifier */
-.svc-scroll-row[data-scroll-direction='down'] {
-  --svc-y: 24px;
+.svc-anim-item[data-scroll-direction='up'] {
+  --svc-dir-y: -16px;
 }
 
-.svc-scroll-row[data-scroll-direction='up'] {
-  --svc-y: -24px;
+/* --------------------------------------------------------
+   Row 0, 2, 4 (Not flipped):
+   Media on LEFT (enters from left)
+   Heading, Paragraph, Points on RIGHT (enter from right)
+   -------------------------------------------------------- */
+.svc-showcase-row:not(.is-flip) .svc-anim-media {
+  transform: translate3d(-65px, var(--svc-dir-y), 0) scale(0.94);
+  transition-duration: 720ms;
+  transition-delay: 0ms;
 }
 
-/* Visible active state */
-.svc-scroll-row.svc-row--visible {
+.svc-showcase-row:not(.is-flip) .svc-anim-heading {
+  transform: translate3d(50px, var(--svc-dir-y), 0);
+  transition-duration: 650ms;
+  transition-delay: 50ms;
+}
+
+.svc-showcase-row:not(.is-flip) .svc-anim-para {
+  transform: translate3d(50px, var(--svc-dir-y), 0);
+  transition-duration: 650ms;
+  transition-delay: 120ms;
+}
+
+.svc-showcase-row:not(.is-flip) .svc-anim-points {
+  transform: translate3d(45px, var(--svc-dir-y), 0);
+  transition-duration: 650ms;
+  transition-delay: 190ms;
+}
+
+/* --------------------------------------------------------
+   Row 1, 3, 5 (is-flip):
+   Heading, Paragraph, Points on LEFT (enter from left)
+   Media on RIGHT (enters from right)
+   -------------------------------------------------------- */
+.svc-showcase-row.is-flip .svc-anim-media {
+  transform: translate3d(65px, var(--svc-dir-y), 0) scale(0.94);
+  transition-duration: 720ms;
+  transition-delay: 0ms;
+}
+
+.svc-showcase-row.is-flip .svc-anim-heading {
+  transform: translate3d(-50px, var(--svc-dir-y), 0);
+  transition-duration: 650ms;
+  transition-delay: 50ms;
+}
+
+.svc-showcase-row.is-flip .svc-anim-para {
+  transform: translate3d(-50px, var(--svc-dir-y), 0);
+  transition-duration: 650ms;
+  transition-delay: 120ms;
+}
+
+.svc-showcase-row.is-flip .svc-anim-points {
+  transform: translate3d(-45px, var(--svc-dir-y), 0);
+  transition-duration: 650ms;
+  transition-delay: 190ms;
+}
+
+/* --------------------------------------------------------
+   Visible active state for each item
+   -------------------------------------------------------- */
+.svc-anim-item.svc-item--visible {
   opacity: 1 !important;
-  transform: translate3d(0, 0, 0) !important;
+  transform: translate3d(0, 0, 0) scale(1) !important;
 }
 
-/* Off-screen reset: zero transition so it resets invisibly */
-.svc-scroll-row.svc-row--resetting {
+/* Off-screen reset: silent zero transition */
+.svc-anim-item.svc-item--resetting {
   transition: none !important;
+  opacity: 0 !important;
 }
 
-/* Subtle media illustration scale enhancement */
-.svc-scroll-row .svc-media {
-  transform: scale(0.96);
-  transition: transform 720ms cubic-bezier(0.16, 1, 0.3, 1);
+/* --------------------------------------------------------
+   Checkmark points cascade inside points table
+   -------------------------------------------------------- */
+.svc-anim-points li {
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+  transition:
+    opacity 400ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 450ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.svc-scroll-row.svc-row--visible .svc-media {
-  transform: scale(1);
+.svc-anim-points.svc-item--visible li {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
 }
 
-.svc-scroll-row.svc-row--resetting .svc-media {
+.svc-anim-points.svc-item--visible li:nth-child(1) { transition-delay: 220ms; }
+.svc-anim-points.svc-item--visible li:nth-child(2) { transition-delay: 260ms; }
+.svc-anim-points.svc-item--visible li:nth-child(3) { transition-delay: 300ms; }
+.svc-anim-points.svc-item--visible li:nth-child(4) { transition-delay: 340ms; }
+.svc-anim-points.svc-item--visible li:nth-child(5) { transition-delay: 380ms; }
+.svc-anim-points.svc-item--visible li:nth-child(6) { transition-delay: 420ms; }
+
+.svc-anim-points.svc-item--resetting li {
   transition: none !important;
+  opacity: 0 !important;
+  transform: translate3d(0, 10px, 0) !important;
 }
 
-/* Responsive adjustments for mobile and tablets */
-@media (max-width: 768px) {
-  .svc-scroll-row {
-    --svc-x: -40px;
-    --svc-y: 18px;
-    transition:
-      opacity 520ms cubic-bezier(0.16, 1, 0.3, 1),
-      transform 540ms cubic-bezier(0.16, 1, 0.3, 1);
+/* --------------------------------------------------------
+   Mobile and tablet responsive adjustments (< 992px)
+   -------------------------------------------------------- */
+@media (max-width: 991px) {
+  .svc-showcase-row:not(.is-flip) .svc-anim-media,
+  .svc-showcase-row:not(.is-flip) .svc-anim-heading,
+  .svc-showcase-row:not(.is-flip) .svc-anim-para,
+  .svc-showcase-row:not(.is-flip) .svc-anim-points {
+    transform: translate3d(-28px, var(--svc-dir-y), 0);
+    transition-duration: 520ms;
   }
 
-  .svc-scroll-row.is-flip {
-    --svc-x: 40px;
+  .svc-showcase-row.is-flip .svc-anim-media,
+  .svc-showcase-row.is-flip .svc-anim-heading,
+  .svc-showcase-row.is-flip .svc-anim-para,
+  .svc-showcase-row.is-flip .svc-anim-points {
+    transform: translate3d(28px, var(--svc-dir-y), 0);
+    transition-duration: 520ms;
   }
 
-  .svc-scroll-row[data-scroll-direction='down'] {
-    --svc-y: 18px;
-  }
-
-  .svc-scroll-row[data-scroll-direction='up'] {
-    --svc-y: -18px;
+  .svc-showcase-row:not(.is-flip) .svc-anim-media,
+  .svc-showcase-row.is-flip .svc-anim-media {
+    transform: translate3d(0, var(--svc-dir-y), 0) scale(0.96);
   }
 }
 
 @media (prefers-reduced-motion: reduce), (scripting: none) {
   .svc-scroll-row,
-  .svc-scroll-row .svc-media {
+  .svc-anim-item,
+  .svc-anim-points li {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
@@ -5080,18 +5184,8 @@ a.page-hero-card-item:hover .page-hero-card-arrow {
   display: block;
 }
 
-@media (max-width: 640px) {
-  .faq-heading-single-line {
-    font-size: clamp(1.15rem, 5.2vw, 1.65rem) !important;
-    letter-spacing: -0.03em;
-  }
-}
-
-@media (min-width: 641px) and (max-width: 1024px) {
-  .faq-heading-single-line {
-    font-size: clamp(1.65rem, 3.2vw, 2.15rem) !important;
-  }
-}
+/* FAQ heading inherits the shared section-title sizing on every screen,
+   while still keeping its single-line desktop treatment. */
 
 .faq-page-lead {
   margin-top: 16px;
@@ -7570,6 +7664,268 @@ blockquote {
   --why-corner: #b2c9fb;
   --why-corner-rgb: 178, 201, 251;
 }
+
+/* ============================================
+   INDUSTRIES WE SERVE — connected flow diagram
+   ============================================ */
+.industries-section {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(55% 75% at 50% 0%, rgba(0, 87, 231, 0.07), transparent 72%),
+    linear-gradient(180deg, #ffffff 0%, #f5f9ff 100%);
+}
+
+.industries-section::before,
+.industries-section::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.industries-section::before {
+  width: 360px;
+  height: 360px;
+  top: -220px;
+  left: -140px;
+  background: radial-gradient(circle, rgba(0, 207, 255, 0.14), transparent 70%);
+}
+
+.industries-section::after {
+  width: 420px;
+  height: 420px;
+  right: -170px;
+  bottom: -290px;
+  background: radial-gradient(circle, rgba(255, 90, 0, 0.08), transparent 70%);
+}
+
+.industries-flow-wrap {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  margin-top: clamp(30px, 4vw, 56px);
+}
+
+.industry-flow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+}
+
+.industry-node {
+  --industry-accent: #0057e7;
+  --industry-tint: #edf4ff;
+  position: relative;
+  z-index: 1;
+  flex: 0 0 clamp(104px, 10.2vw, 148px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(10px, 1vw, 14px);
+  text-align: center;
+}
+
+.industry-node-icon {
+  display: grid;
+  place-items: center;
+  width: clamp(60px, 5vw, 78px);
+  height: clamp(60px, 5vw, 78px);
+  border-radius: 50%;
+  color: var(--industry-accent);
+  background: linear-gradient(150deg, #ffffff 10%, var(--industry-tint) 100%);
+  box-shadow:
+    0 0 0 6px #ffffff,
+    0 0 0 7px rgba(0, 87, 231, 0.12),
+    0 18px 32px -18px var(--industry-accent);
+  transition:
+    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.28s ease;
+}
+
+.industry-node-icon svg {
+  width: 42%;
+  height: 42%;
+  stroke-width: 2.1;
+}
+
+.industry-node:hover .industry-node-icon {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow:
+    0 0 0 6px #ffffff,
+    0 0 0 7px rgba(0, 87, 231, 0.18),
+    0 24px 40px -18px var(--industry-accent);
+}
+
+.industry-node-name {
+  margin: 0;
+  max-width: 15ch;
+  font-size: clamp(0.86rem, 0.72vw + 0.58rem, 1.02rem) !important;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  color: #172033;
+  transition: color 0.25s ease;
+}
+
+.industry-node:hover .industry-node-name {
+  color: var(--industry-accent);
+}
+
+.industry-flow-link {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 26px;
+  height: 3px;
+  margin-top: clamp(29px, 2.4vw, 38px);
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(0, 87, 231, 0.28) 0%, #0057e7 55%, #00cfff 100%);
+  box-shadow: 0 0 14px rgba(0, 135, 255, 0.18);
+}
+
+.industry-flow-link::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid #00a7ff;
+  border-right: 2px solid #00a7ff;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.industry-flow-link::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #00d5ff;
+  box-shadow:
+    0 0 0 4px rgba(0, 207, 255, 0.16),
+    0 0 12px rgba(0, 207, 255, 0.9);
+  transform: translateY(-50%);
+  animation: industry-flow-travel-x 2.8s linear infinite;
+  animation-delay: var(--flow-delay, 0s);
+}
+
+@keyframes industry-flow-travel-x {
+  0% {
+    left: 0;
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    left: calc(100% - 7px);
+    opacity: 0;
+  }
+}
+
+@keyframes industry-flow-travel-y {
+  0% {
+    top: 0;
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    top: calc(100% - 7px);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 991px) {
+  .industries-flow-wrap {
+    margin-top: 28px;
+  }
+
+  .industry-flow {
+    flex-direction: column;
+    align-items: flex-start;
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
+  }
+
+  .industry-node {
+    flex: none;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    width: auto;
+    text-align: left;
+  }
+
+  .industry-node-icon {
+    flex: 0 0 58px;
+    width: 58px;
+    height: 58px;
+    box-shadow:
+      0 0 0 5px #ffffff,
+      0 0 0 6px rgba(0, 87, 231, 0.12),
+      0 14px 26px -18px var(--industry-accent);
+  }
+
+  .industry-node-name {
+    max-width: none;
+    font-size: 1.02rem !important;
+  }
+
+  .industry-flow-link {
+    flex: none;
+    width: 3px;
+    height: 28px;
+    min-width: 0;
+    margin: 0 0 0 27.5px;
+    background: linear-gradient(180deg, #0057e7 0%, #00cfff 100%);
+  }
+
+  .industry-flow-link::after {
+    top: auto;
+    right: auto;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%) rotate(135deg);
+  }
+
+  .industry-flow-link::before {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    animation-name: industry-flow-travel-y;
+    animation-duration: 2.3s;
+  }
+}
+
+@media (max-width: 479px) {
+  .industry-node-icon {
+    flex: 0 0 52px;
+    width: 52px;
+    height: 52px;
+  }
+
+  .industry-flow-link {
+    margin-left: 24.5px;
+  }
+
+  .industry-node-name {
+    font-size: 0.98rem !important;
+  }
+}
+
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1199px) {
