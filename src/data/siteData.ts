@@ -582,7 +582,7 @@ export const teamRoles: Principle[] = [
 export interface TeamMember {
   name: string
   role: string
-  bio: string
+  description: string
   expertise: string[]
 }
 
@@ -590,13 +590,15 @@ export const teamMembers: TeamMember[] = [
   {
     name: 'Er. Sundareswara Nathan',
     role: 'COO & Co-Founder, Marvelsoftwares',
-    bio: 'Leads the design vision at Marvelsoftwares, creating clear and engaging digital experiences. Focuses on thoughtful user experiences and strong visual direction.',
+    description:
+      'Driving business operations, strategic growth, and operational excellence through effective leadership and client-focused solutions.',
     expertise: ['System Architecture', 'Cloud Strategy', 'Product Delivery'],
   },
   {
     name: 'Er. Sindhu Kumar',
-    role: 'CTO & Co-Founder, Marvelsoftwares',
-    bio: 'Leads technology and software development at Marvelsoftwares, building reliable solutions for our clients. Focuses on secure, scalable systems that perform smoothly.',
+    role: 'CEO & Co-Founder, Marvelsoftwares',
+    description:
+      'Leading technology innovation, software development, and digital transformation through scalable and future-ready solutions.',
     expertise: ['Distributed Systems', 'Cloud & DevOps', 'Database Scaling'],
   },
 ]
