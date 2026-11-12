@@ -86,7 +86,10 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, meta }) => {
       intensity={0.25}
       borderGlow={0.8}
       className="group rounded-[24px] flex flex-col justify-between h-full bg-white border border-slate-200/80 transition-all duration-300 hover:-translate-y-1.5 overflow-hidden"
-      style={{ boxShadow: '0 20px 48px -24px rgba(15, 23, 42, 0.32)' }}
+      style={{
+        boxShadow:
+          '0 24px 60px -15px rgba(15, 23, 42, 0.42), 0 10px 24px -12px rgba(15, 23, 42, 0.2)',
+      }}
     >
       {/* Full-bleed square portrait, flush with the card's top and sides */}
       <div className="relative w-full aspect-square overflow-hidden bg-slate-100">
