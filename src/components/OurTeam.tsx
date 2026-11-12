@@ -92,7 +92,7 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, meta }) => {
       }}
     >
       {/* Full-bleed square portrait, flush with the card's top and sides */}
-      <div className="relative w-full aspect-square overflow-hidden bg-slate-100">
+      <div className="relative w-full aspect-square overflow-hidden bg-white">
         {!imgFailed && meta.photo ? (
           <img
             src={meta.photo}
@@ -105,7 +105,7 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, meta }) => {
                   ? 'object-[center_0%]'
                   : ''
             }`}
-            style={{ height: '100%' }}
+            style={{ height: '100%', transform: 'translateY(3px)' }}
             loading="lazy"
           />
         ) : (
