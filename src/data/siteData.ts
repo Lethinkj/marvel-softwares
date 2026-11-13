@@ -168,6 +168,26 @@ export const services: Service[] = [
     solutionValue: 'Mobile Application',
   },
   {
+    id: 'ecommerce-development',
+    icon: 'ecommerce',
+    title: 'E-commerce',
+    headline: 'Online Stores Built to Sell',
+    description: 'Online stores with secure payments.',
+    paragraphs: [
+      'We build online stores that make browsing, checkout and order management simple for customers and your team. Product catalogs, secure payment gateways, inventory synchronization and shipping workflows are connected in one reliable platform that supports sales across web and mobile.',
+    ],
+    capabilities: [
+      'Online storefronts',
+      'Secure payment gateways',
+      'Product and inventory management',
+      'Cart and checkout flows',
+      'Order and shipping management',
+      'Discounts and promotions',
+    ],
+    cta: 'Build an Online Store',
+    solutionValue: 'E-commerce',
+  },
+  {
     id: 'erp-business-software',
     icon: 'erp',
     title: 'ERP & Business Management Software',
@@ -295,6 +315,46 @@ export const services: Service[] = [
     solutionValue: 'AI or Automation',
   },
   {
+    id: 'lms-development',
+    icon: 'lms',
+    title: 'LMS',
+    headline: 'Learning Platforms Built for Modern Institutions',
+    description: 'Learning platforms for institutions.',
+    paragraphs: [
+      'We build learning management systems for schools, training institutes, and enterprises. Course delivery, student enrollment, assessments, live sessions, and progress tracking come together in a clear platform that supports learners, instructors, and administrators.',
+    ],
+    capabilities: [
+      'Course and curriculum management',
+      'Student enrollment and progress',
+      'Assessments and grading',
+      'Live class integration',
+      'Role-based access',
+      'Reports and analytics',
+    ],
+    cta: 'Build a Learning Platform',
+    solutionValue: 'LMS',
+  },
+  {
+    id: 'digital-marketing-seo',
+    icon: 'marketing',
+    title: 'Digital Marketing & SEO',
+    headline: 'Get Found Online and Turn Visits into Leads',
+    description: 'Visibility and lead generation.',
+    paragraphs: [
+      'We help your business get found and chosen online through search engine optimization, content strategy, technical audits, and targeted campaigns. Clear reporting connects visibility and lead generation to the goals that matter to your business.',
+    ],
+    capabilities: [
+      'Search engine optimization',
+      'Keyword and content strategy',
+      'Technical SEO audits',
+      'Social media marketing',
+      'Analytics and reporting',
+      'Lead generation campaigns',
+    ],
+    cta: 'Grow Your Visibility',
+    solutionValue: 'Digital Marketing & SEO',
+  },
+  {
     id: 'maintenance-consulting',
     icon: 'consulting',
     title: 'Maintenance & Technical Consulting',
@@ -317,7 +377,7 @@ export const services: Service[] = [
   },
 ]
 
-// --- Six-card overview used on the home page ---
+// --- Service overview used on the home page and footer ---
 export const homeServices: string[] = [
   'website-development',
   'web-application-development',
@@ -325,6 +385,25 @@ export const homeServices: string[] = [
   'erp-business-software',
   'custom-software-development',
   'ai-automation',
+  'ecommerce-development',
+  'lms-development',
+  'digital-marketing-seo',
+]
+
+// --- Modern, widely supported tools used across our projects ---
+export const technologies: string[] = [
+  'React',
+  'Next.js',
+  'Node.js',
+  'Express',
+  'PostgreSQL',
+  'MySQL',
+  'Tailwind CSS',
+  'Bootstrap',
+  'Python',
+  'TensorFlow',
+  'Flutter',
+  'React Native',
 ]
 
 // --- Four service areas summarised on the home page ---
@@ -364,7 +443,7 @@ export const homeFaqs: Faq[] = [
   {
     question: 'What kind of software do you build?',
     answer:
-      'We build websites, web applications, mobile apps, ERP and business management systems, custom software, API integrations, cloud and DevOps setups, and AI and automation workflows. Most engagements start with one of these and grow from there.',
+      'We build websites, web applications, mobile apps, ERP and business management software, custom software, AI and automation solutions, e-commerce stores, learning management systems (LMS), and digital marketing and SEO programs. We also handle API integrations, cloud and DevOps setups, and ongoing maintenance. Most engagements start with one of these and grow from there.',
   },
   {
     question: 'How long does a project take?',
@@ -403,7 +482,7 @@ export const faqPageFaqs: Faq[] = [
   {
     question: 'What core software development services does Marvel Softwares provide?',
     answer:
-      'We provide end-to-end technology solutions across six core domains: (1) Custom Website Development, (2) Web Application Development & SaaS Platforms, (3) iOS, Android & Cross-Platform Mobile App Development, (4) Tailored ERP & Business Management Software, (5) Custom Business Software & Legacy System Modernization, and (6) AI Solutions & Intelligent Workflow Automation.',
+      'We provide end-to-end technology solutions across nine core domains: (1) Website Development, (2) Web Application Development, (3) Mobile App Development, (4) ERP & Business Management Software, (5) Custom Software Development, (6) AI & Automation, (7) E-commerce Development, (8) Learning Management Systems (LMS), and (9) Digital Marketing & SEO.',
   },
   {
     question: 'Do you develop software for clients across different states and cities in India?',
@@ -768,9 +847,12 @@ export const solutionTypes: string[] = [
   'Website',
   'Web Application',
   'Mobile Application',
+  'E-commerce',
   'ERP or Business Software',
   'Custom Software',
   'AI or Automation',
+  'LMS',
+  'Digital Marketing & SEO',
   'API or Integration',
   'Cloud or DevOps',
   'Other',

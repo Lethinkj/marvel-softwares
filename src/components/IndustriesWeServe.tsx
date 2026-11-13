@@ -1,10 +1,12 @@
 import React from 'react'
 import {
+  BriefcaseBusiness,
   Factory,
   GraduationCap,
   HeartPulse,
+  Hotel,
   House,
-  Plane,
+  Rocket,
   ShoppingCart,
 } from 'lucide-react'
 import AnimatedSection from './AnimatedSection'
@@ -19,11 +21,11 @@ interface Industry {
 
 const industries: Industry[] = [
   {
-    id: 'retail-ecommerce',
-    title: 'Retail & E-commerce',
-    accent: '#f97316',
-    tint: '#fff3e8',
-    icon: <ShoppingCart />,
+    id: 'startups',
+    title: 'Startups',
+    accent: '#f59e0b',
+    tint: '#fff7e6',
+    icon: <Rocket />,
   },
   {
     id: 'education',
@@ -33,18 +35,18 @@ const industries: Industry[] = [
     icon: <GraduationCap />,
   },
   {
+    id: 'retail-ecommerce',
+    title: 'Retail & E-commerce',
+    accent: '#f97316',
+    tint: '#fff3e8',
+    icon: <ShoppingCart />,
+  },
+  {
     id: 'healthcare',
     title: 'Healthcare',
     accent: '#e11d48',
     tint: '#ffebf0',
     icon: <HeartPulse />,
-  },
-  {
-    id: 'real-estate',
-    title: 'Real Estate',
-    accent: '#16a34a',
-    tint: '#e9fbf0',
-    icon: <House />,
   },
   {
     id: 'manufacturing',
@@ -54,11 +56,25 @@ const industries: Industry[] = [
     icon: <Factory />,
   },
   {
-    id: 'hospitality-travel',
-    title: 'Hospitality & Travel',
+    id: 'real-estate',
+    title: 'Real Estate',
+    accent: '#16a34a',
+    tint: '#e9fbf0',
+    icon: <House />,
+  },
+  {
+    id: 'hospitality',
+    title: 'Hospitality',
     accent: '#0ea5e9',
     tint: '#e8f7ff',
-    icon: <Plane />,
+    icon: <Hotel />,
+  },
+  {
+    id: 'professional-services',
+    title: 'Professional Services',
+    accent: '#0f766e',
+    tint: '#e6fbf7',
+    icon: <BriefcaseBusiness />,
   },
 ]
 
@@ -67,10 +83,10 @@ export const IndustriesWeServe: React.FC = () => {
     <>
       <AnimatedSection className="text-center mx-auto w-full">
         <h2 id="industries-title" className="text-section-title">
-          Industries We Serve <span className="heading-last-word">Worldwide</span>
+          Industries We <span className="heading-last-word">Serve</span>
         </h2>
         <p className="section-subtitle w-full max-w-full text-balance" style={{ maxWidth: '100%' }}>
-          Purpose-built digital solutions for the sectors that power everyday life — engineered around the way each industry works.
+          Solutions adapted to your sector.
         </p>
       </AnimatedSection>
 

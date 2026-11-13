@@ -7,6 +7,7 @@ import { OurProcess } from '../components/OurProcess'
 import ServiceShowcase from '../components/ServiceShowcase'
 import WhyChooseUs from '../components/WhyChooseUs'
 import WhyChooseMarvel from '../components/WhyChooseMarvel'
+import TechnologiesWeUse from '../components/TechnologiesWeUse'
 import IndustriesWeServe from '../components/IndustriesWeServe'
 import OurTeam from '../components/OurTeam'
 import UpcomingProjects from '../components/UpcomingProjects'
@@ -81,7 +82,7 @@ export const Home: React.FC = () => {
         title="Marvel Softwares | Software Development Company in India"
         description="MARVEL SOFTWARES is an India-based software development company delivering custom web applications, mobile apps, ERP systems, and AI automation for businesses across India and global markets."
         path="/"
-        keywords="software development company in India, software company in India, software development services, IT solutions company, custom software development, web application development, mobile app development, ERP software development, AI automation solutions, software company in Tamil Nadu, software company in Bangalore, software development partner"
+        keywords="software development company in India, software company in India, software development services, IT solutions company, custom software development, web application development, mobile app development, ERP software development, AI automation solutions, e-commerce development, LMS development, digital marketing and SEO, software company in Tamil Nadu, software company in Bangalore, software development partner"
       />
 
       {/* ============ A. HERO ============ */}
@@ -272,11 +273,10 @@ export const Home: React.FC = () => {
         <div className="container">
           <AnimatedSection className="text-center mx-auto w-full">
             <h2 id="services-title" className="text-section-title">
-              Technology Meets <span className="heading-last-word">Creative Thinking</span>
+              Our <span className="heading-last-word">Services</span>
             </h2>
             <p className="section-subtitle w-full max-w-full text-balance" style={{ maxWidth: '100%' }}>
-              From your first digital product to complex enterprise systems, we build
-              technology around the way your business works.
+              End-to-end software and digital services for startups, small businesses, institutions and growing enterprises.
             </p>
           </AnimatedSection>
 
@@ -299,15 +299,14 @@ export const Home: React.FC = () => {
         <div className="container">
           <AnimatedSection className="text-center mx-auto w-full">
             <h2 id="technologies-title" className="text-section-title">
-              Technologies <span className="heading-last-word">We Work With</span>
+              Technologies We <span className="heading-last-word">Use</span>
             </h2>
             <p className="section-subtitle w-full max-w-full text-balance" style={{ maxWidth: '100%' }}>
-              We leverage modern frameworks, scalable cloud architectures, and proven
-              engineering practices to build powerful digital solutions. Every technology
-              we choose is carefully selected to ensure exceptional performance, enhanced
-              security, seamless scalability, and long-term reliability for your business.
+              Modern, widely supported tools.
             </p>
           </AnimatedSection>
+
+          <TechnologiesWeUse />
 
           <WhyChooseUs />
         </div>

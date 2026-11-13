@@ -3,9 +3,12 @@ import {
   Globe,
   AppWindow,
   Smartphone,
+  ShoppingCart,
   Database,
   Code2,
   Sparkles,
+  GraduationCap,
+  Megaphone,
   Palette,
   Terminal,
   Cloud,
@@ -26,12 +29,18 @@ const getServiceHeadingIcon = (serviceId: string) => {
       return <AppWindow />
     case 'mobile-app-development':
       return <Smartphone />
+    case 'ecommerce-development':
+      return <ShoppingCart />
     case 'erp-business-software':
       return <Database />
     case 'custom-software-development':
       return <Code2 />
     case 'ai-automation':
       return <Sparkles />
+    case 'lms-development':
+      return <GraduationCap />
+    case 'digital-marketing-seo':
+      return <Megaphone />
     case 'ui-ux-design':
       return <Palette />
     case 'api-integration':
@@ -182,6 +191,7 @@ export const ServiceShowcase: React.FC = () => {
         return (
           <div
             key={service.id}
+            id={service.id}
             className={`svc-showcase-row svc-scroll-row${flip ? ' is-flip' : ''}`}
             data-service-index={i}
           >

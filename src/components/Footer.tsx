@@ -62,7 +62,7 @@ export function Footer() {
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault()
-    const targetId = href.replace(/^#/, '')
+    const targetId = href.replace(/^.*#/, '')
     trackSectionNavigation(targetId, 'footer')
     const el = document.getElementById(targetId)
     if (el) {

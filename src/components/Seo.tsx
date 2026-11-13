@@ -142,7 +142,7 @@ export function Seo({
         url: siteConfig.siteUrl,
         image: `${siteConfig.siteUrl}/marvel-softwares-logo-horizontal.png`,
         description:
-          'Software development company providing website development, web applications, mobile apps, ERP systems, AI automation and custom software development across India and international markets.',
+          'Software development company providing website development, web applications, mobile apps, ERP and business management software, custom software, AI and automation, e-commerce stores, LMS platforms, and digital marketing and SEO across India and international markets.',
         address: {
           '@type': 'PostalAddress',
           addressCountry: 'IN',
@@ -173,6 +173,9 @@ export function Seo({
           'ERP & Business Management Software',
           'Custom Software Development',
           'AI & Automation',
+          'E-commerce',
+          'LMS',
+          'Digital Marketing & SEO',
         ],
       },
     ]

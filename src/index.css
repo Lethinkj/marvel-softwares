@@ -1610,30 +1610,6 @@ body.nav-menu-open #root {
   background: rgba(0, 87, 231, 0.1);
 }
 
-.svc-copy-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 24px;
-  padding: 12px 22px;
-  border-radius: 999px;
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #fff;
-  background: var(--color-primary);
-  box-shadow: var(--shadow-button);
-  transition:
-    transform var(--transition-base),
-    box-shadow var(--transition-base),
-    background var(--transition-base);
-}
-
-.svc-copy-cta:hover {
-  transform: translateY(-2px);
-  background: var(--color-primary-dark);
-  box-shadow: 0 12px 26px -10px rgba(0, 87, 231, 0.7);
-}
-
 .svc-mobile-header {
   display: flex;
   justify-content: center;
@@ -7736,6 +7712,93 @@ blockquote {
 }
 
 /* ============================================
+   TECHNOLOGIES WE USE — compact pill cloud
+   ============================================ */
+.technology-pills-wrap {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: clamp(22px, 3vw, 34px);
+  margin-bottom: clamp(28px, 4vw, 46px);
+}
+
+.technology-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.technology-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 7px 17px;
+  border: 1px solid #e4e9f2;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #172033;
+  font-size: clamp(0.82rem, 0.15vw + 0.78rem, 0.92rem);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  box-shadow: 0 7px 18px -14px rgba(23, 32, 51, 0.45);
+  transition:
+    transform 0.22s ease,
+    color 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.technology-pill:hover {
+  transform: translateY(-2px);
+  color: var(--color-primary);
+  border-color: rgba(0, 87, 231, 0.25);
+  box-shadow: 0 12px 24px -14px rgba(0, 87, 231, 0.5);
+}
+
+.technology-pills-wrap.scroll-scene--visible .technology-pill {
+  animation: technology-pill-in 560ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation-delay: var(--pill-delay, 0ms);
+}
+
+@keyframes technology-pill-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .technology-pills-wrap.scroll-scene--visible .technology-pill {
+    animation: none;
+  }
+}
+
+@media (max-width: 639px) {
+  .technology-pills-wrap {
+    margin-top: 20px;
+    margin-bottom: 30px;
+  }
+
+  .technology-pills {
+    gap: 8px;
+  }
+
+  .technology-pill {
+    min-height: 36px;
+    padding: 6px 13px;
+  }
+}
+
+/* ============================================
    INDUSTRIES WE SERVE — connected flow diagram
    ============================================ */
 .industries-section {
@@ -7789,7 +7852,7 @@ blockquote {
   --industry-tint: #edf4ff;
   position: relative;
   z-index: 1;
-  flex: 0 0 clamp(104px, 10.2vw, 148px);
+  flex: 0 0 clamp(82px, 7.4vw, 108px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -7800,8 +7863,8 @@ blockquote {
 .industry-node-icon {
   display: grid;
   place-items: center;
-  width: clamp(60px, 5vw, 78px);
-  height: clamp(60px, 5vw, 78px);
+  width: clamp(58px, 4.4vw, 68px);
+  height: clamp(58px, 4.4vw, 68px);
   border-radius: 50%;
   color: var(--industry-accent);
   background: linear-gradient(150deg, #ffffff 10%, var(--industry-tint) 100%);
@@ -7846,9 +7909,9 @@ blockquote {
 .industry-flow-link {
   position: relative;
   flex: 1 1 0;
-  min-width: 26px;
+  min-width: 18px;
   height: 3px;
-  margin-top: clamp(29px, 2.4vw, 38px);
+  margin-top: clamp(28px, 2.2vw, 34px);
   border-radius: 999px;
   background: linear-gradient(90deg, rgba(0, 87, 231, 0.28) 0%, #0057e7 55%, #00cfff 100%);
   box-shadow: 0 0 14px rgba(0, 135, 255, 0.18);
