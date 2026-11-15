@@ -1572,7 +1572,7 @@ body.nav-menu-open #root {
   height: 18px;
   margin-top: 0;
   border-radius: 50%;
-  background: var(--color-primary);
+  background: #10b981;
 }
 
 .svc-copy-table .svc-copy-tick::after {
@@ -1602,8 +1602,8 @@ body.nav-menu-open #root {
   flex-shrink: 0;
   margin-top: 2px;
   border-radius: 50%;
-  color: var(--color-primary);
-  background: rgba(0, 87, 231, 0.1);
+  color: #059669;
+  background: rgba(16, 185, 129, 0.12);
 }
 
 .svc-mobile-header {
