@@ -196,7 +196,7 @@ export const ServiceShowcase: React.FC = () => {
             data-service-index={i}
           >
             {/* 1. Mobile-only heading (First on mobile view) */}
-            <div className="svc-mobile-header text-center svc-anim-item svc-anim-heading">
+            <div className="svc-mobile-header svc-anim-item svc-anim-heading">
               <h3 className="svc-copy-title">
                 <span className="svc-heading-icon" aria-hidden="true">
                   {getServiceHeadingIcon(service.id)}

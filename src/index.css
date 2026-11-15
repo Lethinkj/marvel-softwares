@@ -1457,7 +1457,7 @@ body.nav-menu-open #root {
   display: inline-flex;
   align-items: flex-start;
   justify-content: flex-start;
-  margin-inline: auto;
+  margin-inline: 0;
   text-align: left;
   max-width: 100%;
 }
@@ -1608,10 +1608,10 @@ body.nav-menu-open #root {
 
 .svc-mobile-header {
   display: flex;
-  justify-content: center;
-  text-align: center;
+  justify-content: flex-start;
+  text-align: left;
   margin-bottom: 8px;
-  padding-inline: 12px;
+  padding-inline: 0;
 }
 
 .svc-copy-title--desktop {
