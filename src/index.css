@@ -671,33 +671,29 @@ body.nav-menu-open #root {
 
 @media (max-width: 640px) {
   .text-section-title {
-    /* Big, readable mobile headings — allow them to wrap naturally, reduced by 2px */
-    font-size: calc(clamp(1.8rem, 8.2vw, 2.4rem) - 2px) !important;
+    /* All main headings: centered, 1px smaller than before on mobile */
+    font-size: calc(clamp(1.8rem, 8.2vw, 2.4rem) - 3px) !important;
     line-height: 1.2;
     letter-spacing: -0.02em;
     white-space: normal !important;
-    text-wrap: balance !important;
+    text-wrap: wrap !important;
     margin-top: clamp(14px, 3vw, 20px);
     margin-bottom: clamp(14px, 3vw, 20px);
-    text-align: left !important;
-  }
-
-  /* Two-tone heading: first part sits left, colored part sits right */
-  .text-section-title .heading-last-word {
-    display: block;
-    text-align: right;
-  }
-
-  /* Mission/Vision keep their badge row and single-line heading */
-  #mission-title,
-  #vision-title {
     text-align: center !important;
   }
 
-  #mission-title .heading-last-word,
-  #vision-title .heading-last-word {
-    display: inline;
+  /* Colored tail stays on one line: if the heading wraps,
+     line 1 is blue and line 2 is orange */
+  .text-section-title .heading-last-word {
+    display: inline-block;
+    white-space: nowrap;
     text-align: inherit;
+  }
+
+  /* FAQ heading may wrap on very narrow phones instead of clipping */
+  .text-section-title.faq-heading-single-line {
+    white-space: normal !important;
+    text-wrap: wrap !important;
   }
 
   /* Remove the decorative left/right lines on mobile */
