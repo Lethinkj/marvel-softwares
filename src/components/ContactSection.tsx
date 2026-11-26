@@ -1,7 +1,7 @@
 import React, { useState, useId, useEffect, useCallback } from 'react'
 import AnimatedSection from './AnimatedSection'
 import { CheckIcon } from './Icons'
-import { siteConfig } from '../data/siteData'
+import { siteConfig, solutionTypes, budgetOptions } from '../data/siteData'
 import { submitProjectInquiry } from '../utils/inquiryApi'
 import { trackFormSubmit } from '../utils/analytics'
 
@@ -9,6 +9,9 @@ interface FormErrors {
   name?: string
   email?: string
   phone?: string
+  projectType?: string
+  otherProjectType?: string
+  budget?: string
   message?: string
 }
 
@@ -18,6 +21,9 @@ export const ContactSection: React.FC = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
+  const [projectType, setProjectType] = useState('')
+  const [otherProjectType, setOtherProjectType] = useState('')
+  const [budget, setBudget] = useState('')
   const [message, setMessage] = useState('')
   const [errors, setErrors] = useState<FormErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -28,6 +34,9 @@ export const ContactSection: React.FC = () => {
     setName('')
     setEmail('')
     setPhone('')
+    setProjectType('')
+    setOtherProjectType('')
+    setBudget('')
     setMessage('')
     setErrors({})
     setSubmitError(null)
@@ -56,16 +65,20 @@ export const ContactSection: React.FC = () => {
   const validate = (): { valid: boolean; firstError?: keyof FormErrors } => {
     const next: FormErrors = {}
     if (name.trim().length < 2) next.name = 'Please enter your full name.'
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))
-      next.email = 'Please enter a valid email address (e.g. name@company.com).'
     if (phone.replace(/\D/g, '').length < 7)
       next.phone = 'Please enter a valid phone number.'
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))
+      next.email = 'Please enter a valid email address (e.g. name@company.com).'
+    if (!projectType) next.projectType = 'Please select a project type.'
+    if (!budget) next.budget = 'Please select an estimated budget.'
+    if (projectType === 'Other' && otherProjectType.trim().length < 2)
+      next.otherProjectType = 'Please specify your project type.'
     if (message.trim().length < 10)
       next.message = 'Please describe your requirements in at least 10 characters.'
     setErrors(next)
-    const firstError = (['name', 'phone', 'email', 'message'] as const).find(
-      (f) => next[f],
-    )
+    const firstError = (
+      ['name', 'phone', 'email', 'projectType', 'budget', 'otherProjectType', 'message'] as const
+    ).find((f) => next[f])
     return { valid: !firstError, firstError }
   }
 
@@ -80,18 +93,32 @@ export const ContactSection: React.FC = () => {
       return
     }
     setIsSubmitting(true)
+    const resolvedSolution =
+      projectType === 'Other'
+        ? `Other: ${otherProjectType.trim()}`.slice(0, 100)
+        : projectType
+    const formattedRequirements = [
+      `Project Type: ${projectType === 'Other' ? `Other (${otherProjectType.trim()})` : projectType}`,
+      `Budget: ${budget}`,
+      '',
+      message.trim(),
+    ].join('\n')
+
     try {
       await submitProjectInquiry({
         name: name.trim(),
         email: email.trim(),
         phone: phone.trim(),
-        solution: 'Other',
-        requirements: message.trim(),
+        solution: resolvedSolution,
+        budget,
+        requirements: formattedRequirements,
       })
       setIsSubmitted(true)
       trackFormSubmit('contact_consultation', 'success', {
         name: name.trim(),
         email: email.trim(),
+        solution: resolvedSolution,
+        budget,
       })
     } catch {
       setSubmitError(
@@ -164,9 +191,14 @@ export const ContactSection: React.FC = () => {
                   </label>
                   <input
                     id={`${formId}-name`}
+                    required
                     className={`field-input${errors.name ? ' field-error' : ''}`}
+                    placeholder="Your full name"
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e) => {
+                      setName(e.target.value)
+                      if (errors.name) setErrors((prev) => ({ ...prev, name: undefined }))
+                    }}
                     autoComplete="name"
                     aria-invalid={Boolean(errors.name)}
                     aria-describedby={errors.name ? `${formId}-name-error` : undefined}
@@ -177,14 +209,19 @@ export const ContactSection: React.FC = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 14 }}>
                   <div>
                     <label className="field-label" htmlFor={`${formId}-phone`}>
-                      Mobile <span className="field-required" aria-hidden="true">*</span>
+                      Phone Number <span className="field-required" aria-hidden="true">*</span>
                     </label>
                     <input
                       id={`${formId}-phone`}
                       type="tel"
+                      required
                       className={`field-input${errors.phone ? ' field-error' : ''}`}
+                      placeholder="+91 98765 43210"
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
+                      onChange={(e) => {
+                        setPhone(e.target.value)
+                        if (errors.phone) setErrors((prev) => ({ ...prev, phone: undefined }))
+                      }}
                       autoComplete="tel"
                       aria-invalid={Boolean(errors.phone)}
                       aria-describedby={errors.phone ? `${formId}-phone-error` : undefined}
@@ -198,9 +235,14 @@ export const ContactSection: React.FC = () => {
                     <input
                       id={`${formId}-email`}
                       type="email"
+                      required
                       className={`field-input${errors.email ? ' field-error' : ''}`}
+                      placeholder="name@company.com"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => {
+                        setEmail(e.target.value)
+                        if (errors.email) setErrors((prev) => ({ ...prev, email: undefined }))
+                      }}
                       autoComplete="email"
                       aria-invalid={Boolean(errors.email)}
                       aria-describedby={errors.email ? `${formId}-email-error` : undefined}
@@ -209,16 +251,110 @@ export const ContactSection: React.FC = () => {
                   </div>
                 </div>
 
+                <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 14 }}>
+                  <div>
+                    <label className="field-label" htmlFor={`${formId}-projectType`}>
+                      Type of Project <span className="field-required" aria-hidden="true">*</span>
+                    </label>
+                    <select
+                      id={`${formId}-projectType`}
+                      required
+                      className={`field-select${errors.projectType ? ' field-error' : ''}`}
+                      value={projectType}
+                      onChange={(e) => {
+                        const val = e.target.value
+                        setProjectType(val)
+                        if (val !== 'Other') {
+                          setOtherProjectType('')
+                        }
+                        if (errors.projectType || errors.otherProjectType) {
+                          setErrors((prev) => ({
+                            ...prev,
+                            projectType: undefined,
+                            otherProjectType: undefined,
+                          }))
+                        }
+                      }}
+                      aria-invalid={Boolean(errors.projectType)}
+                      aria-describedby={errors.projectType ? `${formId}-projectType-error` : undefined}
+                    >
+                      <option value="">Select project type</option>
+                      {solutionTypes.map((type) => (
+                        <option key={type} value={type}>
+                          {type}
+                        </option>
+                      ))}
+                    </select>
+                    {errorFor('projectType')}
+                  </div>
+
+                  <div>
+                    <label className="field-label" htmlFor={`${formId}-budget`}>
+                      Budget <span className="field-required" aria-hidden="true">*</span>
+                    </label>
+                    <select
+                      id={`${formId}-budget`}
+                      required
+                      className={`field-select${errors.budget ? ' field-error' : ''}`}
+                      value={budget}
+                      onChange={(e) => {
+                        setBudget(e.target.value)
+                        if (errors.budget) setErrors((prev) => ({ ...prev, budget: undefined }))
+                      }}
+                      aria-invalid={Boolean(errors.budget)}
+                      aria-describedby={errors.budget ? `${formId}-budget-error` : undefined}
+                    >
+                      <option value="">Select your budget</option>
+                      {budgetOptions.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                    {errorFor('budget')}
+                  </div>
+                </div>
+
+                {projectType === 'Other' && (
+                  <div>
+                    <label className="field-label" htmlFor={`${formId}-otherProjectType`}>
+                      Specify Project Type <span className="field-required" aria-hidden="true">*</span>
+                    </label>
+                    <input
+                      id={`${formId}-otherProjectType`}
+                      required
+                      className={`field-input${errors.otherProjectType ? ' field-error' : ''}`}
+                      placeholder="Please describe your project type"
+                      value={otherProjectType}
+                      onChange={(e) => {
+                        setOtherProjectType(e.target.value)
+                        if (errors.otherProjectType) {
+                          setErrors((prev) => ({ ...prev, otherProjectType: undefined }))
+                        }
+                      }}
+                      aria-invalid={Boolean(errors.otherProjectType)}
+                      aria-describedby={
+                        errors.otherProjectType ? `${formId}-otherProjectType-error` : undefined
+                      }
+                    />
+                    {errorFor('otherProjectType')}
+                  </div>
+                )}
+
                 <div>
                   <label className="field-label" htmlFor={`${formId}-message`}>
                     Message <span className="field-required" aria-hidden="true">*</span>
                   </label>
                   <textarea
                     id={`${formId}-message`}
+                    required
                     className={`field-textarea${errors.message ? ' field-error' : ''}`}
+                    placeholder="Tell us about your project goals, features, and timeline..."
                     value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-
+                    onChange={(e) => {
+                      setMessage(e.target.value)
+                      if (errors.message) setErrors((prev) => ({ ...prev, message: undefined }))
+                    }}
                     aria-invalid={Boolean(errors.message)}
                     aria-describedby={errors.message ? `${formId}-message-error` : undefined}
                   />

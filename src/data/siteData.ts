@@ -858,6 +858,16 @@ export const solutionTypes: string[] = [
   'Other',
 ]
 
+// --- Contact form budget ranges ---
+export const budgetOptions: string[] = [
+  'Under ₹25,000',
+  '₹25,000 – ₹50,000',
+  '₹50,000 – ₹1,00,000',
+  '₹1,00,000 – ₹3,00,000',
+  '₹3,00,000+',
+  'Not sure / Need estimate',
+]
+
 // --- Testimonials ---
 export interface Testimonial {
   id: string
