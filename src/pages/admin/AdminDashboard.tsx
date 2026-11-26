@@ -1471,9 +1471,9 @@ export default function AdminDashboard() {
                   <button
                     onClick={handleExportCSV}
                     disabled={filteredInquiries.length === 0}
-                    className="px-3.5 py-2 rounded-xl bg-white border border-[#E5E7EB] hover:bg-slate-50 text-[#111827] flex items-center gap-2 text-xs font-semibold transition-all shadow-xs cursor-pointer disabled:opacity-50"
+                    className="admin-btn-outline shadow-xs disabled:opacity-50"
                   >
-                    <Download className="w-3.5 h-3.5 text-[#2563EB]" />
+                    <Download className="w-3.5 h-3.5 text-[#566dab]" />
                     <span>Export CSV</span>
                   </button>
                 </div>
@@ -1506,11 +1506,7 @@ export default function AdminDashboard() {
                     <button
                       key={s}
                       onClick={() => setStatusFilter(s)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-mono font-semibold whitespace-nowrap transition-all cursor-pointer ${
-                        statusFilter === s
-                          ? 'bg-[#2563EB] text-white shadow-xs'
-                          : 'bg-[#F8FAFC] text-[#64748B] hover:text-[#111827] border border-[#E5E7EB]'
-                      }`}
+                      className={`admin-filter-pill ${statusFilter === s ? 'admin-filter-pill--active' : ''}`}
                     >
                       {s === 'starred' ? '⭐ Starred' : s.replace('_', ' ').toUpperCase()}
                     </button>
@@ -1522,14 +1518,20 @@ export default function AdminDashboard() {
                   <select
                     value={solutionFilter}
                     onChange={(e) => setSolutionFilter(e.target.value)}
-                    className="w-full px-3 py-2 bg-white border border-[#E5E7EB] rounded-xl text-xs text-[#111827] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 transition-colors"
+                    className="w-full px-3 py-2 bg-white border border-[#566dab]/25 rounded-xl text-xs text-[#3c4b81] font-medium focus:outline-none transition-colors"
                   >
                     <option value="all">All Solutions</option>
-                    <option value="Enterprise Architecture & Web Platforms">Web Platforms</option>
-                    <option value="Mobile Application Engineering">Mobile Apps</option>
-                    <option value="Cloud Architecture & DevOps">Cloud & DevOps</option>
-                    <option value="Custom Business CRM / ERP Systems">CRM / ERP</option>
-                    <option value="API Integration & Microservices">API Services</option>
+                    <option value="Website">Website</option>
+                    <option value="Web Application">Web Application</option>
+                    <option value="Mobile Application">Mobile Application</option>
+                    <option value="E-commerce">E-commerce</option>
+                    <option value="ERP or Business Software">ERP or Business Software</option>
+                    <option value="Custom Software">Custom Software</option>
+                    <option value="AI or Automation">AI or Automation</option>
+                    <option value="LMS">LMS</option>
+                    <option value="Digital Marketing & SEO">Digital Marketing & SEO</option>
+                    <option value="API or Integration">API or Integration</option>
+                    <option value="Cloud or DevOps">Cloud or DevOps</option>
                     <option value="Other">Other Solutions</option>
                   </select>
                 </div>
