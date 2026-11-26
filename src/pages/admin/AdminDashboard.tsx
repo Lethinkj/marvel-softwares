@@ -47,6 +47,7 @@ import {
   deleteInquiry,
   getTelemetryRecordsFromDB,
   getVisitorsFromDB,
+  getTelemetryTotalsFromDB,
   getAdminsFromDB,
   createAdmin,
   deleteAdmin,
@@ -63,6 +64,7 @@ import {
   type AdminInquiry,
   type TelemetryRecord,
   type VisitorRecord,
+  type TelemetryTotals,
   type AdminUser,
   type AdminSession,
   type AuditLog,
@@ -82,12 +84,18 @@ export default function AdminDashboard() {
   const [inquiries, setInquiries] = useState<AdminInquiry[]>([])
   const [telemetry, setTelemetry] = useState<TelemetryRecord[]>([])
   const [visitors, setVisitors] = useState<VisitorRecord[]>([])
+  const [dbTotals, setDbTotals] = useState<TelemetryTotals>({
+    totalVisitors: null,
+    totalPageviews: null,
+    totalEvents: null,
+  })
   const [admins, setAdmins] = useState<AdminUser[]>([])
   const [sessionsList, setSessionsList] = useState<AdminSession[]>([])
   const [ipBlocks, setIpBlocks] = useState<IpBlockRecord[]>([])
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([])
   const [isLoadingData, setIsLoadingData] = useState(true)
   const [refreshKey, setRefreshKey] = useState(0)
+  const [hoveredChartIndex, setHoveredChartIndex] = useState<number | null>(null)
 
   // Inactivity tracking state
   const [, setLastActiveTime] = useState<number>(() => Date.now())
@@ -144,10 +152,11 @@ export default function AdminDashboard() {
     setIsLoadingData(true)
     purgeMockLocalStorageData()
     try {
-      const [inqs, tels, vists, adms, sess, ips, logs] = await Promise.all([
+      const [inqs, tels, vists, totals, adms, sess, ips, logs] = await Promise.all([
         getAllInquiriesFromDB(),
         getTelemetryRecordsFromDB(),
         getVisitorsFromDB(),
+        getTelemetryTotalsFromDB(),
         getAdminsFromDB(),
         getSessionsFromDB(),
         getIpBlocksFromDB(),
@@ -156,6 +165,7 @@ export default function AdminDashboard() {
       setInquiries(inqs)
       setTelemetry(tels)
       setVisitors(vists)
+      setDbTotals(totals)
       setAdmins(adms)
       setSessionsList(sess)
       setIpBlocks(ips)
@@ -226,8 +236,12 @@ export default function AdminDashboard() {
     const starredCount = inquiries.filter((i) => i.is_starred).length
     const conversionRate = totalInquiries > 0 ? Math.round((wonCount / totalInquiries) * 100) : 0
 
-    const uniqueVisitorCount = visitors.length > 0 ? visitors.length : new Set(telemetry.map((t) => t.visitor_id).filter(Boolean)).size
-    const totalPageviews = telemetry.filter((t) => t.event_name === 'page_view').length
+    const fallbackVisitorCount =
+      visitors.length > 0 ? visitors.length : new Set(telemetry.map((t) => t.visitor_id).filter(Boolean)).size
+    const uniqueVisitorCount = dbTotals.totalVisitors ?? fallbackVisitorCount
+
+    const fallbackPageviews = telemetry.filter((t) => t.event_name === 'page_view').length
+    const totalPageviews = dbTotals.totalPageviews ?? fallbackPageviews
 
     const activeSessionsCount = sessionsList.filter((s) => !s.is_revoked && new Date(s.expires_at).getTime() > nowMs).length
     const activeBlocksCount = ipBlocks.filter((b) => b.is_blocked && b.blocked_until > nowMs).length
@@ -297,7 +311,7 @@ export default function AdminDashboard() {
       deviceBreakdown,
       topSections,
     }
-  }, [inquiries, telemetry, visitors, sessionsList, ipBlocks, nowMs])
+  }, [inquiries, telemetry, visitors, dbTotals, sessionsList, ipBlocks, nowMs])
 
   const visitorInsights = useMemo(() => {
     const countries = new Map<string, number>()
@@ -327,19 +341,33 @@ export default function AdminDashboard() {
     }
   }, [visitors])
 
-  // 7-day activity timeline computation
+  // 7-day activity timeline computation (local-date normalized)
   const sevenDayChartData = useMemo(() => {
+    const toLocalDayKey = (isoOrDate: string | Date) => {
+      const dt = typeof isoOrDate === 'string' ? new Date(isoOrDate) : isoOrDate
+      if (Number.isNaN(dt.getTime())) return ''
+      const y = dt.getFullYear()
+      const m = String(dt.getMonth() + 1).padStart(2, '0')
+      const day = String(dt.getDate()).padStart(2, '0')
+      return `${y}-${m}-${day}`
+    }
+
     const days: { dateStr: string; label: string; inquiries: number; pageviews: number }[] = []
     const now = new Date(nowMs)
 
     for (let i = 6; i >= 0; i--) {
       const d = new Date(now)
       d.setDate(d.getDate() - i)
-      const dateStr = d.toISOString().split('T')[0]
+      const dateStr = toLocalDayKey(d)
       const label = d.toLocaleDateString(undefined, { weekday: 'short', month: 'numeric', day: 'numeric' })
 
-      const inqCount = inquiries.filter((inq) => inq.submittedAt && inq.submittedAt.startsWith(dateStr)).length
-      const pvCount = telemetry.filter((t) => t.created_at && t.created_at.startsWith(dateStr) && t.event_name === 'page_view').length
+      const inqCount = inquiries.filter((inq) => inq.submittedAt && toLocalDayKey(inq.submittedAt) === dateStr).length
+      const pvCount = telemetry.filter(
+        (t) =>
+          t.created_at &&
+          toLocalDayKey(t.created_at) === dateStr &&
+          (t.event_name === 'page_view' || t.event_name === 'pageview')
+      ).length
 
       days.push({
         dateStr,
@@ -557,37 +585,37 @@ export default function AdminDashboard() {
   const idleSecs = idleSecondsRemaining % 60
 
   return (
-    <div className="admin-dashboard-page min-h-screen bg-[#F5F7FB] text-[#111827] flex font-sans selection:bg-blue-100 selection:text-blue-900">
+    <div className="admin-dashboard-page min-h-screen bg-[#F4F9FC] text-[#3c4b81] flex font-sans selection:bg-[#b3fdff] selection:text-[#3c4b81]">
       {/* Mobile Sidebar Backdrop */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 lg:hidden"
+          className="fixed inset-0 bg-[#3c4b81]/50 backdrop-blur-xs z-40 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
       {/* ========================================================================= */}
-      {/* SIDEBAR NAVIGATION (Modern White & Blue Sidebar) */}
+      {/* SIDEBAR NAVIGATION (Indigo-Navy & Cyan Console) */}
       {/* ========================================================================= */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 w-72 bg-white border-r border-[#E5E7EB] shadow-sm flex flex-col justify-between transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed top-0 bottom-0 left-0 z-50 w-72 bg-[#3c4b81] border-r border-[#b3fdff]/15 flex flex-col justify-between transition-transform duration-300 lg:translate-x-0 ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div>
           {/* Brand Header */}
-          <div className="p-5 border-b border-[#E5E7EB] flex items-center justify-between">
+          <div className="px-5 py-5 border-b border-white/15 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#2563EB] flex items-center justify-center shadow-md shadow-blue-500/20 text-white">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00dfff] to-[#566dab] flex items-center justify-center shadow-lg shadow-[#00dfff]/25 text-white">
                 <Shield className="w-5 h-5" />
               </div>
               <div>
-                <span className="font-bold text-sm tracking-tight text-[#172554] block">
+                <span className="font-bold text-sm tracking-tight text-white block">
                   MARVEL CONSOLE
                 </span>
                 <div className="flex items-center gap-1.5 mt-0.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-[10px] font-mono text-emerald-700 tracking-wider uppercase font-semibold">
+                  <span className="w-2 h-2 rounded-full bg-[#00dfff] animate-pulse" />
+                  <span className="text-[10px] font-mono text-[#b3fdff] tracking-wider uppercase font-semibold">
                     Supabase Live (dev_)
                   </span>
                 </div>
@@ -595,7 +623,7 @@ export default function AdminDashboard() {
             </div>
             <button
               onClick={() => setIsSidebarOpen(false)}
-              className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+              className="lg:hidden p-1.5 rounded-lg text-[#b3fdff]/80 hover:text-white hover:bg-white/10"
             >
               <X className="w-5 h-5" />
             </button>
@@ -603,7 +631,7 @@ export default function AdminDashboard() {
 
           {/* Navigation Links Group */}
           <div className="p-3.5 space-y-1">
-            <div className="px-3 pt-2 pb-2 text-[10px] font-mono uppercase tracking-widest text-[#64748B] font-semibold">
+            <div className="px-3 pt-2 pb-2 text-[10px] font-mono uppercase tracking-widest text-[#b3fdff]/70 font-semibold">
               Platform Modules
             </div>
 
@@ -613,11 +641,7 @@ export default function AdminDashboard() {
                 setActiveTab('overview')
                 setIsSidebarOpen(false)
               }}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
-                activeTab === 'overview'
-                  ? 'bg-[#2563EB] text-white shadow-md shadow-blue-500/20 font-semibold'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
-              }`}
+              className={`admin-nav-btn ${activeTab === 'overview' ? 'admin-nav-btn--active' : ''}`}
             >
               <div className="flex items-center gap-3">
                 <LayoutDashboard className="w-4 h-4" />
@@ -625,7 +649,7 @@ export default function AdminDashboard() {
               </div>
               <ChevronRight
                 className={`w-3.5 h-3.5 transition-transform ${
-                  activeTab === 'overview' ? 'rotate-90 text-white' : 'text-slate-400'
+                  activeTab === 'overview' ? 'rotate-90 text-[#3c4b81]' : 'text-[#b3fdff]/60'
                 }`}
               />
             </button>
@@ -636,18 +660,20 @@ export default function AdminDashboard() {
                 setActiveTab('inquiries')
                 setIsSidebarOpen(false)
               }}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
-                activeTab === 'inquiries'
-                  ? 'bg-[#2563EB] text-white shadow-md shadow-blue-500/20 font-semibold'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
-              }`}
+              className={`admin-nav-btn ${activeTab === 'inquiries' ? 'admin-nav-btn--active' : ''}`}
             >
               <div className="flex items-center gap-3">
                 <MessageSquareText className="w-4 h-4" />
                 <span>Inquiries & Leads CRM</span>
               </div>
               {stats.newCount > 0 && (
-                <span className="px-2 py-0.5 text-[10px] font-mono font-bold rounded-full bg-[#F97316] text-white shadow-sm">
+                <span
+                  className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded-full shadow-sm ${
+                    activeTab === 'inquiries'
+                      ? 'bg-[#3c4b81] text-[#b3fdff]'
+                      : 'bg-[#00dfff] text-[#3c4b81]'
+                  }`}
+                >
                   {stats.newCount} NEW
                 </span>
               )}
@@ -659,22 +685,24 @@ export default function AdminDashboard() {
                 setActiveTab('telemetry')
                 setIsSidebarOpen(false)
               }}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
-                activeTab === 'telemetry'
-                  ? 'bg-[#2563EB] text-white shadow-md shadow-blue-500/20 font-semibold'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
-              }`}
+              className={`admin-nav-btn ${activeTab === 'telemetry' ? 'admin-nav-btn--active' : ''}`}
             >
               <div className="flex items-center gap-3">
                 <Eye className="w-4 h-4" />
                 <span>Website Viewers Stream</span>
               </div>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200">
+              <span
+                className={`text-[10px] font-mono px-2 py-0.5 rounded-md border ${
+                  activeTab === 'telemetry'
+                    ? 'bg-[#3c4b81]/15 text-[#3c4b81] border-[#3c4b81]/25'
+                    : 'bg-[#566dab]/50 text-[#b3fdff] border-[#b3fdff]/25'
+                }`}
+              >
                 {stats.uniqueVisitorCount}
               </span>
             </button>
 
-            <div className="px-3 pt-5 pb-2 text-[10px] font-mono uppercase tracking-widest text-[#64748B] font-semibold">
+            <div className="px-3 pt-5 pb-2 text-[10px] font-mono uppercase tracking-widest text-[#b3fdff]/70 font-semibold">
               Security & Administration
             </div>
 
@@ -684,22 +712,24 @@ export default function AdminDashboard() {
                 setActiveTab('security')
                 setIsSidebarOpen(false)
               }}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
-                activeTab === 'security'
-                  ? 'bg-[#2563EB] text-white shadow-md shadow-blue-500/20 font-semibold'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
-              }`}
+              className={`admin-nav-btn ${activeTab === 'security' ? 'admin-nav-btn--active' : ''}`}
             >
               <div className="flex items-center gap-3">
                 <ShieldAlert className="w-4 h-4" />
                 <span>Security & IP Lockouts</span>
               </div>
               {stats.activeBlocksCount > 0 ? (
-                <span className="px-2 py-0.5 text-[10px] font-mono font-bold rounded-full bg-[#F97316] text-white shadow-sm">
+                <span className="px-2 py-0.5 text-[10px] font-mono font-bold rounded-full bg-orange-500 text-white shadow-sm">
                   {stats.activeBlocksCount} BLOCKED
                 </span>
               ) : (
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span
+                  className={`text-[10px] font-mono px-2 py-0.5 rounded-md border ${
+                    activeTab === 'security'
+                      ? 'bg-[#3c4b81]/15 text-[#3c4b81] border-[#3c4b81]/25'
+                      : 'bg-[#b3fdff]/15 text-[#b3fdff] border-[#b3fdff]/30'
+                  }`}
+                >
                   SAFE
                 </span>
               )}
@@ -711,17 +741,19 @@ export default function AdminDashboard() {
                 setActiveTab('audit')
                 setIsSidebarOpen(false)
               }}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
-                activeTab === 'audit'
-                  ? 'bg-[#2563EB] text-white shadow-md shadow-blue-500/20 font-semibold'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
-              }`}
+              className={`admin-nav-btn ${activeTab === 'audit' ? 'admin-nav-btn--active' : ''}`}
             >
               <div className="flex items-center gap-3">
                 <History className="w-4 h-4" />
                 <span>Audit Trail Logs</span>
               </div>
-              <span className="text-[10px] font-mono text-[#64748B]">{auditLogs.length}</span>
+              <span
+                className={`text-[10px] font-mono ${
+                  activeTab === 'audit' ? 'text-[#3c4b81]' : 'text-[#b3fdff]/75'
+                }`}
+              >
+                {auditLogs.length}
+              </span>
             </button>
 
             {/* Tab: Admins */}
@@ -730,41 +762,42 @@ export default function AdminDashboard() {
                 setActiveTab('admins')
                 setIsSidebarOpen(false)
               }}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
-                activeTab === 'admins'
-                  ? 'bg-[#2563EB] text-white shadow-md shadow-blue-500/20 font-semibold'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
-              }`}
+              className={`admin-nav-btn ${activeTab === 'admins' ? 'admin-nav-btn--active' : ''}`}
             >
               <div className="flex items-center gap-3">
                 <Users className="w-4 h-4" />
                 <span>Admin Accounts</span>
               </div>
-              <span className="text-[10px] font-mono text-[#64748B]">{admins.length}</span>
+              <span
+                className={`text-[10px] font-mono ${
+                  activeTab === 'admins' ? 'text-[#3c4b81]' : 'text-[#b3fdff]/75'
+                }`}
+              >
+                {admins.length}
+              </span>
             </button>
-
           </div>
         </div>
 
         {/* Footer: User Profile & Logout */}
-        <div className="p-4 border-t border-[#E5E7EB] bg-[#F8FAFC]">
-          <div className="flex items-center justify-between">
+        <div className="p-4 border-t border-white/15 bg-[#2c3863]/70">
+          <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-9 h-9 rounded-xl bg-blue-100 border border-blue-200 text-[#2563EB] flex items-center justify-center font-bold text-xs shrink-0">
+              <div className="w-9 h-9 rounded-xl bg-[#00dfff]/20 border border-[#b3fdff]/35 text-[#b3fdff] flex items-center justify-center font-bold text-xs shrink-0">
                 {session.username.slice(0, 2).toUpperCase()}
               </div>
               <div className="min-w-0">
-                <div className="text-xs font-semibold text-[#111827] truncate">
+                <div className="text-xs font-semibold text-white truncate">
                   {session.full_name || session.username}
                 </div>
-                <div className="text-[10px] font-mono text-[#64748B] truncate">
+                <div className="text-[10px] font-mono text-[#b3fdff]/80 truncate capitalize">
                   {session.role.replace('_', ' ')}
                 </div>
               </div>
             </div>
             <button
               onClick={() => handleAutoLogout('user_logout')}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+              className="p-2 rounded-lg text-[#b3fdff]/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
               title="Sign Out"
             >
               <LogOut className="w-4 h-4" />
@@ -778,11 +811,11 @@ export default function AdminDashboard() {
       {/* ========================================================================= */}
       <div className="flex-1 lg:pl-72 flex flex-col min-w-0">
         {/* Top Navigation Bar */}
-        <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-[#E5E7EB] px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-xs">
+        <header className="sticky top-0 z-30 border-b border-[#566dab]/20 px-4 sm:px-8 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-3 min-w-0">
             <button
               onClick={() => setIsSidebarOpen(true)}
-              className="lg:hidden p-2 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors cursor-pointer"
+              className="lg:hidden p-2 rounded-xl text-[#566dab] hover:text-[#3c4b81] hover:bg-[#b3fdff]/25 transition-colors cursor-pointer"
             >
               <Menu className="w-5 h-5" />
             </button>
@@ -790,20 +823,20 @@ export default function AdminDashboard() {
             {/* Breadcrumb Navigation */}
             <div className="min-w-0">
               <div className="flex items-center gap-2 text-xs">
-                <span className="font-mono uppercase tracking-wider text-[#64748B] text-[11px]">
+                <span className="font-mono uppercase tracking-wider text-[#566dab] text-[11px]">
                   Marvel Softwares
                 </span>
-                <span className="text-slate-300">/</span>
-                <span className="font-semibold text-[#172554] capitalize truncate">
+                <span className="text-[#566dab]/40">/</span>
+                <span className="font-bold text-[#3c4b81] capitalize truncate">
                   {activeTab === 'telemetry' ? 'Website Viewers Stream' : activeTab.replace('_', ' ')}
                 </span>
               </div>
               <div className="flex items-center gap-2 mt-0.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                <span className="text-xs text-[#64748B] font-medium hidden sm:inline">
+                <span className="w-2 h-2 rounded-full bg-[#00dfff]" />
+                <span className="text-xs text-[#566dab] font-medium hidden sm:inline">
                   Supabase Production DB
                 </span>
-                <span className="text-[10px] font-mono text-[#2563EB] bg-blue-50 px-1.5 py-0.2 rounded border border-blue-200">
+                <span className="text-[10px] font-mono text-[#3c4b81] bg-[#b3fdff]/45 px-1.5 py-0.2 rounded border border-[#00dfff]/40">
                   dev_*
                 </span>
               </div>
@@ -817,13 +850,13 @@ export default function AdminDashboard() {
               className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-mono transition-colors ${
                 idleMins < 2
                   ? 'bg-rose-50 border-rose-200 text-rose-700 animate-pulse'
-                  : 'bg-[#F8FAFC] border-[#E5E7EB] text-slate-700'
+                  : 'bg-[#b3fdff]/25 border-[#566dab]/20 text-[#566dab]'
               }`}
               title="Zero-persistence auto logout triggers after 15m of inactivity"
             >
-              <Clock className="w-3.5 h-3.5 text-[#2563EB]" />
+              <Clock className="w-3.5 h-3.5 text-[#3c4b81]" />
               <span>
-                Auto-Logout: <strong className="text-[#111827]">{idleMins}:{idleSecs < 10 ? `0${idleSecs}` : idleSecs}</strong>
+                Session: <strong className="text-[#3c4b81]">{idleMins}:{idleSecs < 10 ? `0${idleSecs}` : idleSecs}</strong>
               </span>
             </div>
 
@@ -833,11 +866,11 @@ export default function AdminDashboard() {
                 setRefreshKey((k) => k + 1)
               }}
               disabled={isLoadingData}
-              className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-white border border-[#E5E7EB] hover:bg-slate-50 text-[#1E293B] flex items-center gap-2 text-xs font-medium transition-all shadow-xs cursor-pointer disabled:opacity-50"
+              className="admin-btn-outline shadow-xs disabled:opacity-50"
               title="Refresh all data from Supabase"
             >
-              <RefreshCw className={`w-3.5 h-3.5 text-[#2563EB] ${isLoadingData ? 'animate-spin' : ''}`} />
-              <span className="hidden sm:inline">Refresh DB</span>
+              <RefreshCw className={`w-3.5 h-3.5 text-[#566dab] ${isLoadingData ? 'animate-spin' : ''}`} />
+              <span className="hidden sm:inline">Refresh</span>
             </button>
 
             {/* Visit Live Website Link */}
@@ -845,9 +878,9 @@ export default function AdminDashboard() {
               href="/"
               target="_blank"
               rel="noreferrer"
-              className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-blue-50 border border-blue-200 text-[#2563EB] hover:bg-blue-100 flex items-center gap-1.5 text-xs font-medium transition-all"
+              className="admin-btn-navy"
             >
-              <ExternalLink className="w-3.5 h-3.5" />
+              <ExternalLink className="w-3.5 h-3.5 text-[#b3fdff]" />
               <span className="hidden sm:inline">Live Site</span>
             </a>
           </div>
@@ -861,36 +894,40 @@ export default function AdminDashboard() {
           {activeTab === 'overview' && (
             <div className="space-y-8">
               {/* Welcome Section */}
-              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 sm:p-7 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                  <div className="flex items-center gap-2 text-xs font-mono text-[#64748B] mb-1">
-                    <span>ADMINISTRATIVE OVERVIEW</span>
-                    <span>•</span>
-                    <span className="text-[#2563EB] font-bold">
+              <div className="bg-gradient-to-br from-[#3c4b81] via-[#3c4b81] to-[#566dab] border border-[#566dab]/40 rounded-2xl p-6 sm:p-7 shadow-lg shadow-[#3c4b81]/15 flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden">
+                <div
+                  className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-[#00dfff]/20 blur-3xl pointer-events-none"
+                  aria-hidden="true"
+                />
+                <div className="relative z-10">
+                  <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono text-[#b3fdff]/85 mb-1.5">
+                    <span className="uppercase tracking-wider text-[#00dfff] font-semibold">Executive Overview</span>
+                    <span className="text-white/35">•</span>
+                    <span className="text-[#b3fdff]">
                       {new Date(nowMs).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                     </span>
                   </div>
-                  <h1 className="text-xl sm:text-2xl font-bold text-[#172554] tracking-tight">
+                  <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
                     Welcome back, {session.full_name || session.username}
                   </h1>
-                  <p className="text-xs text-[#64748B] mt-1 max-w-2xl leading-relaxed">
+                  <p className="text-xs text-[#b3fdff]/85 mt-1.5 max-w-2xl leading-relaxed">
                     Here is what's happening across Marvel Softwares today. All metrics and CRM inquiries are synchronized live with PostgreSQL dev_ tables.
                   </p>
                 </div>
 
-                <div className="flex items-center gap-2.5 shrink-0">
+                <div className="relative z-10 flex items-center gap-2.5 shrink-0">
                   <button
                     onClick={() => setActiveTab('inquiries')}
-                    className="px-4 py-2 bg-[#2563EB] hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-sm transition-all flex items-center gap-2 cursor-pointer"
+                    className="admin-btn-cyan"
                   >
                     <MessageSquareText className="w-4 h-4" />
                     <span>View Inquiries</span>
                   </button>
                   <button
                     onClick={() => setActiveTab('telemetry')}
-                    className="px-4 py-2 bg-white border border-[#E5E7EB] hover:bg-slate-50 text-[#111827] rounded-xl text-xs font-semibold shadow-xs transition-all flex items-center gap-2 cursor-pointer"
+                    className="admin-btn-glass"
                   >
-                    <Eye className="w-4 h-4 text-[#2563EB]" />
+                    <Eye className="w-4 h-4 text-[#00dfff]" />
                     <span>View Stream</span>
                   </button>
                 </div>
@@ -999,102 +1036,207 @@ export default function AdminDashboard() {
               </div>
 
               {/* 7-Day Performance & Traffic Curve */}
-              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 sm:p-7 shadow-xs">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <div className="bg-white border border-[#566dab]/20 rounded-2xl p-6 sm:p-7 shadow-xs overflow-hidden">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
                   <div>
-                    <h2 className="text-base font-bold text-[#172554] tracking-tight flex items-center gap-2">
-                      <TrendingUp className="w-4 h-4 text-[#2563EB]" />
+                    <h2 className="text-base font-bold text-[#3c4b81] tracking-tight flex items-center gap-2">
+                      <TrendingUp className="w-4 h-4 text-[#00dfff]" />
                       7-Day Activity & Lead Generation Trend
                     </h2>
-                    <p className="text-xs text-[#64748B] mt-0.5">
+                    <p className="text-xs text-[#566dab] mt-0.5">
                       Daily incoming inquiries and pageviews from Supabase dev_contact_inquiries & dev_telemetry_events
                     </p>
                   </div>
                   <div className="flex items-center gap-4 text-xs font-mono">
-                    <div className="flex items-center gap-2">
-                      <span className="w-3 h-3 rounded-full bg-[#0284C7]" />
-                      <span className="text-slate-700 font-medium">Pageviews</span>
+                    <div className="flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#b3fdff]/30 border border-[#00dfff]/40">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#00dfff]" />
+                      <span className="text-[#3c4b81] font-semibold">Pageviews</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="w-3 h-3 rounded-full bg-[#2563EB]" />
-                      <span className="text-slate-700 font-medium">Inquiries</span>
+                    <div className="flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#3c4b81]/10 border border-[#566dab]/25">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#3c4b81]" />
+                      <span className="text-[#3c4b81] font-semibold">Inquiries</span>
                     </div>
                   </div>
                 </div>
 
-                {/* SVG Area Chart */}
-                <div className="w-full h-64 relative">
-                  <svg className="w-full h-full overflow-visible" viewBox="0 0 700 200" preserveAspectRatio="none">
-                    <defs>
-                      <linearGradient id="pvGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#0284C7" stopOpacity="0.20" />
-                        <stop offset="100%" stopColor="#0284C7" stopOpacity="0.0" />
-                      </linearGradient>
-                      <linearGradient id="inqGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#2563EB" stopOpacity="0.25" />
-                        <stop offset="100%" stopColor="#2563EB" stopOpacity="0.0" />
-                      </linearGradient>
-                    </defs>
+                {/* Redesigned Interactive SVG Area Chart */}
+                {(() => {
+                  const maxVal = Math.max(
+                    ...sevenDayChartData.map((d) => Math.max(d.pageviews, d.inquiries)),
+                    5
+                  )
+                  const chartLeft = 34
+                  const chartRight = 684
+                  const chartTop = 18
+                  const chartBottom = 188
+                  const plotWidth = chartRight - chartLeft
+                  const plotHeight = chartBottom - chartTop
 
-                    {/* Horizontal Grid lines */}
-                    <line x1="0" y1="50" x2="700" y2="50" stroke="#F1F5F9" strokeDasharray="4 4" strokeWidth="1" />
-                    <line x1="0" y1="100" x2="700" y2="100" stroke="#F1F5F9" strokeDasharray="4 4" strokeWidth="1" />
-                    <line x1="0" y1="150" x2="700" y2="150" stroke="#F1F5F9" strokeDasharray="4 4" strokeWidth="1" />
+                  const pvCoords = sevenDayChartData.map((d, i) => ({
+                    x: chartLeft + (i / 6) * plotWidth,
+                    y: chartBottom - (d.pageviews / maxVal) * plotHeight,
+                    value: d.pageviews,
+                    label: d.label,
+                  }))
+                  const inqCoords = sevenDayChartData.map((d, i) => ({
+                    x: chartLeft + (i / 6) * plotWidth,
+                    y: chartBottom - (d.inquiries / maxVal) * plotHeight,
+                    value: d.inquiries,
+                    label: d.label,
+                  }))
 
-                    {/* Generate SVG points for 7 days */}
-                    {(() => {
-                      const maxVal = Math.max(
-                        ...sevenDayChartData.map((d) => Math.max(d.pageviews, d.inquiries)),
-                        5
-                      )
-                      const pointsPv = sevenDayChartData.map((d, i) => {
-                        const x = (i / 6) * 700
-                        const y = 170 - (d.pageviews / maxVal) * 140
-                        return `${x},${y}`
-                      })
-                      const pointsInq = sevenDayChartData.map((d, i) => {
-                        const x = (i / 6) * 700
-                        const y = 170 - (d.inquiries / maxVal) * 140
-                        return `${x},${y}`
-                      })
+                  const buildSmoothPath = (pts: { x: number; y: number }[]) => {
+                    if (pts.length === 0) return ''
+                    let d = `M ${pts[0].x},${pts[0].y}`
+                    for (let i = 0; i < pts.length - 1; i++) {
+                      const p0 = pts[i]
+                      const p1 = pts[i + 1]
+                      const cx = (p0.x + p1.x) / 2
+                      d += ` C ${cx},${p0.y} ${cx},${p1.y} ${p1.x},${p1.y}`
+                    }
+                    return d
+                  }
 
-                      const pvPath = `M ${pointsPv.join(' L ')}`
-                      const pvArea = `${pvPath} L 700,180 L 0,180 Z`
+                  const pvPath = buildSmoothPath(pvCoords)
+                  const pvArea = `${pvPath} L ${chartRight},${chartBottom} L ${chartLeft},${chartBottom} Z`
+                  const inqPath = buildSmoothPath(inqCoords)
+                  const inqArea = `${inqPath} L ${chartRight},${chartBottom} L ${chartLeft},${chartBottom} Z`
+                  const activeDay = hoveredChartIndex !== null ? sevenDayChartData[hoveredChartIndex] : null
 
-                      const inqPath = `M ${pointsInq.join(' L ')}`
-                      const inqArea = `${inqPath} L 700,180 L 0,180 Z`
+                  return (
+                    <div className="w-full relative">
+                      {activeDay && hoveredChartIndex !== null && (
+                        <div
+                          className="absolute top-1 z-10 pointer-events-none px-3 py-2 rounded-xl bg-[#3c4b81] text-white text-[11px] font-mono shadow-lg shadow-[#3c4b81]/25 border border-[#b3fdff]/30"
+                          style={{
+                            left: `${Math.min(Math.max((hoveredChartIndex / 6) * 100, 10), 82)}%`,
+                            transform: 'translateX(-50%)',
+                          }}
+                        >
+                          <div className="text-[#b3fdff] font-semibold mb-0.5">{activeDay.label}</div>
+                          <div className="flex items-center gap-3">
+                            <span className="text-[#00dfff]">Views: <strong>{activeDay.pageviews}</strong></span>
+                            <span className="text-white">Leads: <strong>{activeDay.inquiries}</strong></span>
+                          </div>
+                        </div>
+                      )}
 
-                      return (
-                        <>
-                          <path d={pvArea} fill="url(#pvGrad)" />
-                          <path d={pvPath} fill="none" stroke="#0284C7" strokeWidth="2.5" strokeLinecap="round" />
+                      <svg
+                        className="admin-chart-svg"
+                        viewBox="0 0 700 205"
+                        preserveAspectRatio="none"
+                        onMouseLeave={() => setHoveredChartIndex(null)}
+                      >
+                        <defs>
+                          <linearGradient id="pvGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#00dfff" stopOpacity="0.32" />
+                            <stop offset="100%" stopColor="#b3fdff" stopOpacity="0.02" />
+                          </linearGradient>
+                          <linearGradient id="inqGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#3c4b81" stopOpacity="0.24" />
+                            <stop offset="100%" stopColor="#566dab" stopOpacity="0.02" />
+                          </linearGradient>
+                        </defs>
 
-                          <path d={inqArea} fill="url(#inqGrad)" />
-                          <path d={inqPath} fill="none" stroke="#2563EB" strokeWidth="2.5" strokeLinecap="round" />
+                        {/* Horizontal Grid lines & Y-axis ticks */}
+                        {[
+                          { y: chartTop, val: maxVal },
+                          { y: chartTop + plotHeight / 2, val: Math.round(maxVal / 2) },
+                          { y: chartBottom, val: 0 },
+                        ].map((tick, idx) => (
+                          <g key={idx}>
+                            <line
+                              x1={chartLeft}
+                              y1={tick.y}
+                              x2={chartRight}
+                              y2={tick.y}
+                              stroke="rgba(86, 109, 171, 0.16)"
+                              strokeDasharray={idx === 2 ? undefined : '4 4'}
+                              strokeWidth="1"
+                            />
+                            <text
+                              x={chartLeft - 8}
+                              y={tick.y + 3}
+                              textAnchor="end"
+                              fill="#566dab"
+                              fontSize="10"
+                              fontFamily="monospace"
+                            >
+                              {tick.val}
+                            </text>
+                          </g>
+                        ))}
 
-                          {sevenDayChartData.map((d, i) => {
-                            const x = (i / 6) * 700
-                            const yPv = 170 - (d.pageviews / maxVal) * 140
-                            const yInq = 170 - (d.inquiries / maxVal) * 140
-                            return (
-                              <g key={i}>
-                                <circle cx={x} cy={yPv} r="4" fill="#0284C7" stroke="#FFFFFF" strokeWidth="2" />
-                                <circle cx={x} cy={yInq} r="4" fill="#2563EB" stroke="#FFFFFF" strokeWidth="2" />
-                              </g>
-                            )
-                          })}
-                        </>
-                      )
-                    })()}
-                  </svg>
+                        {/* Hover vertical guide */}
+                        {hoveredChartIndex !== null && (
+                          <line
+                            x1={pvCoords[hoveredChartIndex].x}
+                            y1={chartTop}
+                            x2={pvCoords[hoveredChartIndex].x}
+                            y2={chartBottom}
+                            stroke="#00dfff"
+                            strokeWidth="1.5"
+                            strokeDasharray="3 3"
+                          />
+                        )}
 
-                  {/* Date labels under chart */}
-                  <div className="flex justify-between mt-3 text-[11px] font-mono text-[#64748B]">
-                    {sevenDayChartData.map((d, idx) => (
-                      <span key={idx} className="text-center">{d.label}</span>
-                    ))}
-                  </div>
-                </div>
+                        <path d={pvArea} fill="url(#pvGrad)" />
+                        <path d={pvPath} fill="none" stroke="#00dfff" strokeWidth="2.75" strokeLinecap="round" />
+
+                        <path d={inqArea} fill="url(#inqGrad)" />
+                        <path d={inqPath} fill="none" stroke="#3c4b81" strokeWidth="2.5" strokeLinecap="round" />
+
+                        {sevenDayChartData.map((_, i) => {
+                          const x = pvCoords[i].x
+                          const isHovered = hoveredChartIndex === i
+                          return (
+                            <g key={i}>
+                              <circle
+                                cx={x}
+                                cy={pvCoords[i].y}
+                                r={isHovered ? 6 : 4}
+                                fill="#00dfff"
+                                stroke="#ffffff"
+                                strokeWidth="2"
+                              />
+                              <circle
+                                cx={x}
+                                cy={inqCoords[i].y}
+                                r={isHovered ? 6 : 4}
+                                fill="#3c4b81"
+                                stroke="#ffffff"
+                                strokeWidth="2"
+                              />
+                              <rect
+                                x={x - 35}
+                                y={chartTop}
+                                width={70}
+                                height={plotHeight}
+                                fill="transparent"
+                                className="cursor-pointer"
+                                onMouseEnter={() => setHoveredChartIndex(i)}
+                              />
+                            </g>
+                          )
+                        })}
+                      </svg>
+
+                      {/* Date labels neatly inside the card */}
+                      <div className="grid grid-cols-7 gap-1 pt-2.5 border-t border-[#566dab]/15 text-[11px] font-mono text-[#566dab]">
+                        {sevenDayChartData.map((d, idx) => (
+                          <span
+                            key={idx}
+                            className={`text-center truncate ${
+                              hoveredChartIndex === idx ? 'text-[#3c4b81] font-bold' : ''
+                            }`}
+                          >
+                            {d.label}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )
+                })()}
               </div>
 
               {/* Bottom Row: Recent Inquiries + Device & Section Breakdown */}
@@ -1170,65 +1312,139 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Device & Section Engagement Breakdown */}
-                <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-xs space-y-6">
-                  {/* Device breakdown */}
+                <div className="bg-white border border-[#566dab]/20 rounded-2xl p-6 shadow-xs space-y-6">
+                  {/* Device breakdown with Donut Ring */}
                   <div>
-                    <h3 className="text-sm font-bold text-[#172554] mb-3 flex items-center gap-2">
-                      <Smartphone className="w-4 h-4 text-[#2563EB]" />
+                    <h3 className="text-sm font-bold text-[#3c4b81] mb-4 flex items-center gap-2">
+                      <Smartphone className="w-4 h-4 text-[#00dfff]" />
                       Audience Device Split
                     </h3>
-                    <div className="space-y-3">
-                      <div>
-                        <div className="flex justify-between text-xs text-slate-700 mb-1 font-medium">
-                          <span className="flex items-center gap-1.5"><Monitor className="w-3.5 h-3.5 text-[#2563EB]" /> Desktop</span>
-                          <span className="font-mono text-[#111827] font-bold">{stats.deviceBreakdown.desktop}%</span>
-                        </div>
-                        <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
-                          <div className="h-full bg-[#2563EB] rounded-full" style={{ width: `${stats.deviceBreakdown.desktop}%` }} />
-                        </div>
-                      </div>
 
-                      <div>
-                        <div className="flex justify-between text-xs text-slate-700 mb-1 font-medium">
-                          <span className="flex items-center gap-1.5"><Smartphone className="w-3.5 h-3.5 text-sky-600" /> Mobile</span>
-                          <span className="font-mono text-[#111827] font-bold">{stats.deviceBreakdown.mobile}%</span>
-                        </div>
-                        <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
-                          <div className="h-full bg-sky-500 rounded-full" style={{ width: `${stats.deviceBreakdown.mobile}%` }} />
-                        </div>
-                      </div>
+                    {(() => {
+                      const desk = stats.deviceBreakdown.desktop
+                      const mob = stats.deviceBreakdown.mobile
+                      const tab = stats.deviceBreakdown.tablet
+                      const total = Math.max(desk + mob + tab, 1)
+                      const r = 42
+                      const circ = 2 * Math.PI * r
+                      const deskLen = (desk / total) * circ
+                      const mobLen = (mob / total) * circ
+                      const tabLen = (tab / total) * circ
 
-                      <div>
-                        <div className="flex justify-between text-xs text-slate-700 mb-1 font-medium">
-                          <span className="flex items-center gap-1.5"><Tablet className="w-3.5 h-3.5 text-amber-600" /> Tablet</span>
-                          <span className="font-mono text-[#111827] font-bold">{stats.deviceBreakdown.tablet}%</span>
+                      return (
+                        <div className="flex items-center gap-5">
+                          <div className="relative shrink-0">
+                            <svg className="admin-donut-svg -rotate-90" viewBox="0 0 112 112">
+                              <circle cx="56" cy="56" r={r} fill="none" stroke="rgba(86, 109, 171, 0.14)" strokeWidth="14" />
+                              <circle
+                                cx="56"
+                                cy="56"
+                                r={r}
+                                fill="none"
+                                stroke="#3c4b81"
+                                strokeWidth="14"
+                                strokeDasharray={`${deskLen} ${circ}`}
+                                strokeDashoffset="0"
+                              />
+                              <circle
+                                cx="56"
+                                cy="56"
+                                r={r}
+                                fill="none"
+                                stroke="#00dfff"
+                                strokeWidth="14"
+                                strokeDasharray={`${mobLen} ${circ}`}
+                                strokeDashoffset={-deskLen}
+                              />
+                              <circle
+                                cx="56"
+                                cy="56"
+                                r={r}
+                                fill="none"
+                                stroke="#566dab"
+                                strokeWidth="14"
+                                strokeDasharray={`${tabLen} ${circ}`}
+                                strokeDashoffset={-(deskLen + mobLen)}
+                              />
+                            </svg>
+                            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                              <span className="text-sm font-bold font-mono text-[#3c4b81]">{desk}%</span>
+                              <span className="text-[9px] font-mono uppercase text-[#566dab]">Desktop</span>
+                            </div>
+                          </div>
+
+                          <div className="flex-1 min-w-0 space-y-2.5">
+                            <div>
+                              <div className="flex justify-between text-xs text-[#3c4b81] mb-1 font-medium">
+                                <span className="flex items-center gap-1.5">
+                                  <Monitor className="w-3.5 h-3.5 text-[#3c4b81]" /> Desktop
+                                </span>
+                                <span className="font-mono font-bold">{desk}%</span>
+                              </div>
+                              <div className="w-full h-1.5 rounded-full bg-[#b3fdff]/35 overflow-hidden">
+                                <div className="h-full bg-[#3c4b81] rounded-full" style={{ width: `${desk}%` }} />
+                              </div>
+                            </div>
+
+                            <div>
+                              <div className="flex justify-between text-xs text-[#3c4b81] mb-1 font-medium">
+                                <span className="flex items-center gap-1.5">
+                                  <Smartphone className="w-3.5 h-3.5 text-[#00dfff]" /> Mobile
+                                </span>
+                                <span className="font-mono font-bold">{mob}%</span>
+                              </div>
+                              <div className="w-full h-1.5 rounded-full bg-[#b3fdff]/35 overflow-hidden">
+                                <div className="h-full bg-[#00dfff] rounded-full" style={{ width: `${mob}%` }} />
+                              </div>
+                            </div>
+
+                            <div>
+                              <div className="flex justify-between text-xs text-[#3c4b81] mb-1 font-medium">
+                                <span className="flex items-center gap-1.5">
+                                  <Tablet className="w-3.5 h-3.5 text-[#566dab]" /> Tablet
+                                </span>
+                                <span className="font-mono font-bold">{tab}%</span>
+                              </div>
+                              <div className="w-full h-1.5 rounded-full bg-[#b3fdff]/35 overflow-hidden">
+                                <div className="h-full bg-[#566dab] rounded-full" style={{ width: `${tab}%` }} />
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                        <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
-                          <div className="h-full bg-amber-500 rounded-full" style={{ width: `${stats.deviceBreakdown.tablet}%` }} />
-                        </div>
-                      </div>
-                    </div>
+                      )
+                    })()}
                   </div>
 
-                  {/* Top Sections */}
-                  <div className="pt-4 border-t border-[#E5E7EB]">
-                    <h3 className="text-sm font-bold text-[#172554] mb-3 flex items-center gap-2">
-                      <Compass className="w-4 h-4 text-emerald-600" />
+                  {/* Top Sections with visual bar */}
+                  <div className="pt-4 border-t border-[#566dab]/15">
+                    <h3 className="text-sm font-bold text-[#3c4b81] mb-3 flex items-center gap-2">
+                      <Compass className="w-4 h-4 text-[#00dfff]" />
                       Top Engaged Sections
                     </h3>
                     {stats.topSections.length === 0 ? (
-                      <div className="text-xs text-[#64748B] py-2">Waiting for first telemetry events...</div>
+                      <div className="text-xs text-[#566dab] py-2">Waiting for first telemetry events...</div>
                     ) : (
-                      <div className="space-y-2.5">
-                        {stats.topSections.map((sec) => (
-                          <div key={sec.id} className="flex items-center justify-between text-xs">
-                            <span className="text-[#334155] font-medium truncate max-w-[150px]">{sec.name}</span>
-                            <div className="flex items-center gap-3 font-mono text-[11px]">
-                              <span className="text-[#2563EB] font-bold">{sec.views} views</span>
-                              <span className="text-[#64748B]">{sec.avgDwell}s avg</span>
+                      <div className="space-y-3">
+                        {(() => {
+                          const maxViews = Math.max(...stats.topSections.map((s) => s.views), 1)
+                          return stats.topSections.map((sec) => (
+                            <div key={sec.id} className="space-y-1">
+                              <div className="flex items-center justify-between text-xs">
+                                <span className="text-[#3c4b81] font-medium truncate max-w-[160px]">{sec.name}</span>
+                                <div className="flex items-center gap-2.5 font-mono text-[11px]">
+                                  <span className="text-[#3c4b81] font-bold">{sec.views} views</span>
+                                  <span className="text-[#566dab]">{sec.avgDwell}s</span>
+                                </div>
+                              </div>
+                              <div className="w-full h-1.5 rounded-full bg-[#b3fdff]/35 overflow-hidden">
+                                <div
+                                  className="h-full rounded-full bg-gradient-to-r from-[#3c4b81] to-[#00dfff]"
+                                  style={{ width: `${Math.round((sec.views / maxViews) * 100)}%` }}
+                                />
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          ))
+                        })()}
                       </div>
                     )}
                   </div>
@@ -1641,26 +1857,18 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Sub-tab switcher */}
-                <div className="flex items-center gap-1 bg-white p-1 rounded-xl border border-[#E5E7EB] self-start sm:self-auto shadow-xs">
+                <div className="flex items-center gap-1 bg-white p-1 rounded-xl border border-[#566dab]/20 self-start sm:self-auto shadow-xs">
                   <button
                     onClick={() => setTelemetrySubTab('visitors')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                      telemetrySubTab === 'visitors'
-                        ? 'bg-[#2563EB] text-white shadow-xs'
-                        : 'text-[#64748B] hover:text-[#111827]'
-                    }`}
+                    className={`admin-tab-pill ${telemetrySubTab === 'visitors' ? 'admin-tab-pill--active' : ''}`}
                   >
-                    Unique Visitors ({visitors.length})
+                    Unique Visitors ({stats.uniqueVisitorCount})
                   </button>
                   <button
                     onClick={() => setTelemetrySubTab('events')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                      telemetrySubTab === 'events'
-                        ? 'bg-[#2563EB] text-white shadow-xs'
-                        : 'text-[#64748B] hover:text-[#111827]'
-                    }`}
+                    className={`admin-tab-pill ${telemetrySubTab === 'events' ? 'admin-tab-pill--active' : ''}`}
                   >
-                    Raw Events ({telemetry.length})
+                    Raw Events ({dbTotals.totalEvents ?? telemetry.length})
                   </button>
                 </div>
               </div>
@@ -1674,26 +1882,101 @@ export default function AdminDashboard() {
                       { title: 'Top Cities', icon: MapPin, values: visitorInsights.cities },
                       { title: 'Browsers', icon: Monitor, values: visitorInsights.browsers },
                       { title: 'Languages', icon: Languages, values: visitorInsights.languages },
-                    ].map(({ title, icon: Icon, values }) => (
-                      <div key={title} className="bg-white border border-[#E5E7EB] rounded-2xl p-4 shadow-xs">
-                        <div className="flex items-center gap-2 text-xs font-bold text-[#172554]">
-                          <Icon className="w-4 h-4 text-[#2563EB]" />
-                          {title}
+                    ].map(({ title, icon: Icon, values }) => {
+                      const maxCount = values.length > 0 ? Math.max(...values.map(([, c]) => c), 1) : 1
+                      return (
+                        <div key={title} className="bg-white border border-[#566dab]/20 rounded-2xl p-4 shadow-xs">
+                          <div className="flex items-center gap-2 text-xs font-bold text-[#3c4b81]">
+                            <Icon className="w-4 h-4 text-[#00dfff]" />
+                            {title}
+                          </div>
+                          <div className="mt-3 space-y-2.5">
+                            {values.length === 0 ? (
+                              <p className="text-[11px] text-[#566dab]">Location data will appear after backend GeoIP is enabled.</p>
+                            ) : (
+                              values.map(([label, count]) => (
+                                <div key={label} className="space-y-1">
+                                  <div className="flex items-center justify-between gap-3 text-[11px]">
+                                    <span className="truncate text-[#3c4b81] font-medium" title={label}>{label}</span>
+                                    <span className="font-mono font-bold text-[#3c4b81]">{count}</span>
+                                  </div>
+                                  <div className="w-full h-1.5 rounded-full bg-[#b3fdff]/35 overflow-hidden">
+                                    <div
+                                      className="h-full rounded-full bg-gradient-to-r from-[#3c4b81] to-[#00dfff]"
+                                      style={{ width: `${Math.round((count / maxCount) * 100)}%` }}
+                                    />
+                                  </div>
+                                </div>
+                              ))
+                            )}
+                          </div>
                         </div>
-                        <div className="mt-3 space-y-2">
-                          {values.length === 0 ? (
-                            <p className="text-[11px] text-[#94A3B8]">Location data will appear after backend GeoIP is enabled.</p>
-                          ) : (
-                            values.map(([label, count]) => (
-                              <div key={label} className="flex items-center justify-between gap-3 text-[11px]">
-                                <span className="truncate text-[#475569]" title={label}>{label}</span>
-                                <span className="font-mono font-bold text-[#172554]">{count}</span>
-                              </div>
-                            ))
-                          )}
-                        </div>
+                      )
+                    })}
+                  </div>
+
+                  {/* 7-Day Traffic Bar Chart on Telemetry Tab */}
+                  <div className="bg-white border border-[#566dab]/20 rounded-2xl p-5 shadow-xs overflow-hidden">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                      <div>
+                        <h3 className="text-sm font-bold text-[#3c4b81] flex items-center gap-2">
+                          <TrendingUp className="w-4 h-4 text-[#00dfff]" />
+                          7-Day Pageviews & Lead Activity
+                        </h3>
+                        <p className="text-[11px] text-[#566dab] mt-0.5">
+                          Daily distribution from dev_telemetry_events & dev_contact_inquiries
+                        </p>
                       </div>
-                    ))}
+                      <div className="flex items-center gap-3 text-[11px] font-mono">
+                        <span className="inline-flex items-center gap-1.5 text-[#3c4b81] font-semibold">
+                          <span className="w-2.5 h-2.5 rounded-xs bg-[#00dfff]" /> Pageviews
+                        </span>
+                        <span className="inline-flex items-center gap-1.5 text-[#3c4b81] font-semibold">
+                          <span className="w-2.5 h-2.5 rounded-xs bg-[#3c4b81]" /> Inquiries
+                        </span>
+                      </div>
+                    </div>
+                    {(() => {
+                      const maxBar = Math.max(...sevenDayChartData.map((d) => Math.max(d.pageviews, d.inquiries)), 5)
+                      return (
+                        <div>
+                          <svg className="admin-chart-svg" viewBox="0 0 700 200" preserveAspectRatio="none">
+                            {[0, 0.5, 1].map((ratio, idx) => {
+                              const y = 180 - ratio * 155
+                              return (
+                                <line
+                                  key={idx}
+                                  x1="28"
+                                  y1={y}
+                                  x2="688"
+                                  y2={y}
+                                  stroke="rgba(86, 109, 171, 0.16)"
+                                  strokeDasharray={idx === 0 ? undefined : '4 4'}
+                                />
+                              )
+                            })}
+                            {sevenDayChartData.map((d, i) => {
+                              const groupX = 56 + i * 94
+                              const pvH = Math.max((d.pageviews / maxBar) * 155, d.pageviews > 0 ? 4 : 0)
+                              const inqH = Math.max((d.inquiries / maxBar) * 155, d.inquiries > 0 ? 4 : 0)
+                              return (
+                                <g key={d.dateStr}>
+                                  <rect x={groupX} y={180 - pvH} width="22" height={pvH} rx="5" fill="#00dfff" />
+                                  <rect x={groupX + 26} y={180 - inqH} width="22" height={inqH} rx="5" fill="#3c4b81" />
+                                </g>
+                              )
+                            })}
+                          </svg>
+                          <div className="grid grid-cols-7 gap-1 pt-2 border-t border-[#566dab]/15 text-[11px] font-mono text-[#566dab]">
+                            {sevenDayChartData.map((d) => (
+                              <span key={d.dateStr} className="text-center truncate">
+                                {d.label}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )
+                    })()}
                   </div>
 
                   <div className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-xs">

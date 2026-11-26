@@ -1311,12 +1311,40 @@ export async function getVisitorsFromDB(): Promise<VisitorRecord[]> {
       .from('dev_visitors')
       .select('*')
       .order('last_seen', { ascending: false })
-      .limit(200)
+      .limit(1000)
 
     if (error || !data) return []
     return data as VisitorRecord[]
   } catch {
     return []
+  }
+}
+
+export interface TelemetryTotals {
+  totalVisitors: number | null
+  totalPageviews: number | null
+  totalEvents: number | null
+}
+
+/**
+ * Fetches exact all-time counts from Supabase (head: true, no row cap)
+ * so the dashboard always displays total viewers and views from the start.
+ */
+export async function getTelemetryTotalsFromDB(): Promise<TelemetryTotals> {
+  try {
+    const [visitorsRes, pageviewsRes, eventsRes] = await Promise.all([
+      supabase.from('dev_visitors').select('*', { count: 'exact', head: true }),
+      supabase.from('dev_telemetry_events').select('*', { count: 'exact', head: true }).eq('event_name', 'page_view'),
+      supabase.from('dev_telemetry_events').select('*', { count: 'exact', head: true }),
+    ])
+
+    return {
+      totalVisitors: !visitorsRes.error && typeof visitorsRes.count === 'number' ? visitorsRes.count : null,
+      totalPageviews: !pageviewsRes.error && typeof pageviewsRes.count === 'number' ? pageviewsRes.count : null,
+      totalEvents: !eventsRes.error && typeof eventsRes.count === 'number' ? eventsRes.count : null,
+    }
+  } catch {
+    return { totalVisitors: null, totalPageviews: null, totalEvents: null }
   }
 }
 
@@ -1336,7 +1364,7 @@ export async function getTelemetryRecordsFromDB(): Promise<TelemetryRecord[]> {
       .from('dev_telemetry_events')
       .select('*')
       .order('created_at', { ascending: false })
-      .limit(300)
+      .limit(1000)
 
     if (error || !data) return getTelemetryRecords()
 
